@@ -1,3 +1,8 @@
+#coding: utf-8
+"""Archivo donde django busca las definiciones de modelos, con sus atributos , metodos y managers,
+ y relaciones de modelos que heredan
+de la clase models de django.db """
+
 from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
@@ -5,13 +10,17 @@ from django.contrib.auth.models import (
 from django.conf import settings
 
 class MyUserManager(BaseUserManager):
+    """Clase utilizada para la creacion de managers customizados 
+    de clase de usuarios tambian customizada, herada metodos y atributos
+    de la clase abstracta BaseUserManager que exige redefinir los metodos
+    create_user y create_superuser"""
     def create_user(self, username, email, password=None):
         """
-        Creates and saves a User with the given email, date of
-        birth and password.
+        Crea y guarda un usuario con el nombre de usuario , email y contraseña
+        dados
         """
         if not username:
-            raise ValueError('Users must have an user name')
+            raise ValueError('Los usuarios deben tener un nombre de usuario')
 
         user = self.model(
             username=username,
@@ -23,8 +32,8 @@ class MyUserManager(BaseUserManager):
 
     def create_superuser(self, username, email, password):
         """
-        Creates and saves a superuser with the given email, date of
-        birth and password.
+        Crea y guarda un superuser con el nombre de usuario, email y password
+        dados
         """
         user = self.create_user(username,
             password=password,
@@ -35,6 +44,7 @@ class MyUserManager(BaseUserManager):
         return user
 
 class Permitido(models.Model):
+    """Este modelos mantiene registros de correos permitidos para la creacion de usuarios"""
     
     email = models.EmailField(
         verbose_name='email address',
@@ -42,13 +52,18 @@ class Permitido(models.Model):
     )
     
     def __unicode__(self):
+        """Representacion unicode del objeto permitido"""
         return self.email
     
 #    def is_exists(self, email_recibido):
     #    if self.email
 
 class MyUser(AbstractBaseUser):
-     
+    """Clase que representa usuario del modulo de autenticacion customizada con mas atributos, hereda
+    metodos y atributos de la clase abstracta AbstractBaseUser, especifica la confgutacion 
+    de sus instancias en USERNAME_FIELDS y los atributos requeridos en create_user y create_superuser
+    en REQUIRED_FIELDS, ademas redefine metodos: get_full_name(),get_short_name(),has_perm(),
+    has_module_perms(),is_staff()"""
     username=models.CharField(max_length=40,unique=True)
     user_name=models.CharField(max_length=50)
     last_name=models.CharField(max_length=50)
@@ -64,6 +79,8 @@ class MyUser(AbstractBaseUser):
     REQUIRED_FIELDS = ['email','direccion']
     
     def create(self,username,email,password,user_name, last_name,direccion):
+        """Metodo para la creacion de usuarios desde interfaz web completando todos los 
+        atributos"""
         usuario=MyUser.objects.create_user(username, email, password=None)
         usuario.last_name=last_name
         usuario.user_name=user_name
@@ -72,34 +89,39 @@ class MyUser(AbstractBaseUser):
         
 
     def get_full_name(self):
+        """Retorna el nombre y apellido del usuario"""
         # The user is identified by their email address
         return self.user_name+self.last_name
 
     def get_short_name(self):
+        """Retorna el username identificador del usuario"""
         # The user is identified by their email address
         return self.username
 
     def __unicode__(self):
+        """Representacion unicode del objeto usuario"""
         return self.username
 
     def has_perm(self, perm, obj=None):
-        "Does the user have a specific permission?"
+        "Por implementar: Retornara true si un usuario tiene el permiso indicado como argumento"
         # Simplest possible answer: Yes, always
         return True
 
     def has_module_perms(self, app_label):
-        "Does the user have permissions to view the app `app_label`?"
+        """Por implementar: Retornarea true si el usuario tiene permiso de acceder a una 
+        applicacion particular"""
         # Simplest possible answer: Yes, always
         return True
 
     @property
     def is_staff(self):
-        "Is the user a member of staff?"
+        "Retorna true si el usuario es administrador"
         # Simplest possible answer: All admins are staff
         return self.is_admin
     
        
 class rol(models.Model):
+    """Modelo que representa roles con relacion muchos a muchos a la tabla de permisos"""
 
     #aca va a habr problemas para relacionar con permisos
     #le puse many to many porque en realidad el foreign key tiene que estar en la otra tabla
@@ -119,6 +141,7 @@ class rol(models.Model):
 
     
 class proyecto(models.Model):
+    """Modelo que representa los proyectos que se pueden usar en el sistema"""
     ESTADO_CHOICES = (
         ('PEN', 'Pendiente'),
         ('ACT', 'Activo'),
@@ -138,6 +161,7 @@ class proyecto(models.Model):
 
 
 class HU(models.Model):
+    """Modelo que reprenseta las historias de usuario"""
     VALORES100_CHOICES = zip( range(1,100), range(1,100) )
     VALORES10_CHOICES = zip( range(1,10), range(1,100) )
 
@@ -157,6 +181,8 @@ class HU(models.Model):
     
 
 class Sprint(models.Model):
+    """Modelo que reprenseta los Spring de un proyecto relacionados a
+    sus respectivos proyectos mediante un foreign key"""
     
     ESTADO_CHOICES = (
         ('CAN', 'Cancelado'),
@@ -176,6 +202,8 @@ class Sprint(models.Model):
     
     
 class Flujo(models.Model):
+    """Representacion de un flujo de proyecto relacionado a su respectivo proyecto
+    mediante"""
     
     ESTADO_CHOICES = (
         ('CAN', 'Cancelado'),
@@ -191,6 +219,7 @@ class Flujo(models.Model):
     
     
 class Actividad(models.Model):
+    """Representacion de la actividad de un flujo relacionada a su proyecto"""
     Actividad_id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length = 200)
     descripcion = models.CharField(max_length = 200)
@@ -201,12 +230,14 @@ class Actividad(models.Model):
     #finalizado
     
 class asignacion(models.Model):
+    """Modelo que especifica una asignacion de un rol a un usuario en un proyecto"""
     asignation_id=models.AutoField(primary_key=True)
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL)
     rol=models.ForeignKey(rol)
     proyecto=models.ForeignKey(proyecto)
     
 class delegacion(models.Model):
+    """Modelo que especifica una delegacion de una HU a un usuario en un proyecto"""
     delegacion_id=models.AutoField(primary_key=True)
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL)
     HU=models.ForeignKey(HU)

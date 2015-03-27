@@ -1,3 +1,8 @@
+
+"""Archivo donde se especifican las expresiones regulares que seran filtradas y 
+y redirigidas a una vista para el procesamiento de las peticiiones. El funcionamiento 
+depende de la variable urlpatterns que puede incluir otros URLConfs o el nombre de la vista 
+y la ruta para poder acceder a la misma"""
 from django.conf.urls import patterns, url
 
 from gestor import views
