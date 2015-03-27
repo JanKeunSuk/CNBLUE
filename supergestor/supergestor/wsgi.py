@@ -1,10 +1,12 @@
+# coding: utf-8
+
 """
-WSGI config for supergestor project.
-
-It exposes the WSGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.7/howto/deployment/wsgi/
+Configuración WSGI para proyecto supergestor.
+La implementación WSGI es una aplicación que puede llamar al servidor de aplicaciones,
+para comunicarse con el código.
+Obtiene la ruta de la aplicación que puede llamar desde su configuración.
+La línea os.environ.setdefault establece el módulo de configuración predeterminada para usar, 
+supergestor.settings es el nombre del paquete de proyecto.
 """
 
 import os

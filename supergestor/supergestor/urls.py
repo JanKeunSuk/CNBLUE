@@ -1,12 +1,15 @@
+# coding: utf-8
+"""
+URLconf es un archivo incluye función vista asociada, que se pasan directamente como un método.
+Importamos las funciones view y agregamos las vistas de holaView, registrarUsuarioView y guardarUsuarioView 
+Tambien incluimos otros modulos URLconf como include(admin.site.urls) y include('django.contrib.auth.urls').
+"""
+
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from gestor import views
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'supergestor.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
     url(r'^admin/', include(admin.site.urls)),
     url('^', include('django.contrib.auth.urls')),
     url(r'^hola/', views.holaView, name='hola'),
