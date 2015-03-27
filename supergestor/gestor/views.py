@@ -28,7 +28,6 @@ def registrarUsuarioView(request):
     """Vista que se obitene del regex /registrar solicitado al precionar el boton
     registrar en el login, devuelve un formulario html para crear un nuevo usuario
     con un correo existente"""
-
     if request.method == 'GET':
         return render(request, 'crearusuario.html')
 """
