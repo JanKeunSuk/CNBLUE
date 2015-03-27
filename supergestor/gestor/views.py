@@ -1,16 +1,7 @@
-<<<<<<< HEAD
 """Archivo que contiene los metodos que contienen
 las peticiones, las manipula y gestiona la respuesta a enviar
 a los clientes , cada vista obtiene de request que se le es envado
 luego de pasar por el filtro de expresiones regulares"""
-=======
-"""
-Views
-La funcion views es una funcion de Python que una solicitud de Web y devuelve una respuesta de Web
-
-"""
-
->>>>>>> branch 'master' of https://github.com/JanKeunSuk/CNBLUE.git
 from django.shortcuts import render
 #from django.contrib.auth import authenticate, login
 #from django.contrib.auth import views
@@ -34,13 +25,9 @@ def holaView(request):
         return render(request,'hola.html',{'usuario':request.user})
     
 def registrarUsuarioView(request):
-<<<<<<< HEAD
     """Vista que se obitene del regex /registrar solicitado al precionar el boton
     registrar en el login, devuelve un formulario html para crear un nuevo usuario
     con un correo existente"""
-=======
-
->>>>>>> branch 'master' of https://github.com/JanKeunSuk/CNBLUE.git
     if request.method == 'GET':
         return render(request, 'crearusuario.html')
 """
