@@ -1,3 +1,9 @@
+"""
+Views
+La funcion views es una funcion de Python que una solicitud de Web y devuelve una respuesta de Web
+
+"""
+
 from django.shortcuts import render
 #from django.contrib.auth import authenticate, login
 #from django.contrib.auth import views
@@ -18,6 +24,7 @@ def holaView(request):
         return render(request,'hola.html',{'usuario':request.user})
     
 def registrarUsuarioView(request):
+
     if request.method == 'GET':
         return render(request, 'crearusuario.html')
 """

@@ -1,15 +1,16 @@
+# coding: utf-8
 """
-Django settings for supergestor project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.7/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.7/ref/settings/
+Django settings es un supergestor de proyecto, que contiene toda la configuración necesaria.
+Agregamos en INSTALLED_APPS 'gestor'.
+Se especificaron las rutas de ROOT_URLCONF,WSGI_APPLICATION,AUTH_USER_MODEL (usuario para el modulo de autenticación) y los templates.
+La configuración de la Base de Datos utilizando Postgresql
 """
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from ntdb import DEFAULT
+from django.conf.global_settings import DEFAULT_CHARSET
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -26,8 +27,9 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
+
+
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -38,6 +40,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'gestor',
 )
+"""Definición de aplicaciones. Se agrego en la INSTALLED_APPS gestor."""
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -49,15 +52,23 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+
+
 ROOT_URLCONF = 'supergestor.urls'
+"""Ubicación de la urls.py dentro de supergestor"""
 
 WSGI_APPLICATION = 'supergestor.wsgi.application'
+"""Ubicación del wsgi.py dentro de supergestor"""
 
 AUTH_USER_MODEL='gestor.MyUser'
+"""Ubicación del modelo usuario para el modulo de autenticación"""
+
 
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+"""Ubicación del templates"""
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
+"""Configuración de la Base de Datos utilizando Postgresql"""
 
 DATABASES = {
     'default': {

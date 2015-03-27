@@ -1,0 +1,52 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module supergestor.settings</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="supergestor.html"><font color="#ffffff">supergestor</font></a>.settings</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/delsy/git/CNBLUE/supergestor/supergestor/settings.py">/home/delsy/git/CNBLUE/supergestor/supergestor/settings.py</a></font></td></tr></table>
+    <p><tt>Django&nbsp;settings&nbsp;es&nbsp;un&nbsp;supergestor&nbsp;de&nbsp;proyecto,&nbsp;que&nbsp;contiene&nbsp;toda&nbsp;la&nbsp;configuración&nbsp;necesaria.<br>
+Agregamos&nbsp;en&nbsp;INSTALLED_APPS&nbsp;'gestor'.<br>
+Se&nbsp;especificaron&nbsp;las&nbsp;rutas&nbsp;de&nbsp;ROOT_URLCONF,WSGI_APPLICATION,AUTH_USER_MODEL&nbsp;(usuario&nbsp;para&nbsp;el&nbsp;modulo&nbsp;de&nbsp;autenticación)&nbsp;y&nbsp;los&nbsp;templates.<br>
+La&nbsp;configuración&nbsp;de&nbsp;la&nbsp;Base&nbsp;de&nbsp;Datos&nbsp;utilizando&nbsp;Postgresql</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="os.html">os</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>ALLOWED_HOSTS</strong> = []<br>
+<strong>AUTH_USER_MODEL</strong> = 'gestor.MyUser'<br>
+<strong>BASE_DIR</strong> = '.'<br>
+<strong>DATABASES</strong> = {'default': {'ENGINE': 'django.db.backends.postgresql_psycopg2', 'HOST': '127.0.0.1', 'NAME': 'prueba5', 'PASSWORD': 'seba2', 'PORT': '5432', 'USER': 'seba2'}}<br>
+<strong>DEBUG</strong> = True<br>
+<strong>DEFAULT</strong> = 0<br>
+<strong>DEFAULT_CHARSET</strong> = 'utf-8'<br>
+<strong>INSTALLED_APPS</strong> = ('django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages', 'django.contrib.staticfiles', 'gestor')<br>
+<strong>LANGUAGE_CODE</strong> = 'en-us'<br>
+<strong>MIDDLEWARE_CLASSES</strong> = ('django.contrib.sessions.middleware.SessionMiddleware', 'django.middleware.common.CommonMiddleware', 'django.middleware.csrf.CsrfViewMiddleware', 'django.contrib.auth.middleware.AuthenticationMiddleware', 'django.contrib.auth.middleware.SessionAuthenticationMiddleware', 'django.contrib.messages.middleware.MessageMiddleware', 'django.middleware.clickjacking.XFrameOptionsMiddleware')<br>
+<strong>ROOT_URLCONF</strong> = 'supergestor.urls'<br>
+<strong>SECRET_KEY</strong> = 'cu*_(rwgi$db-20p(*+fy7%3t!$uxhjoc$ccw8%rw@o7k-2%22'<br>
+<strong>STATIC_URL</strong> = '/static/'<br>
+<strong>TEMPLATE_DEBUG</strong> = True<br>
+<strong>TEMPLATE_DIRS</strong> = ['./templates']<br>
+<strong>TIME_ZONE</strong> = 'UTC'<br>
+<strong>USE_I18N</strong> = True<br>
+<strong>USE_L10N</strong> = True<br>
+<strong>USE_TZ</strong> = True<br>
+<strong>WSGI_APPLICATION</strong> = 'supergestor.wsgi.application'</td></tr></table>
+</body></html>
