@@ -1,5 +1,5 @@
 #coding: utf-8
-"""Archovo que indica a django la configuracion 
+"""Archivo que indica a django la configuracion 
 de la interfaz del admin a los superusuarios,formularios 
 y funciones particulares relacionadas a modelos 
 registrados para ser administrados desde el admin"""

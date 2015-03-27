@@ -16,7 +16,7 @@ from gestor.models import MyUser,Permitido
 #from django import forms
 # Create your views here.
 def holaView(request):
-    """Vista que redirige a la pagna principal de administracion tanto a usuarios como a
+    """Vista que redirige a la pagina principal de administracion tanto a usuarios como a
     superusuarios, los superusuarios son redirigidos a la aplicacion admin mientras que los 
     usuarios obtienen una respuesta con el template hola.html"""
     if request.user.is_staff:
