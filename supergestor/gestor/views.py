@@ -8,6 +8,7 @@ from django.shortcuts import render
 #from django.contrib.auth import logout
 from django.http.response import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ObjectDoesNotExist
 
 from gestor.models import MyUser,Permitido
 #from django.core.context_processors import csrf
@@ -59,14 +60,20 @@ class CustomerRegistrationForm(UserCreationForm):
 def guardarUsuarioView(request):
     """Vista de guardado de nuevo usuario relacionado con un correo autorizado en la tabla Permitidos
     que se utiliza en la interfaz devuelta por /registrar """
-    usuario = MyUser.objects.create_user(username=request.POST['username'], password=request.POST['password1'],email=request.POST['email'])
-    usuario.is_admin=False
-    usuario.direccion = request.POST['direccion']
-    usuario.last_name = request.POST['last_name']
-    usuario.user_name = request.POST['user_name']
-    #usuario.save(using=request._db)
-    usuario.save()
-    return HttpResponseRedirect('/login')
+    try:
+    
+        usuario = MyUser.objects.create_user(username=request.POST['username'], password=request.POST['password1'],email=request.POST['email'])
+        usuario.is_admin=False
+        usuario.direccion = request.POST['direccion']
+        usuario.last_name = request.POST['last_name']
+        usuario.user_name = request.POST['user_name']
+        #usuario.save(using=request._db)
+        usuario.save()
+        return HttpResponseRedirect('/login')
+    except ObjectDoesNotExist:
+        print "Either the entry or blog doesn't exist." 
+        return HttpResponseRedirect('/registrar')
+    
 
 """
 def my_view(request):
