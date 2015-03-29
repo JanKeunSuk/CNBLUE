@@ -9,8 +9,6 @@ La configuración de la Base de Datos utilizando Postgresql
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-from ntdb import DEFAULT
-from django.conf.global_settings import DEFAULT_CHARSET
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -94,6 +92,16 @@ USE_L10N = True
 
 USE_TZ = True
 
+# EMAIL SETTINGS
+EMAIL_HOST = 'smtp.gmail.com'
+ 
+EMAIL_HOST_USER = 'usuariodjango@gmail.com'
+ 
+EMAIL_HOST_PASSWORD = 'usuariodjango2015'
+ 
+EMAIL_PORT = 587
+ 
+EMAIL_USE_TLS = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/

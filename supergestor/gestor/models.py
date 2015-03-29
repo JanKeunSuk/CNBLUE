@@ -92,7 +92,7 @@ class MyUser(AbstractBaseUser):
         """Retorna el nombre y apellido del usuario"""
         # The user is identified by their email address
         return self.user_name+self.last_name
-
+    
     def get_short_name(self):
         """Retorna el username identificador del usuario"""
         # The user is identified by their email address

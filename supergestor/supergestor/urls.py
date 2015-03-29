@@ -15,4 +15,6 @@ urlpatterns = patterns('',
     url(r'^hola/', views.holaView, name='hola'),
     url(r'^registrar/', views.registrarUsuarioView, name='nuevo_usuario'),
     url(r'^save/', views.guardarUsuarioView, name='guardar_nuevo_usuario'),
+    url(r'^contactomail/$', views.contactomail, name='contactoMail'),
+    url(r'^seteoPassword/$', views.seteoPassword, name='seteoPassword'),
 )

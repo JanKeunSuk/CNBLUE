@@ -2,20 +2,16 @@
 las peticiones, las manipula y gestiona la respuesta a enviar
 a los clientes , cada vista obtiene de request que se le es envado
 luego de pasar por el filtro de expresiones regulares"""
-from django.shortcuts import render
-#from django.contrib.auth import authenticate, login
-#from django.contrib.auth import views
-#from django.contrib.auth import logout
+from django.shortcuts import render, render_to_response
 from django.http.response import HttpResponseRedirect
+from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-
-from gestor.models import MyUser,Permitido
-#from django.core.context_processors import csrf
-#from django.template.context import RequestContext
-#from django.contrib.auth.forms import UserCreationForm
-#from django import forms
-# Create your views here.
+from gestor.models import MyUser
+from django import forms
+from django.core.mail.message import EmailMessage
+from django.template.context import RequestContext
+# Create your views and forms here.
 def holaView(request):
     """Vista que redirige a la pagina principal de administracion tanto a usuarios como a
     superusuarios, los superusuarios son redirigidos a la aplicacion admin mientras que los 
@@ -31,31 +27,6 @@ def registrarUsuarioView(request):
     con un correo existente"""
     if request.method == 'GET':
         return render(request, 'crearusuario.html')
-"""
-def registrarUsuarioView(request):
-    if request.method == 'POST':
-        if request.method == 'POST':
-            form = CustomerRegistrationForm(request.POST)
-            if form.is_valid():
-                f = form.save(force_insert=True)
-            return redirect('/hola/')
-    else:
-        args = {}
-        args.update(csrf(request))
-        args['form'] = CustomerRegistrationForm()
-    return render_to_response('crearusuario.html', args ,context_instance = RequestContext(request))
-    #return render(request, 'crearusuario.html')
-    
-class CustomerRegistrationForm(UserCreationForm):
-    class Meta:
-        model = MyUser
-        fields = ('username','password','email')
-    def save(self, commit=True):
-        user = super(CustomerRegistrationForm, self).save(commit=False)
-        if commit:
-            user.save(force_insert=True)
-        return user
-"""   
 
 def guardarUsuarioView(request):
     """Vista de guardado de nuevo usuario relacionado con un correo autorizado en la tabla Permitidos
@@ -74,30 +45,58 @@ def guardarUsuarioView(request):
         print "Either the entry or blog doesn't exist." 
         return HttpResponseRedirect('/registrar')
     
+class FormularioContacto(forms.Form):
+    usuario = forms.CharField()
+    correo = forms.EmailField()
 
-"""
-def my_view(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        if user.is_active:
-            login(request, user)
-            # Redirect to a success page.
-        else:
-            # Return a 'disabled account' error message
-            pass
+class Formulario(forms.Form):
+    nombre = forms.CharField(max_length=100)
+    mensaje = forms.CharField()
+    mail = forms.EmailField()
+
+class FormularioSeteoContrasenha(forms.Form):
+    username_cargar = forms.CharField()
+    password_nueva1 = forms.CharField()
+    password_nueva2 = forms.CharField()
+    
+def contactomail(request):
+    if request.method == 'POST':
+        formulario = FormularioContacto(request.POST)
+        if formulario.is_valid():
+            asunto = 'RECUPERACION DE CONTRASENHA'
+            username_cargado = formulario.cleaned_data['usuario']
+            usuario = MyUser.objects.get(username = username_cargado)
+            if (str(usuario.email) == formulario.cleaned_data['correo']):
+                mensaje = 'Puedes dirigirte a esta URL de seteo de tu password:  djangoserver/seteoPassword/'
+                mail = EmailMessage(asunto, mensaje, to=[request.POST['correo']])
+                mail.send()
+                return HttpResponseRedirect('/login') 
+            else:
+                return HttpResponse('El email no coincide con tu email unico asociado a tu usuario')  
+             
     else:
-        # Return an 'invalid login' error message.
-        pass
-
-def logout_view(request):
-    logout(request)
-    # Redirect to a success page.
-
-def change_password(request):
-    template_response = views.password_change(request)
-    # Do something with `template_response`
-    #For more details, see the TemplateResponse documentation.
-    return template_response
-"""
+        formulario = FormularioContacto()
+        
+    return render_to_response('contactoMail.html', {'formulario': formulario},
+                              context_instance=RequestContext(request))
+    
+def seteoPassword(request):
+    if request.method == 'POST':
+        formulario = FormularioSeteoContrasenha(request.POST)
+        if formulario.is_valid():
+            username_cargado = formulario.cleaned_data['username_cargar']
+            passwor1 = formulario.cleaned_data['password_nueva1']
+            passwor2 = formulario.cleaned_data['password_nueva2']
+            usuario = MyUser.objects.get(username = username_cargado)
+            if (usuario is not None):
+                if passwor1 and passwor2 and passwor1 != passwor2:
+                    raise forms.ValidationError("Passwords don't match")
+                else:
+                    usuario.set_password(formulario.cleaned_data['password_nueva1'])
+                    usuario.save()
+                return HttpResponse('Tu contrasenha ha sido cambiada, puedes loguearte con tu nueva contrasenha')    
+    else:
+        formulario = FormularioSeteoContrasenha()
+        
+    return render_to_response('seteoPassword.html', {'formulario': formulario},
+                              context_instance=RequestContext(request))
