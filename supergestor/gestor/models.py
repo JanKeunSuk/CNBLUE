@@ -136,6 +136,10 @@ class rol(models.Model):
     descripcion = models.CharField(max_length = 200)
     tipo = models.CharField(max_length = 3, choices = ROL_CHOICES)
     
+    def __unicode__(self):
+        """Representacion unicode del objeto permitido"""
+        return self.nombre_rol_id
+    
     
     
 

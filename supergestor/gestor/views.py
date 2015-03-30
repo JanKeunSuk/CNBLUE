@@ -1,3 +1,4 @@
+#coding: utf-8
 """Archivo que contiene los metodos que contienen
 las peticiones, las manipula y gestiona la respuesta a enviar
 a los clientes , cada vista obtiene de request que se le es envado
@@ -63,7 +64,7 @@ def contactomail(request):
     if request.method == 'POST':
         formulario = FormularioContacto(request.POST)
         if formulario.is_valid():
-            asunto = 'RECUPERACION DE CONTRASENHA'
+            asunto = 'RECUPERACION DE CONTRASEÑA'
             username_cargado = formulario.cleaned_data['usuario']
             usuario = MyUser.objects.get(username = username_cargado)
             if (str(usuario.email) == formulario.cleaned_data['correo']):
