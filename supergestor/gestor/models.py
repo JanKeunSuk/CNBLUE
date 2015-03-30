@@ -8,6 +8,7 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
     , Permission)
 from django.conf import settings
+from atk import Role
 
 class MyUserManager(BaseUserManager):
     """Clase utilizada para la creacion de managers customizados 
@@ -39,7 +40,7 @@ class MyUserManager(BaseUserManager):
             password=password,
             email=Permitido.objects.get(pk=email),
         )
-        user.is_admin = True
+        user.is_admin =True
         user.save(using=self._db)
         return user
 
@@ -161,6 +162,9 @@ class proyecto(models.Model):
     fecha_fin = models.DateTimeField()
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
     
+    def __unicode__(self):
+        """Representacion unicode del objeto permitido"""
+        return self.nombre_corto
 
 
 
@@ -238,7 +242,7 @@ class asignacion(models.Model):
     asignation_id=models.AutoField(primary_key=True)
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL)
     rol=models.ForeignKey(rol)
-    proyecto=models.ForeignKey(proyecto)
+    proyecto=models.ForeignKey(proyecto,blank=True)
     
 class delegacion(models.Model):
     """Modelo que especifica una delegacion de una HU a un usuario en un proyecto"""
