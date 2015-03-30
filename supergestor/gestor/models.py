@@ -237,6 +237,15 @@ class Actividad(models.Model):
     #en_progreso
     #finalizado
     
+    
+#Modelo para asignacion de roles de sistema
+class asignacion_sistema(models.Model):
+    """Modelo que especifica una asignacion de un rol a un usuario en un proyecto"""
+    asignation_id=models.AutoField(primary_key=True)
+    usuario=models.ForeignKey(settings.AUTH_USER_MODEL)
+    rol=models.ForeignKey(rol)    
+
+#Modelo para asignacion de roles de proyecto
 class asignacion(models.Model):
     """Modelo que especifica una asignacion de un rol a un usuario en un proyecto"""
     asignation_id=models.AutoField(primary_key=True)
