@@ -8,7 +8,6 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
     , Permission)
 from django.conf import settings
-from atk import Role
 
 class MyUserManager(BaseUserManager):
     """Clase utilizada para la creacion de managers customizados 
@@ -49,7 +48,7 @@ class Permitido(models.Model):
     
     email = models.EmailField(
         verbose_name='email address',
-        max_length=255, primary_key = True
+        max_length=255,primary_key=True,
     )
     
     def __unicode__(self):
@@ -141,7 +140,19 @@ class rol(models.Model):
         """Representacion unicode del objeto permitido"""
         return self.nombre_rol_id
     
-    
+class rol_sistema(models.Model):    
+    ROL_CHOICES = (
+        ("SIS", 'Sistema'),
+        ('PRO', 'Proyecto'),
+    )
+    rol_id = models.AutoField(primary_key=True)
+    permisos= models.ManyToManyField(Permission)
+    nombre_rol_id = models.CharField(max_length = 200)
+    descripcion = models.CharField(max_length = 200)
+    tipo = models.CharField(max_length = 3, choices = ROL_CHOICES)
+    def __unicode__(self):
+        """Representacion unicode del objeto permitido"""
+        return self.nombre_rol_id
     
 
     
@@ -238,20 +249,28 @@ class Actividad(models.Model):
     #finalizado
     
     
-#Modelo para asignacion de roles de sistema
-class asignacion_sistema(models.Model):
-    """Modelo que especifica una asignacion de un rol a un usuario en un proyecto"""
-    asignation_id=models.AutoField(primary_key=True)
-    usuario=models.ForeignKey(settings.AUTH_USER_MODEL)
-    rol=models.ForeignKey(rol)    
-
-#Modelo para asignacion de roles de proyecto
+#Modelo para asignacion de roles de sistema que se asociara a el otro modelo
 class asignacion(models.Model):
     """Modelo que especifica una asignacion de un rol a un usuario en un proyecto"""
     asignation_id=models.AutoField(primary_key=True)
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL)
-    rol=models.ForeignKey(rol)
-    proyecto=models.ForeignKey(proyecto,blank=True)
+    rol=models.ForeignKey(rol)    
+    proyecto=models.ManyToManyField(proyecto,null=True)
+    def __unicode__(self):
+        """Representacion unicode del objeto permitido"""
+        return str(self.asignation_id)
+
+#Modelo para asignacion de roles de proyecto
+class asigna_sistema(models.Model):
+    asigna_id=models.AutoField(primary_key=True)
+    usuario=models.ForeignKey(settings.AUTH_USER_MODEL)
+    rol=models.ForeignKey(rol_sistema)    
+    def __unicode__(self):
+        """Representacion unicode del objeto permitido"""
+        return str(self.asigna_id)
+    
+
+
     
 class delegacion(models.Model):
     """Modelo que especifica una delegacion de una HU a un usuario en un proyecto"""
@@ -261,6 +280,10 @@ class delegacion(models.Model):
     proyecto=models.ForeignKey(proyecto)
     
     
+    
+
+
+
     
 
     
