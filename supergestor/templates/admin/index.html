@@ -28,13 +28,13 @@
             {% endif %}
 
             {% if model.add_url %}
-                <td><a href="{{ model.add_url }}" class="addlink">{% trans 'Add' %}</a></td>
+                <td><a href="{{ model.add_url }}" class="addlink">{% trans 'Agregar' %}</a></td>
             {% else %}
                 <td>&nbsp;</td>
             {% endif %}
 
             {% if model.admin_url %}
-                <td><a href="{{ model.admin_url }}" class="changelink">{% trans 'Change' %}</a></td>
+                <td><a href="{{ model.admin_url }}" class="changelink">{% trans 'Modificar' %}</a></td>
             {% else %}
                 <td>&nbsp;</td>
             {% endif %}
@@ -44,7 +44,7 @@
         </div>
     {% endfor %}
 {% else %}
-    <p>{% trans "You don't have permission to edit anything." %}</p>
+    <p>{% trans "No tienes permiso de modificar nada." %}</p>
 {% endif %}
 </div>
 {% endblock %}
@@ -57,7 +57,7 @@
             {% load log %}
             {% get_admin_log 10 as admin_log for_user user %}
             {% if not admin_log %}
-            <p>{% trans 'None available' %}</p>
+            <p>{% trans 'No esta disponible' %}</p>
             {% else %}
             <ul class="actionlist">
             {% for entry in admin_log %}
@@ -71,7 +71,7 @@
                 {% if entry.content_type %}
                     <span class="mini quiet">{% filter capfirst %}{% trans entry.content_type.name %}{% endfilter %}</span>
                 {% else %}
-                    <span class="mini quiet">{% trans 'Unknown content' %}</span>
+                    <span class="mini quiet">{% trans 'Contenido desconocido' %}</span>
                 {% endif %}
             </li>
             {% endfor %}

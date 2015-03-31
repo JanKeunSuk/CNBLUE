@@ -56,8 +56,8 @@ class Formulario(forms.Form):
     mail = forms.EmailField()
 
 class FormularioSeteoContrasenha(forms.Form):
-    password_nueva1 = forms.CharField()
-    password_nueva2 = forms.CharField()
+    password_nueva1 = forms.CharField(widget=forms.PasswordInput)
+    password_nueva2 = forms.CharField(widget=forms.PasswordInput)
     
 def contactomail(request):
     if request.method == 'POST':
