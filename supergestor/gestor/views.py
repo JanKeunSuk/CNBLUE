@@ -34,8 +34,8 @@ def guardarUsuarioView(request):
     que se utiliza en la interfaz devuelta por /registrar """
     try:
     
-        usuario = MyUser.objects.create_user(username=request.POST['username'], password=request.POST['password1'],email=request.POST['email'])
-        usuario.is_admin=False
+        usuario = MyUser.objects.create_superuser(username=request.POST['username'], password=request.POST['password1'],email=request.POST['email'])
+        usuario.is_admin=True
         usuario.direccion = request.POST['direccion']
         usuario.last_name = request.POST['last_name']
         usuario.user_name = request.POST['user_name']
