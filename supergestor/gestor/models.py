@@ -8,7 +8,7 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
     , Permission)
 from django.conf import settings
-from atk import Role
+
 
 class MyUserManager(BaseUserManager):
     """Clase utilizada para la creacion de managers customizados 
@@ -237,21 +237,21 @@ class Actividad(models.Model):
     #en_progreso
     #finalizado
     
-    
+   
 #Modelo para asignacion de roles de sistema
 class asignacion_sistema(models.Model):
     """Modelo que especifica una asignacion de un rol a un usuario en un proyecto"""
     asignation_id=models.AutoField(primary_key=True)
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL)
     rol=models.ForeignKey(rol)    
-
+    
 #Modelo para asignacion de roles de proyecto
 class asignacion(models.Model):
     """Modelo que especifica una asignacion de un rol a un usuario en un proyecto"""
     asignation_id=models.AutoField(primary_key=True)
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL)
     rol=models.ForeignKey(rol)
-    proyecto=models.ForeignKey(proyecto,blank=True)
+    proyecto=models.ForeignKey(proyecto)
     
 class delegacion(models.Model):
     """Modelo que especifica una delegacion de una HU a un usuario en un proyecto"""
@@ -260,6 +260,7 @@ class delegacion(models.Model):
     HU=models.ForeignKey(HU)
     proyecto=models.ForeignKey(proyecto)
     
+#hola
     
     
 
