@@ -1,0 +1,14 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block form_top %}
+  {% if not is_popup %}
+    <p>{% trans "Primero, introduce un nombre de usuario y contrasenha. Luego estarás habilitado para realizar mas modificaciones." %}</p>
+  {% else %}
+    <p>{% trans "Introduce un nombre de usuario y contrasenha." %}</p>
+  {% endif %}
+{% endblock %}
+
+{% block after_field_sets %}
+<script type="text/javascript">document.getElementById("id_username").focus();</script>
+{% endblock %}

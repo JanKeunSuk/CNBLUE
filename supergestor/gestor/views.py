@@ -56,7 +56,6 @@ class Formulario(forms.Form):
     mail = forms.EmailField()
 
 class FormularioSeteoContrasenha(forms.Form):
-    username_cargar = forms.CharField()
     password_nueva1 = forms.CharField()
     password_nueva2 = forms.CharField()
     
@@ -68,7 +67,7 @@ def contactomail(request):
             username_cargado = formulario.cleaned_data['usuario']
             usuario = MyUser.objects.get(username = username_cargado)
             if (str(usuario.email) == formulario.cleaned_data['correo']):
-                mensaje = 'Puedes dirigirte a esta URL de seteo de tu password:  djangoserver/seteoPassword/'
+                mensaje = 'Puedes dirigirte a esta URL de seteo de tu password:  djangoserver/seteoPassword/' + str(usuario.id) + '/'
                 mail = EmailMessage(asunto, mensaje, to=[request.POST['correo']])
                 mail.send()
                 return HttpResponseRedirect('/login') 
@@ -81,14 +80,13 @@ def contactomail(request):
     return render_to_response('contactoMail.html', {'formulario': formulario},
                               context_instance=RequestContext(request))
     
-def seteoPassword(request):
+def seteoPassword(request, usuario_id):
     if request.method == 'POST':
         formulario = FormularioSeteoContrasenha(request.POST)
         if formulario.is_valid():
-            username_cargado = formulario.cleaned_data['username_cargar']
             passwor1 = formulario.cleaned_data['password_nueva1']
             passwor2 = formulario.cleaned_data['password_nueva2']
-            usuario = MyUser.objects.get(username = username_cargado)
+            usuario = MyUser.objects.get(id = usuario_id)
             if (usuario is not None):
                 if passwor1 and passwor2 and passwor1 != passwor2:
                     raise forms.ValidationError("Passwords don't match")
