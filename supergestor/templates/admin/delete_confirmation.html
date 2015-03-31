@@ -1,0 +1,44 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} delete-confirmation{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst|escape }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'change' object.pk|admin_urlquote %}">{{ object|truncatewords:"18" }}</a>
+&rsaquo; {% trans 'Delete' %}
+</div>
+{% endblock %}
+
+{% block content %}
+{% if perms_lacking or protected %}
+    {% if perms_lacking %}
+        <p>{% blocktrans with escaped_object=object %}Eliminando el {{ object_name }} '{{ escaped_object }}' daria lugar a la eliminacion de objetos relacionados, pero su cuenta no tiene permiso para eliminar los siguientes tipos de objetos:{% endblocktrans %}</p>
+        <ul>
+        {% for obj in perms_lacking %}
+            <li>{{ obj }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% if protected %}
+        <p>{% blocktrans with escaped_object=object %}Eliminando {{ object_name }} '{{ escaped_object }}' requeriria la supresion de los siguientes objetos relacionados protegidos:{% endblocktrans %}</p>
+        <ul>
+        {% for obj in protected %}
+            <li>{{ obj }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% else %}
+    <p>{% blocktrans with escaped_object=object %}Estas seguro de querer eliminar {{ object_name }} "{{ escaped_object }}"? Todos los items relacionados seran eliminados:{% endblocktrans %}</p>
+    <ul>{{ deleted_objects|unordered_list }}</ul>
+    <form action="" method="post">{% csrf_token %}
+    <div>
+    <input type="hidden" name="post" value="Si" />
+    <input type="submit" value="{% trans "Si, estoy seguro" %}" />
+    </div>
+    </form>
+{% endif %}
+{% endblock %}
