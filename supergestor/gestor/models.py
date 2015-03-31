@@ -125,31 +125,31 @@ class rol(models.Model):
 
     #aca va a habr problemas para relacionar con permisos
     #le puse many to many porque en realidad el foreign key tiene que estar en la otra tabla
-    ROL_CHOICES = (
+    """ROL_CHOICES = (
         ("SIS", 'Sistema'),
         ('PRO', 'Proyecto'),
-    )
+    )"""
     
     rol_id = models.AutoField(primary_key=True)
     permisos= models.ManyToManyField(Permission)
     nombre_rol_id = models.CharField(max_length = 200)
     descripcion = models.CharField(max_length = 200)
-    tipo = models.CharField(max_length = 3, choices = ROL_CHOICES)
+    #tipo = models.CharField(max_length = 3, choices = ROL_CHOICES)
     
     def __unicode__(self):
         """Representacion unicode del objeto permitido"""
         return self.nombre_rol_id
     
 class rol_sistema(models.Model):    
-    ROL_CHOICES = (
+    """ROL_CHOICES = (
         ("SIS", 'Sistema'),
         ('PRO', 'Proyecto'),
-    )
+    )"""
     rol_id = models.AutoField(primary_key=True)
     permisos= models.ManyToManyField(Permission)
     nombre_rol_id = models.CharField(max_length = 200)
     descripcion = models.CharField(max_length = 200)
-    tipo = models.CharField(max_length = 3, choices = ROL_CHOICES)
+    #tipo = models.CharField(max_length = 3, choices = ROL_CHOICES)
     def __unicode__(self):
         """Representacion unicode del objeto permitido"""
         return self.nombre_rol_id
