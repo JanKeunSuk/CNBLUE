@@ -94,6 +94,7 @@ class MyUserAdmin(UserAdmin):
     search_fields = ('username',)
     ordering = ('username',)
     filter_horizontal = ()
+    save_as = True
         
 # Now register the new UserAdmin...
 """registra el ModelAdmin(o UserAdmin) para ser desplegado en la interfaz del admin"""
