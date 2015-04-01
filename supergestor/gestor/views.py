@@ -29,7 +29,7 @@ def holaView(request):
                     if p.id == a.proyecto:
                         nombres_de_proyecto.append(p) 
         
-        return render(request,'hola.html',{'usuario':request.user, 'proyectos':nombres_de_proyecto})
+        return render(request,'hola.html',{'usuario':request.user, 'proyectos':nombres_de_proyecto, 'asignacion':asignacion.objects.all()})
     
 def registrarUsuarioView(request):
     """Vista que se obitene del regex /registrar solicitado al precionar el boton
