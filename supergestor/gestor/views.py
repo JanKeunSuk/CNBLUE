@@ -24,11 +24,11 @@ def holaView(request):
     else:
         nombres_de_proyecto = []
         for a in asignacion.objects.all():
-            if a.usuario == request.user.id:
+            if a.usuario == request.user:
                 for p in proyecto.objects.all():
-                    if p.id == a.proyecto:
+                    if p == a.proyecto:
                         nombres_de_proyecto.append(p) 
-        
+        pass
         return render(request,'hola.html',{'usuario':request.user, 'proyectos':nombres_de_proyecto})
     
 def registrarUsuarioView(request):
