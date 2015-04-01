@@ -10,7 +10,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from gestor.models import MyUser, Permitido, rol, asignacion, proyecto,\
-    asigna_sistema, rol_sistema
+    asigna_sistema, rol_sistema, Flujo
 
 
 class UserCreationForm(forms.ModelForm):
@@ -104,6 +104,7 @@ admin.site.register(asignacion)
 admin.site.register(proyecto)
 admin.site.register(asigna_sistema)
 admin.site.register(rol_sistema)
+admin.site.register(Flujo)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 admin.site.unregister(Group)
