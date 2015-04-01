@@ -47,7 +47,9 @@
     <div id="content" class="colMS">
         
         <h1>Pagina en Construccion</h1>
-  
+        {% for proyecto in proyectos %}
+  			<p>Se despliegan los proyectos {{proyecto.nombre_corto}}</p>
+  		{% endfor %}
 <!--     
 <div id="content-main">
 

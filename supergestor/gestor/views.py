@@ -8,11 +8,13 @@ from django.http.response import HttpResponseRedirect
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from gestor.models import MyUser
+from gestor.models import MyUser, asignacion, proyecto
 from django import forms
 from django.core.mail.message import EmailMessage
 from django.template.context import RequestContext
+from django.contrib.auth.decorators import login_required
 # Create your views and forms here.
+@login_required
 def holaView(request):
     """Vista que redirige a la pagina principal de administracion tanto a usuarios como a
     superusuarios, los superusuarios son redirigidos a la aplicacion admin mientras que los 
@@ -20,7 +22,14 @@ def holaView(request):
     if request.user.is_staff:
         return HttpResponseRedirect(reverse('admin:index'))
     else:
-        return render(request,'hola.html',{'usuario':request.user})
+        nombres_de_proyecto = []
+        for a in asignacion.objects.all():
+            if a.usuario == request.user.id:
+                for p in proyecto.objects.all():
+                    if p.id == a.proyecto:
+                        nombres_de_proyecto.append(p) 
+        
+        return render(request,'hola.html',{'usuario':request.user, 'proyectos':nombres_de_proyecto})
     
 def registrarUsuarioView(request):
     """Vista que se obitene del regex /registrar solicitado al precionar el boton
