@@ -253,9 +253,9 @@ class Actividad(models.Model):
 class asignacion(models.Model):
     """Modelo que especifica una asignacion de un rol a un usuario en un proyecto"""
     asignation_id=models.AutoField(primary_key=True)
-    usuario=models.ForeignKey(settings.AUTH_USER_MODEL)
+    usuario=models.ForeignKey(MyUser)
     rol=models.ForeignKey(rol)    
-    proyecto=models.ManyToManyField(proyecto,null=True)
+    proyecto=models.ForeignKey(proyecto)
     def __unicode__(self):
         """Representacion unicode del objeto permitido"""
         return str(self.asignation_id)
@@ -263,7 +263,7 @@ class asignacion(models.Model):
 #Modelo para asignacion de roles de proyecto
 class asigna_sistema(models.Model):
     asigna_id=models.AutoField(primary_key=True)
-    usuario=models.ForeignKey(settings.AUTH_USER_MODEL)
+    usuario=models.ForeignKey(MyUser)
     rol=models.ForeignKey(rol_sistema)    
     def __unicode__(self):
         """Representacion unicode del objeto permitido"""
