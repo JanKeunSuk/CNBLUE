@@ -111,3 +111,5 @@ def seteoPassword(request, usuario_id):
         
     return render_to_response('seteoPassword.html', {'formulario': formulario},
                               context_instance=RequestContext(request))
+
+#hola
