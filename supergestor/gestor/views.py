@@ -24,12 +24,12 @@ def holaView(request):
     else:
         nombres_de_proyecto = []
         for a in asignacion.objects.all():
-            if a.usuario == request.user.id:
+            if a.usuario.id == request.user.id:
                 for p in proyecto.objects.all():
-                    if p.id == a.proyecto:
+                    if p.proyecto_id == a.proyecto:
                         nombres_de_proyecto.append(p) 
         return render(request,'hola.html',{'usuario':request.user, 'proyectos':nombres_de_proyecto})
-    pass
+    
 def registrarUsuarioView(request):
     """Vista que se obitene del regex /registrar solicitado al precionar el boton
     registrar en el login, devuelve un formulario html para crear un nuevo usuario
