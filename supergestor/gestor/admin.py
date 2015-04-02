@@ -10,7 +10,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from gestor.models import MyUser, Permitido, rol, asignacion, proyecto,\
-    asigna_sistema, rol_sistema, Flujo
+    asigna_sistema, rol_sistema,Flujo
 
 
 class UserCreationForm(forms.ModelForm):
@@ -95,7 +95,7 @@ class MyUserAdmin(UserAdmin):
     ordering = ('username',)
     filter_horizontal = ()
     save_as = True
-        
+    
 # Now register the new UserAdmin...
 """registra el ModelAdmin(o UserAdmin) para ser desplegado en la interfaz del admin"""
 admin.site.register(MyUser, MyUserAdmin)

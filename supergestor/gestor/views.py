@@ -28,9 +28,16 @@ def holaView(request):
                 rol_lista = rol.objects.get(rol_id = a.rol.rol_id)
                 for p in proyecto.objects.all():
                     if p.proyecto_id == a.proyecto.proyecto_id:
+<<<<<<< HEAD
                         #nombres_de_proyecto.append(p)
                         nombres_de_proyecto[rol_lista] = p
         return render(request,'hola.html',{'usuario':request.user, 'proyectos':nombres_de_proyecto})
+=======
+                        nombres_de_proyecto.append(p) 
+        return render(request,'hola.html',{'usuario':request.user, 'proyectos':nombres_de_proyecto, 'roles': roles})
+
+
+>>>>>>> branch 'master' of https://github.com/JanKeunSuk/CNBLUE.git
     pass
 def registrarUsuarioView(request):
     """Vista que se obitene del regex /registrar solicitado al precionar el boton
@@ -109,3 +116,5 @@ def seteoPassword(request, usuario_id):
         
     return render_to_response('seteoPassword.html', {'formulario': formulario},
                               context_instance=RequestContext(request))
+
+#hola
