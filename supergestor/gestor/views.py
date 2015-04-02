@@ -8,7 +8,7 @@ from django.http.response import HttpResponseRedirect
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from gestor.models import MyUser, asignacion, proyecto
+from gestor.models import MyUser, asignacion, proyecto, rol
 from django import forms
 from django.core.mail.message import EmailMessage
 from django.template.context import RequestContext
@@ -25,7 +25,7 @@ def holaView(request):
         nombres_de_proyecto = []
         roles = []
         for a in asignacion.objects.all():
-             if a.usuario.id == request.user.id:
+            if a.usuario.id == request.user.id:
                 roles.append(rol.objects.get(rol_id = a.rol.rol_id))
                 for p in proyecto.objects.all():
                     if p.proyecto_id == a.proyecto.proyecto_id:
