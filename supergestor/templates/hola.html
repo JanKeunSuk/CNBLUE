@@ -47,10 +47,7 @@
     <div id="content" class="colMS">
         
         <h1>Pagina en Construccion</h1>
-        {% if proyectos %}
-        	<p>Hola</p>>
-    	{% endif %}
-        <p>Se despliegan los proyectos :</p>
+        <p>Eres miembro de los siguientes proyectos</p>
         {% for proyecto in proyectos %}
   			<p>Se despliegan los proyectos {{proyecto.nombre_corto}}</p>
   		{% endfor %}

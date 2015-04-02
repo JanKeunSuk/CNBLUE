@@ -23,13 +23,17 @@ def holaView(request):
         return HttpResponseRedirect(reverse('admin:index'))
     else:
         nombres_de_proyecto = []
+        roles = []
         for a in asignacion.objects.all():
-            if a.usuario.id == request.user.id:
+             if a.usuario.id == request.user.id:
+                roles.append(rol.objects.get(rol_id = a.rol.rol_id))
                 for p in proyecto.objects.all():
-                    if p.proyecto_id == a.proyecto:
+                    if p.proyecto_id == a.proyecto.proyecto_id:
                         nombres_de_proyecto.append(p) 
-        return render(request,'hola.html',{'usuario':request.user, 'proyectos':nombres_de_proyecto})
-    
+        return render(request,'hola.html',{'usuario':request.user, 'proyectos':nombres_de_proyecto, 'roles': roles})
+
+
+    pass
 def registrarUsuarioView(request):
     """Vista que se obitene del regex /registrar solicitado al precionar el boton
     registrar en el login, devuelve un formulario html para crear un nuevo usuario
