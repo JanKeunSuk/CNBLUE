@@ -47,9 +47,9 @@
     <div id="content" class="colMS">
         
         <h1>Pagina en Construccion</h1>
-        <p>Se despliegan los proyectos {{proyectos}}{{asignacion}}</p>
+        <p>Eres miembro de los siguientes proyectos</p>
         {% for proyecto in proyectos %}
-  			<p>Se despliegan los proyectos {{proyecto.nombre_corto}}</p>
+  			<p>Perteneces a {{proyecto.nombre_corto}} {{proyecto.descripcion}} con el rol {{roles}}</p>
   		{% endfor %}
 <!--     
 <div id="content-main">
