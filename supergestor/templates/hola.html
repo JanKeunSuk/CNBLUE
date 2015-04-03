@@ -55,7 +55,7 @@
         
             <tr class="model-proyecto">
             
-				{% for proyecto,rol in proyectos.items %}
+				{% for rol,proyecto in proyectos.items %}
   				
 	  				{%if rol.rol_id == 1 %}
 	  					 <th scope="row"><a href="/scrum/" >Perteneces a {{proyecto}} {{proyecto.descripcion}} con el rol {{rol}}</a></td>
