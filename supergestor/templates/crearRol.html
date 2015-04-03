@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en-us" >
+<head>
+<title>Agregar rol | Sitio de administracion</title>
+<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css" />
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/static/admin/css/ie.css" /><![endif]-->
+
+<script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
+<script type="text/javascript">window.__admin_utc_offset__ = "0";</script>
+
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="/static/admin/js/core.js"></script>
+<script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+<script type="text/javascript" src="/static/admin/js/actions.js"></script>
+
+<meta name="robots" content="NONE,NOARCHIVE" />
+</head>
+
+
+<body class=" app-gestor model-rol change-form">
+
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        
+<h1 id="site-name"><a href="/admin/">Administracion</a></h1>
+
+        </div>
+        
+        <div id="user-tools">
+            
+                Welcome,
+                <strong>{{usuario}}</strong>.
+            
+            
+                
+                
+                
+                <a href="/admin/password_change/">Cambiar contrasenha</a> /
+                
+                <a href="/admin/logout/">Salir</a>
+            
+        </div>
+        
+        
+    </div>
+    <!-- END Header -->
+    
+<div class="breadcrumbs">
+<a href="/admin/">Pagina Principal</a>
+&rsaquo; <a href="/admin/gestor/">Gestor</a>
+&rsaquo; <a href="/admin/gestor/rol/">Rols</a>
+&rsaquo; Agregar rol
+</div>
+
+    
+
+    
+        
+    
+
+    <!-- Content -->
+    <div id="content" class="colM">
+        
+        <h1>Agregar rol</h1>
+        <div id="content-main">
+
+
+
+<form enctype="multipart/form-data" action="/guardarRol/" method="post" id="rol_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
+{% csrf_token %}
+<div>
+
+
+
+
+
+
+
+  <fieldset class="module aligned ">
+    
+    
+    
+        <div class="form-row field-permisos">
+            
+            
+                <div>
+                    
+                    
+                        <label class="required" for="id_permisos">Permisos:</label>
+                        
+                            <select multiple="multiple" id="id_permisos" name="permisos">
+                            {%for permission in permissions %}
+								<option value="{{permission.id}}">{{permission.name}}</option>
+							{%endfor%}
+</select>
+                        
+                    
+                    
+                        <p class="help"> Presiona "Control" para seleccionar mas de una opcion.</p>
+                    
+                </div>
+            
+        </div>
+    
+        <div class="form-row field-nombre_rol_id">
+            
+            
+                <div>
+                    
+                    
+                        <label class="required" for="id_nombre_rol_id">Nombre rol id:</label>
+                        
+                            <input class="vTextField" id="id_nombre_rol_id" maxlength="200" name="nombre_rol_id" type="text" />
+                        
+                    
+                    
+                </div>
+            
+        </div>
+    
+        <div class="form-row field-descripcion">
+            
+            
+                <div>
+                    
+                    
+                        <label class="required" for="id_descripcion">Descripcion:</label>
+                        
+                            <input class="vTextField" id="id_descripcion" maxlength="200" name="descripcion" type="text" />
+                        
+                    
+                    
+                </div>
+            
+        </div>
+    
+</fieldset>
+
+
+
+<div class="submit-row">
+<input type="submit" value="Guardar" />
+
+</div>
+
+
+
+    <script type="text/javascript">
+        (function($) {
+            $(document).ready(function() {
+                $('form#rol_form :input:visible:enabled:first').focus()
+            });
+        })(django.jQuery);
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function($) {
+    var field;
+
+
+})(django.jQuery);
+</script>
+
+
+</div>
+</form></div>
+
+        
+        <br class="clear" />
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+
+</body>
+</html>

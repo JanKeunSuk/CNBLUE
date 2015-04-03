@@ -55,7 +55,7 @@
         
             <tr class="model-proyecto">
             
-				{% for rol,proyecto in proyectos.items %}
+				{% for proyecto,rol in proyectos.items %}
   				
 	  				{%if rol.rol_id == 1 %}
 	  					 <th scope="row"><a href="/scrum/" >Perteneces a {{proyecto}} {{proyecto.descripcion}} con el rol {{rol}}</a></td>
@@ -64,11 +64,11 @@
 	  					<td>Perteneces a {{proyecto}} {{proyecto.descripcion}} con el rol {{rol}}</td>
 	  				{% endif %}
 	            
-	                <td><a href="/hola/gestor/myuser/visualizar/" class="addlink">Visualizar</a></td>
+	                <td><a href="/visualizarProyecto/{{proyecto.proyecto_id}}/" class="addlink">Visualizar</a></td>
 	            
 	
 	            
-	                <td><a href="/hola/gestor/myuser/modificar" class="changelink">Modificar</a></td>
+	                <td><a href="/modificarProyecto/{{proyecto.proyecto_id}}/" class="changelink">Modificar</a></td>
 	              </tr>
             	{% endfor %}
            

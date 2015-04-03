@@ -8,11 +8,13 @@ from django.http.response import HttpResponseRedirect
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from gestor.models import MyUser, asignacion, proyecto, rol, rol_sistema, Flujo
+from gestor.models import MyUser, asignacion, proyecto, rol, Flujo
 from django import forms
 from django.core.mail.message import EmailMessage
 from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required
+from django.forms.widgets import CheckboxSelectMultiple
+from django.contrib.auth.models import Permission
 #from gestor.admin import proyectoFrom
 
 # Create your views and forms here.
@@ -30,7 +32,7 @@ def holaView(request):
                 rol_lista = rol.objects.get(rol_id = a.rol.rol_id)
                 for p in proyecto.objects.all():
                     if p.proyecto_id == a.proyecto.proyecto_id:
-                        nombres_de_proyecto[rol_lista] = p
+                        nombres_de_proyecto[p] = rol_lista
         return render(request,'hola.html',{'usuario':request.user, 'proyectos':nombres_de_proyecto})
 
 def holaScrumView(request): 
@@ -62,6 +64,20 @@ def guardarUsuarioView(request):
     except ObjectDoesNotExist:
         print "Either the entry or blog doesn't exist." 
         return HttpResponseRedirect('/registrar')
+    
+def guardarRolView(request):
+    """Vista de guardado de nuevo usuario relacionado con un correo autorizado en la tabla Permitidos
+    que se utiliza en la interfaz devuelta por /registrar """
+    try:
+    
+        rol_a_crear = rol.objects.create(nombre_rol_id=request.POST['nombre_rol_id'], descripcion=request.POST['descripcion'])
+        for p in request.POST.getlist('permisos'):
+            rol_a_crear.permisos.add(Permission.objects.get(id=p))
+        rol_a_crear.save()
+        return HttpResponse('El rol se ha creado')  
+    except ObjectDoesNotExist:
+        print "Either the entry or blog doesn't exist." 
+        return HttpResponseRedirect('/crearRol/')
     
 class FormularioContacto(forms.Form):
     usuario = forms.CharField()
@@ -126,21 +142,44 @@ class FormularioRolProyecto(forms.ModelForm):
     class Meta:
         model= rol
         fields=['permisos','nombre_rol_id','descripcion']
+        widgets = {
+            'permisos': CheckboxSelectMultiple(),
+        }
         
         
     
-def vistaModicarRolProyecto(request,rolid):
-    if request.method == 'POST':
-        rol_to_change= rol.objects.get(rol_id=rolid)
+def visualizarRolProyectoView(request,rol_id_rec):
+    """if request.method == 'POST':
+        rol_to_change= rol.objects.get(rol_id=rol_id_rec)
         formulario_loaded = FormularioRolProyecto(request.POST,instance=rol_to_change)
-        formulario_loaded.save()
+        formulario_loaded.save()"""
+    rolproyecto= rol.objects.get(rol_id=rol_id_rec)
+    if request.method == 'POST':
+        formulario = FormularioRolProyecto(request.POST)
+        if formulario.is_valid():
+            nombre_rol_id=formulario.cleanned_data['c']
+            descripcion=formulario.cleanned_data['descripcion']
+            permisos=formulario.cleanned_data['permisos']
+            rolproyecto.nombre_rol_id=nombre_rol_id
+            rolproyecto.descripcion=descripcion
+            rolproyecto.permisos=permisos
+            rolproyecto.save() #Guardamos el modelo de manera Editada
+            return HttpResponse('El rol ha sido guardado exitosamente')
     else:  
         """asignation= asignacion.objects.get(asignacion_id=request.asignacion)  #asignacion supongo que es lo que me manda kathe
         rolproyecto= rol.objects.get(rol=asignation.rol)""" #me dalta ver si chequear asi nomas o el rol
-        rolproyecto= rol.objects.get(rol_id=rolid)
-        formulario =  FormularioRolProyecto(initial=rolproyecto)      
-        return render_to_response('changerol.html',{'formulario':formulario},
+        
+        formulario =  FormularioRolProyecto(initial={
+                                                     'nombre_rol_id': rolproyecto.nombre_rol_id,
+                                                     'permisos': rolproyecto.permisos,
+                                                     'descripcion': rolproyecto.descripcion,
+                                                     })      
+        return render_to_response('visualizarRol.html',{'formulario':formulario, 'rol':rolproyecto},
                                   context_instance=RequestContext(request))
+
+def crearRol(request):
+    if request.method == 'GET':
+        return render(request, 'crearRol.html',{'permissions':Permission.objects.all()})
 
 class proyectoFrom(forms.ModelForm):
     """Clase meta de un ModelForm donde se indica el Modelo relacionado y los campos a mostrar"""
@@ -148,17 +187,17 @@ class proyectoFrom(forms.ModelForm):
         model = proyecto
         fields = ['nombre_corto', 'nombre_largo', 'descripcion','fecha_inicio','fecha_fin']
 
-def modificarProyecto(request, proyecto_id=2):
+def modificarProyecto(request, proyecto_id_rec):
     """Modifica el proyecto"""
-    p=proyecto.objects.get(proyecto_id=2)
+    p=proyecto.objects.get(proyecto_id=proyecto_id_rec)
     if request.method == 'POST':
         form = proyectoFrom(request.POST)
         if form.is_valid():
-            nombre_corto=form.cleanned_data['nombre_corto']
-            nombre_largo=form.cleanned_data['nombre_largo']
-            descripcion=form.cleanned_data['descripcion']
-            fecha_inicio=form.cleanned_data['fecha_inicio']
-            fecha_fin=form.cleanned_data['fecha_fin']
+            nombre_corto=form.cleaned_data['nombre_corto']
+            nombre_largo=form.cleaned_data['nombre_largo']
+            descripcion=form.cleaned_data['descripcion']
+            fecha_inicio=form.cleaned_data['fecha_inicio']
+            fecha_fin=form.cleaned_data['fecha_fin']
             p.nombre_corto=nombre_corto
             p.nombre_largo=nombre_largo
             p.descripcion=descripcion
@@ -178,3 +217,12 @@ def modificarProyecto(request, proyecto_id=2):
                                          })
         ctx = {'form':form, 'proyecto':p}
         return render_to_response('modificarProyecto.html', ctx ,context_instance=RequestContext(request))
+    
+def visualizarProyectoView(request,proyecto_id_rec):
+    """if request.method == 'POST':
+        rol_to_change= rol.objects.get(rol_id=rol_id_rec)
+        formulario_loaded = FormularioRolProyecto(request.POST,instance=rol_to_change)
+        formulario_loaded.save()"""
+    proyecto_enc= proyecto.objects.get(proyecto_id=proyecto_id_rec)
+    return render_to_response('visualizarProyecto.html',{'proyecto':proyecto_enc},
+                                  context_instance=RequestContext(request))

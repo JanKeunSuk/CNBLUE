@@ -62,11 +62,7 @@
 	  					<td> {{rol.nombre_rol_id}} </td>
   		
             
-                		<td><a href="/hola/gestor/myuser/visualizar/" class="addlink">Visualizar</a></td>
-            
-
-            
-                		<td><a href="/hola/gestor/myuser/modificar" class="changelink">Modificar</a></td>
+                		<td><a href="/visualizarRol/{{rol.rol_id}}" class="addlink">Visualizar</a></td>
                 	
                 		<td><a href="/asignarRol" class="changelink">Asignar</a></td>
               			</tr>
@@ -75,7 +71,7 @@
             {% endfor %}
             </table>
             
-            <form method="get" action="/crearRol">
+            <form method="get" action="/crearRol/">
 
 				<input type="submit" value="Crear Rol" />
 
