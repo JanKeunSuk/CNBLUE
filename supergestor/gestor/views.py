@@ -31,6 +31,11 @@ def holaView(request):
                         nombres_de_proyecto[rol_lista] = p
         return render(request,'hola.html',{'usuario':request.user, 'proyectos':nombres_de_proyecto})
 
+def holaScrumView(request): 
+    return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all()})
+
+def ListarUsuarioParaFormarEquipo(request):
+    return render(request,'formarEquipo.html',{'usuarios':MyUser.objects.all(), 'roles':rol.objects.all()})
 
 def registrarUsuarioView(request):
     """Vista que se obitene del regex /registrar solicitado al precionar el boton

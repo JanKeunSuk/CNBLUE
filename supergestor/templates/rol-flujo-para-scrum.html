@@ -23,7 +23,7 @@
     <div id="header">
         <div id="branding">
         
-<h1 id="site-name"><a href="/hola/">Pagina Principal</a></h1>
+<h1 id="site-name"><a href="/scrum/">Pagina Principal</a></h1>
 
         </div>
         
@@ -51,29 +51,60 @@
         <table>
 
             <caption>Gestor</caption>
-			<th>Proyectos</th>
+			<th>Roles de proyecto</th>
         
             <tr class="model-proyecto">
             
-				{% for proyecto,rol in proyectos.items %}
-  				
-	  				{%if rol.rol_id == 1 %}
-	  					 <th scope="row"><a href="/scrum/" >Perteneces a {{proyecto}} {{proyecto.descripcion}} con el rol {{rol}}</a></td>
-	  					 <td><a href="/formarEquipo/" class="addlink">Equipo</a></td>
+				{% for rol in roles %}
+					{%if rol.rol_id == 1 %}
+	  					 <!-- El scrum no se sita, ya que no puede asiganr ese rol a otro -->
 	  				{% else %}
-	  					<td>Perteneces a {{proyecto}} {{proyecto.descripcion}} con el rol {{rol}}</td>
+	  					<td> {{rol.nombre_rol_id}} </td>
+  		
+            
+                		<td><a href="/hola/gestor/myuser/visualizar/" class="addlink">Visualizar</a></td>
+            
+
+            
+                		<td><a href="/hola/gestor/myuser/modificar" class="changelink">Modificar</a></td>
+                	
+                		<td><a href="/asignarRol" class="changelink">Asignar</a></td>
+              			</tr>
 	  				{% endif %}
-	            
-	                <td><a href="/hola/gestor/myuser/visualizar/" class="addlink">Visualizar</a></td>
-	            
-	
-	            
-	                <td><a href="/hola/gestor/myuser/modificar" class="changelink">Modificar</a></td>
-	              </tr>
-            	{% endfor %}
-           
+  				
+            {% endfor %}
+            </table>
+            
+            <form method="get" action="/crearRol">
+
+				<input type="submit" value="Crear Rol" />
+
+			</form>
+			
+            <table>
+           <th>Flujos disponibles</th>
+        
+            <tr class="model-proyecto">
+            
+				{% for flujo in flujos %}
+  				<td> {{flujo.nombre}} </td>
+  		
+            
+                <td><a href="/hola/gestor/myuser/visualizar/" class="addlink">Visualizar</a></td>
+            
+
+            
+                <td><a href="/hola/gestor/myuser/modificar" class="changelink">Modificar</a></td>
+              </tr>
+            {% endfor %}
         
         </table>
+        <form method="get" action="/crearFlujo">
+
+			<input type="submit" value="Crear Flujo" />
+
+		</form>
+        
         </div>
     
 
