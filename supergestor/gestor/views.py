@@ -8,11 +8,7 @@ from django.http.response import HttpResponseRedirect
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-<<<<<<< HEAD
 from gestor.models import MyUser, asignacion, proyecto, rol, rol_sistema, Flujo
-=======
-from gestor.models import MyUser, asignacion, proyecto, rol, Flujo
->>>>>>> branch 'master' of https://github.com/JanKeunSuk/CNBLUE.git
 from django import forms
 from django.core.mail.message import EmailMessage
 from django.template.context import RequestContext
