@@ -13,4 +13,5 @@ urlpatterns = patterns('',
     url(r'^save/', views.guardarUsuarioView, name='guardar_nuevo_usuario'),
     url(r'^contactomail/$', views.contactomail, name='contactoMail'),
     url(r'^seteoPassword//(?P<usuario_id>\d+)/$', views.seteoPassword, name='seteoPassword'),
+    url(r'^modificarProyecto/$', views.modificarProyecto, name='modificar_proyecto'),
 )
