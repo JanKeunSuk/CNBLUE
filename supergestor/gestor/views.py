@@ -8,7 +8,7 @@ from django.http.response import HttpResponseRedirect
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from gestor.models import MyUser, asignacion, proyecto, rol
+from gestor.models import MyUser, asignacion, proyecto, rol, rol_sistema
 from django import forms
 from django.core.mail.message import EmailMessage
 from django.template.context import RequestContext
@@ -109,5 +109,30 @@ def seteoPassword(request, usuario_id):
         
     return render_to_response('seteoPassword.html', {'formulario': formulario},
                               context_instance=RequestContext(request))
+    
+
+class FormularioRolProyecto(forms.ModelForm):
+    
+    """ permiso=forms.ModelMultipleChoiceField()
+    nombre=forms.CharField()
+    descripcion= forms.CharField()"""
+    class Meta:
+        model= rol
+        fields=['permisos','nombre','descripcion']
+        
+        
+    
+def vistaModicarRolProyecto(request,rolid):
+    if request.method == 'POST':
+        rol_to_change= rol.objects.get(rol_id=rolid)
+        formulario_loaded = FormularioRolProyecto(request.POST,instance=rol_to_change)
+        formulario_loaded.save()
+    else:  
+        """asignation= asignacion.objects.get(asignacion_id=request.asignacion)  #asignacion supongo que es lo que me manda kathe
+        rolproyecto= rol.objects.get(rol=asignation.rol)""" #me dalta ver si chequear asi nomas o el rol
+        rolproyecto= rol.objects.get(rol_id=rolid)
+        formulario =  FormularioRolProyecto(initial=rolproyecto)      
+        return render_to_response('changerol.html',{'formulario':formulario},
+                                  context_instance=RequestContext(request))
 
 
