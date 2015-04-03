@@ -49,8 +49,8 @@ def guardarUsuarioView(request):
     que se utiliza en la interfaz devuelta por /registrar """
     try:
     
-        usuario = MyUser.objects.create_superuser(username=request.POST['username'], password=request.POST['password1'],email=request.POST['email'])
-        usuario.is_admin=True
+        usuario = MyUser.objects.create_user(username=request.POST['username'], password=request.POST['password1'],email=request.POST['email'])
+        usuario.is_admin=False
         usuario.direccion = request.POST['direccion']
         usuario.last_name = request.POST['last_name']
         usuario.user_name = request.POST['user_name']
@@ -115,4 +115,4 @@ def seteoPassword(request, usuario_id):
     return render_to_response('seteoPassword.html', {'formulario': formulario},
                               context_instance=RequestContext(request))
 
-#hola
+
