@@ -13,6 +13,8 @@ from django import forms
 from django.core.mail.message import EmailMessage
 from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required
+#from gestor.admin import proyectoFrom
+
 # Create your views and forms here.
 @login_required
 def holaView(request):
@@ -140,4 +142,39 @@ def vistaModicarRolProyecto(request,rolid):
         return render_to_response('changerol.html',{'formulario':formulario},
                                   context_instance=RequestContext(request))
 
+class proyectoFrom(forms.ModelForm):
+    """Clase meta de un ModelForm donde se indica el Modelo relacionado y los campos a mostrar"""
+    class Meta:
+        model = proyecto
+        fields = ['nombre_corto', 'nombre_largo', 'descripcion','fecha_inicio','fecha_fin']
 
+def modificarProyecto(request, proyecto_id=2):
+    """Modifica el proyecto"""
+    p=proyecto.objects.get(proyecto_id=2)
+    if request.method == 'POST':
+        form = proyectoFrom(request.POST)
+        if form.is_valid():
+            nombre_corto=form.cleanned_data['nombre_corto']
+            nombre_largo=form.cleanned_data['nombre_largo']
+            descripcion=form.cleanned_data['descripcion']
+            fecha_inicio=form.cleanned_data['fecha_inicio']
+            fecha_fin=form.cleanned_data['fecha_fin']
+            p.nombre_corto=nombre_corto
+            p.nombre_largo=nombre_largo
+            p.descripcion=descripcion
+            p.fecha_inicio=fecha_inicio
+            p.fecha_fin=fecha_fin
+            p.save() #Guardamos el modelo de manera Editada
+            return HttpResponse('Tu proyecto a sido guardado exitosamente')
+    else:
+        
+        form = proyectoFrom(initial={
+                                         'nombre_corto': p.nombre_corto,
+                                         'nombre_largo': p.nombre_largo,
+                                         'descripcion': p.descripcion,
+                                         'fecha_inicio': p.fecha_inicio,
+                                         'fecha_fin': p.fecha_fin,
+                                     
+                                         })
+        ctx = {'form':form, 'proyecto':p}
+        return render_to_response('modificarProyecto.html', ctx ,context_instance=RequestContext(request))
