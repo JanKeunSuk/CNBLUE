@@ -8,7 +8,7 @@ from django.http.response import HttpResponseRedirect
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from gestor.models import MyUser, asignacion, proyecto, rol
+from gestor.models import MyUser, asignacion, proyecto, rol, Flujo
 from django import forms
 from django.core.mail.message import EmailMessage
 from django.template.context import RequestContext
@@ -28,9 +28,14 @@ def holaView(request):
                 rol_lista = rol.objects.get(rol_id = a.rol.rol_id)
                 for p in proyecto.objects.all():
                     if p.proyecto_id == a.proyecto.proyecto_id:
-                        nombres_de_proyecto[rol_lista] = p
+                        nombres_de_proyecto[p] = rol_lista
         return render(request,'hola.html',{'usuario':request.user, 'proyectos':nombres_de_proyecto})
 
+def holaScrumView(request): 
+    return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all()})
+
+def ListarUsuarioParaFormarEquipo(request):
+    return render(request,'formarEquipo.html',{'usuarios':MyUser.objects.all(), 'roles':rol.objects.all()})
 
 def registrarUsuarioView(request):
     """Vista que se obitene del regex /registrar solicitado al precionar el boton
