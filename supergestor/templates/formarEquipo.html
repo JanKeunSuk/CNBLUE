@@ -23,7 +23,7 @@
     <div id="header">
         <div id="branding">
         
-<h1 id="site-name"><a href="/hola/">Pagina Principal</a></h1>
+<h1 id="site-name"><a href="/scrum/">Pagina Principal</a></h1>
 
         </div>
         
@@ -45,36 +45,27 @@
     
     <!-- Content -->
   		
-  		<div id="content" class="colMS">
+  		<div id="content">
     
-        <div class="app-gestor module">
-        <table>
-
-            <caption>Gestor</caption>
-			<th>Proyectos</th>
+        	{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+			<p>Selecciona todos los usuarios que foramaran parte del trabajo de este proyecto:</p>
+			<form action="/guardarEquipo" method="post">
+				{% csrf_token %}
+					{% for usuario in usuarios %}
+						<p><input type="checkbox" name="{{usuario}}" value="{{usuario}}"  />{{usuario}}</p>
+						<select name="roles"> 
+							{% for rol in roles %}
+								{%if rol.rol_id != 1 %}
+									<option value="{{rol}}">{{rol}}</option>
+								{%endif%}
+							{% endfor %}
+						</select>
+    					<!-- <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ usuario }}" />
+    					<label for="choice{{ forloop.counter }}">{{ usuario }}</label><br /> -->
+					{% endfor %}
+				<p><input type="submit" value="Formar" /></p>
+			</form>
         
-            <tr class="model-proyecto">
-            
-				{% for proyecto,rol in proyectos.items %}
-  				
-	  				{%if rol.rol_id == 1 %}
-	  					 <th scope="row"><a href="/scrum/" >Perteneces a {{proyecto}} {{proyecto.descripcion}} con el rol {{rol}}</a></td>
-	  					 <td><a href="/formarEquipo/" class="addlink">Equipo</a></td>
-	  				{% else %}
-	  					<td>Perteneces a {{proyecto}} {{proyecto.descripcion}} con el rol {{rol}}</td>
-	  				{% endif %}
-	            
-	                <td><a href="/hola/gestor/myuser/visualizar/" class="addlink">Visualizar</a></td>
-	            
-	
-	            
-	                <td><a href="/hola/gestor/myuser/modificar" class="changelink">Modificar</a></td>
-	              </tr>
-            	{% endfor %}
-           
-        
-        </table>
-        </div>
     
 
 </div>

@@ -18,4 +18,6 @@ urlpatterns = patterns('',
     url(r'^contactomail/$', views.contactomail, name='contactoMail'),
     url(r'^seteoPassword/(?P<usuario_id>\d+)/$', views.seteoPassword, name='seteoPassword'),
     url(r'^modificarProyecto/$', views.modificarProyecto, name='modificar_proyecto'),
+    url(r'^scrum/$', views.holaScrumView, name='roles-flujos'),
+    url(r'^formarEquipo/$', views.ListarUsuarioParaFormarEquipo, name='formarEquipo'),
 )
