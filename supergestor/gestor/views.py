@@ -8,14 +8,15 @@ from django.http.response import HttpResponseRedirect
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from gestor.models import MyUser, asignacion, proyecto, rol, Flujo
+from gestor.models import MyUser, asignacion, proyecto, rol, Flujo, Actividad
 from django import forms
 from django.core.mail.message import EmailMessage
 from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.forms.widgets import CheckboxSelectMultiple
 from django.contrib.auth.models import Permission
-#from gestor.admin import proyectoFrom
+from django.contrib import admin
+from django.db.models import Q
 
 # Create your views and forms here.
 @login_required
@@ -226,3 +227,64 @@ def visualizarProyectoView(request,proyecto_id_rec):
     proyecto_enc= proyecto.objects.get(proyecto_id=proyecto_id_rec)
     return render_to_response('visualizarProyecto.html',{'proyecto':proyecto_enc},
                                   context_instance=RequestContext(request))
+
+        
+
+    
+def crearActividadView(request):
+    """
+    Vista que se obitene del regex /registrar solicitado al precionar el boton
+    registrar en el Flujo, devuelve un formulario html para crear una nueva actividad
+    """
+    
+    if request.method == 'GET':
+        #si no es una peticion post, aignamos a form
+        #el form que hemos creado sin datos
+        form = formularioActividad()
+        return render_to_response("crearActividad.html",{"form":form}, context_instance = RequestContext(request))
+    
+    else:#request.method == 'POST'
+        form = formularioActividad(request.POST)
+        if form.is_valid():
+            nombre=form.cleaned_data['nombre']
+            descripcion=form.cleaned_data['descripcion']
+            flujo=form.cleaned_data['flujo']
+            form.nombre=nombre
+            form.descripcion=descripcion
+            form.flujo=flujo
+            form.save()
+            return HttpResponse('Ha sido guardado exitosamente')       
+ 
+class formularioActividad(forms.ModelForm):
+    class Meta:
+        model=Actividad
+        fields = ('nombre', 'descripcion','flujo')
+        
+def seleccionarFlujoModificar(request):
+    return render(request,'modificarActividad.html',{'flujo':Flujo.objects.all(), 'actividad':Actividad.objects.all()})
+"""
+def modificarActividad(request, actividad_id_rec):
+    p=Actividad.objects.get(actividad_id=actividad_id_rec)
+    if request.method == 'POST':
+        form = formularioActividad(request.POST)
+        if form.is_valid():
+            nombre=form.cleaned_data['nombre']
+            descripcion=form.cleaned_data['descripcion']
+            flujo=form.cleaned_data['flujo']
+            p.nombre=nombre
+            p.descripcion=descripcion
+            p.flujo=flujo
+            p.save() #Guardamos el modelo de manera Editada
+            return HttpResponse('Se ha guardado exitosamente')
+    else:
+        
+        form = formularioActividad(initial={
+                                         'nombre': p.nombre,
+                                         'descripcion': p.descripcion,
+                                         'flujo': p.flujo,
+                                     
+                                         })
+        ctx = {'form':form, 'Actividad':p}
+        return render_to_response('modificarActividad.html', ctx ,context_instance=RequestContext(request)) 
+    
+    """

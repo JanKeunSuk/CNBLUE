@@ -42,6 +42,7 @@
 {% if is_popup %}<input type="hidden" name="{{ is_popup_var }}" value="1" />{% endif %}
 {% if to_field %}<input type="hidden" name="{{ to_field_var }}" value="{{ to_field }}" />{% endif %}
 {% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}
+ 
 {% if errors %}
     <p class="errornote">
     {% if errors|length == 1 %}{% trans "Corrige el error de abajo, por favor." %}{% else %}{% trans "Corrige los errores de abajo, por favor." %}{% endif %}
@@ -64,6 +65,10 @@
 {% endblock %}
 
 {% block after_related_objects %}{% endblock %}
+
+<p class="Flujo">
+<a href="/crearActividad/">Crear Actividad</a>
+</p>
 
 {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
 

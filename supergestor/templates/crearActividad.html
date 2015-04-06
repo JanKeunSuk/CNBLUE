@@ -1,0 +1,29 @@
+{% extends "admin/base_site.html" %}
+{% load i18n l10n admin_urls %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} delete-confirmation delete-selected-confirmation{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Registro de Actividad' %}</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<form enctype="multipart/form-data" method="post">
+
+{% csrf_token %}
+
+
+<div>
+
+{{form.as_p}}
+            
+</div>
+    
+<div class="submit-row">
+<input type="submit" value="Guardar Actividad" class="crearActividadView" name="_save" />
+<td><a href="/seleccionarFlujoModificar/">Modificar Actividad</a></td>
+    
+
+{% endblock %}

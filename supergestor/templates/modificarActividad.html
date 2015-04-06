@@ -1,0 +1,50 @@
+{% extends "admin/base_site.html" %}
+{% load i18n l10n admin_urls %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} delete-confirmation delete-selected-confirmation{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Modificar Actividad' %}</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<form enctype="multipart/form-data" method="post">
+<head>
+<style type="text/css">
+.hidden{
+	display:none;
+}
+</style>
+<script>
+function ver(id){//muestra el select de flujo
+	document.getElementById(id).style.display='block';
+
+}
+function f(){//obtiene el valor del select
+var posicion=document.getElementById('contenedorForm').options.selectedIndex; //posicion
+//alert(document.getElementById('contenedorForm').options[posicion].text); //valor
+alert(posicion);
+}
+</script>
+</head>
+{% csrf_token %}
+Seleccione un Flujo: <br><br>
+<body>
+<input type="button" value="Ver" onClick="ver('contenedorForm')" />
+	<div id="contenedorForm" class="hidden" style="display: none;">
+		<select name="roles"> 
+		{% for Flujo in flujo %}
+				<option value="{{Flujo}}">{{Flujo}}</option>
+		{% endfor %}
+		</select>
+		</div>
+
+<br><br>
+<input type="button" onClick="f();">//era para ver el valor del select pero no muestra
+<br><br>
+<div class="submit-row">
+<input type="submit" value="Guardar" class="modificarActividad" name="_save" />   
+
+{% endblock %}

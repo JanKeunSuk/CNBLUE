@@ -9,6 +9,7 @@ from django.contrib.auth.models import (
     , Permission)
 from django.conf import settings
 
+
 class MyUserManager(BaseUserManager):
     """Clase utilizada para la creacion de managers customizados 
     de clase de usuarios tambian customizada, herada metodos y atributos
@@ -233,7 +234,9 @@ class Flujo(models.Model):
     nombre = models.CharField(max_length = 200)
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
     #proyecto=models.ForeignKey(proyecto)
-    
+    def __unicode__(self):
+        """Representacion unicode del objeto permitido"""
+        return str(self.Flujo_id)
 
     
     
@@ -247,8 +250,10 @@ class Actividad(models.Model):
     #pendiente
     #en_progreso
     #finalizado
+    def __unicode__(self):
+        """Representacion unicode del objeto permitido"""
+        return str(self.Actividad_id)    
     
-   
 #Modelo para asignacion de roles de proyecto
 class asignacion(models.Model):
     """Modelo que especifica una asignacion de un rol a un usuario en un proyecto"""
@@ -275,20 +280,4 @@ class delegacion(models.Model):
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL)
     HU=models.ForeignKey(HU)
     proyecto=models.ForeignKey(proyecto)
-    
-
-    
-    
-
-
-
-    
-
-    
-    
-    
-
-    
-    
-    
     
