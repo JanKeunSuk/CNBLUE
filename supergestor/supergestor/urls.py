@@ -22,10 +22,11 @@ urlpatterns = patterns('',
     url(r'^visualizarRol/(?P<rol_id_rec>\d+)/$', views.visualizarRolProyectoView, name='visualizar_rol'),
     url(r'^crearRol/', views.crearRol, name='crear_Rol'),
     url(r'^guardarRol/', views.guardarRolView, name='guardar_nuevo_rol'),
-    url(r'^scrum/$', views.holaScrumView, name='roles-flujos'),
+    url(r'^scrum/(?P<proyectoid>\d+)$', views.holaScrumView, name='roles-flujos'),
     url(r'^formarEquipo/$', views.ListarUsuarioParaFormarEquipo, name='formarEquipo'),
     url(r'^crearActividad/$', views.crearActividadView, name='crearActividad'),
     url(r'^modificarActividad/$', views.seleccionarFlujoModificar, name='seleccionarFlujoModificar'),
     url(r'^modificarActividad/(?P<actividad_id_rec>\d+)/$', views.modificarActividad, name='modificarActividad'),
+    url(r'^asignarRol/(?P<rolid>\d+)/(?P<proyectoid>\d+)$',views.asignarRol, name= 'asignaRol'),
     
 )

@@ -36,8 +36,9 @@ def holaView(request):
                         nombres_de_proyecto[p] = rol_lista
         return render(request,'hola.html',{'usuario':request.user, 'proyectos':nombres_de_proyecto})
 
-def holaScrumView(request): 
-    return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all()})
+def holaScrumView(request,proyectoid): 
+    proyectox=proyecto.objects.get(proyecto_id=proyectoid)
+    return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all(),'proyecto':proyectox})
 
 def ListarUsuarioParaFormarEquipo(request):
     return render(request,'formarEquipo.html',{'usuarios':MyUser.objects.all(), 'roles':rol.objects.all()})
@@ -286,4 +287,41 @@ def modificarActividad(request, actividad_id_rec):
                                          })
         ctx = {'form':form, 'Actividad':p}
         return render_to_response('modificarActividad.html', ctx ,context_instance=RequestContext(request)) 
+ 
+ 
+class asignaForm_web(forms.ModelForm):  
+    class Meta:  
+        model=asignacion
+        fields=['usuario']
+
+class asignaForm_view(forms.ModelForm):  
+    class Meta:  
+        model=asignacion
+        fields=['usuario','rol','proyecto']
+    
+def asignarRol(request,rolid,proyectoid):
+    if request.method=='POST':
+        #necesito obtener el usuario
+        form=asignaForm_web(request.POST)
+        if form.is_valid():
+            usuario=form.cleaned_data['usuario']#aca nose si obtener el user o si con esto es suficiente
+            #tengo que crear una asignacion con los datos que ya tengo
+            """ asignacionx=asignacion(usuario,rolid,proyectoid)
+            #no creo que esto funcione
+            asignacionx.save()"""
+            formx=asignaForm_view(usuario,rolid,proyectoid)
+            formx.save()
+            
+            #Volver a la vista de scrum redirigiendo al mismo template con las mismas variables
+            proyectox=proyecto.objects.get(proyecto_id=proyectoid)
+            return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all(),'proyecto':proyectox})
+            
+    else:
+        form= asignaForm_web()
+        return render_to_response('asignaRolProyecto.html',{'formulario':form},context_instance=RequestContext(request))
+    
+    
+    
+    
+    
     
