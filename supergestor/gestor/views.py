@@ -214,6 +214,7 @@ def modificarProyecto(request, proyecto_id_rec):
                                          'nombre_corto': p.nombre_corto,
                                          'nombre_largo': p.nombre_largo,
                                          'descripcion': p.descripcion,
+                                         'estado':p.estado,
                                          'fecha_inicio': p.fecha_inicio,
                                          'fecha_fin': p.fecha_fin,
                                      
