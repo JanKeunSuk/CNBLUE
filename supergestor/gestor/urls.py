@@ -21,6 +21,6 @@ urlpatterns = patterns('',
     url(r'^scrum/$', views.holaScrumView, name='roles-flujos'),
     url(r'^formarEquipo/$', views.ListarUsuarioParaFormarEquipo, name='formarEquipo'),
     url(r'^crearActividad/$', views.crearActividadView, name='crearActividad'),
-    url(r'^seleccionarFlujoModificar/$', views.seleccionarFlujoModificar, name='seleccionarFlujoModificar'),
-   # url(r'^modificarActividad/{{Actividad.Actividad_id}}/$', views.modificarActividad, name='modificarActividad'),
+    url(r'^modificarActividad/$', views.seleccionarFlujoModificar, name='seleccionarFlujoModificar'),
+    url(r'^modificarActividad/(?P<actividad_id_rec>\d+)/$', views.modificarActividad, name='modificarActividad'),
 )

@@ -65,11 +65,12 @@
 {% endblock %}
 
 {% block after_related_objects %}{% endblock %}
-
-<p class="Flujo">
-<a href="/crearActividad/">Crear Actividad</a>
-</p>
-
+ {% ifequal opts.model_name 'flujo' %}
+<div class="Flujo">
+<p><a href="/crearActividad/">Crear Actividad</a></p>
+<p><a href="/modificarActividad/">Modificar Actividad</a></p>
+</div>
+{% endifequal %}
 {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
 
 {% if adminform and add %}

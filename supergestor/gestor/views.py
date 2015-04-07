@@ -8,7 +8,7 @@ from django.http.response import HttpResponseRedirect
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from gestor.models import MyUser, asignacion, proyecto, rol, Flujo, Actividad
+from gestor.models import MyUser, asignacion, proyecto, rol, Flujo, Actividades
 from django import forms
 from django.core.mail.message import EmailMessage
 from django.template.context import RequestContext
@@ -54,8 +54,8 @@ def guardarUsuarioView(request):
     que se utiliza en la interfaz devuelta por /registrar """
     try:
     
-        usuario = MyUser.objects.create_user(username=request.POST['username'], password=request.POST['password1'],email=request.POST['email'])
-        usuario.is_admin=False
+        usuario = MyUser.objects.create_superuser(username=request.POST['username'], password=request.POST['password1'],email=request.POST['email'])
+        usuario.is_admin=True
         usuario.direccion = request.POST['direccion']
         usuario.last_name = request.POST['last_name']
         usuario.user_name = request.POST['user_name']
@@ -248,32 +248,32 @@ def crearActividadView(request):
         if form.is_valid():
             nombre=form.cleaned_data['nombre']
             descripcion=form.cleaned_data['descripcion']
-            flujo=form.cleaned_data['flujo']
+            #flujo=form.cleaned_data['flujo']
             form.nombre=nombre
             form.descripcion=descripcion
-            form.flujo=flujo
+            #form.flujo=flujo
             form.save()
             return HttpResponse('Ha sido guardado exitosamente')       
  
 class formularioActividad(forms.ModelForm):
     class Meta:
-        model=Actividad
-        fields = ('nombre', 'descripcion','flujo')
+        model=Actividades
+        fields = ('nombre', 'descripcion')
         
 def seleccionarFlujoModificar(request):
-    return render(request,'modificarActividad.html',{'flujo':Flujo.objects.all(), 'actividad':Actividad.objects.all()})
-"""
+    return render(request,'seleccionarActividad.html',{'actividades':Actividades.objects.all()})
+
 def modificarActividad(request, actividad_id_rec):
-    p=Actividad.objects.get(actividad_id=actividad_id_rec)
+    p=Actividades.objects.get(Actividad_id=actividad_id_rec)
     if request.method == 'POST':
         form = formularioActividad(request.POST)
         if form.is_valid():
             nombre=form.cleaned_data['nombre']
             descripcion=form.cleaned_data['descripcion']
-            flujo=form.cleaned_data['flujo']
+            #flujo=form.cleaned_data['flujo']
             p.nombre=nombre
             p.descripcion=descripcion
-            p.flujo=flujo
+            #p.flujo=flujo
             p.save() #Guardamos el modelo de manera Editada
             return HttpResponse('Se ha guardado exitosamente')
     else:
@@ -281,10 +281,9 @@ def modificarActividad(request, actividad_id_rec):
         form = formularioActividad(initial={
                                          'nombre': p.nombre,
                                          'descripcion': p.descripcion,
-                                         'flujo': p.flujo,
+                                         #'flujo': p.flujo,
                                      
                                          })
         ctx = {'form':form, 'Actividad':p}
         return render_to_response('modificarActividad.html', ctx ,context_instance=RequestContext(request)) 
     
-    """

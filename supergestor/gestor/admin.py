@@ -9,8 +9,11 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField 
 from django.http.response import HttpResponseRedirect
+from django.shortcuts import render
 from gestor.models import MyUser, Permitido, rol, asignacion, proyecto,\
-    asigna_sistema, rol_sistema,Flujo
+    asigna_sistema, rol_sistema,Flujo, Actividades
+from django.contrib.admin import actions
+from gestor.views import seleccionarFlujoModificar
 
 
 class UserCreationForm(forms.ModelForm):
@@ -96,7 +99,13 @@ class MyUserAdmin(UserAdmin):
     ordering = ('username',)
     filter_horizontal = ()
     save_as = True      
-   
+
+class FlujoAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'estado')
+    list_filter = ('estado',)
+    ordering = ('Flujo_id',)
+    filter_horizontal = ('actividades',)
+    save_as = True 
 
 # Now register the new UserAdmin...
 """registra el ModelAdmin(o UserAdmin) para ser desplegado en la interfaz del admin"""
@@ -107,7 +116,7 @@ admin.site.register(asignacion)
 admin.site.register(proyecto)
 admin.site.register(asigna_sistema)
 admin.site.register(rol_sistema)
-admin.site.register(Flujo)
+admin.site.register(Flujo,FlujoAdmin)
 
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.

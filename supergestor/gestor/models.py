@@ -218,7 +218,19 @@ class Sprint(models.Model):
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
     #proyecto=models.ForeignKey(proyecto)
     
-
+class Actividades(models.Model):
+    """Representacion de la actividad de un flujo relacionada a su proyecto"""
+    Actividad_id = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length = 200)
+    descripcion = models.CharField(max_length = 200)
+    #cada Actividad referancia a su respectivo FLujo
+    #flujo=models.ForeignKey(Flujo) NECESITO un campo para asociar con Flujo
+    #pendiente
+    #en_progreso
+    #finalizado
+    def __unicode__(self):
+        """Representacion unicode del objeto permitido"""
+        return str(self.Actividad_id)  + " " + self.nombre
     
     
 class Flujo(models.Model):
@@ -233,26 +245,11 @@ class Flujo(models.Model):
     Flujo_id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length = 200)
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
+    actividades = models.ManyToManyField(Actividades)
     #proyecto=models.ForeignKey(proyecto)
     def __unicode__(self):
         """Representacion unicode del objeto permitido"""
-        return str(self.Flujo_id)
-
-    
-    
-class Actividad(models.Model):
-    """Representacion de la actividad de un flujo relacionada a su proyecto"""
-    Actividad_id = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length = 200)
-    descripcion = models.CharField(max_length = 200)
-    #cada Actividad referancia a su respectivo FLujo
-    flujo=models.ForeignKey(Flujo)
-    #pendiente
-    #en_progreso
-    #finalizado
-    def __unicode__(self):
-        """Representacion unicode del objeto permitido"""
-        return str(self.Actividad_id)    
+        return str(self.Flujo_id)  
     
 #Modelo para asignacion de roles de proyecto
 class asignacion(models.Model):
