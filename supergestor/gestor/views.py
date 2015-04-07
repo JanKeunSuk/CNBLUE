@@ -203,6 +203,7 @@ def modificarProyecto(request, proyecto_id_rec):
             p.nombre_corto=nombre_corto
             p.nombre_largo=nombre_largo
             p.descripcion=descripcion
+            p.estado=estado
             p.fecha_inicio=fecha_inicio
             p.fecha_fin=fecha_fin
             p.save() #Guardamos el modelo de manera Editada
