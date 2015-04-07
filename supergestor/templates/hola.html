@@ -54,15 +54,15 @@
 			<th>Proyectos</th>
         
             <tr class="model-proyecto">
-            
+            	{% csrf_token %}
 				{% for proyecto,rol in proyectos.items %}
   				
-	  				{%if rol.rol_id == 1 %}
+	  				{%ifequal rol.nombre_rol_id 'ScrumMaster' %}
 	  					 <th scope="row"><a href="/scrum/" >Perteneces a {{proyecto}} {{proyecto.descripcion}} con el rol {{rol}}</a></td>
 	  					 <td><a href="/formarEquipo/" class="addlink">Equipo</a></td>
 	  				{% else %}
 	  					<td>Perteneces a {{proyecto}} {{proyecto.descripcion}} con el rol {{rol}}</td>
-	  				{% endif %}
+	  				{% endifequal %}
 	            
 	                <td><a href="/visualizarProyecto/{{proyecto.proyecto_id}}/" class="addlink">Visualizar</a></td>
 	            

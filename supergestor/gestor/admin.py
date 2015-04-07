@@ -106,12 +106,19 @@ class FlujoAdmin(admin.ModelAdmin):
     ordering = ('Flujo_id',)
     filter_horizontal = ('actividades',)
     save_as = True 
+    
+class RolAdmin(admin.ModelAdmin):
+    list_display = ('nombre_rol_id', 'descripcion')
+    list_filter = ('nombre_rol_id',)
+    ordering = ('rol_id',)
+    filter_horizontal = ('permisos',)
+    save_as = True 
 
 # Now register the new UserAdmin...
 """registra el ModelAdmin(o UserAdmin) para ser desplegado en la interfaz del admin"""
 admin.site.register(MyUser, MyUserAdmin)
 admin.site.register(Permitido)
-admin.site.register(rol) 
+admin.site.register(rol, RolAdmin) 
 admin.site.register(asignacion)
 admin.site.register(proyecto)
 admin.site.register(asigna_sistema)
