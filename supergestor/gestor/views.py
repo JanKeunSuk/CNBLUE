@@ -15,8 +15,7 @@ from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.forms.widgets import CheckboxSelectMultiple
 from django.contrib.auth.models import Permission
-from django.contrib import admin
-from django.db.models import Q
+
 
 # Create your views and forms here.
 @login_required
@@ -187,7 +186,7 @@ class proyectoFrom(forms.ModelForm):
     """Clase meta de un ModelForm donde se indica el Modelo relacionado y los campos a mostrar"""
     class Meta:
         model = proyecto
-        fields = ['nombre_corto', 'nombre_largo', 'descripcion','fecha_inicio','fecha_fin']
+        fields = ['nombre_corto', 'nombre_largo', 'descripcion','estado','fecha_inicio','fecha_fin']
 
 def modificarProyecto(request, proyecto_id_rec):
     """Modifica el proyecto"""
@@ -198,6 +197,7 @@ def modificarProyecto(request, proyecto_id_rec):
             nombre_corto=form.cleaned_data['nombre_corto']
             nombre_largo=form.cleaned_data['nombre_largo']
             descripcion=form.cleaned_data['descripcion']
+            estado=form.cleaned_data['estado']
             fecha_inicio=form.cleaned_data['fecha_inicio']
             fecha_fin=form.cleaned_data['fecha_fin']
             p.nombre_corto=nombre_corto
@@ -300,6 +300,7 @@ class asignaForm_view(forms.ModelForm):
         fields=['usuario','rol','proyecto']
     
 def asignarRol(request,rolid,proyectoid):
+    proyectox=proyecto.objects.get(proyecto_id=proyectoid)
     if request.method=='POST':
         #necesito obtener el usuario
         form=asignaForm_web(request.POST)
@@ -313,12 +314,12 @@ def asignarRol(request,rolid,proyectoid):
             formx.save()
             
             #Volver a la vista de scrum redirigiendo al mismo template con las mismas variables
-            proyectox=proyecto.objects.get(proyecto_id=proyectoid)
+           
             return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all(),'proyecto':proyectox})
             
     else:
         form= asignaForm_web()
-        return render_to_response('asignaRolProyecto.html',{'formulario':form},context_instance=RequestContext(request))
+        return render_to_response('asignaRolProyecto.html',{'formulario':form,'proyecto':proyectox},context_instance=RequestContext(request))
     
     
     
