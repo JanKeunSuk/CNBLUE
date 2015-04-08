@@ -55,7 +55,7 @@
 						<p><input type="checkbox" name="{{usuario}}" value="{{usuario}}"  />{{usuario}}</p>
 						<select name="roles"> 
 							{% for rol in roles %}
-								{%if rol.rol_id != 1 %}
+								{%if rol.id != 1 %}
 									<option value="{{rol}}">{{rol}}</option>
 								{%endif%}
 							{% endfor %}

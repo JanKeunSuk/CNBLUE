@@ -71,7 +71,7 @@
 
 
 
-<form enctype="multipart/form-data" action="/guardarRol/" method="post" id="rol_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
+<form enctype="multipart/form-data" action="/guardarFlujo/" method="post" id="rol_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
 {% csrf_token %}
 <div>
 
@@ -85,37 +85,15 @@
     
     
     
-        <div class="form-row field-permisos">
-            
-            
-                <div>
-                    
-                    
-                        <label class="required" for="id_permisos">Permisos:</label>
-                        
-                            <select multiple="multiple" id="id_permisos" name="permisos">
-                            {%for permission in permissions %}
-								<option value="{{permission.id}}">{{permission.name}}</option>
-							{%endfor%}
-</select>
-                        
-                    
-                    
-                        <p class="help"> Presiona "Control" para seleccionar mas de una opcion.</p>
-                    
-                </div>
-            
-        </div>
-    
         <div class="form-row field-nombre_rol_id">
             
             
                 <div>
                     
                     
-                        <label class="required" for="id_nombre_rol_id">Nombre rol id:</label>
+                        <label class="required" for="id_nombre_rol_id">Nombre:</label>
                         
-                            <input class="vTextField" id="id_nombre_rol_id" maxlength="200" name="nombre_rol_id" type="text" />
+                            <input class="vTextField" id="id_nombre_rol_id" maxlength="200" name="nombre" type="text" />
                         
                     
                     
@@ -126,22 +104,52 @@
         <div class="form-row field-descripcion">
             
             
+                               <div>
+                    
+                    
+                        		<label class="required" for="id_estado">Estado:</label>
+                        
+                           			 <select id="id_estado" name="estado">
+										<option value="" selected="selected">---------</option>
+										<option value="CAN">Cancelado</option>
+										<option value="ACT">Activo</option>
+									</select>
+                        
+                    
+                    
+                				</div>
+            
+        </div>
+        
+            <div class="form-row field-permisos">
+            
+            
                 <div>
                     
                     
-                        <label class="required" for="id_descripcion">Descripcion:</label>
+                        <label class="required" for="id_permisos">Permisos:</label>
                         
-                            <input class="vTextField" id="id_descripcion" maxlength="200" name="descripcion" type="text" />
+                            <select multiple="multiple" id="id_actividades" name="actividades">
+                            {%for actividad in actividades %}
+								<option value="{{actividad.id}}">{{actividad.nombre}}</option>
+							{%endfor%}
+</select>
                         
                     
+                    
+                        <p class="help"> Presiona "Control" para seleccionar mas de una opcion.</p>
                     
                 </div>
             
         </div>
+        
     
 </fieldset>
 
-
+<div class="Flujo">
+<p><a href="/crearActividad/">Crear Actividad</a></p>
+<p><a href="/modificarActividad/">Modificar Actividad</a></p>
+</div>
 
 <div class="submit-row">
 <input type="submit" value="Guardar" />

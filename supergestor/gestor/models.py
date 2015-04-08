@@ -131,7 +131,6 @@ class rol(models.Model):
         ('PRO', 'Proyecto'),
     )"""
     
-    rol_id = models.AutoField(primary_key=True)
     permisos= models.ManyToManyField(Permission)
     nombre_rol_id = models.CharField(max_length = 200)
     descripcion = models.CharField(max_length = 200)
@@ -146,7 +145,6 @@ class rol_sistema(models.Model):
         ("SIS", 'Sistema'),
         ('PRO', 'Proyecto'),
     )"""
-    rol_id = models.AutoField(primary_key=True)
     permisos= models.ManyToManyField(Permission)
     nombre_rol_id = models.CharField(max_length = 200)
     descripcion = models.CharField(max_length = 200)
@@ -155,30 +153,6 @@ class rol_sistema(models.Model):
         """Representacion unicode del objeto permitido"""
         return self.nombre_rol_id
     
-
-    
-class proyecto(models.Model):
-    """Modelo que representa los proyectos que se pueden usar en el sistema"""
-    ESTADO_CHOICES = (
-        ('PEN', 'Pendiente'),
-        ('ACT', 'Activo'),
-        ('ANU', 'Anulado'),
-        ('FIN', 'Finalizado'),
-    )
-    
-    proyecto_id = models.AutoField(primary_key=True)
-    nombre_corto = models.CharField(max_length = 200)
-    nombre_largo = models.CharField(max_length = 200)
-    descripcion = models.CharField(max_length = 200)
-    fecha_inicio = models.DateTimeField()
-    fecha_fin = models.DateTimeField()
-    estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
-    
-    def __unicode__(self):
-        """Representacion unicode del objeto permitido"""
-        return self.nombre_corto
-
-
 
 class HU(models.Model):
     """Modelo que reprenseta las historias de usuario"""
@@ -189,8 +163,13 @@ class HU(models.Model):
         ('CAN', 'Cancelado'),
         ('ACT', 'Activo'),
     )
-     
-    HU_id = models.AutoField(primary_key=True)
+    
+    ESTADO_ACTIVIDAD_CHOICES = (
+        ('PEN', 'Pendiente'),
+        ('PRO', 'En Progreso'),
+        ('FIN', 'Finalizado'),
+    )
+    
     descripcion = models.CharField(max_length = 200)
     valor_negocio = models.IntegerField(choices = VALORES10_CHOICES)
     valor_tecnico = models.IntegerField(choices = VALORES10_CHOICES)
@@ -198,7 +177,7 @@ class HU(models.Model):
     duracion = models.FloatField()
     acumulador_horas = models.FloatField()
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
-    
+    estado_en_actividad = models.CharField(max_length = 3, choices = ESTADO_ACTIVIDAD_CHOICES)
 
 class Sprint(models.Model):
     """Modelo que reprenseta los Spring de un proyecto relacionados a
@@ -210,7 +189,6 @@ class Sprint(models.Model):
         ('CON', 'Consulta'),
     )
      
-    Sprint_id = models.AutoField(primary_key=True)
     descripcion = models.CharField(max_length = 200)
     #HU se referencia desde el modelo HU
     fecha_inicio = models.DateTimeField()
@@ -220,7 +198,6 @@ class Sprint(models.Model):
     
 class Actividades(models.Model):
     """Representacion de la actividad de un flujo relacionada a su proyecto"""
-    Actividad_id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length = 200)
     descripcion = models.CharField(max_length = 200)
     #cada Actividad referancia a su respectivo FLujo
@@ -230,7 +207,7 @@ class Actividades(models.Model):
     #finalizado
     def __unicode__(self):
         """Representacion unicode del objeto permitido"""
-        return str(self.Actividad_id)  + " " + self.nombre
+        return str(self.id)  + " " + self.nombre
     
     
 class Flujo(models.Model):
@@ -242,25 +219,48 @@ class Flujo(models.Model):
         ('ACT', 'Activo'),
     )
      
-    Flujo_id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length = 200)
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
     actividades = models.ManyToManyField(Actividades)
-    #proyecto=models.ForeignKey(proyecto)
     def __unicode__(self):
         """Representacion unicode del objeto permitido"""
-        return str(self.Flujo_id)  
+        return str(self.id) + self.nombre
+
+class asignaHU_actividad_flujo(models.Model):
+    lista_de_HU = models.ManyToManyField(HU)
+    flujo_al_que_pertenece = models.ForeignKey(Flujo)
+    actividad_al_que_pertenece = models.ForeignKey(Actividades)
+
+class proyecto(models.Model):
+    """Modelo que representa los proyectos que se pueden usar en el sistema"""
+    ESTADO_CHOICES = (
+        ('PEN', 'Pendiente'),
+        ('ACT', 'Activo'),
+        ('ANU', 'Anulado'),
+        ('FIN', 'Finalizado'),
+    )
     
-#Modelo para asignacion de roles de proyecto
+    nombre_corto = models.CharField(max_length = 200)
+    nombre_largo = models.CharField(max_length = 200)
+    descripcion = models.CharField(max_length = 200)
+    fecha_inicio = models.DateTimeField()
+    fecha_fin = models.DateTimeField()
+    estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
+    flujos = models.ManyToManyField(Flujo)
+    
+    def __unicode__(self):
+        """Representacion unicode del objeto permitido"""
+        return self.nombre_corto
+        
+#Modelo para asignacion de actividades con HU en un flujo determinado
 class asignacion(models.Model):
     """Modelo que especifica una asignacion de un rol a un usuario en un proyecto"""
-    asignation_id=models.AutoField(primary_key=True)
     usuario=models.ForeignKey(MyUser)
     rol=models.ForeignKey(rol)    
     proyecto=models.ForeignKey(proyecto)
     def __unicode__(self):
         """Representacion unicode del objeto permitido"""
-        return str(self.asignation_id)
+        return str(self.id)
 
 #Modelo para asignacion de roles de proyecto
 class asigna_sistema(models.Model):
@@ -273,7 +273,6 @@ class asigna_sistema(models.Model):
        
 class delegacion(models.Model):
     """Modelo que especifica una delegacion de una HU a un usuario en un proyecto"""
-    delegacion_id=models.AutoField(primary_key=True)
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL)
     HU=models.ForeignKey(HU)
     proyecto=models.ForeignKey(proyecto)

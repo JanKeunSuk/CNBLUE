@@ -23,7 +23,7 @@
     <div id="header">
         <div id="branding">
         
-<h1 id="site-name"><a href="/scrum/">Pagina Principal</a></h1>
+<h1 id="site-name"><a href="/hola/">Pagina Principal</a></h1>
 
         </div>
         
@@ -56,17 +56,17 @@
             <tr class="model-proyecto">
             
 				{% for rol in roles %}
-					{%if rol.rol_id == 1 %}
+					{%ifequal rol.nombre_rol_id 'ScrumMaster' %}
 	  					 <!-- El scrum no se sita, ya que no puede asiganr ese rol a otro -->
 	  				{% else %}
 	  					<td> {{rol.nombre_rol_id}} </td>
   		
             
-                		<td><a href="/visualizarRol/{{rol.rol_id}}" class="addlink">Visualizar</a></td>
+                		<td><a href="/visualizarRol/{{proyecto.id}}/{{rol.id}}/" class="addlink">Visualizar</a></td>
                 	
-                		<td><a href="/asignarRol/{{rol.rol_id}}/{{proyecto.proyecto_id}}" class="changelink">Asignar</a></td>
+                		<td><a href="/asignarRol/{{rol.id}}/{{proyecto.id}}" class="changelink">Asignar</a></td>
               			</tr>
-	  				{% endif %}
+	  				{% endifequal %}
   				
             {% endfor %}
             </table>
@@ -86,16 +86,16 @@
   				<td> {{flujo.nombre}} </td>
   		
             
-                <td><a href="/hola/gestor/myuser/visualizar/" class="addlink">Visualizar</a></td>
+                <td><a href="/visualizarFlujo/{{proyecto.id}}/{{flujo.id}}/" class="addlink">Visualizar</a></td>
             
 
             
-                <td><a href="/hola/gestor/myuser/modificar" class="changelink">Modificar</a></td>
+                <td><a href="/modificarFlujo/{{proyecto.id}}/{{flujo.id}}/" class="changelink">Modificar</a></td>
               </tr>
             {% endfor %}
         
         </table>
-        <form method="get" action="/crearFlujo">
+        <form method="get" action="/crearFlujo/">
 
 			<input type="submit" value="Crear Flujo" />
 

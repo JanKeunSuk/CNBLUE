@@ -8,12 +8,8 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField 
-from django.http.response import HttpResponseRedirect
-from django.shortcuts import render
 from gestor.models import MyUser, Permitido, rol, asignacion, proyecto,\
-    asigna_sistema, rol_sistema,Flujo, Actividades
-from django.contrib.admin import actions
-from gestor.views import seleccionarFlujoModificar
+    asigna_sistema, rol_sistema,Flujo
 
 
 class UserCreationForm(forms.ModelForm):
@@ -103,14 +99,15 @@ class MyUserAdmin(UserAdmin):
 class FlujoAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'estado')
     list_filter = ('estado',)
-    ordering = ('Flujo_id',)
+    ordering = ('id',)
     filter_horizontal = ('actividades',)
+    exclude = ('proyecto',)
     save_as = True 
     
 class RolAdmin(admin.ModelAdmin):
     list_display = ('nombre_rol_id', 'descripcion')
-    list_filter = ('nombre_rol_id',)
-    ordering = ('rol_id',)
+    list_filter = ('id',)
+    ordering = ('id',)
     filter_horizontal = ('permisos',)
     save_as = True 
 
