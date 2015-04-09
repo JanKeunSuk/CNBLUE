@@ -415,42 +415,16 @@ def modificarActividad(request,usuario_id,proyectoid,actividad_id_rec):
 def asignarRol(request,rolid,proyectoid,usuario_id):
     proyectox=proyecto.objects.get(id=proyectoid)
     rolx = rol.objects.get(id=rolid)
-    usuario = MyUser.objects.get(id=usuario_id)
     if request.method=='POST':
         try:
             for p in request.POST.getlist('usuarios'):
                 asignacion_a_crear = asignacion.objects.create(usuario=MyUser.objects.get(id=p),rol=rolx, proyecto=proyectox)
                 asignacion_a_crear.save()
-<<<<<<< HEAD
-                return HttpResponse('La asignacion se ha realizado exitosamente')
-=======
                 usuario=MyUser.objects.get(id=usuario_id)
                 return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario':usuario})
->>>>>>> branch 'master' of https://github.com/JanKeunSuk/CNBLUE.git
         except ObjectDoesNotExist:
             print "Either the entry or blog doesn't exist." 
             return HttpResponseRedirect('/crearFlujo/')
     else:
-        return render_to_response('asignaRolProyecto.html',{'proyecto':proyectox,'usuarios':MyUser.objects.all().exclude(id=usuario_id),'proyectoid':proyectoid,'usuarioid':usuario_id})
-    """proyectox=proyecto.objects.get(id=proyectoid)
-    rolx = rol.objects.get(id=rolid)
-    if request.method=='POST':
-        #necesito obtener el usuario
-        form=asignaForm_web(request.POST)
-        if form.is_valid():
-            u=form.cleaned_data['usuario']#aca nose si obtener el user o si con esto es suficiente
-            #tengo que crear una asignacion con los datos que ya tengo
-            usuario=MyUser.objects.get(username=u)
-            formx=asignaForm_view(usuario,rolx,proyectox)
-            formx.save()
-            
-            #Volver a la vista de scrum redirigiendo al mismo template con las mismas variables
-           
-            return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all(),'proyecto':proyectox})
-            
-    else:
-        form= asignaForm_web()
-        return render_to_response('asignaRolProyecto.html',{'formulario':form,'proyecto':proyectox,'usuarios':MyUser.objects.all()},context_instance=RequestContext(request))
-    
-    """
+        return render(request,'asignaRolProyecto.html',{'proyecto':proyectox,'usuarios':MyUser.objects.all().exclude(id=usuario_id),'proyectoid':proyectoid,'usuarioid':usuario_id})
     
