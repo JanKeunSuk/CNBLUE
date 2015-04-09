@@ -30,7 +30,7 @@
     <div id="header">
         <div id="branding">
         
-<h1 id="site-name"><a href="/hola/">Pagina Principal</a></h1>
+<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/">Pagina Principal</a></h1>
 
         </div>
         
@@ -54,7 +54,7 @@
     <!-- END Header -->
     
 <div class="breadcrumbs">
-<a href="/hola/">Pagina Principal</a>
+<a href="/scrum/{{usuarioid}}/{{proyectoid}}/">Pagina Principal</a>
 </div>
 
     
@@ -66,7 +66,7 @@
     <!-- Content -->
     <div id="content" class="colM">
         
-        <h1>Agregar rol</h1>
+        <h1>Agregar flujo</h1>
         <div id="content-main">
 
 
@@ -91,9 +91,9 @@
                 <div>
                     
                     
-                        <label class="required" for="id_nombre_rol_id">Nombre:</label>
+                        <label class="required" for="id_nombre">Nombre:</label>
                         
-                            <input class="vTextField" id="id_nombre_rol_id" maxlength="200" name="nombre" type="text" />
+                            <input class="vTextField" id="id_nombre" maxlength="200" name="nombre" type="text" />
                         
                     
                     
@@ -127,7 +127,7 @@
                 <div>
                     
                     
-                        <label class="required" for="id_permisos">Permisos:</label>
+                        <label class="required" for="id_permisos">Actividades:</label>
                         
                             <select multiple="multiple" id="id_actividades" name="actividades">
                             {%for actividad in actividades %}
@@ -147,8 +147,8 @@
 </fieldset>
 
 <div class="Flujo">
-<p><a href="/crearActividad/">Crear Actividad</a></p>
-<p><a href="/modificarActividad/">Modificar Actividad</a></p>
+<p><a href="/crearActividad/{{usuarioid}}/{{proyectoid}}/">Crear Actividad</a></p>
+<p><a href="/modificarActividad/{{usuarioid}}/{{proyectoid}}/">Modificar Actividad</a></p>
 </div>
 
 <div class="submit-row">
