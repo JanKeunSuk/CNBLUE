@@ -35,9 +35,9 @@ def holaView(request):
                         nombres_de_proyecto[p] = rol_lista
         return render(request,'hola.html',{'usuario':request.user, 'proyectos':nombres_de_proyecto})
 
-def holaScrumView(request,proyectoid): 
+def holaScrumView(request,usuario_id,proyectoid): 
     proyectox=proyecto.objects.get(id=proyectoid)
-    return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all(),'proyecto':proyectox})
+    return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuarioid':usuario_id})
 
 def ListarUsuarioParaFormarEquipo(request):
     return render(request,'formarEquipo.html',{'usuarios':MyUser.objects.all(), 'roles':rol.objects.all()})
@@ -66,12 +66,12 @@ def guardarUsuarioView(request):
         print "Either the entry or blog doesn't exist." 
         return HttpResponseRedirect('/registrar')
     
-def guardarRolView(request):
+def guardarRolView(request,usuario_id):
     """Vista de guardado de nuevo usuario relacionado con un correo autorizado en la tabla Permitidos
     que se utiliza en la interfaz devuelta por /registrar """
     try:
-    
-        rol_a_crear = rol.objects.create(nombre_rol_id=request.POST['nombre_rol_id'], descripcion=request.POST['descripcion'])
+        usuario=MyUser.objects.get(id=usuario_id)
+        rol_a_crear = rol.objects.create(nombre_rol_id=request.POST['nombre_rol_id'], descripcion=request.POST['descripcion'],usuario_creador=usuario)
         for p in request.POST.getlist('permisos'):
             rol_a_crear.permisos.add(Permission.objects.get(id=p))
         rol_a_crear.save()
@@ -252,9 +252,9 @@ def modificarFlujo(request, proyectoid, flujo_id_rec):
         ctx = {'form':form, 'flujo':f, 'proyectoid':proyectoid}
         return render_to_response('modificarFlujo.html', ctx ,context_instance=RequestContext(request))
     
-def crearRol(request):
+def crearRol(request,usuario_id):
     if request.method == 'GET':
-        return render(request, 'crearRol.html',{'permissions':Permission.objects.all()})
+        return render(request, 'crearRol.html',{'permissions':Permission.objects.all(),'usuarioid':usuario_id})
 
 def crearFlujo(request):
     if request.method == 'GET':

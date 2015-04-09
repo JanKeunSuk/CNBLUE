@@ -59,19 +59,24 @@
 					{%ifequal rol.nombre_rol_id 'ScrumMaster' %}
 	  					 <!-- El scrum no se sita, ya que no puede asiganr ese rol a otro -->
 	  				{% else %}
-	  					<td> {{rol.nombre_rol_id}} </td>
+	  					<td> {{rol.nombre_rol_id}}{{ rol.usuario_creador}} </td>
   		
             
                 		<td><a href="/visualizarRol/{{proyecto.id}}/{{rol.id}}/" class="addlink">Visualizar</a></td>
                 	
                 		<td><a href="/asignarRol/{{rol.id}}/{{proyecto.id}}" class="changelink">Asignar</a></td>
+                		
+                		{%if rol.usuario_creador == usuarioid %}
+                			<td><a href="/visualizarRol/{{proyecto.id}}/{{rol.id}}/" class="addlink">Modificar</a></td>
+                		
+                		{% endif %}
               			</tr>
 	  				{% endifequal %}
   				
             {% endfor %}
             </table>
             
-            <form method="get" action="/crearRol/">
+            <form method="get" action="/crearRol/{{usuarioid}}/">
 
 				<input type="submit" value="Crear Rol" />
 

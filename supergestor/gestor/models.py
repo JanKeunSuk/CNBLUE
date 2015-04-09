@@ -134,6 +134,7 @@ class rol(models.Model):
     permisos= models.ManyToManyField(Permission)
     nombre_rol_id = models.CharField(max_length = 200)
     descripcion = models.CharField(max_length = 200)
+    usuario_creador = models.ForeignKey(MyUser)
     #tipo = models.CharField(max_length = 3, choices = ROL_CHOICES)
     
     def __unicode__(self):
@@ -264,7 +265,6 @@ class asignacion(models.Model):
 
 #Modelo para asignacion de roles de proyecto
 class asigna_sistema(models.Model):
-    asigna_id=models.AutoField(primary_key=True)
     usuario=models.ForeignKey(MyUser)
     rol=models.ForeignKey(rol_sistema)    
     def __unicode__(self):
