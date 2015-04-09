@@ -59,15 +59,15 @@
 					{%ifequal rol.nombre_rol_id 'ScrumMaster' %}
 	  					 <!-- El scrum no se sita, ya que no puede asiganr ese rol a otro -->
 	  				{% else %}
-	  					<td> {{rol.nombre_rol_id}}{{ rol.usuario_creador}} </td>
+	  					<td> {{rol.nombre_rol_id}} </td>
   		
             
-                		<td><a href="/visualizarRol/{{proyecto.id}}/{{rol.id}}/" class="addlink">Visualizar</a></td>
+                		<td><a href="/visualizarRol/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}/" class="addlink">Visualizar</a></td>
                 	
-                		<td><a href="/asignarRol/{{rol.id}}/{{proyecto.id}}" class="changelink">Asignar</a></td>
+                		<td><a href="/asignarRol/{{usuario.id}}/{{rol.id}}/{{proyecto.id}}" class="changelink">Asignar</a></td>
                 		
-                		{%if rol.usuario_creador == usuarioid %}
-                			<td><a href="/visualizarRol/{{proyecto.id}}/{{rol.id}}/" class="addlink">Modificar</a></td>
+                		{%if rol.usuario_creador == usuario %}
+                			<td><a href="/modificarRol/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}/" class="addlink">Modificar</a></td>
                 		
                 		{% endif %}
               			</tr>
@@ -76,7 +76,7 @@
             {% endfor %}
             </table>
             
-            <form method="get" action="/crearRol/{{usuarioid}}/">
+            <form method="get" action="/crearRol/{{usuario.id}}/{{proyecto.id}}/">
 
 				<input type="submit" value="Crear Rol" />
 
@@ -91,16 +91,16 @@
   				<td> {{flujo.nombre}} </td>
   		
             
-                <td><a href="/visualizarFlujo/{{proyecto.id}}/{{flujo.id}}/" class="addlink">Visualizar</a></td>
+                <td><a href="/visualizarFlujo/{{usuario.id}}/{{proyecto.id}}/{{flujo.id}}/" class="addlink">Visualizar</a></td>
             
 
             
-                <td><a href="/modificarFlujo/{{proyecto.id}}/{{flujo.id}}/" class="changelink">Modificar</a></td>
+                <td><a href="/modificarFlujo/{{usuario.id}}/{{proyecto.id}}/{{flujo.id}}/" class="changelink">Modificar</a></td>
               </tr>
             {% endfor %}
         
         </table>
-        <form method="get" action="/crearFlujo/">
+        <form method="get" action="/crearFlujo/{{usuario.id}}/{{proyecto.id}}/">
 
 			<input type="submit" value="Crear Flujo" />
 

@@ -32,7 +32,7 @@
     <div id="header">
         <div id="branding">
         
-<h1 id="site-name">Crear actividad</h1>
+<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/">Modificación de Rol</a></h1>
 
         </div>
         
@@ -48,17 +48,86 @@
     </div>
     <!-- END Header -->
     
-<form enctype="multipart/form-data" method="post">
+<div class="breadcrumbs">
+<a href="/scrum/{{usuarioid}}/{{proyectoid}}/">Pagina Principal</a>
+<!-- 
+&rsaquo; <a href="/admin/gestor/">Gestor</a>
+&rsaquo; <a href="/admin/gestor/proyecto/">Proyectos</a>
+&rsaquo; p2
+ -->
+</div>
 
+    
+
+    
+        
+    
+
+    <!-- Content -->
+    <div id="content" class="colM">
+        
+        <h1>Modificar Rol</h1>
+        <div id="content-main">
+
+
+  <ul class="object-tools">
+    <!-- 
+    <li>
+        
+        <a href="/admin/gestor/proyecto/2/history/" class="historylink">Historial</a>
+    </li>
+     -->
+    
+  </ul>
+
+
+<form enctype="multipart/form-data" method="post" id="rol_form" novalidate>
 {% csrf_token %}
-
 
 <div>
 
-{{form.as_p}}
+{{form}}
             
 </div>
-    
+
+
 <div class="submit-row">
-<input type="submit" value="Guardar Actividad" class="crearActividadView" name="_save" />
+<input type="submit" value="Guardar" class="modificarRol" name="_save" />
+<!-- 
     
+    <p class="deletelink-box"><a href="/admin/gestor/proyecto/2/delete/" class="deletelink">Eliminar</a></p>
+
+
+<input type="submit" value="Guardar y agregar otro" name="_addanother" />
+<input type="submit" value="Guardar y continuar editando" name="_continue" />
+</div>
+ -->
+
+
+
+
+
+<script type="text/javascript">
+(function($) {
+    var field;
+
+
+})(django.jQuery);
+</script>
+
+
+</div>
+</form></div>
+
+        
+        <br class="clear" />
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+
+</body>
+</html>
+

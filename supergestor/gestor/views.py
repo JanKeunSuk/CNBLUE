@@ -37,7 +37,8 @@ def holaView(request):
 
 def holaScrumView(request,usuario_id,proyectoid): 
     proyectox=proyecto.objects.get(id=proyectoid)
-    return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuarioid':usuario_id})
+    usuario=MyUser.objects.get(id=usuario_id)
+    return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario':usuario})
 
 def ListarUsuarioParaFormarEquipo(request):
     return render(request,'formarEquipo.html',{'usuarios':MyUser.objects.all(), 'roles':rol.objects.all()})
@@ -161,7 +162,7 @@ class FormularioRolProyecto(forms.ModelForm):
             'permisos': CheckboxSelectMultiple(),
         }
         
-def visualizarRolProyectoView(request,proyectoid, rol_id_rec):
+def visualizarRolProyectoView(request,usuario_id,proyectoid, rol_id_rec):
     """if request.method == 'POST':
         rol_to_change= rol.objects.get(rol_id=rol_id_rec)
         formulario_loaded = FormularioRolProyecto(request.POST,instance=rol_to_change)
@@ -187,8 +188,35 @@ def visualizarRolProyectoView(request,proyectoid, rol_id_rec):
                                                      'permisos': rolproyecto.permisos,
                                                      'descripcion': rolproyecto.descripcion,
                                                      })      
-        return render_to_response('visualizarRol.html',{'formulario':formulario, 'rol':rolproyecto, 'proyectoid':proyectoid},
+        return render_to_response('visualizarRol.html',{'formulario':formulario, 'rol':rolproyecto, 'proyectoid':proyectoid,'usuarioid':usuario_id},
                                   context_instance=RequestContext(request))
+        
+def modificarRol(request, usuario_id, proyectoid, rol_id_rec):
+    """Modifica el Rol"""
+    f=rol.objects.get(id=rol_id_rec)
+    u=MyUser.objects.get(id=usuario_id)
+    if request.method == 'POST':
+        form = FormularioRolProyecto(request.POST)
+        if form.is_valid():
+            nombre_rol_id=form.cleaned_data['nombre_rol_id']
+            descripcion=form.cleaned_data['descripcion']
+            permisos=form.cleaned_data['permisos']
+            f.nombre_rol_id=nombre_rol_id
+            f.descripcion=descripcion
+            f.permisos=permisos
+            f.usuario_creador=u
+            f.save() #Guardamos el modelo de manera Editada
+            return HttpResponse('El rol a sido modificado exitosamente')
+    else:
+        
+        form = FormularioRolProyecto(initial={
+                                         'nombre_rol_id': f.nombre_rol_id,
+                                         'descripcion': f.descripcion,
+                                         'permisos': [t.id for t in f.permisos.all()],
+   
+                                         })
+        ctx = {'form':form, 'rol':f, 'proyectoid':proyectoid,'usuarioid':usuario_id}
+        return render_to_response('modificarRol.html', ctx ,context_instance=RequestContext(request))
 
 class FormularioFlujoProyecto(forms.ModelForm):
     
@@ -202,7 +230,7 @@ class FormularioFlujoProyecto(forms.ModelForm):
             'actividades': CheckboxSelectMultiple(),
         }
         
-def visualizarFlujoProyectoView(request,proyectoid, flujo_id_rec):
+def visualizarFlujoProyectoView(request,usuario_id, proyectoid, flujo_id_rec):
     flujo_disponible= Flujo.objects.get(id=flujo_id_rec)
     if request.method == 'POST':
         formulario = FormularioFlujoProyecto(request.POST)
@@ -224,10 +252,10 @@ def visualizarFlujoProyectoView(request,proyectoid, flujo_id_rec):
                                                      'estado': flujo_disponible.estado,
                                                      'actividades': flujo_disponible.actividades,
                                                      })      
-        return render_to_response('visualizarFlujo.html',{'formulario':formulario, 'flujo':flujo_disponible, 'proyectoid':proyectoid},
+        return render_to_response('visualizarFlujo.html',{'formulario':formulario, 'flujo':flujo_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id},
                                   context_instance=RequestContext(request))
 
-def modificarFlujo(request, proyectoid, flujo_id_rec):
+def modificarFlujo(request, usuario_id, proyectoid, flujo_id_rec):
     """Modifica el Flujo"""
     f=Flujo.objects.get(id=flujo_id_rec)
     if request.method == 'POST':
@@ -240,7 +268,7 @@ def modificarFlujo(request, proyectoid, flujo_id_rec):
             f.estado=estado
             f.actividades=actividades
             f.save() #Guardamos el modelo de manera Editada
-            return HttpResponse('El flujo a sido guardado exitosamente')
+            return HttpResponse('El flujo a sido modificado exitosamente')
     else:
         
         form = FormularioFlujoProyecto(initial={
@@ -249,16 +277,29 @@ def modificarFlujo(request, proyectoid, flujo_id_rec):
                                          'actividades': [t.id for t in f.actividades.all()],
    
                                          })
-        ctx = {'form':form, 'flujo':f, 'proyectoid':proyectoid}
+        ctx = {'form':form, 'flujo':f, 'proyectoid':proyectoid,'usuarioid':usuario_id}
         return render_to_response('modificarFlujo.html', ctx ,context_instance=RequestContext(request))
     
-def crearRol(request,usuario_id):
+def crearRol(request,usuario_id,proyectoid):
     if request.method == 'GET':
-        return render(request, 'crearRol.html',{'permissions':Permission.objects.all(),'usuarioid':usuario_id})
-
-def crearFlujo(request):
+        permisos=Permission.objects.all().exclude(name='Can add group').exclude(name='Can change group') 
+        #permisos=permisos.exclude('Can delete group').exclude(name='Can delete permission') 
+        permisos=permisos.exclude(name='Can add my user').exclude(name='Can change my user') 
+        permisos=permisos.exclude(name='Can delete my user').exclude(name='Can delete rol sistema') 
+        permisos=permisos.exclude(name='Can add permission').exclude(name='Can change permission') 
+        permisos=permisos.exclude(name='Can add rol sistema').exclude(name='Can change rol sistema') 
+        permisos=permisos.exclude(name='Can add proyecto').exclude(name='Can change proyecto') 
+        #permisos=permisos.exclude(name='Can delete proyecto') 
+        permisos=permisos.exclude(name='Can add asigna sistema').exclude(name='Can change asigna sistema') 
+        #permisos=permisos.exclude(name='Can delete asigna sistema') 
+        permisos=permisos.exclude(name='Can add permitido').exclude(name='Can change permitido') 
+        #permisos=permisos.exclude(name='Can delete permitido')
+        
+        return render(request, 'crearRol.html',{'permissions':permisos,'usuarioid':usuario_id,'proyectoid':proyectoid})
+    
+def crearFlujo(request,usuario_id,proyectoid):
     if request.method == 'GET':
-        return render(request, 'crearFlujo.html',{'actividades':Actividades.objects.all()})
+        return render(request, 'crearFlujo.html',{'actividades':Actividades.objects.all(),'usuarioid':usuario_id,'proyectoid':proyectoid})
 
 class proyectoFrom(forms.ModelForm):
     """Clase meta de un ModelForm donde se indica el Modelo relacionado y los campos a mostrar"""
@@ -266,7 +307,7 @@ class proyectoFrom(forms.ModelForm):
         model = proyecto
         fields = ['nombre_corto', 'nombre_largo', 'descripcion','estado','fecha_inicio','fecha_fin']
 
-def modificarProyecto(request, proyecto_id_rec):
+def modificarProyecto(request, usuario_id, proyecto_id_rec):
     """Modifica el proyecto"""
     p=proyecto.objects.get(id=proyecto_id_rec)
     if request.method == 'POST':
@@ -297,22 +338,22 @@ def modificarProyecto(request, proyecto_id_rec):
                                          'fecha_fin': p.fecha_fin,
                                      
                                          })
-        ctx = {'form':form, 'proyecto':p}
+        ctx = {'form':form, 'proyecto':p,'usuarioid':usuario_id}
         return render_to_response('modificarProyecto.html', ctx ,context_instance=RequestContext(request))
     
-def visualizarProyectoView(request,proyecto_id_rec):
+def visualizarProyectoView(request,usuario_id, proyecto_id_rec):
     """if request.method == 'POST':
         rol_to_change= rol.objects.get(rol_id=rol_id_rec)
         formulario_loaded = FormularioRolProyecto(request.POST,instance=rol_to_change)
         formulario_loaded.save()"""
     proyecto_enc= proyecto.objects.get(id=proyecto_id_rec)
-    return render_to_response('visualizarProyecto.html',{'proyecto':proyecto_enc},
+    return render_to_response('visualizarProyecto.html',{'proyecto':proyecto_enc,'usuarioid':usuario_id},
                                   context_instance=RequestContext(request))
 
         
 
     
-def crearActividadView(request):
+def crearActividadView(request,usuario_id,proyectoid):
     """
     Vista que se obitene del regex /registrar solicitado al precionar el boton
     registrar en el Flujo, devuelve un formulario html para crear una nueva actividad
@@ -322,7 +363,7 @@ def crearActividadView(request):
         #si no es una peticion post, aignamos a form
         #el form que hemos creado sin datos
         form = formularioActividad()
-        return render_to_response("crearActividad.html",{"form":form}, context_instance = RequestContext(request))
+        return render_to_response("crearActividad.html",{"form":form,'usuarioid':usuario_id,'proyectoid':proyectoid}, context_instance = RequestContext(request))
     
     else:#request.method == 'POST'
         form = formularioActividad(request.POST)
@@ -341,10 +382,10 @@ class formularioActividad(forms.ModelForm):
         model=Actividades
         fields = ('nombre', 'descripcion')
         
-def seleccionarFlujoModificar(request):
-    return render(request,'seleccionarActividad.html',{'actividades':Actividades.objects.all()})
+def seleccionarFlujoModificar(request,usuario_id,proyectoid):
+    return render(request,'seleccionarActividad.html',{'actividades':Actividades.objects.all(),'usuarioid':usuario_id,'proyectoid':proyectoid})
 
-def modificarActividad(request, actividad_id_rec):
+def modificarActividad(request,usuario_id,proyectoid,actividad_id_rec):
     p=Actividades.objects.get(id=actividad_id_rec)
     if request.method == 'POST':
         form = formularioActividad(request.POST)
@@ -365,11 +406,11 @@ def modificarActividad(request, actividad_id_rec):
                                          #'flujo': p.flujo,
                                      
                                          })
-        ctx = {'form':form, 'Actividad':p}
+        ctx = {'form':form, 'Actividad':p,'usuarioid':usuario_id,'proyectoid':proyectoid}
         return render_to_response('modificarActividad.html', ctx ,context_instance=RequestContext(request)) 
  
     
-def asignarRol(request,rolid,proyectoid):
+def asignarRol(request,rolid,proyectoid,usuario_id):
     proyectox=proyecto.objects.get(id=proyectoid)
     rolx = rol.objects.get(id=rolid)
     if request.method=='POST':
@@ -382,7 +423,7 @@ def asignarRol(request,rolid,proyectoid):
             print "Either the entry or blog doesn't exist." 
             return HttpResponseRedirect('/crearFlujo/')
     else:
-        return render(request,'asignaRolProyecto.html',{'proyecto':proyectox,'usuarios':MyUser.objects.all(),'proyectoid':proyectoid})
+        return render(request,'asignaRolProyecto.html',{'proyecto':proyectox,'usuarios':MyUser.objects.all(),'proyectoid':proyectoid,'usuarioid':usuario_id})
     """proyectox=proyecto.objects.get(id=proyectoid)
     rolx = rol.objects.get(id=rolid)
     if request.method=='POST':
