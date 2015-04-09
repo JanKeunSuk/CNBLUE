@@ -138,7 +138,7 @@ def seteoPassword(request, usuario_id):
             usuario = MyUser.objects.get(id = usuario_id)
             if (usuario is not None):
                 if passwor1 and passwor2 and passwor1 != passwor2:
-                    raise forms.ValidationError("Passwords don't match")
+                    return HttpResponse("Las contrasenhas no coinciden, vuelve a la pagina de seteo")
                 else:
                     usuario.set_password(formulario.cleaned_data['password_nueva1'])
                     usuario.save()
@@ -414,17 +414,18 @@ def modificarActividad(request,usuario_id,proyectoid,actividad_id_rec):
 def asignarRol(request,rolid,proyectoid,usuario_id):
     proyectox=proyecto.objects.get(id=proyectoid)
     rolx = rol.objects.get(id=rolid)
+    usuario = MyUser.objects.get(id=usuario_id)
     if request.method=='POST':
         try:
             for p in request.POST.getlist('usuarios'):
                 asignacion_a_crear = asignacion.objects.create(usuario=MyUser.objects.get(id=p),rol=rolx, proyecto=proyectox)
                 asignacion_a_crear.save()
-                return HttpResponse('La asignacion se ha realizado')  
+                return HttpResponse('La asignacion se ha realizado exitosamente')
         except ObjectDoesNotExist:
             print "Either the entry or blog doesn't exist." 
             return HttpResponseRedirect('/crearFlujo/')
     else:
-        return render(request,'asignaRolProyecto.html',{'proyecto':proyectox,'usuarios':MyUser.objects.all(),'proyectoid':proyectoid,'usuarioid':usuario_id})
+        return render_to_response('asignaRolProyecto.html',{'proyecto':proyectox,'usuarios':MyUser.objects.all().exclude(id=usuario_id),'proyectoid':proyectoid,'usuarioid':usuario_id})
     """proyectox=proyecto.objects.get(id=proyectoid)
     rolx = rol.objects.get(id=rolid)
     if request.method=='POST':
