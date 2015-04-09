@@ -269,7 +269,7 @@ class asigna_sistema(models.Model):
     rol=models.ForeignKey(rol_sistema)    
     def __unicode__(self):
         """Representacion unicode del objeto permitido"""
-        return str(self.asigna_id)
+        return str(self.id)
        
 class delegacion(models.Model):
     """Modelo que especifica una delegacion de una HU a un usuario en un proyecto"""
