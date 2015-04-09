@@ -76,7 +76,8 @@ def guardarRolView(request,usuario_id):
         for p in request.POST.getlist('permisos'):
             rol_a_crear.permisos.add(Permission.objects.get(id=p))
         rol_a_crear.save()
-        return HttpResponse('El rol se ha creado')  
+        return HttpResponse('El rol se ha creado')
+      
     except ObjectDoesNotExist:
         print "Either the entry or blog doesn't exist." 
         return HttpResponseRedirect('/crearRol/')
@@ -419,7 +420,8 @@ def asignarRol(request,rolid,proyectoid,usuario_id):
             for p in request.POST.getlist('usuarios'):
                 asignacion_a_crear = asignacion.objects.create(usuario=MyUser.objects.get(id=p),rol=rolx, proyecto=proyectox)
                 asignacion_a_crear.save()
-                return HttpResponse('La asignacion se ha realizado')  
+                usuario=MyUser.objects.get(id=usuario_id)
+                return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario':usuario})
         except ObjectDoesNotExist:
             print "Either the entry or blog doesn't exist." 
             return HttpResponseRedirect('/crearFlujo/')
