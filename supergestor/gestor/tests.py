@@ -3,9 +3,19 @@
 Casos de prueba para los modelos existentes dentro del sistema.
 
 """
+import sys
+import unittest
 from django.test import TestCase, Client
+from gestor.models import MyUser, Permitido, rol, rol_sistema, Actividades, Flujo, proyecto, asignacion, asigna_sistema
+from django.core.urlresolvers import reverse, resolve
+from gestor.views import FormularioRolProyecto, proyectoFrom, FormularioFlujoProyecto, formularioActividad,crearRol
+from django.http import HttpRequest
+from django.test import Client
+from samba.upgradehelpers import SIMPLE
+from django.test.testcases import SimpleTestCase
+from django.test.client import RequestFactory
+from django.contrib.auth.models import AnonymousUser, Permission
 
-from gestor.models import MyUser, Permitido
 
 class MyUserManagerTests(TestCase):
 
@@ -112,3 +122,131 @@ class MyUserTest(TestCase):
         
         response = self.client.get('/save/')
         self.assertEqual(response.status_code, 200)
+     
+class RolTest(TestCase):
+    
+    
+    def create_rol(self):
+        return rol.objects.create( nombre_rol_id="nuevoRol", descripcion="nuevo_rol", usuario_creador= MyUser.objects.create_user('nuevo33333', Permitido.objects.create(email='nuevo33333@gmail.com'), '1234'))
+    
+    def test_rol_creation(self):
+        w=self.create_rol()
+        self.assertTrue(isinstance(w, rol))
+        self.assertEqual(w.__unicode__(), w.nombre_rol_id)
+        
+    def setUp(self):
+        self.factory=RequestFactory
+        self.rol=rol.objects.create(nombre_rol_id="nuevoRol", descripcion="nuevo_rol", usuario_creador=MyUser.objects.create_user('nuevo11111', Permitido.objects.create(email='nuevo1111@gmail.com'), '1234'))
+        
+    def test_rol_view(self):
+        response=self.client.get('/crearRol/2/1/')
+        self.assertEqual(response.status_code, 200)
+         
+class Rol_sistemaTest(TestCase):
+    
+    def create_rol_sistema(self):
+        return rol_sistema.objects.create( nombre_rol_id="nuevoRol", descripcion="nuevo_rol")
+    
+    def test_rol_sistema_creation(self):
+        w=self.create_rol_sistema()
+        self.assertTrue(isinstance(w, rol_sistema))
+        self.assertEqual(w.__unicode__(), w.nombre_rol_id)
+        
+class ActividadesTest(TestCase):
+    def create_Actividades(self, nombre="nuevaActividad", descripcion="nuevo Actividad" ):
+        return Actividades.objects.create(nombre=nombre, descripcion=descripcion)
+    
+    def test_Actividad_creation(self):
+        w=self.create_Actividades()
+        self.assertTrue(isinstance(w, Actividades))
+        self.assertEqual(w.__unicode__(), str(w.id)  + " " + w.nombre)
+        
+  #  def test_invalid_formularioActividad(self):
+   #     w = Actividades.objects.create(nombre="nuevaActividad", descripcion='nueva Actividad' )
+    #    data = {'nombre':w.nombre, 'descripcion':w.descripcion,}
+     #   form = formularioActividad(data=data)
+      #  self.assertFalse(form.is_valid())
+        
+    def test_valid_formularioActividad(self):
+        w = Actividades.objects.create(nombre="nuevaActividad", descripcion='nueva Actividad' )
+        data = {'nombre':w.nombre, 'descripcion':w.descripcion,}
+        form = formularioActividad(data=data)
+        self.assertTrue(form.is_valid())
+        
+class FlujoTest(TestCase):
+    def create_Flujo(self, nombre="nuevoFlujo", estado="ACT" ):
+        return Flujo.objects.create(nombre=nombre, estado=estado)
+    
+    def test_Flujo_creation(self):
+        w=self.create_Flujo()
+        self.assertTrue(isinstance(w, Flujo))
+        self.assertEqual(w.__unicode__(), str(w.id) + w.nombre)
+        
+class proyectoTest(TestCase):
+    
+    def create_proyecto(self, nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio="2015-03-31 00:00:00-04", fecha_fin="2015-03-31 00:00:00-04" ,estado="PEN" ):
+        return proyecto.objects.create(nombre_corto=nombre_corto, nombre_largo=nombre_largo, descripcion=descripcion, fecha_inicio=fecha_inicio, fecha_fin=fecha_fin, estado=estado)
+    
+    def test_proyecto_creation(self):
+        w=self.create_proyecto()
+        self.assertTrue(isinstance(w, proyecto))
+        self.assertEqual(w.__unicode__(), w.nombre_corto)
+        
+    #def test_invalid_proyectoFrom(self):
+     #   w = proyecto.objects.create(nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio="2015-03-31 00:00:00-04", fecha_fin="2015-03-31 00:00:00-04" ,estado="PEN" )
+      #  data = {'nombre_corto':w.nombre_corto, 'nombre_largo':w.nombre_largo, 'descripcion':w.descripcion, 'fecha_inicio':w.fecha_inicio, 'fecha_fin': w.fecha_fin, 'estado':w.estado ,}
+       # form = proyectoFrom(data=data)
+        #self.assertFalse(form.is_valid())
+     
+    def test_valid_proyectoFrom(self):
+        w = proyecto.objects.create(nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio="2015-03-31 00:00:00-04", fecha_fin="2015-03-31 00:00:00-04" ,estado="PEN" )
+        data = {'nombre_corto':w.nombre_corto, 'nombre_largo':w.nombre_largo, 'descripcion':w.descripcion, 'fecha_inicio':w.fecha_inicio, 'fecha_fin': w.fecha_fin, 'estado':w.estado , }
+        form = proyectoFrom(data=data)
+        self.assertTrue(form.is_valid())
+               
+  #  def test_invalid_FormularioRolProyecto(self):
+   #     w = proyecto.objects.create(nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio="2015-03-31 00:00:00-04", fecha_fin="2015-03-31 00:00:00-04" ,estado="PEN" )
+    #    data = {'nombre_corto':w.nombre_corto, 'nombre_largo':w.nombre_largo, 'descripcion':w.descripcion, 'fecha_inicio':w.fecha_inicio, 'fecha_fin': w.fecha_fin, 'estado':w.estado ,}
+     #   form = FormularioRolProyecto(data=data)
+      #  self.assertFalse(form.is_valid())
+        
+    def test_valid_FormularioRolProyecto(self):
+        w = rol.objects.create(nombre_rol_id="nuevoRol", descripcion="nuevoRol", usuario_creador=MyUser.objects.create_user('kathe', Permitido.objects.create(email='kathe@gmail.com'), '1234'))
+        w.save()
+        w.permisos.add(Permission.objects.get(id=34))
+        data = {'nombre_rol_id':w.nombre_rol_id, 'descripcion':w.descripcion,'permisos':w.permisos, }
+        form = FormularioRolProyecto(data=data, instance=rol)
+        self.assertTrue(form.is_valid())
+        
+    #def test_invalid_FormularioFlujoProyecto(self):
+     #   w = Flujo.objects.create(nombre='nuevoFlujo', estado='ACT')
+      #  data = {'nombre':w.nombre, 'estado':w.estado, }
+       # form = FormularioFlujoProyecto(data=data)
+       # self.assertFalse(form.is_valid())
+        
+    def test_valid_FormularioFlujoProyecto(self):
+        w = Flujo.objects.create(nombre='nuevoFlujo', estado='ACT')
+        w.actividades.create(nombre='Actividad1', descripcion='actividad')
+        data = {'nombre':w.nombre, 'estado':w.estado, 'actividades': w.actividades,}
+        form = FormularioFlujoProyecto(data=data, instance=Flujo)
+        self.assertTrue(form.is_valid())
+        
+        
+class asignacionTest(TestCase):
+    def create_asignacion(self, usuario_id='1', rol_id='1', proyecto_id='1'):
+        return asignacion.objects.create(usuario_id=usuario_id, rol_id=rol_id, proyecto_id=proyecto_id)
+    
+    def test_asignacion_creation(self):
+        w=self.create_asignacion()
+        self.assertTrue(isinstance(w, asignacion))
+        self.assertEqual(w.__unicode__(), str(w.id))
+        
+class asigna_sistemacionTest(TestCase):
+    def create_asigna_sistema(self, usuario_id='1', rol_id='1'):
+        return asigna_sistema.objects.create(usuario_id=usuario_id, rol_id=rol_id)
+    
+    def test_asigna_sistema_creation(self):
+        w=self.create_asigna_sistema()
+        self.assertTrue(isinstance(w, asigna_sistema))
+        self.assertEqual(w.__unicode__(), str(w.id))
+
