@@ -10,6 +10,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField 
 from gestor.models import MyUser, Permitido, rol, asignacion, proyecto,\
     asigna_sistema, rol_sistema,Flujo
+from django.contrib.admin.options import ModelAdmin
 
 
 class UserCreationForm(forms.ModelForm):
@@ -64,7 +65,13 @@ class UserChangeForm(forms.ModelForm):
         # field does not have access to the initial value
         return self.initial["password"]
 
+class RolCreationForm(forms.ModelForm):
+    class Meta:
+        model=rol
+        fields=('permisos','nombre_rol_id','descripcion')
 
+    
+  
 class MyUserAdmin(UserAdmin):
     """Configura la vista de administracion de un modelo, 
     los campos visibles de cada registro, los campos de filtro y busqueda
@@ -105,10 +112,19 @@ class FlujoAdmin(admin.ModelAdmin):
     save_as = True 
     
 class RolAdmin(admin.ModelAdmin):
+    form=RolCreationForm
     list_display = ('nombre_rol_id', 'descripcion')
     list_filter = ('id',)
     ordering = ('id',)
     filter_horizontal = ('permisos',)
+    def save_model(self, request, obj, form, change):
+        obj.usuario_creador = request.user
+        obj.save()
+    """add_fieldsets = (
+        (None, {
+            'fields': ('permisos','usuario_rol_id','descripcion')}
+        ),
+    )"""
     save_as = True 
 
 # Now register the new UserAdmin...
