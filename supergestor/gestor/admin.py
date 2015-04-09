@@ -10,7 +10,6 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField 
 from gestor.models import MyUser, Permitido, rol, asignacion, proyecto,\
     asigna_sistema, rol_sistema,Flujo
-from django.contrib.admin.options import ModelAdmin
 
 
 class UserCreationForm(forms.ModelForm):
@@ -104,6 +103,8 @@ class MyUserAdmin(UserAdmin):
     save_as = True      
 
 class FlujoAdmin(admin.ModelAdmin):
+    """Configura la vista de administracion de Flujos para un usuario administrador,
+    lista nombre y estado y al modificar permite guardar como"""
     list_display = ('nombre', 'estado')
     list_filter = ('estado',)
     ordering = ('id',)
@@ -112,12 +113,15 @@ class FlujoAdmin(admin.ModelAdmin):
     save_as = True 
     
 class RolAdmin(admin.ModelAdmin):
+    """Configura la vista de administracion, modificacion y creacion de roles para un administrador,
+    lsta nombre y desprpcion y al crear, automaticamente establece al usuario actual como creador del rol"""
     form=RolCreationForm
     list_display = ('nombre_rol_id', 'descripcion')
     list_filter = ('id',)
     ordering = ('id',)
     filter_horizontal = ('permisos',)
     def save_model(self, request, obj, form, change):
+        """Permite establecer al usuario actual utilizando la interfaz admin como creador del rol"""
         obj.usuario_creador = request.user
         obj.save()
     """add_fieldsets = (
