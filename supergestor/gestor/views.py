@@ -254,7 +254,19 @@ def modificarFlujo(request, proyectoid, flujo_id_rec):
     
 def crearRol(request,usuario_id):
     if request.method == 'GET':
-        return render(request, 'crearRol.html',{'permissions':Permission.objects.all(),'usuarioid':usuario_id})
+        permisos=Permission.objects.all().exclude(name='Can add group').exclude(name='Can change group')
+        permisos=permisos.exclude(name='Can delete group').exclude(name='Can delete permission')
+        permisos=permisos.exclude(name='Can add my user').exclude(name='Can change my user')
+        permisos=permisos.exclude(name='Can delete my user').exclude(name='Can delete rol sistema')
+        permisos=permisos.exclude(name='Can add permission').exclude(name='Can change permission')
+        permisos=permisos.exclude(name='Can add rol sistema').exclude(name='Can change rol sistema')
+        permisos=permisos.exclude(name='Can add proyecto').exclude(name='Can change proyecto')
+        permisos=permisos.exclude(name='Can delete proyecto')
+        permisos=permisos.exclude(name='Can add asigna sistema').exclude(name='Can change asigna sistema')
+        permisos=permisos.exclude(name='Can delete asigna sistema')
+        permisos=permisos.exclude(name='Can add permitido').exclude(name='Can change permitido')
+        permisos=permisos.exclude(name='Can delete permitido')
+        return render(request, 'crearRol.html',{'permissions':permisos,'usuarioid':usuario_id})
 
 def crearFlujo(request):
     if request.method == 'GET':
