@@ -1,8 +1,8 @@
 #coding: utf-8
-"""Archivo que contiene los metodos que contienen
-las peticiones, las manipula y gestiona la respuesta a enviar
-a los clientes , cada vista obtiene de request que se le es envado
-luego de pasar por el filtro de expresiones regulares"""
+"""Archivo que contiene los metodos que responden a las peticiones de las URL que se filtran por medio de las
+expresiones regulares en el archivo urls.py, manipula y gestiona la respuesta que se van a enviar a los clientes.
+Cada vista obtiene del request que se le envio la informacion necesaria para el funcionamiento de los metodos,
+"""
 from django.shortcuts import render, render_to_response
 from django.http.response import HttpResponseRedirect
 from django.http import HttpResponse
@@ -35,13 +35,14 @@ def holaView(request):
                         nombres_de_proyecto[p] = rol_lista
         return render(request,'hola.html',{'usuario':request.user, 'proyectos':nombres_de_proyecto})
 
-def holaScrumView(request,usuario_id,proyectoid): 
+def holaScrumView(request,usuario_id,proyectoid):
+    """
+    Vista especial para el usuario scrum en la que le listan los proyectos y los enlaces para la creacion de roles y flujos
+    Vista para los usuario comunes, en la que solo se listan los proyectos sin enlaces, ya que no tiene permiso para ello.
+    """
     proyectox=proyecto.objects.get(id=proyectoid)
     usuario=MyUser.objects.get(id=usuario_id)
     return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario':usuario})
-
-def ListarUsuarioParaFormarEquipo(request):
-    return render(request,'formarEquipo.html',{'usuarios':MyUser.objects.all(), 'roles':rol.objects.all()})
 
 def registrarUsuarioView(request):
     """Vista que se obitene del regex /registrar solicitado al precionar el boton
@@ -97,19 +98,25 @@ def guardarFlujoView(request):
         return HttpResponseRedirect('/crearFlujo/')
     
 class FormularioContacto(forms.Form):
+    """
+    Clase utilizada para obtener el formulario de peticion de seto de contrasenha.
+    """
     usuario = forms.CharField()
     correo = forms.EmailField()
 
-class Formulario(forms.Form):
-    nombre = forms.CharField(max_length=100)
-    mensaje = forms.CharField()
-    mail = forms.EmailField()
-
 class FormularioSeteoContrasenha(forms.Form):
+    """
+    Clase utilizada para obtener el formulario de seteo de contrasenha.
+    """
     password_nueva1 = forms.CharField(widget=forms.PasswordInput)
     password_nueva2 = forms.CharField(widget=forms.PasswordInput)
     
 def contactomail(request):
+    """
+    Vista que obtiene los datos del usuario como su nombre identificador de usuario y correo,
+    comprueba que el correo le pertenezca y envia la direccion correspondiente al seteo de su contrasenha
+    a su correo. En caso de que su correo no coincida con el que le corresponda, notifica al usuario.
+    """
     if request.method == 'POST':
         formulario = FormularioContacto(request.POST)
         if formulario.is_valid():
@@ -131,6 +138,11 @@ def contactomail(request):
                               context_instance=RequestContext(request))
     
 def seteoPassword(request, usuario_id):
+    """
+    Vista que se despliega al estar en el direccionamiento de configuracion de contrasenha,
+    comprueba que ambas contrasenhas intruducidas por el usuario coincidan, en caso de que coincidan
+    se almacena la nueva contrasenha en la Base de Datos y en caso de que no coincidan se le notifica al usuario.
+    """
     if request.method == 'POST':
         formulario = FormularioSeteoContrasenha(request.POST)
         if formulario.is_valid():
@@ -152,10 +164,10 @@ def seteoPassword(request, usuario_id):
     
 
 class FormularioRolProyecto(forms.ModelForm):
-    
-    """ permiso=forms.ModelMultipleChoiceField()
-    nombre=forms.CharField()
-    descripcion= forms.CharField()"""
+    """
+    Clase que obtiene el formulario para la creacion, visualizacion y modificacion
+    de roles de proyecto desde la vista del Scrum.
+    """
     class Meta:
         model= rol
         fields=['permisos','nombre_rol_id','descripcion']
@@ -164,10 +176,10 @@ class FormularioRolProyecto(forms.ModelForm):
         }
         
 def visualizarRolProyectoView(request,usuario_id,proyectoid, rol_id_rec):
-    """if request.method == 'POST':
-        rol_to_change= rol.objects.get(rol_id=rol_id_rec)
-        formulario_loaded = FormularioRolProyecto(request.POST,instance=rol_to_change)
-        formulario_loaded.save()"""
+    """
+    Vista que utiliza el formulario RolProyecto para desplegar los datos almacenados
+    en el Rol que se quiere visualizar.
+    """
     rolproyecto= rol.objects.get(id=rol_id_rec)
     if request.method == 'POST':
         formulario = FormularioRolProyecto(request.POST)
@@ -178,12 +190,9 @@ def visualizarRolProyectoView(request,usuario_id,proyectoid, rol_id_rec):
             rolproyecto.nombre_rol_id=nombre_rol_id
             rolproyecto.descripcion=descripcion
             rolproyecto.permisos=permisos
-            rolproyecto.save() #Guardamos el modelo de manera Editada
+            rolproyecto.save() 
             return HttpResponse('El rol ha sido guardado exitosamente')
-    else:  
-        """asignation= asignacion.objects.get(asignacion_id=request.asignacion)  #asignacion supongo que es lo que me manda kathe
-        rolproyecto= rol.objects.get(rol=asignation.rol)""" #me dalta ver si chequear asi nomas o el rol
-        
+    else:       
         formulario =  FormularioRolProyecto(initial={
                                                      'nombre_rol_id': rolproyecto.nombre_rol_id,
                                                      'permisos': rolproyecto.permisos,
@@ -193,7 +202,10 @@ def visualizarRolProyectoView(request,usuario_id,proyectoid, rol_id_rec):
                                   context_instance=RequestContext(request))
         
 def modificarRol(request, usuario_id, proyectoid, rol_id_rec):
-    """Modifica el Rol"""
+    """
+    Vista que utiliza el formulario RolProyecto para desplegar los datos editables
+    del Rol que se quiere modificar.
+    """
     f=rol.objects.get(id=rol_id_rec)
     u=MyUser.objects.get(id=usuario_id)
     if request.method == 'POST':
@@ -220,10 +232,10 @@ def modificarRol(request, usuario_id, proyectoid, rol_id_rec):
         return render_to_response('modificarRol.html', ctx ,context_instance=RequestContext(request))
 
 class FormularioFlujoProyecto(forms.ModelForm):
-    
-    """ permiso=forms.ModelMultipleChoiceField()
-    nombre=forms.CharField()
-    descripcion= forms.CharField()"""
+    """
+    Clase que obtiene el formulario para la creacion, visualizacion y modificacion
+    de flujos de proyecto desde la vista del Scrum.
+    """
     class Meta:
         model= Flujo
         fields=['nombre','estado','actividades']
@@ -232,6 +244,10 @@ class FormularioFlujoProyecto(forms.ModelForm):
         }
         
 def visualizarFlujoProyectoView(request,usuario_id, proyectoid, flujo_id_rec):
+    """
+    Vista que utiliza el formulario FlujoProyecto para desplegar los datos almacenados
+    en el Flujo que se quiere visualizar.
+    """
     flujo_disponible= Flujo.objects.get(id=flujo_id_rec)
     if request.method == 'POST':
         formulario = FormularioFlujoProyecto(request.POST)
@@ -244,10 +260,7 @@ def visualizarFlujoProyectoView(request,usuario_id, proyectoid, flujo_id_rec):
             flujo_disponible.actividades=actividades
             flujo_disponible.save() #Guardamos el modelo de manera Editada
             return HttpResponse('El rol ha sido guardado exitosamente')
-    else:  
-        """asignation= asignacion.objects.get(asignacion_id=request.asignacion)  #asignacion supongo que es lo que me manda kathe
-        rolproyecto= rol.objects.get(rol=asignation.rol)""" #me dalta ver si chequear asi nomas o el rol
-        
+    else:   
         formulario =  FormularioRolProyecto(initial={
                                                      'nombre': flujo_disponible.nombre,
                                                      'estado': flujo_disponible.estado,
@@ -257,7 +270,10 @@ def visualizarFlujoProyectoView(request,usuario_id, proyectoid, flujo_id_rec):
                                   context_instance=RequestContext(request))
 
 def modificarFlujo(request, usuario_id, proyectoid, flujo_id_rec):
-    """Modifica el Flujo"""
+    """
+    Vista que utiliza el formulario FlujoProyecto para desplegar los datos editables
+    del Flujo que se quiere modificar.
+    """
     f=Flujo.objects.get(id=flujo_id_rec)
     if request.method == 'POST':
         form = FormularioFlujoProyecto(request.POST)
@@ -282,6 +298,10 @@ def modificarFlujo(request, usuario_id, proyectoid, flujo_id_rec):
         return render_to_response('modificarFlujo.html', ctx ,context_instance=RequestContext(request))
     
 def crearRol(request,usuario_id,proyectoid):
+    """
+    Vista que realiza la creacion de roles de proyecto desde la vista del Scrum, excluyendo aquellos permisos que no corresponde
+    ser vistos por el usuario Scrum.
+    """
     if request.method == 'GET':
         permisos=Permission.objects.all().exclude(name='Can add group').exclude(name='Can change group') 
         permisos=permisos.exclude(name='Can delete group').exclude(name='Can delete permission') 
@@ -300,17 +320,25 @@ def crearRol(request,usuario_id,proyectoid):
         return render(request, 'crearRol.html',{'permissions':permisos,'usuarioid':usuario_id,'proyectoid':proyectoid})
     
 def crearFlujo(request,usuario_id,proyectoid):
+    """
+    Vista que realiza la creacion de flujos de proyecto desde la vista del Scrum.
+    """
     if request.method == 'GET':
         return render(request, 'crearFlujo.html',{'actividades':Actividades.objects.all(),'usuarioid':usuario_id,'proyectoid':proyectoid})
 
 class proyectoFrom(forms.ModelForm):
-    """Clase meta de un ModelForm donde se indica el Modelo relacionado y los campos a mostrar"""
+    """
+    Clase que obtiene el formulario para la visualizacion y modificacion de proyectos desde la vista del Scrum.
+    """
     class Meta:
         model = proyecto
         fields = ['nombre_corto', 'nombre_largo', 'descripcion','estado','fecha_inicio','fecha_fin']
 
 def modificarProyecto(request, usuario_id, proyecto_id_rec):
-    """Modifica el proyecto"""
+    """
+    Vista que utiliza el formulario proyectoFrom para desplegar los datos editables
+    del Proyecto que se quiere modificar.
+    """
     p=proyecto.objects.get(id=proyecto_id_rec)
     if request.method == 'POST':
         form = proyectoFrom(request.POST)
@@ -344,26 +372,20 @@ def modificarProyecto(request, usuario_id, proyecto_id_rec):
         return render_to_response('modificarProyecto.html', ctx ,context_instance=RequestContext(request))
     
 def visualizarProyectoView(request,usuario_id, proyecto_id_rec):
-    """if request.method == 'POST':
-        rol_to_change= rol.objects.get(rol_id=rol_id_rec)
-        formulario_loaded = FormularioRolProyecto(request.POST,instance=rol_to_change)
-        formulario_loaded.save()"""
+    """
+    Vista que utiliza el formulario proyectoFrom para desplegar los datos almacenados
+    en el Flujo que se quiere visualizar.
+    """
     proyecto_enc= proyecto.objects.get(id=proyecto_id_rec)
     return render_to_response('visualizarProyecto.html',{'proyecto':proyecto_enc,'usuarioid':usuario_id},
                                   context_instance=RequestContext(request))
 
-        
-
-    
 def crearActividadView(request,usuario_id,proyectoid):
     """
-    Vista que se obitene del regex /registrar solicitado al precionar el boton
-    registrar en el Flujo, devuelve un formulario html para crear una nueva actividad
-    """
-    
+    Vista que se obtiene del regex al presionar el boton Crear Actividad dentro del formulario
+    de creacion o modificacion de Flujos, devolviendo un formulario html para crear una nueva actividad
+    """  
     if request.method == 'GET':
-        #si no es una peticion post, aignamos a form
-        #el form que hemos creado sin datos
         form = formularioActividad()
         return render_to_response("crearActividad.html",{"form":form,'usuarioid':usuario_id,'proyectoid':proyectoid}, context_instance = RequestContext(request))
     
@@ -372,47 +394,56 @@ def crearActividadView(request,usuario_id,proyectoid):
         if form.is_valid():
             nombre=form.cleaned_data['nombre']
             descripcion=form.cleaned_data['descripcion']
-            #flujo=form.cleaned_data['flujo']
             form.nombre=nombre
             form.descripcion=descripcion
-            #form.flujo=flujo
             form.save()
             return HttpResponse('Ha sido guardado exitosamente')       
  
 class formularioActividad(forms.ModelForm):
+    """
+    Clase que obtiene el formulario para la creacion y modificacion de actividades desde la vista del Scrum y el admin.
+    """
     class Meta:
         model=Actividades
         fields = ('nombre', 'descripcion')
         
 def seleccionarFlujoModificar(request,usuario_id,proyectoid):
+    """
+    Al presionar el boton Modificar Actividad, esta vista despliega una lista de todas las actividades seleccionables por el usuario
+    para su modificacion.
+    """
     return render(request,'seleccionarActividad.html',{'actividades':Actividades.objects.all(),'usuarioid':usuario_id,'proyectoid':proyectoid})
 
 def modificarActividad(request,usuario_id,proyectoid,actividad_id_rec):
+    """
+    Vista que utiliza el formulario formularioActividad para desplegar los datos editables
+    de la Actividad que se quiere modificar.
+    """
     p=Actividades.objects.get(id=actividad_id_rec)
     if request.method == 'POST':
         form = formularioActividad(request.POST)
         if form.is_valid():
             nombre=form.cleaned_data['nombre']
             descripcion=form.cleaned_data['descripcion']
-            #flujo=form.cleaned_data['flujo']
             p.nombre=nombre
             p.descripcion=descripcion
-            #p.flujo=flujo
             p.save() #Guardamos el modelo de manera Editada
             return HttpResponse('Se ha guardado exitosamente')
     else:
         
         form = formularioActividad(initial={
                                          'nombre': p.nombre,
-                                         'descripcion': p.descripcion,
-                                         #'flujo': p.flujo,
-                                     
+                                         'descripcion': p.descripcion,                                     
                                          })
         ctx = {'form':form, 'Actividad':p,'usuarioid':usuario_id,'proyectoid':proyectoid}
         return render_to_response('modificarActividad.html', ctx ,context_instance=RequestContext(request)) 
  
     
 def asignarRol(request,rolid,proyectoid,usuario_id):
+    """
+    Vista que permite asignar un rol a un usuario dentro de la vista del Scrum, valiendose de la URL para obtener
+    los id's del rol , proyecto ye l usuario creador.
+    """
     proyectox=proyecto.objects.get(id=proyectoid)
     rolx = rol.objects.get(id=rolid)
     if request.method=='POST':
