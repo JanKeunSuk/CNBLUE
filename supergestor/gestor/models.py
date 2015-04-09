@@ -138,10 +138,12 @@ class rol(models.Model):
     #tipo = models.CharField(max_length = 3, choices = ROL_CHOICES)
     
     def __unicode__(self):
-        """Representacion unicode del objeto permitido"""
+        """Representacion unicode del objeto rol"""
         return self.nombre_rol_id
     
-class rol_sistema(models.Model):    
+class rol_sistema(models.Model): 
+    """Modelo que representa roles exclusivos de permisos de sistema, tiene una relacion
+    muchos a muchos con permisos"""   
     """ROL_CHOICES = (
         ("SIS", 'Sistema'),
         ('PRO', 'Proyecto'),
@@ -151,7 +153,7 @@ class rol_sistema(models.Model):
     descripcion = models.CharField(max_length = 200)
     #tipo = models.CharField(max_length = 3, choices = ROL_CHOICES)
     def __unicode__(self):
-        """Representacion unicode del objeto permitido"""
+        """Representacion unicode del objeto rol sistema"""
         return self.nombre_rol_id
     
 
@@ -207,7 +209,7 @@ class Actividades(models.Model):
     #en_progreso
     #finalizado
     def __unicode__(self):
-        """Representacion unicode del objeto permitido"""
+        """Representacion unicode del objeto actividad"""
         return str(self.id)  + " " + self.nombre
     
     
@@ -224,10 +226,11 @@ class Flujo(models.Model):
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
     actividades = models.ManyToManyField(Actividades)
     def __unicode__(self):
-        """Representacion unicode del objeto permitido"""
+        """Representacion unicode del objeto flujo"""
         return str(self.id) + self.nombre
 
 class asignaHU_actividad_flujo(models.Model):
+    """Modelo intermedio para la relacion varios a varios del modelo flujo con actividades"""
     lista_de_HU = models.ManyToManyField(HU)
     flujo_al_que_pertenece = models.ForeignKey(Flujo)
     actividad_al_que_pertenece = models.ForeignKey(Actividades)
@@ -250,7 +253,7 @@ class proyecto(models.Model):
     flujos = models.ManyToManyField(Flujo)
     
     def __unicode__(self):
-        """Representacion unicode del objeto permitido"""
+        """Representacion unicode del objeto proyecto"""
         return self.nombre_corto
         
 #Modelo para asignacion de actividades con HU en un flujo determinado
@@ -260,15 +263,17 @@ class asignacion(models.Model):
     rol=models.ForeignKey(rol)    
     proyecto=models.ForeignKey(proyecto)
     def __unicode__(self):
-        """Representacion unicode del objeto permitido"""
+        """Representacion unicode del objeto asignacion"""
         return str(self.id)
 
 #Modelo para asignacion de roles de proyecto
 class asigna_sistema(models.Model):
+    """MOdelo que representa la asignaciones de roles de sistema a usuarios con clave foranea a 
+    modelo rol sistema"""
     usuario=models.ForeignKey(MyUser)
     rol=models.ForeignKey(rol_sistema)    
     def __unicode__(self):
-        """Representacion unicode del objeto permitido"""
+        """Representacion unicode del objeto asigna sistema"""
         return str(self.id)
        
 class delegacion(models.Model):
