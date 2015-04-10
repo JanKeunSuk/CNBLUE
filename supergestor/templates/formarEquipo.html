@@ -23,13 +23,13 @@
     <div id="header">
         <div id="branding">
         
-<h1 id="site-name"><a href="/scrum/">Pagina Principal</a></h1>
+<h1 id="site-name"><a href="/scrum/{{usuario_id}}/{{proyecto.id}}">Pagina Principal</a></h1>
 
         </div>
         
         <div id="user-tools">
             
-                Bienvenido,
+                Bienvenido 
                 <strong>{{usuario}}</strong>.
             
 
@@ -46,52 +46,17 @@
     <!-- Content -->
   		
   		<div id="content">
-    
+    		<p>Usuarios que conforman el equipo de proyecto:</p>
         	{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-			<p>Selecciona todos los usuarios que foramaran parte del trabajo de este proyecto:</p>
-			<form action="/guardarEquipo" method="post">
-				{% csrf_token %}
-					{% for usuario in usuarios %}
-						<p><input type="checkbox" name="{{usuario}}" value="{{usuario}}"  />{{usuario}}</p>
-						<select name="roles"> 
-							{% for rol in roles %}
-								{%if rol.id != 1 %}
-									<option value="{{rol}}">{{rol}}</option>
-								{%endif%}
-							{% endfor %}
-						</select>
-    					<!-- <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ usuario }}" />
-    					<label for="choice{{ forloop.counter }}">{{ usuario }}</label><br /> -->
-					{% endfor %}
-				<p><input type="submit" value="Formar" /></p>
-			</form>
-        
-    
-
-</div>
-  		
-<!--     
-
-        
-<div id="content-related">
-    <div class="module" id="recent-actions-module">
-        <h2>Recent Actions</h2>
-        <h3>My Actions</h3>
-            
-            
-            
-            <p>None available</p>
-            
-    </div>
+        	<table>
+        	{% csrf_token %}
+        		{%for u in list_a%}
+        		<th>{{u}}</th>
+        		{% endfor %}
+			</table>  
+		</div>
 </div>
 
-        <br class="clear" />
-    </div>
-    <!-- END Content -->
-<!-- 
-    <div id="footer"></div>
-</div>
-<!-- END Container -->
 
 </body>
 </html>

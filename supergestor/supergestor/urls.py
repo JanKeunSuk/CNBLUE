@@ -32,5 +32,6 @@ urlpatterns = patterns('',
     url(r'^modificarActividad/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/$', views.seleccionarFlujoModificar, name='seleccionarFlujoModificar'),
     url(r'^modificarActividad/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<actividad_id_rec>\d+)/$', views.modificarActividad, name='modificarActividad'),
     url(r'^asignarRol/(?P<usuario_id>\d+)/(?P<rolid>\d+)/(?P<proyectoid>\d+)$',views.asignarRol, name= 'asignaRol'),
+    url(r'^equipoProyecto/(?P<proyecto_id_rec>\d+)/(?P<usuario_id>\d+)$',views.listarEquipo,name='listaEquipo'),
     
 )

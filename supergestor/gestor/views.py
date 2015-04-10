@@ -459,3 +459,16 @@ def asignarRol(request,rolid,proyectoid,usuario_id):
     else:
         return render(request,'asignaRolProyecto.html',{'proyecto':proyectox,'usuarios':MyUser.objects.all().exclude(id=usuario_id),'proyectoid':proyectoid,'usuarioid':usuario_id})
     
+    
+    
+def listarEquipo(request,proyecto_id_rec,usuario_id):
+    """Esta vista debe obtener los datos de los usuarios que han sido asignados a un rol en el proyecto,el parametro
+    usuario_id se necesita simplemente para el render para poder retornar a rol-flujo-para-scrum"""
+    lista_a=[]
+    proyectox=proyecto.objects.get(id=proyecto_id_rec)
+    asignationes=asignacion.objects.all()#primero obtengo todos los registros tabla asignaciones
+    for a in asignationes:
+        if a.proyecto == proyectox:#si el proyecto relacionado a una asignacion es el que se esta viendo ahora
+            lista_a.append(a.usuario)#agregar el usuario de esa asignacion a la vista, y mandarlo al template
+    return render(request,'formarEquipo.html',{'roles':rol.objects.all(),'lista_asigna':lista_a, 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario_id':usuario_id})
+    
