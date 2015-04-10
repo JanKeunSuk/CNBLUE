@@ -252,3 +252,4 @@ class asigna_sistemacionTest(TestCase):
         self.assertTrue(isinstance(w, asigna_sistema))
         self.assertEqual(w.__unicode__(), str(w.id))
         
+        
