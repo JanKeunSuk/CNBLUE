@@ -46,14 +46,14 @@
     <!-- Content -->
   		
   		<div id="content">
-    		<p>Usuarios que conforman el equipo de proyecto:</p>
         	{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-        	<table>
+        	<p><b>Usuarios que conforman el equipo de proyecto:</b></p>
         	{% csrf_token %}
-        		{%for u in list_a%}
-        		<th>{{u}}</th>
+        		<ul>
+        		{%for u,r in lista_asigna.items%}
+        			<li><p>{{u.username}} con Rol {{r.nombre_rol_id}}</p></li>
         		{% endfor %}
-			</table>  
+				</ul>
 		</div>
 </div>
 
