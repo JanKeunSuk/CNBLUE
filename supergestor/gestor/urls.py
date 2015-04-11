@@ -23,3 +23,4 @@ urlpatterns = patterns('',
     url(r'^modificarActividad/$', views.seleccionarFlujoModificar, name='seleccionarFlujoModificar'),
     url(r'^modificarActividad/(?P<actividad_id_rec>\d+)/$', views.modificarActividad, name='modificarActividad'),
 )
+
