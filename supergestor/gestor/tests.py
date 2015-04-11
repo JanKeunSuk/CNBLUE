@@ -171,9 +171,29 @@ class ActividadesTest(TestCase):
         form = formularioActividad(data=data)
         self.assertFalse(form.is_valid())
         
-    def test_crear_actividad_views(self):
+    def test_crear_actividad_views_get(self):
         response=self.client.get('/crearActividad/2/1/')
         self.assertEqual(response.status_code, 200)
+        
+    def test_crear_actividad_views_pos(self):
+        w = Actividades.objects.create(nombre="nuevaActividad", descripcion='nueva Actividad' )
+        w.save()
+        
+        actividad_in=Actividades.objects.get(pk=w.id)
+        self.assertEquals(actividad_in.nombre, w.nombre)    
+       
+    def create_proyecto(self):
+        return proyecto(nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio=timezone.now(), fecha_fin=datetime.timedelta(days=1), estado="PEN")
+    
+     
+    def test_modificar_actividad(self):
+        w=self.create_proyecto()    
+        u= MyUser.objects.create_user('anonimo', Permitido.objects.create(email='anonimo2@hotmail.com'), '1234')
+        y= self.create_Actividades()
+
+        post_data={'usuario':u.id,'proyecto':w.id,'actividad':y.id}
+        Actividad_url='/modificarActividad/1/1/'
+        self.client.post(Actividad_url, data=post_data)
         
 class FlujoTest(TestCase):
     def create_Flujo(self, nombre="nuevoFlujo", estado="ACT" ):
@@ -245,11 +265,29 @@ class asignacionTest(TestCase):
         
 class asigna_sistemacionTest(TestCase):
     def create_asigna_sistema(self, usuario_id='1', rol_id='1'):
-        return asigna_sistema.objects.create(usuario_id=usuario_id, rol_id=rol_id)
+        return asigna_sistema.objects.create(usuario_id=usuario_id, rol_id=rol_id) 
     
     def test_asigna_sistema_creation(self):
         w=self.create_asigna_sistema()
         self.assertTrue(isinstance(w, asigna_sistema))
         self.assertEqual(w.__unicode__(), str(w.id))
+
+    def create_proyecto(self):
+        return proyecto(nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio=timezone.now(), fecha_fin=datetime.timedelta(days=1), estado="PEN")
+
         
+    def create_rol(self):
+        return rol.objects.create( nombre_rol_id="nuevoRol", descripcion="nuevo_rol", usuario_creador= MyUser.objects.create_user('delsy', Permitido.objects.create(email='delsy@gmail.com'), '1234'))
+
+    def test_asignarRol_POST(self):
+        w=self.create_proyecto()
+        x=self.create_rol()
+        post_data={'proyecto':w.id,'rol':x.id, 'usuario':x.usuario_creador}
+        asignarRol_url='/asignarRol/1/1/'
+        self.client.post(asignarRol_url, data=post_data)
+                
+
+ 
+        
+     
         
