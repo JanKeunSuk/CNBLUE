@@ -472,4 +472,5 @@ def listarEquipo(request,proyecto_id_rec,usuario_id):
             usuario_a=MyUser.objects.get(id=a.usuario.id)
             lista[usuario_a]=rol_a#agregar el usuario de esa asignacion a la vista, y mandarlo al template
     return render(request,'formarEquipo.html',{'roles':rol.objects.all(),'lista_asigna':lista, 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario_id':usuario_id})
+
     
