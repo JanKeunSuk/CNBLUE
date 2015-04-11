@@ -16,7 +16,6 @@ from django.contrib.auth.decorators import login_required
 from django.forms.widgets import CheckboxSelectMultiple
 from django.contrib.auth.models import Permission
 
-
 # Create your views and forms here.
 @login_required
 def holaView(request):
@@ -171,10 +170,29 @@ class FormularioRolProyecto(forms.ModelForm):
     class Meta:
         model= rol
         fields=['permisos','nombre_rol_id','descripcion']
-        widgets = {
-            'permisos': CheckboxSelectMultiple(),
-        }
+        """
+        permisos=Permission.objects.all().exclude(name='Can add group').exclude(name='Can change group') 
+        permisos=permisos.exclude(name='Can delete group').exclude(name='Can delete permission') 
+        permisos=permisos.exclude(name='Can add my user').exclude(name='Can change my user') 
+        permisos=permisos.exclude(name='Can delete my user').exclude(name='Can delete rol sistema') 
+        permisos=permisos.exclude(name='Can add permission').exclude(name='Can change permission') 
+        permisos=permisos.exclude(name='Can add rol sistema').exclude(name='Can change rol sistema') 
+        permisos=permisos.exclude(name='Can add proyecto').exclude(name='Can change proyecto') 
+        permisos=permisos.exclude(name='Can delete proyecto') 
+        permisos=permisos.exclude(name='Can add asigna sistema').exclude(name='Can change asigna sistema') 
+        permisos=permisos.exclude(name='Can delete asigna sistema') 
+        permisos=permisos.exclude(name='Can add permitido').exclude(name='Can change permitido') 
+        permisos=permisos.exclude(name='Can delete permitido')
+        permisos=permisos.exclude(name='Can add log entry').exclude(name='Can delete log entry').exclude(name='Can change log entry')
+        permisos=permisos.exclude(name='Can add content type').exclude(name='Can delete content type').exclude(name='Can change content type')
+        """
         
+        """
+        widgets = {
+            'permisos': CheckboxSelectMultiple(choices = permisos),
+            
+        }
+        """
 def visualizarRolProyectoView(request,usuario_id,proyectoid, rol_id_rec):
     """
     Vista que utiliza el formulario RolProyecto para desplegar los datos almacenados
@@ -197,7 +215,7 @@ def visualizarRolProyectoView(request,usuario_id,proyectoid, rol_id_rec):
                                                      'nombre_rol_id': rolproyecto.nombre_rol_id,
                                                      'permisos': rolproyecto.permisos,
                                                      'descripcion': rolproyecto.descripcion,
-                                                     })      
+                                                     }) 
         return render_to_response('visualizarRol.html',{'formulario':formulario, 'rol':rolproyecto, 'proyectoid':proyectoid,'usuarioid':usuario_id},
                                   context_instance=RequestContext(request))
         
@@ -221,14 +239,35 @@ def modificarRol(request, usuario_id, proyectoid, rol_id_rec):
             f.save() #Guardamos el modelo de manera Editada
             return HttpResponse('El rol a sido modificado exitosamente')
     else:
-        
+        permisos=Permission.objects.all().exclude(name='Can add group').exclude(name='Can change group') 
+        permisos=permisos.exclude(name='Can delete group').exclude(name='Can delete permission') 
+        permisos=permisos.exclude(name='Can add my user').exclude(name='Can change my user') 
+        permisos=permisos.exclude(name='Can delete my user').exclude(name='Can delete rol sistema') 
+        permisos=permisos.exclude(name='Can add permission').exclude(name='Can change permission') 
+        permisos=permisos.exclude(name='Can add rol sistema').exclude(name='Can change rol sistema') 
+        permisos=permisos.exclude(name='Can add proyecto').exclude(name='Can change proyecto') 
+        permisos=permisos.exclude(name='Can delete proyecto') 
+        permisos=permisos.exclude(name='Can add asigna sistema').exclude(name='Can change asigna sistema') 
+        permisos=permisos.exclude(name='Can delete asigna sistema') 
+        permisos=permisos.exclude(name='Can add permitido').exclude(name='Can change permitido') 
+        permisos=permisos.exclude(name='Can delete permitido')
+        permisos=permisos.exclude(name='Can add log entry').exclude(name='Can delete log entry').exclude(name='Can change log entry')
+        permisos=permisos.exclude(name='Can add content type').exclude(name='Can delete content type').exclude(name='Can change content type')
         form = FormularioRolProyecto(initial={
                                          'nombre_rol_id': f.nombre_rol_id,
                                          'descripcion': f.descripcion,
-                                         'permisos': [t.id for t in f.permisos.all()],
+                                         'permisos': f.permisos,
    
                                          })
-        ctx = {'form':form, 'rol':f, 'proyectoid':proyectoid,'usuarioid':usuario_id}
+        lista_restante=[]
+        for permitido in permisos.all():
+            x=0
+            for perm_rol in f.permisos.all():
+                if permitido.id==perm_rol.id:
+                    x=1
+            if x==0:
+                lista_restante.append(permitido)
+        ctx = {'form':form, 'rol':f, 'proyectoid':proyectoid,'usuarioid':usuario_id,'rolid':rol_id_rec,'permisos':lista_restante}
         return render_to_response('modificarRol.html', ctx ,context_instance=RequestContext(request))
 
 class FormularioFlujoProyecto(forms.ModelForm):
@@ -398,6 +437,56 @@ def crearActividadView(request,usuario_id,proyectoid):
             form.descripcion=descripcion
             form.save()
             return HttpResponse('Ha sido guardado exitosamente')       
+
+def crearActividadAdminView(request):
+    """
+    Vista que se obtiene del regex al presionar el boton Crear Actividad dentro del formulario
+    de creacion o modificacion de Flujos, devolviendo un formulario html para crear una nueva actividad
+    """  
+    if request.method == 'GET':
+        form = formularioActividad()
+        return render_to_response("crearActividadAdmin.html",{"form":form,}, context_instance = RequestContext(request))
+    
+    else:#request.method == 'POST'
+        form = formularioActividad(request.POST)
+        if form.is_valid():
+            nombre=form.cleaned_data['nombre']
+            descripcion=form.cleaned_data['descripcion']
+            form.nombre=nombre
+            form.descripcion=descripcion
+            form.save()
+            return HttpResponse('Ha sido guardado exitosamente')  
+        
+def seleccionarFlujoModificarAdmin(request):
+    """
+    Al presionar el boton Modificar Actividad, esta vista despliega una lista de todas las actividades seleccionables por el usuario
+    para su modificacion.
+    """
+    return render(request,'seleccionarActividadAdmin.html',{'actividades':Actividades.objects.all(),})
+
+def modificarActividadAdmin(request,actividad_id_rec):
+    """
+    Vista que utiliza el formulario formularioActividad para desplegar los datos editables
+    de la Actividad que se quiere modificar.
+    """
+    p=Actividades.objects.get(id=actividad_id_rec)
+    if request.method == 'POST':
+        form = formularioActividad(request.POST)
+        if form.is_valid():
+            nombre=form.cleaned_data['nombre']
+            descripcion=form.cleaned_data['descripcion']
+            p.nombre=nombre
+            p.descripcion=descripcion
+            p.save() #Guardamos el modelo de manera Editada
+            return HttpResponse('Se ha guardado exitosamente')
+    else:
+        
+        form = formularioActividad(initial={
+                                         'nombre': p.nombre,
+                                         'descripcion': p.descripcion,                                     
+                                         })
+        ctx = {'form':form, 'Actividad':p,}
+        return render_to_response('modificarActividadAdmin.html', ctx ,context_instance=RequestContext(request)) 
  
 class formularioActividad(forms.ModelForm):
     """
