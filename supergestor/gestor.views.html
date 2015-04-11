@@ -67,9 +67,9 @@ Data descriptors defined here:<br>
 </dl>
 <hr>
 Data and other attributes defined here:<br>
-<dl><dt><strong>base_fields</strong> = OrderedDict([('usuario', &lt;django.forms.fields.Ch...ms.fields.EmailField object at 0x7fb6568be190&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('usuario', &lt;django.forms.fields.Ch...ms.fields.EmailField object at 0x7fc6f37a7850&gt;)])</dl>
 
-<dl><dt><strong>declared_fields</strong> = OrderedDict([('usuario', &lt;django.forms.fields.Ch...ms.fields.EmailField object at 0x7fb6568be190&gt;)])</dl>
+<dl><dt><strong>declared_fields</strong> = OrderedDict([('usuario', &lt;django.forms.fields.Ch...ms.fields.EmailField object at 0x7fc6f37a7850&gt;)])</dl>
 
 <hr>
 Methods inherited from <a href="django.forms.forms.html#BaseForm">django.forms.forms.BaseForm</a>:<br>
@@ -180,7 +180,7 @@ Data descriptors defined here:<br>
 Data and other attributes defined here:<br>
 <dl><dt><strong>Meta</strong> = &lt;class gestor.views.Meta&gt;</dl>
 
-<dl><dt><strong>base_fields</strong> = OrderedDict([('nombre', &lt;django.forms.fields.Cha...lMultipleChoiceField object at 0x7fb6568beb50&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('nombre', &lt;django.forms.fields.Cha...lMultipleChoiceField object at 0x7fc6f37ba310&gt;)])</dl>
 
 <dl><dt><strong>declared_fields</strong> = OrderedDict()</dl>
 
@@ -298,7 +298,7 @@ Data descriptors defined here:<br>
 Data and other attributes defined here:<br>
 <dl><dt><strong>Meta</strong> = &lt;class gestor.views.Meta&gt;</dl>
 
-<dl><dt><strong>base_fields</strong> = OrderedDict([('permisos', &lt;django.forms.models.M...rms.fields.CharField object at 0x7fb6568be790&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('permisos', &lt;django.forms.models.M...rms.fields.CharField object at 0x7fc6f37a7f10&gt;)])</dl>
 
 <dl><dt><strong>declared_fields</strong> = OrderedDict()</dl>
 
@@ -412,9 +412,9 @@ Data descriptors defined here:<br>
 </dl>
 <hr>
 Data and other attributes defined here:<br>
-<dl><dt><strong>base_fields</strong> = OrderedDict([('password_nueva1', &lt;django.forms.f...rms.fields.CharField object at 0x7fb6568be310&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('password_nueva1', &lt;django.forms.f...rms.fields.CharField object at 0x7fc6f37a79d0&gt;)])</dl>
 
-<dl><dt><strong>declared_fields</strong> = OrderedDict([('password_nueva1', &lt;django.forms.f...rms.fields.CharField object at 0x7fb6568be310&gt;)])</dl>
+<dl><dt><strong>declared_fields</strong> = OrderedDict([('password_nueva1', &lt;django.forms.f...rms.fields.CharField object at 0x7fc6f37a79d0&gt;)])</dl>
 
 <hr>
 Methods inherited from <a href="django.forms.forms.html#BaseForm">django.forms.forms.BaseForm</a>:<br>
@@ -524,7 +524,7 @@ Data descriptors defined here:<br>
 Data and other attributes defined here:<br>
 <dl><dt><strong>Meta</strong> = &lt;class gestor.views.Meta&gt;</dl>
 
-<dl><dt><strong>base_fields</strong> = OrderedDict([('nombre', &lt;django.forms.fields.Cha...rms.fields.CharField object at 0x7fb6568d33d0&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('nombre', &lt;django.forms.fields.Cha...rms.fields.CharField object at 0x7fc6f37bab50&gt;)])</dl>
 
 <dl><dt><strong>declared_fields</strong> = OrderedDict()</dl>
 
@@ -641,7 +641,7 @@ Data descriptors defined here:<br>
 Data and other attributes defined here:<br>
 <dl><dt><strong>Meta</strong> = &lt;class gestor.views.Meta&gt;</dl>
 
-<dl><dt><strong>base_fields</strong> = OrderedDict([('nombre_corto', &lt;django.forms.fiel...fields.DateTimeField object at 0x7fb6568d3150&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('nombre_corto', &lt;django.forms.fiel...fields.DateTimeField object at 0x7fc6f37ba8d0&gt;)])</dl>
 
 <dl><dt><strong>declared_fields</strong> = OrderedDict()</dl>
 
@@ -746,6 +746,8 @@ los&nbsp;id's&nbsp;del&nbsp;rol&nbsp;,&nbsp;proyecto&nbsp;ye&nbsp;l&nbsp;usuario
  <dl><dt><a name="-contactomail"><strong>contactomail</strong></a>(request)</dt><dd><tt>Vista&nbsp;que&nbsp;obtiene&nbsp;los&nbsp;datos&nbsp;del&nbsp;usuario&nbsp;como&nbsp;su&nbsp;nombre&nbsp;identificador&nbsp;de&nbsp;usuario&nbsp;y&nbsp;correo,<br>
 comprueba&nbsp;que&nbsp;el&nbsp;correo&nbsp;le&nbsp;pertenezca&nbsp;y&nbsp;envia&nbsp;la&nbsp;direccion&nbsp;correspondiente&nbsp;al&nbsp;seteo&nbsp;de&nbsp;su&nbsp;contrasenha<br>
 a&nbsp;su&nbsp;correo.&nbsp;En&nbsp;caso&nbsp;de&nbsp;que&nbsp;su&nbsp;correo&nbsp;no&nbsp;coincida&nbsp;con&nbsp;el&nbsp;que&nbsp;le&nbsp;corresponda,&nbsp;notifica&nbsp;al&nbsp;usuario.</tt></dd></dl>
+ <dl><dt><a name="-crearActividadAdminView"><strong>crearActividadAdminView</strong></a>(request)</dt><dd><tt>Vista&nbsp;que&nbsp;se&nbsp;obtiene&nbsp;del&nbsp;regex&nbsp;al&nbsp;presionar&nbsp;el&nbsp;boton&nbsp;Crear&nbsp;Actividad&nbsp;dentro&nbsp;del&nbsp;formulario<br>
+de&nbsp;creacion&nbsp;o&nbsp;modificacion&nbsp;de&nbsp;Flujos&nbsp;del&nbsp;admin,&nbsp;devolviendo&nbsp;un&nbsp;formulario&nbsp;html&nbsp;para&nbsp;crear&nbsp;una&nbsp;nueva&nbsp;actividad</tt></dd></dl>
  <dl><dt><a name="-crearActividadView"><strong>crearActividadView</strong></a>(request, usuario_id, proyectoid)</dt><dd><tt>Vista&nbsp;que&nbsp;se&nbsp;obtiene&nbsp;del&nbsp;regex&nbsp;al&nbsp;presionar&nbsp;el&nbsp;boton&nbsp;Crear&nbsp;Actividad&nbsp;dentro&nbsp;del&nbsp;formulario<br>
 de&nbsp;creacion&nbsp;o&nbsp;modificacion&nbsp;de&nbsp;Flujos,&nbsp;devolviendo&nbsp;un&nbsp;formulario&nbsp;html&nbsp;para&nbsp;crear&nbsp;una&nbsp;nueva&nbsp;actividad</tt></dd></dl>
  <dl><dt><a name="-crearFlujo"><strong>crearFlujo</strong></a>(request, usuario_id, proyectoid)</dt><dd><tt>Vista&nbsp;que&nbsp;realiza&nbsp;la&nbsp;creacion&nbsp;de&nbsp;flujos&nbsp;de&nbsp;proyecto&nbsp;desde&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum.</tt></dd></dl>
@@ -762,7 +764,11 @@ Vista&nbsp;para&nbsp;los&nbsp;usuario&nbsp;comunes,&nbsp;en&nbsp;la&nbsp;que&nbs
  <dl><dt><a name="-holaView"><strong>holaView</strong></a>(request, *args, **kwargs)</dt><dd><tt>Vista&nbsp;que&nbsp;redirige&nbsp;a&nbsp;la&nbsp;pagina&nbsp;principal&nbsp;de&nbsp;administracion&nbsp;tanto&nbsp;a&nbsp;usuarios&nbsp;como&nbsp;a<br>
 superusuarios,&nbsp;los&nbsp;superusuarios&nbsp;son&nbsp;redirigidos&nbsp;a&nbsp;la&nbsp;aplicacion&nbsp;admin&nbsp;mientras&nbsp;que&nbsp;los&nbsp;<br>
 usuarios&nbsp;obtienen&nbsp;una&nbsp;respuesta&nbsp;con&nbsp;el&nbsp;template&nbsp;hola.html</tt></dd></dl>
+ <dl><dt><a name="-listarEquipo"><strong>listarEquipo</strong></a>(request, proyecto_id_rec, usuario_id)</dt><dd><tt>Esta&nbsp;vista&nbsp;debe&nbsp;obtener&nbsp;los&nbsp;datos&nbsp;de&nbsp;los&nbsp;usuarios&nbsp;que&nbsp;han&nbsp;sido&nbsp;asignados&nbsp;a&nbsp;un&nbsp;rol&nbsp;en&nbsp;el&nbsp;proyecto,el&nbsp;parametro<br>
+usuario_id&nbsp;se&nbsp;necesita&nbsp;simplemente&nbsp;para&nbsp;el&nbsp;render&nbsp;para&nbsp;poder&nbsp;retornar&nbsp;a&nbsp;rol-flujo-para-scrum</tt></dd></dl>
  <dl><dt><a name="-modificarActividad"><strong>modificarActividad</strong></a>(request, usuario_id, proyectoid, actividad_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;<a href="#formularioActividad">formularioActividad</a>&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
+de&nbsp;la&nbsp;Actividad&nbsp;que&nbsp;se&nbsp;quiere&nbsp;modificar.</tt></dd></dl>
+ <dl><dt><a name="-modificarActividadAdmin"><strong>modificarActividadAdmin</strong></a>(request, actividad_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;<a href="#formularioActividad">formularioActividad</a>&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables&nbsp;en&nbsp;el&nbsp;admin<br>
 de&nbsp;la&nbsp;Actividad&nbsp;que&nbsp;se&nbsp;quiere&nbsp;modificar.</tt></dd></dl>
  <dl><dt><a name="-modificarFlujo"><strong>modificarFlujo</strong></a>(request, usuario_id, proyectoid, flujo_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;FlujoProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
 del&nbsp;Flujo&nbsp;que&nbsp;se&nbsp;quiere&nbsp;modificar.</tt></dd></dl>
@@ -775,6 +781,8 @@ registrar&nbsp;en&nbsp;el&nbsp;login,&nbsp;devuelve&nbsp;un&nbsp;formulario&nbsp
 con&nbsp;un&nbsp;correo&nbsp;existente</tt></dd></dl>
  <dl><dt><a name="-seleccionarFlujoModificar"><strong>seleccionarFlujoModificar</strong></a>(request, usuario_id, proyectoid)</dt><dd><tt>Al&nbsp;presionar&nbsp;el&nbsp;boton&nbsp;Modificar&nbsp;Actividad,&nbsp;esta&nbsp;vista&nbsp;despliega&nbsp;una&nbsp;lista&nbsp;de&nbsp;todas&nbsp;las&nbsp;actividades&nbsp;seleccionables&nbsp;por&nbsp;el&nbsp;usuario<br>
 para&nbsp;su&nbsp;modificacion.</tt></dd></dl>
+ <dl><dt><a name="-seleccionarFlujoModificarAdmin"><strong>seleccionarFlujoModificarAdmin</strong></a>(request)</dt><dd><tt>Al&nbsp;presionar&nbsp;el&nbsp;boton&nbsp;Modificar&nbsp;Actividad&nbsp;en&nbsp;el&nbsp;admin,&nbsp;esta&nbsp;vista&nbsp;despliega&nbsp;una&nbsp;lista&nbsp;de&nbsp;todas&nbsp;las&nbsp;actividades&nbsp;<br>
+seleccionables&nbsp;por&nbsp;el&nbsp;usuario&nbsp;para&nbsp;su&nbsp;modificacion.</tt></dd></dl>
  <dl><dt><a name="-seteoPassword"><strong>seteoPassword</strong></a>(request, usuario_id)</dt><dd><tt>Vista&nbsp;que&nbsp;se&nbsp;despliega&nbsp;al&nbsp;estar&nbsp;en&nbsp;el&nbsp;direccionamiento&nbsp;de&nbsp;configuracion&nbsp;de&nbsp;contrasenha,<br>
 comprueba&nbsp;que&nbsp;ambas&nbsp;contrasenhas&nbsp;intruducidas&nbsp;por&nbsp;el&nbsp;usuario&nbsp;coincidan,&nbsp;en&nbsp;caso&nbsp;de&nbsp;que&nbsp;coincidan<br>
 se&nbsp;almacena&nbsp;la&nbsp;nueva&nbsp;contrasenha&nbsp;en&nbsp;la&nbsp;Base&nbsp;de&nbsp;Datos&nbsp;y&nbsp;en&nbsp;caso&nbsp;de&nbsp;que&nbsp;no&nbsp;coincidan&nbsp;se&nbsp;le&nbsp;notifica&nbsp;al&nbsp;usuario.</tt></dd></dl>

@@ -441,7 +441,7 @@ def crearActividadView(request,usuario_id,proyectoid):
 def crearActividadAdminView(request):
     """
     Vista que se obtiene del regex al presionar el boton Crear Actividad dentro del formulario
-    de creacion o modificacion de Flujos, devolviendo un formulario html para crear una nueva actividad
+    de creacion o modificacion de Flujos del admin, devolviendo un formulario html para crear una nueva actividad
     """  
     if request.method == 'GET':
         form = formularioActividad()
@@ -459,14 +459,14 @@ def crearActividadAdminView(request):
         
 def seleccionarFlujoModificarAdmin(request):
     """
-    Al presionar el boton Modificar Actividad, esta vista despliega una lista de todas las actividades seleccionables por el usuario
-    para su modificacion.
+    Al presionar el boton Modificar Actividad en el admin, esta vista despliega una lista de todas las actividades 
+    seleccionables por el usuario para su modificacion.
     """
     return render(request,'seleccionarActividadAdmin.html',{'actividades':Actividades.objects.all(),})
 
 def modificarActividadAdmin(request,actividad_id_rec):
     """
-    Vista que utiliza el formulario formularioActividad para desplegar los datos editables
+    Vista que utiliza el formulario formularioActividad para desplegar los datos editables en el admin
     de la Actividad que se quiere modificar.
     """
     p=Actividades.objects.get(id=actividad_id_rec)
