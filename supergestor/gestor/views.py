@@ -43,22 +43,27 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     usuario=MyUser.objects.get(id=usuario_id)
     rolx=rol.objects.get(id=rol_id)
     enlaces=[]
-    #cambio
+    enlacef=[]
+    
     class enlacex:
         def __init__(self,urlx,nombrex):
             self.url=urlx
             self.nombre=nombrex
     
-    
-    
-    
+      
     if rolx.tiene_permiso('Can add rol'):
             roles=rol.objects.all()
             enlaces.append(enlacex('/crearRol/'+usuario_id+'/'+proyectoid,'add'))
     else:
             roles =[]#lista vacia si no tiene permiso de ver roles
+            
+    if rolx.tiene_permiso('Can add flujo'):
+        flujos=Flujo.objects.all()
+        enlacef.append(enlacex('/crearFlujo/'+usuario_id+'/'+proyectoid,'add Flujo'))
+    else:
+        flujos = []#lista vacia si no tiene permiso de ver flujos
      
-    return render(request,'rol-flujo-para-scrum.html',{'enlaces':enlaces,'roles':roles, 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario':usuario})
+    return render(request,'rol-flujo-para-scrum.html',{'enlacef':enlacef,'enlaces':enlaces,'roles':roles, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario})
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
     
 
