@@ -55,7 +55,11 @@
             {% if roles|length > 0%}
             <th>Roles de Proyecto</th>
             	{%for rol in roles%}<!-- roles va a ser la lista que tenga o no elementos -->
-            		<tr><td><p>{{rol}}</p></td></tr>
+            		<tr><td><p>{{rol}}</p></td>
+            		<td><a href="#">visualizar</a></td>
+            		<td><a href="#">asignar</a></td>
+            		<td><a href="#">modificar</a></td>
+            		</tr>
             	{% endfor %}
             	{%for enlace in enlaces%}
             		<a href="{{enlace.url}}">{{enlace.nombre}}</a>
