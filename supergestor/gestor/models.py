@@ -135,6 +135,16 @@ class rol(models.Model):
     nombre_rol_id = models.CharField(max_length = 200)
     descripcion = models.CharField(max_length = 200)
     usuario_creador = models.ForeignKey(MyUser)
+    
+    
+    
+    def tiene_permiso(self,perm):
+        """checkea si un rol esta compuesto por un permiso"""
+        permiso= Permission.objects.get(name=perm)
+        if permiso in self.permisos.all():
+            return True
+        else:
+            return False
     #tipo = models.CharField(max_length = 3, choices = ROL_CHOICES)
     
     def __unicode__(self):
