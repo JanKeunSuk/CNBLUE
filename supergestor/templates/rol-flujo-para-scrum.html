@@ -58,7 +58,9 @@
             		<tr><td><p>{{rol}}</p></td>
             		<td><a href="#">visualizar</a></td>
             		<td><a href="#">asignar</a></td>
+            		{%if rol.usuario_creador == usuario %}
             		<td><a href="#">modificar</a></td>
+            		{%endif%}
             		</tr>
             	{% endfor %}
             	{%for enlace in enlaces%}
