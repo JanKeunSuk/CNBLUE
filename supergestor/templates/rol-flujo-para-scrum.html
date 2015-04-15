@@ -53,9 +53,9 @@
             
            
             {% if roles|length > 0%}
-            <th>Roles de Proyecto</th>>
+            <th>Roles de Proyecto</th>
             	{%for rol in roles%}<!-- roles va a ser la lista que tenga o no elementos -->
-            		<td><td><p>{{rol}}</p></td></tr>
+            		<tr><td><p>{{rol}}</p></td></tr>
             	{% endfor %}
             	{%for enlace in enlaces%}
             		<a href="{{enlace.url}}">{{enlace.nombre}}</a>
