@@ -49,18 +49,19 @@
     
         <div class="app-gestor module">
       
-
+<table><caption>Gestor</caption>
             
            
             {% if roles|length > 0%}
+            <th>Roles de Proyecto</th>>
             	{%for rol in roles%}<!-- roles va a ser la lista que tenga o no elementos -->
-            		<p>{{rol}}</p>
+            		<td><td><p>{{rol}}</p></td></tr>
             	{% endfor %}
             	{%for enlace in enlaces%}
             		<a href="{{enlace.url}}">{{enlace.nombre}}</a>
             	{%endfor%}
             {% endif %}
-            	
+    <table>        	
             
             
             <!--Lo que se imprima aca va a ser la lista de roles si es que tiene permiso, sino se va a imprimir una lista vacia,lo
