@@ -48,39 +48,25 @@
   		<div id="content" class="colMS">
     
         <div class="app-gestor module">
-        <table>
+      
 
-            <caption>Gestor</caption>
-			<th>Roles de proyecto</th>
-        
-            <tr class="model-proyecto">
             
-				{% for rol in roles %}
-					{%ifequal rol.nombre_rol_id 'ScrumMaster' %}
-	  					 <!-- El scrum no se sita, ya que no puede asiganr ese rol a otro -->
-	  				{% else %}
-	  					<td> {{rol.nombre_rol_id}} </td>
-  		
+           
+            {% if roles|length > 0%}
+            	{%for rol in roles%}<!-- roles va a ser la lista que tenga o no elementos -->
+            		<p>{{rol}}</p>
+            	{% endfor %}
+            	{%for enlace in enlaces%}
+            		<a href="{{enlace.url}}">{{enlace.nombre}}</a>
+            	{%endfor%}
+            {% endif %}
+            	
             
-                		<td><a href="/visualizarRol/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}/" class="addlink">Visualizar</a></td>
-                	
-                		<td><a href="/asignarRol/{{usuario.id}}/{{rol.id}}/{{proyecto.id}}" class="changelink">Asignar</a></td>
-                		
-                		{%if rol.usuario_creador == usuario %}
-                			<td><a href="/modificarRol/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}/" class="addlink">Modificar</a></td>
-                		
-                		{% endif %}
-              			</tr>
-	  				{% endifequal %}
-  				
-            {% endfor %}
-            </table>
             
-            <form method="get" action="/crearRol/{{usuario.id}}/{{proyecto.id}}/">
-
-				<input type="submit" value="Crear Rol" />
-
-			</form>
+            <!--Lo que se imprima aca va a ser la lista de roles si es que tiene permiso, sino se va a imprimir una lista vacia,lo
+            que equivale a no imprimir nada,para lo cual de acuerdo al permiso que tenga este rol, voy a mandar desde la vista una lista
+            vacia o una lista llena de roles que estan en la base de datos-->
+			
 			
             <table>
            <th>Flujos disponibles</th>

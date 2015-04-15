@@ -57,13 +57,10 @@
             	{% csrf_token %}
 				{% for proyecto,rol in proyectos.items %}
   				
-	  				{%ifequal rol.nombre_rol_id 'ScrumMaster' %}
-	  					 <th scope="row"><a href="/scrum/{{usuario.id}}/{{proyecto.id}}/" >Perteneces a {{proyecto}} {{proyecto.descripcion}} con el rol {{rol}}</a></td>
+	  				
+	  					 <th scope="row"><a href="/scrum/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}" >Perteneces a {{proyecto}} {{proyecto.descripcion}} con el rol {{rol}}</a></td>
 	  					<td><a href="/modificarProyecto/{{usuario.id}}/{{proyecto.id}}/" class="changelink">Modificar</a></td>
 	  					<td><a href="/equipoProyecto/{{proyecto.id}}/{{usuario.id}}" class="addlink">Equipo</a></td>
-	  				{% else %}
-	  					<td>Perteneces a {{proyecto}} {{proyecto.descripcion}} con el rol {{rol}}</td>
-	  				{% endifequal %}
 	            
 	                <td><a href="/visualizarProyecto/{{usuario.id}}/{{proyecto.id}}/" class="addlink">Visualizar</a></td>
 	            

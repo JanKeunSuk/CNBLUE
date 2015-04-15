@@ -34,14 +34,33 @@ def holaView(request):
                         nombres_de_proyecto[p] = rol_lista
         return render(request,'hola.html',{'usuario':request.user, 'proyectos':nombres_de_proyecto})
 
-def holaScrumView(request,usuario_id,proyectoid):
+def holaScrumView(request,usuario_id,proyectoid,rol_id):
     """
     Vista especial para el usuario scrum en la que le listan los proyectos y los enlaces para la creacion de roles y flujos
     Vista para los usuario comunes, en la que solo se listan los proyectos sin enlaces, ya que no tiene permiso para ello.
     """
     proyectox=proyecto.objects.get(id=proyectoid)
     usuario=MyUser.objects.get(id=usuario_id)
-    return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario':usuario})
+    rolx=rol.objects.get(id=rol_id)
+    enlaces=[]
+    
+    class enlacex:
+        def __init__(self,urlx,nombrex):
+            self.url=urlx
+            self.nombre=nombrex
+    
+    
+    
+    
+    if rolx.tiene_permiso('Can add rol'):
+            roles=rol.objects.all()
+            enlaces.append(enlacex('/crearRol/'+usuario_id+'/'+proyectoid,'add'))
+    else:
+            roles =[]#lista vacia si no tiene permiso de ver roles
+     
+    return render(request,'rol-flujo-para-scrum.html',{'enlaces':enlaces,'roles':roles, 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario':usuario})
+    #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
+    
 
 def registrarUsuarioView(request):
     """Vista que se obitene del regex /registrar solicitado al precionar el boton
