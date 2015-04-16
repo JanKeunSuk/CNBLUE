@@ -44,6 +44,8 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     rolx=rol.objects.get(id=rol_id)
     enlaces=[]
     enlacef=[]
+    enlacefm=[]
+    enlacefv=[]
     
     class enlacex:
         def __init__(self,urlx,nombrex):
@@ -55,7 +57,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     
     if rolx.tiene_permiso('Can add rol'):
             roles=rol.objects.all()
-            enlaces.append(enlacex('/crearRol/'+usuario_id+'/'+proyectoid,'add'))
+            enlaces.append(enlacex('/crearRol/'+usuario_id+'/'+proyectoid+'/'+rol_id,'add'))
     else:
             roles =[]#lista vacia si no tiene permiso de ver roles
      
@@ -65,6 +67,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         permiso correspondiente al rol-flujo-para-scrum.html"""
         flujos=Flujo.objects.all()
         enlacef.append(enlacex('/crearFlujo/'+usuario_id+'/'+proyectoid+'/'+rol_id,'add Flujo'))
+        enlacefv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
     else:
         flujos = []#lista vacia si no tiene permiso de ver flujos
         
@@ -72,11 +75,12 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         """Tiene permiso de modificar flujo, obtengo todos los flujos para enviar al rol-flujo-para-scrum.html"""
         flujosm=Flujo.objects.all()
         flujos=Flujo.objects.all()
-        #enlacefm.append(enlacex('/modificarFlujo/'+usuario_id+'/'+proyectoid+'/'+Flujo.objects.get(id),'add Flujo'))
+        enlacefm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar Flujo'))
+        enlacefv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
     else:
         flujosm = []#lista vacia si no tiene permiso de ver flujos
         
-    return render(request,'rol-flujo-para-scrum.html',{'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario})
+    return render(request,'rol-flujo-para-scrum.html',{'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario})
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
     
 
@@ -319,7 +323,7 @@ class FormularioFlujoProyecto(forms.ModelForm):
             'actividades': CheckboxSelectMultiple(),
         }
         
-def visualizarFlujoProyectoView(request,usuario_id, proyectoid, flujo_id_rec):
+def visualizarFlujoProyectoView(request,usuario_id, proyectoid, rolid, flujo_id_rec):
     """
     Vista que utiliza el formulario FlujoProyecto para desplegar los datos almacenados
     en el Flujo que se quiere visualizar.
@@ -342,10 +346,10 @@ def visualizarFlujoProyectoView(request,usuario_id, proyectoid, flujo_id_rec):
                                                      'estado': flujo_disponible.estado,
                                                      'actividades': flujo_disponible.actividades,
                                                      })      
-        return render_to_response('visualizarFlujo.html',{'formulario':formulario, 'flujo':flujo_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id},
+        return render_to_response('visualizarFlujo.html',{'formulario':formulario, 'flujo':flujo_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid},
                                   context_instance=RequestContext(request))
 
-def modificarFlujo(request, usuario_id, proyectoid, flujo_id_rec):
+def modificarFlujo(request, usuario_id, proyectoid, rolid, flujo_id_rec):
     """
     Vista que utiliza el formulario FlujoProyecto para desplegar los datos editables
     del Flujo que se quiere modificar.
@@ -353,6 +357,7 @@ def modificarFlujo(request, usuario_id, proyectoid, flujo_id_rec):
     f=Flujo.objects.get(id=flujo_id_rec)
     if request.method == 'POST':
         form = FormularioFlujoProyecto(request.POST)
+        
         if form.is_valid():
             nombre=form.cleaned_data['nombre']
             estado=form.cleaned_data['estado']
@@ -370,10 +375,10 @@ def modificarFlujo(request, usuario_id, proyectoid, flujo_id_rec):
                                          'actividades': [t.id for t in f.actividades.all()],
    
                                          })
-        ctx = {'form':form, 'flujo':f, 'proyectoid':proyectoid,'usuarioid':usuario_id}
+        ctx = {'form':form, 'flujo':f, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
         return render_to_response('modificarFlujo.html', ctx ,context_instance=RequestContext(request))
     
-def crearRol(request,usuario_id,proyectoid):
+def crearRol(request,usuario_id,proyectoid,rolid):
     """
     Vista que realiza la creacion de roles de proyecto desde la vista del Scrum, excluyendo aquellos permisos que no corresponde
     ser vistos por el usuario Scrum.
@@ -393,7 +398,7 @@ def crearRol(request,usuario_id,proyectoid):
         permisos=permisos.exclude(name='Can delete permitido')
         permisos=permisos.exclude(name='Can add log entry').exclude(name='Can delete log entry').exclude(name='Can change log entry')
         permisos=permisos.exclude(name='Can add content type').exclude(name='Can delete content type').exclude(name='Can change content type')
-        return render(request, 'crearRol.html',{'permissions':permisos,'usuarioid':usuario_id,'proyectoid':proyectoid})
+        return render(request, 'crearRol.html',{'permissions':permisos,'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
     
 def crearFlujo(request,usuario_id,proyectoid,rolid):
     """

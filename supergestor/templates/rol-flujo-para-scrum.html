@@ -83,12 +83,19 @@
 				{% for flujo in flujos %}
 			            
   				<td> {{flujo.nombre}} </td>
+  					{%for enlace in enlacefv%}
   		           
-                <td><a href="/visualizarFlujo/{{usuario.id}}/{{proyecto.id}}/{{flujo.id}}/" class="addlink">Visualizar</a></td>
-            
+                		<td><a href="/visualizarFlujo/{{enlace.url}}/{{flujo.id}}/" class="addlink">Visualizar</a></td>
+                		
+             		{% endfor %}
+             		
             		{% if flujosm|length > 0%}
             		
-                		<td><a href="/modificarFlujo/{{usuario.id}}/{{proyecto.id}}/{{flujo.id}}/" class="changelink">Modificar</a></td>
+            			{%for enlace in enlacefm%}
+            		
+                			<td><a href="/modificarFlujo/{{enlace.url}}/{{flujo.id}}/" class="changelink">Modificar</a></td>
+                		
+                		{%endfor%}
                 		
                 	{% endif %}
                 	

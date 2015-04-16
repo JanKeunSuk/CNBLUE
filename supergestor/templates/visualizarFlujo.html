@@ -23,7 +23,7 @@
     <div id="header">
         <div id="branding">
         
-<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/">Flujo disponible de Proyecto</a></h1>
+<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}/">Flujo disponible de Proyecto</a></h1>
 
         </div>      
         
@@ -33,7 +33,7 @@
     <!-- Content -->
     <div class="content">
         
-        <form id="formulario" action="/scrum/{{usuarioid}}/{{proyectoid}}/">{% csrf_token %}
+        <form id="formulario" action="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">{% csrf_token %}
         	<b>Nombre del flujo: </b> {{flujo.nombre}}<br/><br/>
         	<b>Estado: </b> {{flujo.estado}}<br/><br/>
         	<b>Actividades: </b> <br/><br/>{% for actividad in flujo.actividades.all %}{{ actividad.nombre }}<br/><br/>{% endfor %}
