@@ -68,27 +68,34 @@
             vacia o una lista llena de roles que estan en la base de datos-->
 			
             {% if flujos|length > 0%}
-                        <table>
-           <th>Flujos disponibles</th>
+            <table>
+            <th>Flujos disponibles</th>
         
             <tr class="model-proyecto">
             
 				{% for flujo in flujos %}
 			            
   				<td> {{flujo.nombre}} </td>
-  		
-           
+  		           
                 <td><a href="/visualizarFlujo/{{usuario.id}}/{{proyecto.id}}/{{flujo.id}}/" class="addlink">Visualizar</a></td>
             
-
-            
-                <td><a href="/modificarFlujo/{{usuario.id}}/{{proyecto.id}}/{{flujo.id}}/" class="changelink">Modificar</a></td>  
-              </tr>
-                {% endfor %}
+            		{% if flujosm|length > 0%}
+            		
+                		<td><a href="/modificarFlujo/{{usuario.id}}/{{proyecto.id}}/{{flujo.id}}/" class="changelink">Modificar</a></td>
+                		
+                	{% endif %}
+                	
+              	</tr>
+              	
+               {% endfor %}
+               
             {% endif %}
-                {%for enlace in enlacef%}
-            		<td><a href="{{enlace.url}}">{{enlace.nombre}}</a></td>
-            	{%endfor%}
+            
+            {%for enlace in enlacef%}
+                
+            	<td><a href="{{enlace.url}}">{{enlace.nombre}}</a></td>
+            		
+            {%endfor%}
       
         </table>   <!--
         <form method="get" action="/crearFlujo/{{usuario.id}}/{{proyecto.id}}/">
