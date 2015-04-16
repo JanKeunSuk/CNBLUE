@@ -67,7 +67,6 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         permiso correspondiente al rol-flujo-para-scrum.html"""
         flujos=Flujo.objects.all()
         enlacef.append(enlacex('/crearFlujo/'+usuario_id+'/'+proyectoid+'/'+rol_id,'add Flujo'))
-        enlacefv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
     else:
         flujos = []#lista vacia si no tiene permiso de ver flujos
         
@@ -76,9 +75,11 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         flujosm=Flujo.objects.all()
         flujos=Flujo.objects.all()
         enlacefm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar Flujo'))
-        enlacefv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
     else:
         flujosm = []#lista vacia si no tiene permiso de ver flujos
+        
+    if rolx.tiene_permiso('Can add flujo') or rolx.tiene_permiso('Can change flujo'):
+        enlacefv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
         
     return render(request,'rol-flujo-para-scrum.html',{'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario})
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
