@@ -43,7 +43,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     usuario=MyUser.objects.get(id=usuario_id)
     rolx=rol.objects.get(id=rol_id)
     enlaces=[]
-    #cambio
+    #cambio de codigo
     class enlacex:
         def __init__(self,urlx,nombrex):
             self.url=urlx
