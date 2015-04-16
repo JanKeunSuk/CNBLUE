@@ -57,7 +57,7 @@
             	{%for rol in roles%}<!-- roles va a ser la lista que tenga o no elementos -->
             		<tr><td><p>{{rol}}</p></td>
             		<td><a href="/visualizarFlujo/{{usuario.id}}/{{proyecto.id}}/{{flujo.id}}/">visualizar</a></td>
-            		<td><a href="#">asignar</a></td>
+            		<td><a href="/asignarRol/{{usuario.id}}/{{rol.id}}/{{proyecto.id}}">asignar</a></td>
             		{%if rol.usuario_creador == usuario %}
             		<td><a href="#">modificar</a></td>
             		{%endif%}
