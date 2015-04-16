@@ -357,6 +357,7 @@ def modificarFlujo(request, usuario_id, proyectoid, rolid, flujo_id_rec):
     f=Flujo.objects.get(id=flujo_id_rec)
     if request.method == 'POST':
         form = FormularioFlujoProyecto(request.POST)
+        
         if form.is_valid():
             nombre=form.cleaned_data['nombre']
             estado=form.cleaned_data['estado']
