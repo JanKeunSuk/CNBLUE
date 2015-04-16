@@ -56,10 +56,10 @@
             <th>Roles de Proyecto</th>
             	{%for rol in roles%}<!-- roles va a ser la lista que tenga o no elementos -->
             		<tr><td><p>{{rol}}</p></td>
-            		<td><a href="/visualizarRol/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}/">visualizar</a></td>
-            		<td><a href="/asignarRol/{{usuario.id}}/{{rol.id}}/{{proyecto.id}}">asignar</a></td>
+            		<td><a href="/visualizarRol/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}/"class="addlink">visualizar</a></td>
+            		<td><a href="/asignarRol/{{usuario.id}}/{{rol.id}}/{{proyecto.id}}"class="addlink">asignar</a></td>
             		{%if rol.usuario_creador == usuario %}
-            		<td><a href="/modificarRol/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}/">modificar</a></td>
+            		<td><a href="/modificarRol/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}/"class="changelink">modificar</a></td>
             		{%endif%}
             		</tr>
             	{% endfor %}

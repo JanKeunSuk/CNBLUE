@@ -589,7 +589,7 @@ def asignarRol(request,rolid,proyectoid,usuario_id):
             print "Either the entry or blog doesn't exist." 
             return HttpResponseRedirect('/crearFlujo/')
     else:
-        return render(request,'asignaRolProyecto.html',{'proyecto':proyectox,'usuarios':MyUser.objects.all().exclude(id=usuario_id),'proyectoid':proyectoid,'usuarioid':usuario_id})
+        return render(request,'asignaRolProyecto.html',{'proyecto':proyectox,'usuarios':MyUser.objects.all().exclude(id=usuario_id),'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
     
     
     
