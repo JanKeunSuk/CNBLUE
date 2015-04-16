@@ -76,7 +76,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     else:
         flujosm = []#lista vacia si no tiene permiso de ver flujos
         
-    return render(request,'rol-flujo-para-scrum.html',{'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario':usuario})
+    return render(request,'rol-flujo-para-scrum.html',{'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario})
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
     
 
