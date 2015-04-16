@@ -43,7 +43,8 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     usuario=MyUser.objects.get(id=usuario_id)
     rolx=rol.objects.get(id=rol_id)
     enlaces=[]
-    #cambio de codigo
+    enlacef=[]
+    
     class enlacex:
         def __init__(self,urlx,nombrex):
             self.url=urlx
@@ -58,7 +59,24 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     else:
             roles =[]#lista vacia si no tiene permiso de ver roles
      
-    return render(request,'rol-flujo-para-scrum.html',{'enlaces':enlaces,'roles':roles, 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario':usuario})
+     
+    if rolx.tiene_permiso('Can add flujo'):
+        """Tiene permiso de crear un nuevo flujo, obtengo todos los flujos y enlancef envia el url de crear con el nombre del
+        permiso correspondiente al rol-flujo-para-scrum.html"""
+        flujos=Flujo.objects.all()
+        enlacef.append(enlacex('/crearFlujo/'+usuario_id+'/'+proyectoid+'/'+rol_id,'add Flujo'))
+    else:
+        flujos = []#lista vacia si no tiene permiso de ver flujos
+        
+    if rolx.tiene_permiso('Can change flujo'):
+        """Tiene permiso de modificar flujo, obtengo todos los flujos para enviar al rol-flujo-para-scrum.html"""
+        flujosm=Flujo.objects.all()
+        flujos=Flujo.objects.all()
+        #enlacefm.append(enlacex('/modificarFlujo/'+usuario_id+'/'+proyectoid+'/'+Flujo.objects.get(id),'add Flujo'))
+    else:
+        flujosm = []#lista vacia si no tiene permiso de ver flujos
+        
+    return render(request,'rol-flujo-para-scrum.html',{'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario':usuario})
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
     
 
@@ -377,12 +395,12 @@ def crearRol(request,usuario_id,proyectoid):
         permisos=permisos.exclude(name='Can add content type').exclude(name='Can delete content type').exclude(name='Can change content type')
         return render(request, 'crearRol.html',{'permissions':permisos,'usuarioid':usuario_id,'proyectoid':proyectoid})
     
-def crearFlujo(request,usuario_id,proyectoid):
+def crearFlujo(request,usuario_id,proyectoid,rolid):
     """
     Vista que realiza la creacion de flujos de proyecto desde la vista del Scrum.
     """
     if request.method == 'GET':
-        return render(request, 'crearFlujo.html',{'actividades':Actividades.objects.all(),'usuarioid':usuario_id,'proyectoid':proyectoid})
+        return render(request, 'crearFlujo.html',{'actividades':Actividades.objects.all(),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
 
 class proyectoFrom(forms.ModelForm):
     """

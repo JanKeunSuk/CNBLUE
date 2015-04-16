@@ -74,31 +74,43 @@
             que equivale a no imprimir nada,para lo cual de acuerdo al permiso que tenga este rol, voy a mandar desde la vista una lista
             vacia o una lista llena de roles que estan en la base de datos-->
 			
-			
+            {% if flujos|length > 0%}
             <table>
-           <th>Flujos disponibles</th>
+            <th>Flujos disponibles</th>
         
             <tr class="model-proyecto">
             
 				{% for flujo in flujos %}
+			            
   				<td> {{flujo.nombre}} </td>
-  		
-            
+  		           
                 <td><a href="/visualizarFlujo/{{usuario.id}}/{{proyecto.id}}/{{flujo.id}}/" class="addlink">Visualizar</a></td>
             
-
+            		{% if flujosm|length > 0%}
+            		
+                		<td><a href="/modificarFlujo/{{usuario.id}}/{{proyecto.id}}/{{flujo.id}}/" class="changelink">Modificar</a></td>
+                		
+                	{% endif %}
+                	
+              	</tr>
+              	
+               {% endfor %}
+               
+            {% endif %}
             
-                <td><a href="/modificarFlujo/{{usuario.id}}/{{proyecto.id}}/{{flujo.id}}/" class="changelink">Modificar</a></td>
-              </tr>
-            {% endfor %}
-        
-        </table>
+            {%for enlace in enlacef%}
+                
+            	<td><a href="{{enlace.url}}">{{enlace.nombre}}</a></td>
+            		
+            {%endfor%}
+      
+        </table>   <!--
         <form method="get" action="/crearFlujo/{{usuario.id}}/{{proyecto.id}}/">
 
 			<input type="submit" value="Crear Flujo" />
 
 		</form>
-        
+ -->        
         </div>
     
 
