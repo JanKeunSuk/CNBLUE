@@ -22,8 +22,8 @@
     <!-- Header -->
     <div id="header">
         <div id="branding">
-  {% csrf_token %}      
-<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Rol de Proyecto</a></h1>
+        
+<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Visualizar Sprint {{Sprint.descripcion}}</a></h1>
 
         </div>      
         
@@ -33,10 +33,11 @@
     <!-- Content -->
     <div class="content">
         
-        <form id="formulario" action="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">
-        	<b>Nombre del rol: </b> {{rol.nombre_rol_id}}<br/><br/>
-        	<b>Descripcion: </b> {{rol.descripcion}}<br/><br/>
-        	<b>Permisos contenidos: </b> <br/><br/>{% for permiso in rol.permisos.all %}{{ permiso.name }}<br/><br/>{% endfor %}
+        <form id="formulario" action="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">{% csrf_token %}
+        	<b>Descripcion: </b> {{Sprint.descripcion}}<br/><br/>
+        	<b>Fecha de inicio: </b> {{Sprint.fecha_inicio}}<br/><br/>
+        	<b>Duracion en horas: </b> {{Sprint.duracion}}<br/><br/>
+        	<b>Estado del Sprint: </b> {{Sprint.estado}}<br/><br/>
         	<input type="submit" value="Volver" />
         </form>
      </div>

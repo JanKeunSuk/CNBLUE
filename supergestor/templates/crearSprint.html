@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us" >
 <head>
-<title>Agregar rol | Sitio de administracion</title>
+<title>Agregar Sprint | Sitio de administracion</title>
 <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
 <link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css" />
 <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/static/admin/css/ie.css" /><![endif]-->
@@ -62,34 +62,28 @@
     <!-- Content -->
     <div id="content" class="colM">
         
-        <h1>Agregar flujo</h1>
+        <h1>Agregar Sprint</h1>
         <div id="content-main">
 
 
 
-<form enctype="multipart/form-data" action="/guardarFlujo/" method="post" id="rol_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
+<form enctype="multipart/form-data" action="/guardarSprint/" method="post" id="rol_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
 {% csrf_token %}
 <div>
-
-
-
-
-
-
 
   <fieldset class="module aligned ">
     
     
     
-        <div class="form-row field-nombre_rol_id">
+        <div class="form-row field-descripcion">
             
             
                 <div>
                     
                     
-                        <label class="required" for="id_nombre">Nombre:</label>
+                        <label class="required" for="id_descripcion">Descripcion:</label>
                         
-                            <input class="vTextField" id="id_nombre" maxlength="200" name="nombre" type="text" />
+                            <input class="vTextField" id="id_descripcion" maxlength="500" name="descripcion" type="text" />
                         
                     
                     
@@ -97,35 +91,39 @@
             
         </div>
         
-            <div class="form-row field-permisos">
+        <div class="form-row field-fecha-inicio">
             
             
                 <div>
                     
                     
-                        <label class="required" for="id_permisos">Actividades:</label>
+                        <label class="required" for="id_fecha_inicio">Fecha de inicio:</label>
                         
-                            <select multiple="multiple" id="id_actividades" name="actividades">
-                            {%for actividad in actividades %}
-								<option value="{{actividad.id}}">{{actividad.nombre}}</option>
-							{%endfor%}
-</select>
+                            <input class="vTextField" id="id_descripcion" maxlength="500" name="fecha_inicio" type="text" value={{fecha_ahora}}/>
                         
                     
-                    
-                        <p class="help"> Presiona "Control" para seleccionar mas de una opcion.</p>
                     
                 </div>
             
         </div>
-        
+            
+        <div class="form-row field-duracion">
+            
+            
+                <div>
+                    
+                    
+                        <label class="required" for="id_duracion">Duracion:</label>
+                        
+                            <input class="vTextField" id="id_duracion" maxlength="500" name="duracion" type="text" />
+                        
+                    
+                    
+                </div>
+            
+        </div>
     
 </fieldset>
-
-<div class="Flujo">
-<p><a href="/crearActividad/{{usuarioid}}/{{proyectoid}}/">Crear Actividad</a></p>
-<p><a href="/modificarActividad/{{usuarioid}}/{{proyectoid}}/">Modificar Actividad</a></p>
-</div>
 
 <div class="submit-row">
 <input type="submit" value="Guardar" />

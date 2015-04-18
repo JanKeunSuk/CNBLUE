@@ -8,14 +8,15 @@ from django.http.response import HttpResponseRedirect
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from gestor.models import MyUser, asignacion, proyecto, rol, Flujo, Actividades
+from gestor.models import MyUser, asignacion, proyecto, rol, Flujo, Actividades, HU,\
+    Sprint
 from django import forms
 from django.core.mail.message import EmailMessage
 from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.forms.widgets import CheckboxSelectMultiple
 from django.contrib.auth.models import Permission
-
+from datetime import datetime 
 # Create your views and forms here.
 @login_required
 def holaView(request):
@@ -25,14 +26,18 @@ def holaView(request):
     if request.user.is_staff:
         return HttpResponseRedirect(reverse('admin:index'))
     else:
-        nombres_de_proyecto = {}
+        nombres_de_proyecto_enlace = {}
+        nombres_de_proyecto_sin_enlace = {}
         for a in asignacion.objects.all():
             if a.usuario.id == request.user.id:
                 rol_lista = rol.objects.get(id = a.rol.id)
                 for p in proyecto.objects.all():
                     if p.id == a.proyecto.id:
-                        nombres_de_proyecto[p] = rol_lista
-        return render(request,'hola.html',{'usuario':request.user, 'proyectos':nombres_de_proyecto})
+                        if rol_lista.tiene_permiso('Can change proyecto'):
+                            nombres_de_proyecto_enlace[p] = rol_lista
+                        else:
+                            nombres_de_proyecto_sin_enlace[p] = rol_lista
+        return render(request,'hola.html',{'usuario':request.user, 'proyectos_enlace':nombres_de_proyecto_enlace, 'proyectos_sin_enlace':nombres_de_proyecto_sin_enlace})
 
 def holaScrumView(request,usuario_id,proyectoid,rol_id):
     """
@@ -46,14 +51,17 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     enlacef=[]
     enlacefm=[]
     enlacefv=[]
-    
+    enlaceHU=[]
+    enlaceHUv=[]
+    enlaceHUm=[]
+    enlaceSprint=[]
+    enlaceSprintv=[]
+    enlaceSprintm=[]
+    is_Scrum=0
     class enlacex:
         def __init__(self,urlx,nombrex):
             self.url=urlx
             self.nombre=nombrex
-    
-    
-    
     
     if rolx.tiene_permiso('Can add rol'):
             roles=rol.objects.all()
@@ -80,10 +88,48 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         
     if rolx.tiene_permiso('Can add flujo') or rolx.tiene_permiso('Can change flujo'):
         enlacefv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
-        
-    return render(request,'rol-flujo-para-scrum.html',{'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario})
-    #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
     
+    if rolx.tiene_permiso('Can add hu'):
+            HUs=HU.objects.all()
+            enlaceHU.append(enlacex('/crearHU/'+usuario_id+'/'+proyectoid+'/'+rol_id,'add'))
+    else:
+            HUs =[]#lista vacia si no tiene permiso de ver roles
+    
+    if rolx.tiene_permiso('Can change hu'):
+        HUsm=HU.objects.all()
+        HUs=HU.objects.all()
+        enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
+        is_Scrum=0
+    elif rolx.tiene_permiso('Can change hu nivel Scrum'):
+        HUsm=HU.objects.all()
+        HUs=HU.objects.all()
+        enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
+        is_Scrum=1
+    else:
+        HUsm=[]
+    
+    if rolx.tiene_permiso('Can add hu') or rolx.tiene_permiso('Can change hu') or rolx.tiene_permiso('Can change hu nivel Scrum'):
+        enlaceHUv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
+    
+    if rolx.tiene_permiso('Can add sprint'):
+        sprints=Sprint.objects.all()
+        enlaceSprint.append(enlacex('/crearSprint/'+usuario_id+'/'+proyectoid+'/'+rol_id,'add Sprint'))
+    else:
+        sprints = []#lista vacia si no tiene permiso de ver flujos
+        
+    if rolx.tiene_permiso('Can change sprint'):
+        """Tiene permiso de modificar flujo, obtengo todos los flujos para enviar al rol-flujo-para-scrum.html"""
+        sprintsm=Sprint.objects.all()
+        sprints=Sprint.objects.all()
+        enlaceSprintm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar Sprint'))
+    else:
+        sprintsm = []#lista vacia si no tiene permiso de ver flujos
+        
+    if rolx.tiene_permiso('Can add sprint') or rolx.tiene_permiso('Can change sprint'):
+        enlaceSprintv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
+         
+    return render(request,'rol-flujo-para-scrum.html',{'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsf':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'is_Scrum':is_Scrum,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id})
+    #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
 def registrarUsuarioView(request):
     """Vista que se obitene del regex /registrar solicitado al precionar el boton
@@ -129,7 +175,7 @@ def guardarFlujoView(request):
     que se utiliza en la interfaz devuelta por /registrar """
     try:
     
-        flujo_a_crear = Flujo.objects.create(nombre=request.POST['nombre'], estado=request.POST['estado'])
+        flujo_a_crear = Flujo.objects.create(nombre=request.POST['nombre'],estado="ACT")
         for p in request.POST.getlist('actividades'):
             flujo_a_crear.actividades.add(Actividades.objects.get(id=p))
         flujo_a_crear.save()
@@ -137,6 +183,45 @@ def guardarFlujoView(request):
     except ObjectDoesNotExist:
         print "Either the entry or blog doesn't exist." 
         return HttpResponseRedirect('/crearFlujo/')
+    
+def guardarHUView(request):
+    """Vista de guardado de nuevo usuario relacionado con un correo autorizado en la tabla Permitidos
+    que se utiliza en la interfaz devuelta por /registrar """
+    try:
+    
+        HU_a_crear = HU.objects.create(descripcion=request.POST['descripcion'],estado="ACT",valor_negocio=request.POST['valor_negocio'], valor_tecnico=0, prioridad=0, duracion=0, acumulador_horas=0, estado_en_actividad='PEN')
+        HU_a_crear.save()
+        return HttpResponse('La HU se ha creado')  
+    except ObjectDoesNotExist:
+        print "Either the entry or blog doesn't exist." 
+        return HttpResponseRedirect('/crearHU/')
+
+def guardarSprintView(request):
+    """Vista de guardado de nuevo usuario relacionado con un correo autorizado en la tabla Permitidos
+    que se utiliza en la interfaz devuelta por /registrar """
+    try:
+        Sprint_a_crear = Sprint.objects.create(descripcion=request.POST['descripcion'],estado="ACT",fecha_inicio=request.POST['fecha_inicio'], duracion=request.POST['duracion'])
+        Sprint_a_crear.save()
+        return HttpResponse('El Sprint se ha creado')  
+    except ObjectDoesNotExist:
+        print "Either the entry or blog doesn't exist." 
+        return HttpResponseRedirect('/crearSprint/')
+
+def guardarHUProdOwnerView(request,HU_id_rec):
+    """Vista de guardado de nuevo usuario relacionado con un correo autorizado en la tabla Permitidos
+    que se utiliza en la interfaz devuelta por /registrar """
+    try:
+        h=HU.objects.get(id=HU_id_rec)
+        if request.method == 'POST':
+            valor_negocio=request.POST['valor_negocio']
+            descripcion=request.POST['descripcion']
+            h.valor_negocio=valor_negocio
+            h.descripcion=descripcion
+            h.save() #Guardamos el modelo de manera Editada
+            return HttpResponse('La HU a sido modificado exitosamente')
+    except ObjectDoesNotExist:
+            print "Either the entry or blog doesn't exist." 
+            return HttpResponseRedirect('/crearHU/')
     
 class FormularioContacto(forms.Form):
     """
@@ -212,56 +297,22 @@ class FormularioRolProyecto(forms.ModelForm):
     class Meta:
         model= rol
         fields=['permisos','nombre_rol_id','descripcion']
-        """
-        permisos=Permission.objects.all().exclude(name='Can add group').exclude(name='Can change group') 
-        permisos=permisos.exclude(name='Can delete group').exclude(name='Can delete permission') 
-        permisos=permisos.exclude(name='Can add my user').exclude(name='Can change my user') 
-        permisos=permisos.exclude(name='Can delete my user').exclude(name='Can delete rol sistema') 
-        permisos=permisos.exclude(name='Can add permission').exclude(name='Can change permission') 
-        permisos=permisos.exclude(name='Can add rol sistema').exclude(name='Can change rol sistema') 
-        permisos=permisos.exclude(name='Can add proyecto').exclude(name='Can change proyecto') 
-        permisos=permisos.exclude(name='Can delete proyecto') 
-        permisos=permisos.exclude(name='Can add asigna sistema').exclude(name='Can change asigna sistema') 
-        permisos=permisos.exclude(name='Can delete asigna sistema') 
-        permisos=permisos.exclude(name='Can add permitido').exclude(name='Can change permitido') 
-        permisos=permisos.exclude(name='Can delete permitido')
-        permisos=permisos.exclude(name='Can add log entry').exclude(name='Can delete log entry').exclude(name='Can change log entry')
-        permisos=permisos.exclude(name='Can add content type').exclude(name='Can delete content type').exclude(name='Can change content type')
-        """
-        
-        """
-        widgets = {
-            'permisos': CheckboxSelectMultiple(choices = permisos),
-            
-        }
-        """
-def visualizarRolProyectoView(request,usuario_id,proyectoid, rol_id_rec):
+
+def visualizarRolProyectoView(request,usuario_id,proyectoid, rolid, rol_id_rec):
     """
     Vista que utiliza el formulario RolProyecto para desplegar los datos almacenados
     en el Rol que se quiere visualizar.
     """
     rolproyecto= rol.objects.get(id=rol_id_rec)
-    if request.method == 'POST':
-        formulario = FormularioRolProyecto(request.POST)
-        if formulario.is_valid():
-            nombre_rol_id=formulario.cleanned_data['c']
-            descripcion=formulario.cleanned_data['descripcion']
-            permisos=formulario.cleanned_data['permisos']
-            rolproyecto.nombre_rol_id=nombre_rol_id
-            rolproyecto.descripcion=descripcion
-            rolproyecto.permisos=permisos
-            rolproyecto.save() 
-            return HttpResponse('El rol ha sido guardado exitosamente')
-    else:       
-        formulario =  FormularioRolProyecto(initial={
+    formulario =  FormularioRolProyecto(initial={
                                                      'nombre_rol_id': rolproyecto.nombre_rol_id,
                                                      'permisos': rolproyecto.permisos,
                                                      'descripcion': rolproyecto.descripcion,
                                                      }) 
-        return render_to_response('visualizarRol.html',{'formulario':formulario, 'rol':rolproyecto, 'proyectoid':proyectoid,'usuarioid':usuario_id},
+    return render_to_response('visualizarRol.html',{'formulario':formulario, 'rol':rolproyecto, 'proyectoid':proyectoid,'usuarioid':usuario_id,'rolid':rolid},
                                   context_instance=RequestContext(request))
         
-def modificarRol(request, usuario_id, proyectoid, rol_id_rec):
+def modificarRol(request, usuario_id, proyectoid, rolid, rol_id_rec):
     """
     Vista que utiliza el formulario RolProyecto para desplegar los datos editables
     del Rol que se quiere modificar.
@@ -309,7 +360,7 @@ def modificarRol(request, usuario_id, proyectoid, rol_id_rec):
                     x=1
             if x==0:
                 lista_restante.append(permitido)
-        ctx = {'form':form, 'rol':f, 'proyectoid':proyectoid,'usuarioid':usuario_id,'rolid':rol_id_rec,'permisos':lista_restante}
+        ctx = {'form':form, 'rol':f, 'proyectoid':proyectoid,'usuarioid':usuario_id,'rolid':rolid ,'permisos':lista_restante}
         return render_to_response('modificarRol.html', ctx ,context_instance=RequestContext(request))
 
 class FormularioFlujoProyecto(forms.ModelForm):
@@ -330,24 +381,12 @@ def visualizarFlujoProyectoView(request,usuario_id, proyectoid, rolid, flujo_id_
     en el Flujo que se quiere visualizar.
     """
     flujo_disponible= Flujo.objects.get(id=flujo_id_rec)
-    if request.method == 'POST':
-        formulario = FormularioFlujoProyecto(request.POST)
-        if formulario.is_valid():
-            nombre=formulario.cleanned_data['nombre']
-            estado=formulario.cleanned_data['estado']
-            actividades=formulario.cleanned_data['actividades']
-            flujo_disponible.nombre=nombre
-            flujo_disponible.estado=estado
-            flujo_disponible.actividades=actividades
-            flujo_disponible.save() #Guardamos el modelo de manera Editada
-            return HttpResponse('El rol ha sido guardado exitosamente')
-    else:   
-        formulario =  FormularioRolProyecto(initial={
+    formulario =  FormularioRolProyecto(initial={
                                                      'nombre': flujo_disponible.nombre,
                                                      'estado': flujo_disponible.estado,
                                                      'actividades': flujo_disponible.actividades,
                                                      })      
-        return render_to_response('visualizarFlujo.html',{'formulario':formulario, 'flujo':flujo_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid},
+    return render_to_response('visualizarFlujo.html',{'formulario':formulario, 'flujo':flujo_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid},
                                   context_instance=RequestContext(request))
 
 def modificarFlujo(request, usuario_id, proyectoid, rolid, flujo_id_rec):
@@ -378,7 +417,118 @@ def modificarFlujo(request, usuario_id, proyectoid, rolid, flujo_id_rec):
                                          })
         ctx = {'form':form, 'flujo':f, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
         return render_to_response('modificarFlujo.html', ctx ,context_instance=RequestContext(request))
+
+class FormularioSprintProyecto(forms.ModelForm):
+    """
+    Clase que obtiene el formulario para la creacion, visualizacion y modificacion
+    de flujos de proyecto desde la vista del Scrum.
+    """
+    class Meta:
+        model= Sprint
+        fields=['descripcion','fecha_inicio','duracion','estado']
+        
+def visualizarSprintProyectoView(request,usuario_id, proyectoid, rolid, Sprint_id_rec):
+    """
+    Vista que utiliza el formulario FlujoProyecto para desplegar los datos almacenados
+    en el Flujo que se quiere visualizar.
+    """
+    Sprint_disponible= Sprint.objects.get(id=Sprint_id_rec)
+    formulario =  FormularioSprintProyecto(initial={
+                                                     'descripcion': Sprint_disponible.descripcion,
+                                                     'fecha_inicio': Sprint_disponible.fecha_inicio,
+                                                     'duracion': Sprint_disponible.duracion,
+                                                     'estado': Sprint_disponible.estado,
+                                                     })      
+    return render_to_response('visualizarSprint.html',{'formulario':formulario, 'Sprint':Sprint_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid},
+                                  context_instance=RequestContext(request))
+
+def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
+    """
+    Vista que utiliza el formulario FlujoProyecto para desplegar los datos editables
+    del Flujo que se quiere modificar.
+    """
+    s=Sprint.objects.get(id=Sprint_id_rec)
+    if request.method == 'POST':
+        form = FormularioSprintProyecto(request.POST)
+        if form.is_valid():
+            descripcion=form.cleaned_data['descripcion']
+            estado=form.cleaned_data['estado']
+            fecha_inicio=form.cleaned_data['fecha_inicio']
+            duracion=form.cleaned_data['duracion']
+            s.descripcion=descripcion
+            s.estado=estado
+            s.fecha_inicio=fecha_inicio
+            s.duracion=duracion
+            s.save() #Guardamos el modelo de manera Editada
+            return HttpResponse('El Sprint ha sido modificado exitosamente')
+    else:
+        
+        form = FormularioSprintProyecto(initial={
+                                         'descripcion': s.descripcion,
+                                         'estado': s.estado,
+                                         'fecha_inicio': s.fecha_inicio,
+                                         'duracion': s.duracion,
+   
+                                         })
+        ctx = {'form':form, 'Sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
+        return render_to_response('modificarSprint.html', ctx ,context_instance=RequestContext(request))
     
+class FormularioHU(forms.ModelForm):
+    """
+    Clase que obtiene el formulario para la creacion, visualizacion y modificacion
+    de flujos de proyecto desde la vista del Scrum.
+    """
+    class Meta:
+        model= HU
+        fields=['estado','valor_tecnico','prioridad','duracion']
+        
+def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec):
+    """
+    Vista que utiliza el formulario FlujoProyecto para desplegar los datos almacenados
+    en el Flujo que se quiere visualizar.
+    """
+    HU_disponible= HU.objects.get(id=HU_id_rec)
+    formulario =  FormularioHU(initial={
+                                                     'descripcion': HU_disponible.descripcion,
+                                                     'valor_negocio': HU_disponible.valor_negocio,
+                                                     })      
+    return render_to_response('visualizarHU.html',{'formulario':formulario, 'HU':HU_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid},
+                                  context_instance=RequestContext(request))
+
+def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
+    """
+    Vista que utiliza el formulario FlujoProyecto para desplegar los datos editables
+    del Flujo que se quiere modificar.
+    """
+    VALORES10_CHOICES = range(1,10)
+    h=HU.objects.get(id=HU_id_rec)
+    if (is_Scrum == '1'):
+        if request.method == 'POST':
+            form = FormularioHU(request.POST)
+            if form.is_valid():
+                estado=form.cleaned_data['estado']
+                valor_tecnico=form.cleaned_data['valor_tecnico']
+                prioridad=form.cleaned_data['prioridad']
+                duracion=form.cleaned_data['duracion']
+                h.estado=estado
+                h.valor_tecnico=valor_tecnico
+                h.prioridad=prioridad
+                h.duracion=duracion
+                h.save() #Guardamos el modelo de manera Editada
+                return HttpResponse('La HU ha sido modificado exitosamente')
+        else:
+        
+            form = FormularioHU(initial={
+                                        'estado': h.estado,
+                                        'valor_tecnico': h.valor_tecnico,
+                                        'prioridad': h.prioridad,
+                                        'duracion':h.duracion,
+                                         })
+            ctx = {'valores':VALORES10_CHOICES,'form':form, 'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum}
+            return render_to_response('modificarHU.html', ctx ,context_instance=RequestContext(request))
+    else:
+        return render(request,'modificarHU.html', {'valores':VALORES10_CHOICES,'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum})
+
 def crearRol(request,usuario_id,proyectoid,rolid):
     """
     Vista que realiza la creacion de roles de proyecto desde la vista del Scrum, excluyendo aquellos permisos que no corresponde
@@ -408,6 +558,21 @@ def crearFlujo(request,usuario_id,proyectoid,rolid):
     if request.method == 'GET':
         return render(request, 'crearFlujo.html',{'actividades':Actividades.objects.all(),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
 
+def crearSprint(request,usuario_id,proyectoid,rolid):
+    """
+    Vista que realiza la creacion de flujos de proyecto desde la vista del Scrum.
+    """
+    if request.method == 'GET':
+        return render(request, 'crearSprint.html',{'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
+
+def crearHU(request,usuario_id,proyectoid,rolid):
+    """
+    Vista que realiza la creacion de flujos de proyecto desde la vista del Scrum.
+    """
+    VALORES10_CHOICES = range(1,10)
+    if request.method == 'GET':
+        return render(request, 'crearHU.html',{'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid,'valores':VALORES10_CHOICES})
+    
 class proyectoFrom(forms.ModelForm):
     """
     Clase que obtiene el formulario para la visualizacion y modificacion de proyectos desde la vista del Scrum.
@@ -571,20 +736,20 @@ def modificarActividad(request,usuario_id,proyectoid,actividad_id_rec):
         return render_to_response('modificarActividad.html', ctx ,context_instance=RequestContext(request)) 
  
     
-def asignarRol(request,rolid,proyectoid,usuario_id):
+def asignarRol(request,usuario_id, proyectoid,rolid, rol_id_rec):
     """
     Vista que permite asignar un rol a un usuario dentro de la vista del Scrum, valiendose de la URL para obtener
     los id's del rol , proyecto ye l usuario creador.
     """
     proyectox=proyecto.objects.get(id=proyectoid)
-    rolx = rol.objects.get(id=rolid)
+    rolx = rol.objects.get(id=rol_id_rec)
     if request.method=='POST':
         try:
             for p in request.POST.getlist('usuarios'):
                 asignacion_a_crear = asignacion.objects.create(usuario=MyUser.objects.get(id=p),rol=rolx, proyecto=proyectox)
                 asignacion_a_crear.save()
                 usuario=MyUser.objects.get(id=usuario_id)
-                return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario':usuario})
+                return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario':usuario, 'rolid':rolid})
         except ObjectDoesNotExist:
             print "Either the entry or blog doesn't exist." 
             return HttpResponseRedirect('/crearFlujo/')

@@ -32,7 +32,7 @@
     <div id="header">
         <div id="branding">
         
-<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Modificación de Rol</a></h1>
+<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Modificación de HU</a></h1>
 
         </div>
         
@@ -66,7 +66,7 @@
     <!-- Content -->
     <div id="content" class="colM">
         
-        <h1>Modificar Rol</h1>
+        <h1>Modificar HU</h1>
         <div id="content-main">
 
 
@@ -80,37 +80,44 @@
     
   </ul>
 
-
-<form enctype="multipart/form-data" method="post" id="rol_form" novalidate>
+{%if is_Scrum == "1"%}    
+<form enctype="multipart/form-data" method="post" id="proyecto_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='lIrpccfDE0jXqIrun25AwLRBdIxGUDco' />
 {% csrf_token %}
-
-<div>
-
-<FORM ACTION="/modificarRol/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" METHOD= GET >
-
-<input type="text" size="15" maxlength="30" value="{{rol.nombre_rol_id}}" name="nombre_rol_id">
-
-<input type="text" size="15" maxlength="30" value="{{rol.descripcion}}" name="descripcion">
-
-<label>Multiple Selection </label>&nbsp;</td>
-    <select name="permisos" multiple="multiple" size=30>
-    	{%for rolperm in rol.permisos.all%}
-    			<option selected="selected" value="{{rolperm.id}}">{{rolperm.name}}</option>
-        {%endfor%}
-        
-        {%for perm in permisos%}
-    			<option value="{{perm.id}}">{{perm.name}}</option>
-        {%endfor%}
-    </select>
-    <input type="submit" name="Submit" value="Guardar" tabindex="2" />
-</FORM> 
+	<div>
+		<b>Descripcion de Scrum: </b> {{HU.descripcion}}<br/><br/>
+		<b>Valor de negocio: </b> {{HU.valor_negocio}}<br/><br/>
+		{{form.as_p}}
             
-</div>
+	</div>
+<div class="submit-row">
+<input type="submit" value="Guardar" class="modificarProyecto" name="_save" />
+{%else%}
+<form action="/guardarHU/{{HU.id}}/" method="post">
+	{% csrf_token %}
+	<div>
+     	<label class="required" for="id_nombre">Descripcion:</label>
+     	<input class="vTextField" id="id_nombre" maxlength="500" name="descripcion" value={{HU.descripcion}} type="text" />
+    </div>
+    
+    <div>
+        <label class="required" for="id_permisos">Valor de Negocio:</label>
+        <select id="id_actividades" name="valor_negocio">
+           {%for valor in valores %}
+          		{%ifequal valor HU.valor_negocio%}
+          			<option value="{{valor}}" selected="selected">{{valor}}</option>
+          		{%else%}
+					<option value="{{valor}}">{{valor}}</option>
+				{%endifequal%}
+			{%endfor%}
+		</select>
+    </div>
+
+<input type="submit" name="Submit" value="Guardar" tabindex="2" />
+</form>
+    
+{%endif%}
 
 <!-- 
-<div class="submit-row">
-<input type="submit" value="Guardar" class="modificarRol" name="_save" />
-
     
     <p class="deletelink-box"><a href="/admin/gestor/proyecto/2/delete/" class="deletelink">Eliminar</a></p>
 

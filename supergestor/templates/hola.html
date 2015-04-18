@@ -55,18 +55,19 @@
         
             <tr class="model-proyecto">
             	{% csrf_token %}
-				{% for proyecto,rol in proyectos.items %}
+				{% for proyecto,rol in proyectos_enlace.items %}
   				
-	  				
 	  					 <th scope="row"><a href="/scrum/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}" >Perteneces a {{proyecto}} {{proyecto.descripcion}} con el rol {{rol}}</a></td>
 	  					<td><a href="/modificarProyecto/{{usuario.id}}/{{proyecto.id}}/" class="changelink">Modificar</a></td>
-	  					<td><a href="/equipoProyecto/{{proyecto.id}}/{{usuario.id}}" class="addlink">Equipo</a></td>
-	            
+	  					<td><a href="/equipoProyecto/{{proyecto.id}}/{{usuario.id}}" class="addlink">Visualizar Equipo</a></td>
 	                <td><a href="/visualizarProyecto/{{usuario.id}}/{{proyecto.id}}/" class="addlink">Visualizar</a></td>
 	            
 	              </tr>
             	{% endfor %}
-           
+            	{% for proyecto,rol in proyectos_sin_enlace.items %}
+            		<th scope="row"><a href="/scrum/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}" >Perteneces a {{proyecto}} {{proyecto.descripcion}} con el rol {{rol}}</a></td>
+            		<td><a href="/visualizarProyecto/{{usuario.id}}/{{proyecto.id}}/" class="addlink">Visualizar</a></td>
+           		{% endfor %}
         
         </table>
         </div>

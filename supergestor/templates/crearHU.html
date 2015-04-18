@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us" >
 <head>
-<title>Agregar rol | Sitio de administracion</title>
+<title>Agregar HU | Sitio de administracion</title>
 <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
 <link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css" />
 <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/static/admin/css/ie.css" /><![endif]-->
@@ -62,12 +62,12 @@
     <!-- Content -->
     <div id="content" class="colM">
         
-        <h1>Agregar flujo</h1>
+        <h1>Agregar HU</h1>
         <div id="content-main">
 
 
 
-<form enctype="multipart/form-data" action="/guardarFlujo/" method="post" id="rol_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
+<form enctype="multipart/form-data" action="/guardarHU/" method="post" id="rol_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
 {% csrf_token %}
 <div>
 
@@ -87,9 +87,9 @@
                 <div>
                     
                     
-                        <label class="required" for="id_nombre">Nombre:</label>
+                        <label class="required" for="id_nombre">Descripcion:</label>
                         
-                            <input class="vTextField" id="id_nombre" maxlength="200" name="nombre" type="text" />
+                            <input class="vTextField" id="id_nombre" maxlength="500" name="descripcion" type="text" />
                         
                     
                     
@@ -103,17 +103,15 @@
                 <div>
                     
                     
-                        <label class="required" for="id_permisos">Actividades:</label>
+                        <label class="required" for="id_permisos">Valor de Negocio:</label>
                         
-                            <select multiple="multiple" id="id_actividades" name="actividades">
-                            {%for actividad in actividades %}
-								<option value="{{actividad.id}}">{{actividad.nombre}}</option>
+                            <select id="id_actividades" name="valor_negocio">
+                            {%for valor in valores %}
+								<option value="{{valor}}">{{valor}}</option>
 							{%endfor%}
 </select>
                         
-                    
-                    
-                        <p class="help"> Presiona "Control" para seleccionar mas de una opcion.</p>
+                   
                     
                 </div>
             
@@ -121,11 +119,6 @@
         
     
 </fieldset>
-
-<div class="Flujo">
-<p><a href="/crearActividad/{{usuarioid}}/{{proyectoid}}/">Crear Actividad</a></p>
-<p><a href="/modificarActividad/{{usuarioid}}/{{proyectoid}}/">Modificar Actividad</a></p>
-</div>
 
 <div class="submit-row">
 <input type="submit" value="Guardar" />

@@ -191,7 +191,8 @@ class HU(models.Model):
     acumulador_horas = models.FloatField()
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
     estado_en_actividad = models.CharField(max_length = 3, choices = ESTADO_ACTIVIDAD_CHOICES)
-
+    #valido=models.BooleanField() # rl productOwner debe validar
+    
 class Sprint(models.Model):
     """Modelo que reprenseta los Spring de un proyecto relacionados a
     sus respectivos proyectos mediante un foreign key"""

@@ -56,10 +56,10 @@
             <th>Roles de Proyecto</th>
             	{%for rol in roles%}<!-- roles va a ser la lista que tenga o no elementos -->
             		<tr><td><p>{{rol}}</p></td>
-            		<td><a href="/visualizarRol/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}/"class="addlink">visualizar</a></td>
-            		<td><a href="/asignarRol/{{usuario.id}}/{{rol.id}}/{{proyecto.id}}"class="addlink">asignar</a></td>
+            		<td><a href="/visualizarRol/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/{{rol.id}}/"class="addlink">visualizar</a></td>
+            		<td><a href="/asignarRol/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/{{rol.id}}/"class="addlink">asignar</a></td>
             		{%if rol.usuario_creador == usuario %}
-            		<td><a href="/modificarRol/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}/"class="changelink">modificar</a></td>
+            		<td><a href="/modificarRol/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/{{rol.id}}/"class="changelink">modificar</a></td>
             		{%endif%}
             		</tr>
             	{% endfor %}
@@ -106,6 +106,81 @@
             {% endif %}
             
             {%for enlace in enlacef%}
+                
+            	<td><a href="{{enlace.url}}">{{enlace.nombre}}</a></td>
+            		
+            {%endfor%}
+            
+            
+           {% if HUs|length > 0%}
+            <table>
+            <th>Lista de HU's del proyecto </th>
+        
+            <tr class="model-proyecto">
+            
+				{% for HU in HUs %}
+			            
+  				<td> {{HU.descripcion}} </td>
+  					{%for enlace in enlaceHUv%}
+  		           
+                		<td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/" class="addlink">Visualizar</a></td>
+                		
+             		{% endfor %}
+
+            		{% if HUsm|length > 0%}
+            		
+            			{%for enlace in enlaceHUm%}
+            		
+                			<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Modificar</a></td>
+                		
+                		{%endfor%}
+                		
+                	{% endif %} 
+                	
+              	</tr>
+              	
+               {% endfor %}
+               
+            {% endif %}
+            
+            {%for enlace in enlaceHU%}
+                
+            	<td><a href="{{enlace.url}}">{{enlace.nombre}}</a></td>
+            		
+            {%endfor%}
+            
+          {% if sprints|length > 0%}
+            <table>
+            <th>Lista de Sprint's del proyecto </th>
+        
+            <tr class="model-proyecto">
+            
+				{% for sprint in sprints %}
+			            
+  				<td> {{sprint.descripcion}} </td>
+  					{%for enlace in enlaceSprintv%}
+  		           
+                		<td><a href="/visualizarSprint/{{enlace.url}}/{{sprint.id}}/" class="addlink">Visualizar</a></td>
+                		
+             		{% endfor %}
+
+            		{% if sprintsm|length > 0%}
+            		
+            			{%for enlace in enlaceSprintm%}
+            		
+                			<td><a href="/modificarSprint/{{enlace.url}}/{{sprint.id}}/" class="changelink">Modificar</a></td>
+                		
+                		{%endfor%}
+                		
+                	{% endif %} 
+                	
+              	</tr>
+              	
+               {% endfor %}
+               
+            {% endif %}
+            
+            {%for enlace in enlaceSprint%}
                 
             	<td><a href="{{enlace.url}}">{{enlace.nombre}}</a></td>
             		
