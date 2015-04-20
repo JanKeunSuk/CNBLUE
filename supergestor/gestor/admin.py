@@ -9,7 +9,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField 
 from gestor.models import MyUser, Permitido, rol, asignacion, proyecto,\
-    asigna_sistema, rol_sistema,Flujo
+    asigna_sistema, rol_sistema,Flujo, Sprint
 
 
 class UserCreationForm(forms.ModelForm):
@@ -130,6 +130,30 @@ class RolAdmin(admin.ModelAdmin):
         ),
     )"""
     save_as = True 
+    
+    
+    
+class SprintCreationForm(forms.ModelForm):
+    class Meta:
+        model=Flujo
+        fields=('descripcion','duracion','fecha_inicio') #el estado en el momento de creacion tendra valor por defecto el usuario no decide  
+    
+         
+
+class SprintAdmin(admin.ModelAdmin):
+    """Configura la vista de administracion de Sprint para un usuario administrador,
+    lista nombre y estado y al modificar permite guardar como"""
+    form=SprintCreationForm
+    list_display = ('id', 'descripcion','duracion','fecha_inicio')
+    list_filter = ('estado',)
+    ordering = ('id',)
+    save_as = True 
+    def save_model(self,request,obj,form,change):
+        """Permite establecer el Estado por defecto en el momento de la creacion que es ACTIVO????"""
+        obj.estado='CONSULTA'
+        obj.save()
+        
+
 
 # Now register the new UserAdmin...
 """registra el ModelAdmin(o UserAdmin) para ser desplegado en la interfaz del admin"""
@@ -141,6 +165,8 @@ admin.site.register(proyecto)
 admin.site.register(asigna_sistema)
 admin.site.register(rol_sistema)
 admin.site.register(Flujo,FlujoAdmin)
+admin.site.register(Sprint,SprintAdmin)
+
 
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
