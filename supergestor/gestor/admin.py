@@ -110,6 +110,7 @@ class FlujoCreationForm(forms.ModelForm):
 class FlujoAdmin(admin.ModelAdmin):
     """Configura la vista de administracion de Flujos para un usuario administrador,
     lista nombre y estado y al modificar permite guardar como"""
+    form=FlujoCreationForm
     list_display = ('nombre', 'estado')
     list_filter = ('estado',)
     ordering = ('id',)
@@ -122,8 +123,8 @@ class RolAdmin(admin.ModelAdmin):
     lsta nombre y desprpcion y al crear, automaticamente establece al usuario actual como creador del rol"""
     form=RolCreationForm
     list_display = ('nombre_rol_id', 'descripcion')
-    list_filter = ('id',)
-    ordering = ('id',)
+    list_filter = ('id')
+    ordering = ('id')
     filter_horizontal = ('permisos',)
     def save_model(self, request, obj, form, change):
         """Permite establecer al usuario actual utilizando la interfaz admin como creador del rol"""
@@ -149,9 +150,9 @@ class SprintAdmin(admin.ModelAdmin):
     """Configura la vista de administracion de Sprint para un usuario administrador,
     lista nombre y estado y al modificar permite guardar como"""
     form=SprintCreationForm
-    list_display = ('id', 'descripcion','duracion','fecha_inicio')
-    list_filter = ('estado',)
-    ordering = ('id',)
+    list_display = ( 'descripcion','duracion','fecha_inicio')
+    list_filter = ('estado')
+    ordering = ('id')
     save_as = True 
     def save_model(self,request,obj,form,change):
         """Permite establecer el Estado por defecto en el momento de la creacion que es ACTIVO????"""
