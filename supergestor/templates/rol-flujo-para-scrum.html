@@ -119,23 +119,45 @@
             <tr class="model-proyecto">
             
 				{% for HU in HUs %}
-			            
-  				<td> {{HU.descripcion}} </td>
-  					{%for enlace in enlaceHUv%}
+			    	{%if HU.descripcion|length > 0%}      
+  						<td> {{HU.descripcion}} </td>
+  						{%for enlace in enlaceHUv%}
   		           
-                		<td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/" class="addlink">Visualizar</a></td>
+                			<td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/" class="addlink">Visualizar</a></td>
+                		
+             			{% endfor %}
+
+            			{% if HUsm|length > 0%}
+            		
+            				{%for enlace in enlaceHUm%}
+            		
+                				<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Modificar</a></td>
+                		
+                			{%endfor%}
+                		
+                		{% endif %}
+                	{%endif%}
+                	
+              		</tr>
+              	
+               	{% endfor %}
+               
+            {% endif %}
+
+            {% if HUs_add_horas|length > 0%}
+            <table>
+            <th>Lista de HU's a las que estas asignado </th>
+        
+            <tr class="model-proyecto">
+            	
+				{% for HU in HUs_add_horas %}
+			            
+  				<td> {{HU.descripcion}} a </td>
+  					{%for enlace in enlaceHU_agregar%}
+  		           
+                		<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Agregar horas trabajadas</a></td>
                 		
              		{% endfor %}
-
-            		{% if HUsm|length > 0%}
-            		
-            			{%for enlace in enlaceHUm%}
-            		
-                			<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Modificar</a></td>
-                		
-                		{%endfor%}
-                		
-                	{% endif %} 
                 	
               	</tr>
               	

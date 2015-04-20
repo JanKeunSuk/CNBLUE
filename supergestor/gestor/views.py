@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from gestor.models import MyUser, asignacion, proyecto, rol, Flujo, Actividades, HU,\
-    Sprint
+    Sprint, delegacion
 from django import forms
 from django.core.mail.message import EmailMessage
 from django.template.context import RequestContext
@@ -48,12 +48,16 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     usuario=MyUser.objects.get(id=usuario_id)
     rolx=rol.objects.get(id=rol_id)
     enlaces=[]
+    HUs=[]
+    HUsm=[]
+    HUs_add_horas=[]
     enlacef=[]
     enlacefm=[]
     enlacefv=[]
     enlaceHU=[]
     enlaceHUv=[]
     enlaceHUm=[]
+    enlaceHU_agregar=[]
     enlaceSprint=[]
     enlaceSprintv=[]
     enlaceSprintm=[]
@@ -90,26 +94,38 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         enlacefv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
     
     if rolx.tiene_permiso('Can add hu'):
-            HUs=HU.objects.all()
-            enlaceHU.append(enlacex('/crearHU/'+usuario_id+'/'+proyectoid+'/'+rol_id,'add'))
-    else:
-            HUs =[]#lista vacia si no tiene permiso de ver roles
+        for d in delegacion.objects.all():
+            if str(d.proyecto.id) == proyectoid:
+                HUs.append(d.HU)
+        enlaceHU.append(enlacex('/crearHU/'+usuario_id+'/'+proyectoid+'/'+rol_id,'add'))
     
     if rolx.tiene_permiso('Can change hu'):
-        HUsm=HU.objects.all()
-        HUs=HU.objects.all()
+        for d in delegacion.objects.all():
+            if str(d.proyecto.id) == proyectoid:
+                HUs.append(d.HU)
+                HUsm.append(d.HU)
         enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
         is_Scrum=0
     elif rolx.tiene_permiso('Can change hu nivel Scrum'):
-        HUsm=HU.objects.all()
-        HUs=HU.objects.all()
+        for d in delegacion.objects.all():
+            if str(d.proyecto.id) == proyectoid:
+                HUs.append(d.HU)
+                HUsm.append(d.HU)
         enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
         is_Scrum=1
-    else:
-        HUsm=[]
     
     if rolx.tiene_permiso('Can add hu') or rolx.tiene_permiso('Can change hu') or rolx.tiene_permiso('Can change hu nivel Scrum'):
         enlaceHUv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
+    
+    if rolx.tiene_permiso('Agregar horas trabajadas'):
+        for d in delegacion.objects.all():
+            if str(d.proyecto.id) == proyectoid and str(d.usuario.id) == usuario_id:
+                HUs_add_horas.append(d.HU)
+        enlaceHU_agregar.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar horas'))
+        is_Scrum=2
+    HUs = set(HUs)
+    HUsm = set(HUsm)
+    HUs_add_horas=set(HUs_add_horas)
     
     if rolx.tiene_permiso('Can add sprint'):
         sprints=Sprint.objects.all()
@@ -127,8 +143,8 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         
     if rolx.tiene_permiso('Can add sprint') or rolx.tiene_permiso('Can change sprint'):
         enlaceSprintv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
-         
-    return render(request,'rol-flujo-para-scrum.html',{'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsf':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'is_Scrum':is_Scrum,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id})
+        
+    return render(request,'rol-flujo-para-scrum.html',{'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsf':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id})
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
 def registrarUsuarioView(request):
@@ -184,14 +200,18 @@ def guardarFlujoView(request):
         print "Either the entry or blog doesn't exist." 
         return HttpResponseRedirect('/crearFlujo/')
     
-def guardarHUView(request):
+def guardarHUView(request,proyectoid):
     """Vista de guardado de nuevo usuario relacionado con un correo autorizado en la tabla Permitidos
     que se utiliza en la interfaz devuelta por /registrar """
     try:
     
         HU_a_crear = HU.objects.create(descripcion=request.POST['descripcion'],estado="ACT",valor_negocio=request.POST['valor_negocio'], valor_tecnico=0, prioridad=0, duracion=0, acumulador_horas=0, estado_en_actividad='PEN')
         HU_a_crear.save()
-        return HttpResponse('La HU se ha creado')  
+        usuariox = MyUser.objects.get(id=1)
+        proyectox = proyecto.objects.get(id=proyectoid)
+        relacionar_HU_proyecto = delegacion.objects.create(usuario=usuariox, HU=HU_a_crear, proyecto=proyectox)
+        relacionar_HU_proyecto.save()
+        return HttpResponse('La HU se ha creado y relacionado con el proyecto')  
     except ObjectDoesNotExist:
         print "Either the entry or blog doesn't exist." 
         return HttpResponseRedirect('/crearHU/')
@@ -207,18 +227,25 @@ def guardarSprintView(request):
         print "Either the entry or blog doesn't exist." 
         return HttpResponseRedirect('/crearSprint/')
 
-def guardarHUProdOwnerView(request,HU_id_rec):
+def guardarHUProdOwnerView(request,HU_id_rec,is_Scrum):
     """Vista de guardado de nuevo usuario relacionado con un correo autorizado en la tabla Permitidos
     que se utiliza en la interfaz devuelta por /registrar """
     try:
         h=HU.objects.get(id=HU_id_rec)
         if request.method == 'POST':
-            valor_negocio=request.POST['valor_negocio']
-            descripcion=request.POST['descripcion']
-            h.valor_negocio=valor_negocio
-            h.descripcion=descripcion
-            h.save() #Guardamos el modelo de manera Editada
-            return HttpResponse('La HU a sido modificado exitosamente')
+            if is_Scrum == '0':
+                valor_negocio=request.POST['valor_negocio']
+                descripcion=request.POST['descripcion']
+                h.valor_negocio=valor_negocio
+                h.descripcion=descripcion
+                h.save() #Guardamos el modelo de manera Editada
+                return HttpResponse('La descripcion y valor de negocio de la HU a sido modificado exitosamente')
+            else:
+                horas_a_agregar = request.POST['horas_agregar']
+                acumulador_horas = float(horas_a_agregar)+h.acumulador_horas
+                h.acumulador_horas=acumulador_horas
+                h.save()
+                return HttpResponse('Las horas se han agregado exitosamente')
     except ObjectDoesNotExist:
             print "Either the entry or blog doesn't exist." 
             return HttpResponseRedirect('/crearHU/')
