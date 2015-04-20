@@ -797,4 +797,29 @@ def listarEquipo(request,proyecto_id_rec,usuario_id):
             lista[usuario_a]=rol_a#agregar el usuario de esa asignacion a la vista, y mandarlo al template
     return render(request,'formarEquipo.html',{'roles':rol.objects.all(),'lista_asigna':lista, 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario_id':usuario_id})
 
-    
+def delegarHU(request,usuario_id,proyecto_id,rol_id,hu_id):
+    """Copiado del metodo asignar Rol le voy a agregar algunos exclude a usuarios      NO ESTA TERMINADO"""
+    usuario=MyUser.objects.get(id=usuario_id)
+    proyectox=proyecto.objects.get(id=proyecto_id)
+    hu=HU.objects.get(id=hu_id)
+    if request.method=='POST' :
+        try:
+            for p in request.POST.getlist('usuarios'):
+                delegacionx= delegacion.objects.create(usuario=MyUser.objects.get(id=p),HU=hu,proyecto=proyectox)
+                delegacionx.save()
+                return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario':usuario, 'rolid':rol_id})
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/crearFlujo/') #redirijir a rol flujo para scrum despues
+    else:
+        users=[]
+        #users=MyUser.objects.all().exclude(id=usuario_id)  #falta filtrar usuarios sin permisos de agregar horas
+        #Primero obtener todos lo usuarios con rol en este proyectp
+        asignaciones= asignacion.objects.filter(proyecto== proyectox)#obtuve todas las asignaciones para este proyecto
+        for a in asignaciones:
+            rola = a.rol
+            if rola.tiene_permiso('Can add horas'):
+                users.append(a.usuario)
+                
+        
+        return render(request,'asignaHU.html',{'proyecto':proyectox,'usuarios':users,'proyectoid':proyecto_id,'usuarioid':usuario_id, 'rolid':rol_id})
+
