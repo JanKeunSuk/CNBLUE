@@ -167,31 +167,7 @@ class rol_sistema(models.Model):
         return self.nombre_rol_id
     
 
-class HU(models.Model):
-    """Modelo que reprenseta las historias de usuario"""
-    VALORES100_CHOICES = zip( range(1,100), range(1,100) )
-    VALORES10_CHOICES = zip( range(1,10), range(1,100) )
 
-    ESTADO_CHOICES = (
-        ('CAN', 'Cancelado'),
-        ('ACT', 'Activo'),
-    )
-    
-    ESTADO_ACTIVIDAD_CHOICES = (
-        ('PEN', 'Pendiente'),
-        ('PRO', 'En Progreso'),
-        ('FIN', 'Finalizado'),
-    )
-    
-    descripcion = models.CharField(max_length = 200)
-    valor_negocio = models.IntegerField(choices = VALORES10_CHOICES)
-    valor_tecnico = models.IntegerField(choices = VALORES10_CHOICES)
-    prioridad = models.IntegerField(choices = VALORES100_CHOICES)
-    duracion = models.FloatField()
-    acumulador_horas = models.FloatField()
-    estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
-    estado_en_actividad = models.CharField(max_length = 3, choices = ESTADO_ACTIVIDAD_CHOICES)
-    #valido=models.BooleanField() # rl productOwner debe validar
     
 class Sprint(models.Model):
     """Modelo que reprenseta los Spring de un proyecto relacionados a
@@ -240,11 +216,7 @@ class Flujo(models.Model):
         """Representacion unicode del objeto flujo"""
         return str(self.id) + self.nombre
 
-class asignaHU_actividad_flujo(models.Model):
-    """Modelo intermedio para la relacion varios a varios del modelo flujo con actividades"""
-    lista_de_HU = models.ManyToManyField(HU)
-    flujo_al_que_pertenece = models.ForeignKey(Flujo)
-    actividad_al_que_pertenece = models.ForeignKey(Actividades)
+
 
 class proyecto(models.Model):
     """Modelo que representa los proyectos que se pueden usar en el sistema"""
@@ -267,6 +239,38 @@ class proyecto(models.Model):
         """Representacion unicode del objeto proyecto"""
         return self.nombre_corto
         
+        
+        
+        
+        
+class HU(models.Model):
+    """Modelo que reprenseta las historias de usuario"""
+    VALORES100_CHOICES = zip( range(1,100), range(1,100) )
+    VALORES10_CHOICES = zip( range(1,10), range(1,100) )
+
+    ESTADO_CHOICES = (
+        ('CAN', 'Cancelado'),
+        ('ACT', 'Activo'),
+    )
+    
+    ESTADO_ACTIVIDAD_CHOICES = (
+        ('PEN', 'Pendiente'),
+        ('PRO', 'En Progreso'),
+        ('FIN', 'Finalizado'),
+    )
+    
+    descripcion = models.CharField(max_length = 200)
+    valor_negocio = models.IntegerField(choices = VALORES10_CHOICES)
+    valor_tecnico = models.IntegerField(choices = VALORES10_CHOICES)
+    prioridad = models.IntegerField(choices = VALORES100_CHOICES)
+    duracion = models.FloatField()
+    acumulador_horas = models.FloatField()
+    estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
+    estado_en_actividad = models.CharField(max_length = 3, choices = ESTADO_ACTIVIDAD_CHOICES)
+    #este campo va indicar a que proyecto pertenece asi en la vista ya no tenemos que hacer hu.objects.all()
+    proyecto=models.ForeignKey(proyecto)
+    #valido=models.BooleanField() # rl productOwner debe validar
+    
 #Modelo para asignacion de actividades con HU en un flujo determinado
 class asignacion(models.Model):
     """Modelo que especifica una asignacion de un rol a un usuario en un proyecto"""
@@ -292,4 +296,12 @@ class delegacion(models.Model):
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL)
     HU=models.ForeignKey(HU)
     proyecto=models.ForeignKey(proyecto)
+    
+    
+    
+class asignaHU_actividad_flujo(models.Model):
+    """Modelo intermedio para la relacion varios a varios del modelo flujo con actividades"""
+    lista_de_HU = models.ManyToManyField(HU)
+    flujo_al_que_pertenece = models.ForeignKey(Flujo)
+    actividad_al_que_pertenece = models.ForeignKey(Actividades)
     

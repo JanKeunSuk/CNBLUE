@@ -54,6 +54,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     enlaceHU=[]
     enlaceHUv=[]
     enlaceHUm=[]
+    enlaceHUa=[]
     enlaceSprint=[]
     enlaceSprintv=[]
     enlaceSprintm=[]
@@ -88,28 +89,46 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         
     if rolx.tiene_permiso('Can add flujo') or rolx.tiene_permiso('Can change flujo'):
         enlacefv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
+        
+        
+        
+        
+    """SECCION DE CHEQUEO PERMISOS HU"""
     
     if rolx.tiene_permiso('Can add hu'):
-            HUs=HU.objects.all()
+        #solo obtendra las hu relacionadas al proyecto con id proyectoid,devuelve una lista
+        #puede ser tambien proyectox.HU__set.all()
+            HUs=HU.objects.filter(proyecto__id=proyectoid)
             enlaceHU.append(enlacex('/crearHU/'+usuario_id+'/'+proyectoid+'/'+rol_id,'add'))
     else:
-            HUs =[]#lista vacia si no tiene permiso de ver roles
+            HUs =[]#lista vacia si no tiene permiso de administrar HU
     
     if rolx.tiene_permiso('Can change hu'):
-        HUsm=HU.objects.all()
-        HUs=HU.objects.all()
+        HUsm=1
+        HUs=HU.objects.filter(proyecto__id=proyectoid) 
         enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
         is_Scrum=0
     elif rolx.tiene_permiso('Can change hu nivel Scrum'):
-        HUsm=HU.objects.all()
-        HUs=HU.objects.all()
+        HUsm=1
+        HUs=HU.objects.filter(proyecto__id=proyectoid)
         enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
         is_Scrum=1
     else:
-        HUsm=[]
+        #quiero que la lista en esa posicion tenga un texto vacio pero nose si es conveniente todavia
+        HUsm=0
     
     if rolx.tiene_permiso('Can add hu') or rolx.tiene_permiso('Can change hu') or rolx.tiene_permiso('Can change hu nivel Scrum'):
         enlaceHUv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
+        if rolx.tiene_permiso('Can add delegation'):
+            enlaceHUa.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Asignar'))
+            HUsa=1
+        else:
+            HUsa=0
+        
+    
+        
+        
+    """SECCION CHEQUEO PERMISOS SPRINT"""
     
     if rolx.tiene_permiso('Can add sprint'):
         sprints=Sprint.objects.all()
@@ -128,7 +147,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     if rolx.tiene_permiso('Can add sprint') or rolx.tiene_permiso('Can change sprint'):
         enlaceSprintv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
          
-    return render(request,'rol-flujo-para-scrum.html',{'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsf':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'is_Scrum':is_Scrum,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id})
+    return render(request,'rol-flujo-para-scrum.html',{'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsf':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'is_Scrum':is_Scrum,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'HUsa':HUsa,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id})
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
 def registrarUsuarioView(request):
@@ -769,5 +788,9 @@ def listarEquipo(request,proyecto_id_rec,usuario_id):
             usuario_a=MyUser.objects.get(id=a.usuario.id)
             lista[usuario_a]=rol_a#agregar el usuario de esa asignacion a la vista, y mandarlo al template
     return render(request,'formarEquipo.html',{'roles':rol.objects.all(),'lista_asigna':lista, 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario_id':usuario_id})
+
+
+def delegarHU(request,usuario_id,proyecto_id,rol_id,hu_id):
+    pass
 
     

@@ -121,33 +121,48 @@
 				{% for HU in HUs %}
 			            
   				<td> {{HU.descripcion}} </td>
+  				{%if HUsm==1%}
   					{%for enlace in enlaceHUv%}
   		           
                 		<td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/" class="addlink">Visualizar</a></td>
                 		
              		{% endfor %}
 
-            		{% if HUsm|length > 0%}
+        
             		
-            			{%for enlace in enlaceHUm%}
+            		{%for enlace in enlaceHUm%}
             		
-                			<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Modificar</a></td>
+                		<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Modificar</a></td>
                 		
-                		{%endfor%}
+                	{%endfor%}
+                {%endif%}
+                {%if HUsa==1%}
+                	
+                	
+                	{%for enlace in enlaceHUa%}
+            		
+                		<td><a href="/asignarHU/{{enlace.url}}/{{HU.id}}" class="asignlink">Asignar</a></td>
                 		
-                	{% endif %} 
+                	{%endfor%}
+                {%endif%}
+                		
                 	
               	</tr>
               	
                {% endfor %}
                
             {% endif %}
-            
+            <!-- este for es para agregar un boton: add HU -->
             {%for enlace in enlaceHU%}
                 
             	<td><a href="{{enlace.url}}">{{enlace.nombre}}</a></td>
             		
             {%endfor%}
+            
+            
+            
+            
+            
             
           {% if sprints|length > 0%}
             <table>
