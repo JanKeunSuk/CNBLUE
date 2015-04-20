@@ -136,6 +136,12 @@
                 			{%endfor%}
                 		
                 		{% endif %}
+                		
+                		{%for enlace in enlaceHUa%}
+            		
+                		<td><a href="/asignarHU/{{enlace.url}}/{{HU.id}}" class="asignlink">Asignar</a></td>
+                		
+                		{%endfor%}
                 	{%endif%}
                 	
               		</tr>
