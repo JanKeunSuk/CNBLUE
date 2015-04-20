@@ -46,4 +46,4 @@ urlpatterns = patterns('',
     url(r'^guardarSprint/$', views.guardarSprintView, name='guardar_nuevo_Sprint'),
     url(r'^modificarSprint/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<Sprint_id_rec>\d+)/$', views.modificarSprint, name='modificar_Sprint'),
     url(r'^delegarHU/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<hu_id>\d+)/$',views.delegarHU,name='delegarhu'),
-)u
+)
