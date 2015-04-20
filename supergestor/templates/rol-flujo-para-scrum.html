@@ -136,6 +136,16 @@
                 			{%endfor%}
                 		
                 		{% endif %}
+                		
+                		{%if HUsa==1%}
+                	
+                	
+                	{%for enlace in enlaceHUa%}
+            		
+                		<td><a href="/asignarHU/{{enlace.url}}/{{HU.id}}" class="asignlink">Asignar</a></td>
+                		
+                	{%endfor%}
+                {%endif%}
                 	{%endif%}
                 	
               		</tr>
