@@ -100,7 +100,12 @@ class MyUserAdmin(UserAdmin):
     search_fields = ('username',)
     ordering = ('username',)
     filter_horizontal = ()
-    save_as = True      
+    save_as = True    
+    
+class FlujoCreationForm(forms.ModelForm):
+    class Meta:
+        model=Flujo
+        fields=('nombre','actividades') #el estado en el momento de creacion tendra valor por defecto el usuario no decide    
 
 class FlujoAdmin(admin.ModelAdmin):
     """Configura la vista de administracion de Flujos para un usuario administrador,
@@ -166,6 +171,9 @@ admin.site.register(asigna_sistema)
 admin.site.register(rol_sistema)
 admin.site.register(Flujo,FlujoAdmin)
 admin.site.register(Sprint,SprintAdmin)
+
+    
+    
 
 
 # ... and, since we're not using Django's built-in permissions,
