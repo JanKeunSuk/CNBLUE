@@ -182,7 +182,7 @@ class proyectoAdmin(admin.ModelAdmin):
     """Configura la vista de administracion de Sprint para un usuario administrador,
     lista nombre y estado y al modificar permite guardar como"""
     form=ProyectoCreationForm
-    list_display = ('id', 'nombre_corto','nombre_largo','duracion','fecha_inicio')
+    list_display = ('id', 'nombre_corto','nombre_largo','fecha_inicio','fecha_fin')
     list_filter = ('estado',)
     ordering = ('nombre_corto',)
     save_as = True 
