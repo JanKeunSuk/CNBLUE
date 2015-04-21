@@ -124,14 +124,14 @@ cur.execute(c)
 
 #PRODUCT OWNER
 #Administracion sprint
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('3','37');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('2','37');"
 cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('3','38');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('2','38');"
 cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('3','39');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('2','39');"
 cur.execute(c)
 #EQUIPO
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('4','55');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('3','55');"
 cur.execute(c)
 conexion.commit()
 
