@@ -228,6 +228,26 @@ cur.execute(c)
 c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','51');"
 cur.execute(c)
 conexion.commit()
+#asignacion de sistema, rol: admin, usuario: admin
+c="insert into gestor_asignacion_sistema (rol_id, usuario_id) values ('1','1');"
+cur.execute(c)
+#asignacion
+c="insert into gestor_asignacion (proyecto_id, rol_id, usuario_id) values ('1','1', '2');"
+cur.execute(c)
+c="insert into gestor_asignacion (proyecto_id, rol_id, usuario_id) values ('1','2', '3');"
+cur.execute(c)
+c="insert into gestor_asignacion (proyecto_id, rol_id, usuario_id) values ('1','3', '4');"
+cur.execute(c)
+c="insert into gestor_asignacion (proyecto_id, rol_id, usuario_id) values ('2','1', '4');"
+cur.execute(c)
+c="insert into gestor_asignacion (proyecto_id, rol_id, usuario_id) values ('2','3', '3');"
+cur.execute(c)
+c="insert into gestor_asignacion (proyecto_id, rol_id, usuario_id) values ('3','1', '3');"
+cur.execute(c)
+c="insert into gestor_asignacion (proyecto_id, rol_id, usuario_id) values ('3','2', '4');"
+cur.execute(c)
+c="insert into gestor_asignacion (proyecto_id, rol_id, usuario_id) values ('3','3', '2');"
+cur.execute(c)
 
 #Carga actividades
 c="insert into gestor_actividades (nombre, descripcion) values ('Analisis','analisis');"
