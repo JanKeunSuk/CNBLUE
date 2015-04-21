@@ -125,107 +125,107 @@ conexion.commit()
 
 #Carga de Permisos del Rol de Sistema
 #Tiene todos los permisos
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','1');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','1');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','2');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','2');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','3');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','3');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','4');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','4');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','5');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','5');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','6');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','6');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','7');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','7');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','8');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','8');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','9');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','9');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','10');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','10');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','11');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','11');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','12');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','12');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','13');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','13');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','14');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','14');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','15');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','15');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','16');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','16');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','17');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','17');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','18');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','18');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','19');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','19');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','20');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','20');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','21');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','21');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','22');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','22');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','23');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','23');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','24');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','24');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','25');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','25');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','26');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','26');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','27');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','27');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','28');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','28');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','29');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','29');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','30');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','30');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','31');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','31');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','32');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','32');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','33');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','33');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','34');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','34');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','35');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','35');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','36');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','36');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','37');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','37');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','38');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','38');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','39');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','39');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','40');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','40');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','41');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','41');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','42');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','42');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','43');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','43');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','44');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','44');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','45');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','45');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','46');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','46');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','47');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','47');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','48');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','48');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','49');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','49');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','50');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','50');"
 cur.execute(c)
-c="insert into gestor_rol_sistema_permisos (rol_id, permission_id) values ('1','51');"
+c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) values ('1','51');"
 cur.execute(c)
 conexion.commit()
 #asignacion de sistema, rol: admin, usuario: admin
