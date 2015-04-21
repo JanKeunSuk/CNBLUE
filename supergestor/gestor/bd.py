@@ -91,6 +91,9 @@ c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','32');"
 cur.execute(c)
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','33');"
 cur.execute(c)
+#Modifica Proyecto
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','35');"
+cur.execute(c)
 #Administracion Flujo
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','37');"
 cur.execute(c)
@@ -105,27 +108,32 @@ c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','44');"
 cur.execute(c)
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','45');"
 cur.execute(c)
-#Asignacion
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','46');"
+#
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','49');"
 cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','47');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','50');"
 cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','48');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','51');"
+cur.execute(c)
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','52');"
+cur.execute(c)
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','53');"
+cur.execute(c)
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','54');"
+cur.execute(c)
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','55');"
 cur.execute(c)
 #PRODUCT OWNER
 #Administracion sprint
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('2','31');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('3','37');"
 cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('2','32');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('3','38');"
 cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('2','33');"
-cur.execute(c)
-#EQUIPO
-#Modificar sprint
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('3','32');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('3','39');"
 cur.execute(c)
 #EQUIPO
-
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('4','55');"
+cur.execute(c)
 conexion.commit()
 
 #Carga de Permisos del Rol de Sistema
