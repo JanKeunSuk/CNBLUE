@@ -229,7 +229,7 @@ c="insert into gestor_rol_sistema_permisos (rol_sistema_id, permission_id) value
 cur.execute(c)
 conexion.commit()
 #asignacion de sistema, rol: admin, usuario: admin
-c="insert into gestor_asignacion_sistema (rol_id, usuario_id) values ('1','1');"
+c="insert into gestor_asigna_sistema (rol_id, usuario_id) values ('1','1');"
 cur.execute(c)
 #asignacion
 c="insert into gestor_asignacion (proyecto_id, rol_id, usuario_id) values ('1','1', '2');"
