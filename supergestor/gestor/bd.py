@@ -121,8 +121,7 @@ c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','53');"
 cur.execute(c)
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','54');"
 cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','55');"
-cur.execute(c)
+
 #PRODUCT OWNER
 #Administracion sprint
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('3','37');"
