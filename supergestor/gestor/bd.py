@@ -37,6 +37,11 @@ cur.execute(c)
 #contraseña: 1234
 c="insert into gestor_myuser (password,last_login,username, user_name, last_name, direccion, is_active, is_admin, email_id) values ('pbkdf2_sha256$15000$Wwp6bhAeZDZv$d82uJ3SqwA08rtuY4Vm91tvT27KPkL5kF/YJ3Z3bzI8=','2015-03-31 09:16:23.277637-04','sebas','sebas','sebas', 'Asuncion', 'TRUE', 'FALSE','gsebacatt@gmail.com');"
 cur.execute(c)
+#Permisos
+c="insert into auth_permission (name, content_type_id, codename) values ('Agregar horas trabajadas','13','agregar horas trabajadas');"
+cur.execute(c)
+c="insert into auth_permission (name, content_type_id, codename) values ('Can change hu nivel Scrum','13','cambiar hu nivel Scrum');"
+cur.execute(c)
 
 conexion.commit()
 #carga de Proyecto
@@ -273,20 +278,24 @@ cur.execute(c)
 conexion.commit()
 
 #creacion de HU
-c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, proyecto_id) values ('HU1', '3', '0', '0', '0', '0', 'ACT', 'PEN', '1');"
+c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU1', '3', '0', '0', '0', '0', 'ACT', 'PEN', 'FALSE', '1');"
 cur.execute(c)
-c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, proyecto_id) values ('HU2', '5', '0', '0', '0', '0', 'ACT', 'PEN', '1');"
+c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU2', '5', '0', '0', '0', '0', 'ACT', 'PEN','FALSE', '1');"
 cur.execute(c)
-c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, proyecto_id) values ('HU3', '8', '0', '0', '0', '0', 'ACT', 'PEN', '1');"
+c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU3', '8', '0', '0', '0', '0', 'ACT', 'PEN','FALSE', '1');"
+cur.execute(c)
+conexion.commit()
+#creacion de sprint
+c="insert into gestor_sprint (descripcion, fecha_inicio, duracion, estado, proyecto_id) values ('sprint1', '2015-04-18 20:00:00-04', '2', 'ACT', '1');"
+cur.execute(c)
+c="insert into gestor_sprint (descripcion, fecha_inicio, duracion, estado, proyecto_id) values ('sprint2', '2015-04-18 20:05:00-04', '2', 'ACT', '1');"
+cur.execute(c)
+c="insert into gestor_sprint (descripcion, fecha_inicio, duracion, estado, proyecto_id) values ('sprint3', '2015-04-18 20:10:00-04', '2', 'ACT', '1');"
+cur.execute(c)
+#conexion.commit()
+c="insert into gestor_sprint_HU (sprint_id, hu_id) values ('1', '1');"
 cur.execute(c)
 
-#creacion de sprint
-c="insert into gestor_sprint (descripcion, fecha_inicio, duracion, estado) values ('sprint1', '2015-04-18 20:00:00-04', '2', 'ACT');"
-cur.execute(c)
-c="insert into gestor_sprint (descripcion, fecha_inicio, duracion, estado) values ('sprint2', '2015-04-18 20:05:00-04', '2', 'ACT');"
-cur.execute(c)
-c="insert into gestor_sprint (descripcion, fecha_inicio, duracion, estado) values ('sprint3', '2015-04-18 20:10:00-04', '2', 'ACT');"
-cur.execute(c)
 
 #Efectuamos los cambios en la base de datos
 conexion.commit()

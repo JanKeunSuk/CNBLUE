@@ -255,7 +255,7 @@ class Sprint(models.Model):
     )
      
     descripcion = models.CharField(max_length = 200)
-    HU=models.ManyToManyField(HU)
+    hu=models.ManyToManyField(HU)
     fecha_inicio = models.DateTimeField()
     duracion = models.FloatField()
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
