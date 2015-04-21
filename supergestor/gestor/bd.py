@@ -48,6 +48,7 @@ c="insert into gestor_proyecto (nombre_corto, nombre_largo, descripcion, fecha_i
 cur.execute(c)
 c="insert into gestor_proyecto (nombre_corto, nombre_largo, descripcion, fecha_inicio, fecha_fin, estado) values ('p4','proyecto4', 'proyecto4','2015-03-31','2015-04-01', 'PEN');"
 cur.execute(c)
+
 #Carga de Rol de Sistema
 c="insert into gestor_rol_sistema (nombre_rol_id, descripcion) values ('admin', 'admin tiene todos los permisos');"
 cur.execute(c)
@@ -246,12 +247,17 @@ c="insert into gestor_flujo (nombre, estado) values ('Flujo3','ACT');"
 cur.execute(c)
 conexion.commit()
 
+#carga de Proyecto Flujo
+c="insert into gestor_proyecto_flujo (proyecto_id, flujo_id) values ('1','1');"
+cur.execute(c)
+conexion.commit()
+
 #creacion de HU
-c="insert into gestor_HU (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad) values ('HU1', '3', '0', '0', '0', '0', 'ACT', 'PEN');"
+c="insert into gestor_HU (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, proyecto) values ('HU1', '3', '0', '0', '0', '0', 'ACT', 'PEN', '1');"
 cur.execute(c)
-c="insert into gestor_HU (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad) values ('HU2', '5', '0', '0', '0', '0', 'ACT', 'PEN');"
+c="insert into gestor_HU (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, proyecto) values ('HU2', '5', '0', '0', '0', '0', 'ACT', 'PEN', '1');"
 cur.execute(c)
-c="insert into gestor_HU (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad) values ('HU3', '8', '0', '0', '0', '0', 'ACT', 'PEN');"
+c="insert into gestor_HU (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, proyecto) values ('HU3', '8', '0', '0', '0', '0', 'ACT', 'PEN', '1');"
 cur.execute(c)
 
 #creacion de sprint
