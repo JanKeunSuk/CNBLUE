@@ -215,7 +215,7 @@ def guardarSprintView(request, proyectoid):
     try:
         Sprint_a_crear = Sprint.objects.create(descripcion=request.POST['descripcion'],estado="ACT",fecha_inicio=request.POST['fecha_inicio'], duracion=request.POST['duracion'], proyecto=proyecto.objects.get(id=proyectoid))
         for p in request.POST.getlist('HUs'):
-            Sprint_a_crear.HU.add(HU.objects.get(id=p))
+            Sprint_a_crear.hu.add(HU.objects.get(id=p))
         Sprint_a_crear.save()
         return HttpResponse('El Sprint se ha creado')  
     except ObjectDoesNotExist:
