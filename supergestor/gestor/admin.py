@@ -169,7 +169,28 @@ class SprintAdmin(admin.ModelAdmin):
         obj.estado='CON'
         obj.save()
         pass
-     
+ 
+ 
+class ProyectoCreationForm(forms.ModelForm):
+    class Meta:
+        model=proyecto
+        fields=('nombre_corto','nombre_largo','descripcion','fecha_inicio','fecha_fin','flujos') #el estado en el momento de creacion tendra valor por defecto el usuario no decide  
+    
+         
+
+class proyectoAdmin(admin.ModelAdmin):
+    """Configura la vista de administracion de Sprint para un usuario administrador,
+    lista nombre y estado y al modificar permite guardar como"""
+    form=ProyectoCreationForm
+    list_display = ('id', 'nombre_corto','nombre_largo','duracion','fecha_inicio')
+    list_filter = ('estado',)
+    ordering = ('nombre_corto',)
+    save_as = True 
+    def save_model(self,request,obj,form,change):
+        """Permite establecer el Estado por defecto en el momento de la creacion que es ACTIVO????"""
+        obj.estado='PEN'
+        obj.save()
+        pass    
 
 # Now register the new UserAdmin...
 """registra el ModelAdmin(o UserAdmin) para ser desplegado en la interfaz del admin"""
@@ -177,7 +198,7 @@ admin.site.register(MyUser, MyUserAdmin)
 admin.site.register(Permitido)
 admin.site.register(rol, RolAdmin) 
 admin.site.register(asignacion)
-admin.site.register(proyecto)
+admin.site.register(proyecto,proyectoAdmin)
 admin.site.register(asigna_sistema)
 admin.site.register(rol_sistema)
 admin.site.register(Flujo,FlujoAdmin)
