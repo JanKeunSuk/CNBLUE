@@ -166,10 +166,10 @@ class SprintAdmin(admin.ModelAdmin):
     save_as = True 
     def save_model(self,request,obj,form,change):
         """Permite establecer el Estado por defecto en el momento de la creacion que es ACTIVO????"""
-        obj.estado='CONSULTA'
+        obj.estado='CON'
         obj.save()
         pass
-
+     
 
 # Now register the new UserAdmin...
 """registra el ModelAdmin(o UserAdmin) para ser desplegado en la interfaz del admin"""
