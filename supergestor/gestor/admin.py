@@ -151,7 +151,7 @@ class RolAdmin(admin.ModelAdmin):
     
 class SprintCreationForm(forms.ModelForm):
     class Meta:
-        model=Flujo
+        model=Sprint
         fields=('descripcion','duracion','fecha_inicio') #el estado en el momento de creacion tendra valor por defecto el usuario no decide  
     
          
