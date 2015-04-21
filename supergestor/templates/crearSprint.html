@@ -67,7 +67,7 @@
 
 
 
-<form enctype="multipart/form-data" action="/guardarSprint/" method="post" id="rol_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
+<form enctype="multipart/form-data" action="/guardarSprint/{{proyectoid}}/" method="post" id="rol_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
 {% csrf_token %}
 <div>
 
@@ -120,8 +120,32 @@
                     
                     
                 </div>
+                
             
         </div>
+        
+        <div class="form-row field-HUs">
+            
+            
+                <div>
+                    
+                    
+                        <label class="required" for="id_usuarios">HUs:</label>
+                        
+                            <select id="id_usuarios" name="HUs">
+                            {%for HU in HUs %}
+								<option value="{{HU.id}}">{{HU.descripcion}}</option>
+							{%endfor%}
+</select>
+                        
+                    
+                    
+                        <p class="help"> Presiona "Control" para seleccionar mas de una opcion.</p>
+                    
+                </div>
+            
+        </div>
+        
     
 </fieldset>
 

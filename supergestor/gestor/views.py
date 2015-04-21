@@ -96,29 +96,23 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         enlacefv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
     
     if rolx.tiene_permiso('Can add hu'):
-        for d in delegacion.objects.all():
-            if str(d.proyecto.id) == proyectoid:
-                HUs.append(d.HU)
+        HUs = HU.objects.filter(proyecto=proyectox)
         enlaceHU.append(enlacex('/crearHU/'+usuario_id+'/'+proyectoid+'/'+rol_id,'add'))
     
     if rolx.tiene_permiso('Can change hu'):
-        for d in delegacion.objects.all():
-            if str(d.proyecto.id) == proyectoid:
-                HUs.append(d.HU)
-                HUsm.append(d.HU)
+        HUs = HU.objects.filter(proyecto=proyectox)
+        HUsm = HU.objects.filter(proyecto=proyectox)
         enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
         is_Scrum=0
     elif rolx.tiene_permiso('Can change hu nivel Scrum'):
-        for d in delegacion.objects.all():
-            if str(d.proyecto.id) == proyectoid:
-                HUs.append(d.HU)
-                HUsm.append(d.HU)
+        HUs = HU.objects.filter(proyecto=proyectox)
+        HUsm = HU.objects.filter(proyecto=proyectox)
         enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
         is_Scrum=1
     
     if rolx.tiene_permiso('Can add hu') or rolx.tiene_permiso('Can change hu') or rolx.tiene_permiso('Can change hu nivel Scrum'):
         enlaceHUv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
-        if rolx.tiene_permiso('Can add delegation'):
+        if rolx.tiene_permiso('Can add delegacion'):
             enlaceHUa.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Asignar'))
             HUsa=1
         else:
@@ -126,24 +120,20 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     
     if rolx.tiene_permiso('Agregar horas trabajadas'):
         for d in delegacion.objects.all():
-            if str(d.proyecto.id) == proyectoid and str(d.usuario.id) == usuario_id:
+            if d.HU.proyecto == proyectox and str(d.usuario.id) == usuario_id:
                 HUs_add_horas.append(d.HU)
         enlaceHU_agregar.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar horas'))
         is_Scrum=2
-    HUs = set(HUs)
-    HUsm = set(HUsm)
-    HUs_add_horas=set(HUs_add_horas)
-    
+
     if rolx.tiene_permiso('Can add sprint'):
-        sprints=Sprint.objects.all()
         enlaceSprint.append(enlacex('/crearSprint/'+usuario_id+'/'+proyectoid+'/'+rol_id,'add Sprint'))
     else:
         sprints = []#lista vacia si no tiene permiso de ver flujos
         
     if rolx.tiene_permiso('Can change sprint'):
         """Tiene permiso de modificar flujo, obtengo todos los flujos para enviar al rol-flujo-para-scrum.html"""
-        sprintsm=Sprint.objects.all()
-        sprints=Sprint.objects.all()
+        sprintsm=Sprint.objects.filter(proyecto=proyectox)
+        sprints=Sprint.objects.filter(proyecto=proyectox)
         enlaceSprintm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar Sprint'))
     else:
         sprintsm = []#lista vacia si no tiene permiso de ver flujos
@@ -211,23 +201,21 @@ def guardarHUView(request,proyectoid):
     """Vista de guardado de nuevo usuario relacionado con un correo autorizado en la tabla Permitidos
     que se utiliza en la interfaz devuelta por /registrar """
     try:
-    
-        HU_a_crear = HU.objects.create(descripcion=request.POST['descripcion'],estado="ACT",valor_negocio=request.POST['valor_negocio'], valor_tecnico=0, prioridad=0, duracion=0, acumulador_horas=0, estado_en_actividad='PEN')
-        HU_a_crear.save()
-        usuariox = MyUser.objects.get(id=1)
         proyectox = proyecto.objects.get(id=proyectoid)
-        relacionar_HU_proyecto = delegacion.objects.create(usuario=usuariox, HU=HU_a_crear, proyecto=proyectox)
-        relacionar_HU_proyecto.save()
+        HU_a_crear = HU.objects.create(descripcion=request.POST['descripcion'],estado="ACT",valor_negocio=request.POST['valor_negocio'], valor_tecnico=0, prioridad=0, duracion=0, acumulador_horas=0, estado_en_actividad='PEN',proyecto=proyectox,valido=False)
+        HU_a_crear.save()
         return HttpResponse('La HU se ha creado y relacionado con el proyecto')  
     except ObjectDoesNotExist:
         print "Either the entry or blog doesn't exist." 
         return HttpResponseRedirect('/crearHU/')
 
-def guardarSprintView(request):
+def guardarSprintView(request, proyectoid):
     """Vista de guardado de nuevo usuario relacionado con un correo autorizado en la tabla Permitidos
     que se utiliza en la interfaz devuelta por /registrar """
     try:
-        Sprint_a_crear = Sprint.objects.create(descripcion=request.POST['descripcion'],estado="ACT",fecha_inicio=request.POST['fecha_inicio'], duracion=request.POST['duracion'])
+        Sprint_a_crear = Sprint.objects.create(descripcion=request.POST['descripcion'],estado="ACT",fecha_inicio=request.POST['fecha_inicio'], duracion=request.POST['duracion'], proyecto=proyecto.objects.get(id=proyectoid))
+        for p in request.POST.getlist('HUs'):
+            Sprint_a_crear.HU.add(HU.objects.get(id=p))
         Sprint_a_crear.save()
         return HttpResponse('El Sprint se ha creado')  
     except ObjectDoesNotExist:
@@ -596,8 +584,9 @@ def crearSprint(request,usuario_id,proyectoid,rolid):
     """
     Vista que realiza la creacion de flujos de proyecto desde la vista del Scrum.
     """
+    proyectox = proyecto.objects.get(id=proyectoid)
     if request.method == 'GET':
-        return render(request, 'crearSprint.html',{'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
+        return render(request, 'crearSprint.html',{'HUs':HU.objects.filter(proyecto=proyectox),'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
 
 def crearHU(request,usuario_id,proyectoid,rolid):
     """
@@ -804,29 +793,27 @@ def listarEquipo(request,proyecto_id_rec,usuario_id):
             lista[usuario_a]=rol_a#agregar el usuario de esa asignacion a la vista, y mandarlo al template
     return render(request,'formarEquipo.html',{'roles':rol.objects.all(),'lista_asigna':lista, 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario_id':usuario_id})
 
-def delegarHU(request,usuario_id,proyecto_id,rol_id,hu_id):
+def delegarHU(request,usuario_id,proyectoid,rolid,hu_id):
     """Copiado del metodo asignar Rol le voy a agregar algunos exclude a usuarios      NO ESTA TERMINADO"""
-    usuario=MyUser.objects.get(id=usuario_id)
-    proyectox=proyecto.objects.get(id=proyecto_id)
+    proyectox=proyecto.objects.get(id=proyectoid)
     hu=HU.objects.get(id=hu_id)
     if request.method=='POST' :
         try:
-            for p in request.POST.getlist('usuarios'):
-                delegacionx= delegacion.objects.create(usuario=MyUser.objects.get(id=p),HU=hu,proyecto=proyectox)
-                delegacionx.save()
-                return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario':usuario, 'rolid':rol_id})
+            delegacionx= delegacion.objects.create(usuario=MyUser.objects.get(id=request.POST['usuario']),HU=hu)
+            delegacionx.save()
+            return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')
         except ObjectDoesNotExist:
             return HttpResponseRedirect('/crearFlujo/') #redirijir a rol flujo para scrum despues
     else:
         users=[]
         #users=MyUser.objects.all().exclude(id=usuario_id)  #falta filtrar usuarios sin permisos de agregar horas
         #Primero obtener todos lo usuarios con rol en este proyectp
-        asignaciones= asignacion.objects.filter(proyecto== proyectox)#obtuve todas las asignaciones para este proyecto
+        asignaciones= asignacion.objects.filter(proyecto=proyectox)#obtuve todas las asignaciones para este proyecto
         for a in asignaciones:
             rola = a.rol
-            if rola.tiene_permiso('Can add horas'):
+            if rola.tiene_permiso('Agregar horas trabajadas'):
                 users.append(a.usuario)
                 
         
-        return render(request,'asignaHU.html',{'proyecto':proyectox,'usuarios':users,'proyectoid':proyecto_id,'usuarioid':usuario_id, 'rolid':rol_id})
+        return render(request,'asignaHU.html',{'proyecto':proyectox,'usuarios':users,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
 

@@ -137,12 +137,12 @@
                 		
                 		{% endif %}
                 		
-                		{%if HUsa==1%}
+                		{%if HUsa == 1%}
                 	
                 	
                 	{%for enlace in enlaceHUa%}
             		
-                		<td><a href="/asignarHU/{{enlace.url}}/{{HU.id}}" class="asignlink">Asignar</a></td>
+                		<td><a href="/delegarHU/{{enlace.url}}/{{HU.id}}" class="asignlink">Asignar</a></td>
                 		
                 	{%endfor%}
                 {%endif%}

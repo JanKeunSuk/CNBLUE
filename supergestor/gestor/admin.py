@@ -123,7 +123,7 @@ class FlujoAdmin(admin.ModelAdmin):
     save_as = True 
     def save_model(self,request,obj,form,change):
         """Permite establecer el Estado por defecto en el momento de la creacion que es ACTIVO????"""
-        obj.estado='ACTIVO'
+        obj.estado='ACT'
         obj.save()
         
     

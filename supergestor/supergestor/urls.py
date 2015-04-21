@@ -43,7 +43,7 @@ urlpatterns = patterns('',
     url(r'^guardarHU/(?P<HU_id_rec>\d+)/(?P<is_Scrum>\d+)/$', views.guardarHUProdOwnerView, name='guardar_HU_modificada'),
     url(r'^visualizarSprint/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<Sprint_id_rec>\d+)/$', views.visualizarSprintProyectoView,name='visualizar_Sprint'),
     url(r'^crearSprint/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$', views.crearSprint, name='crear_Sprint'),
-    url(r'^guardarSprint/$', views.guardarSprintView, name='guardar_nuevo_Sprint'),
+    url(r'^guardarSprint/(?P<proyectoid>\d+)/$', views.guardarSprintView, name='guardar_nuevo_Sprint'),
     url(r'^modificarSprint/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<Sprint_id_rec>\d+)/$', views.modificarSprint, name='modificar_Sprint'),
     url(r'^delegarHU/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<hu_id>\d+)/$',views.delegarHU,name='delegarhu'),
 )

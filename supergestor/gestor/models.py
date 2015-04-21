@@ -136,8 +136,6 @@ class rol(models.Model):
     descripcion = models.CharField(max_length = 200)
     usuario_creador = models.ForeignKey(MyUser)
     
-    
-    
     def tiene_permiso(self,perm):
         """checkea si un rol esta compuesto por un permiso"""
         permiso= Permission.objects.get(name=perm)
@@ -165,24 +163,7 @@ class rol_sistema(models.Model):
     def __unicode__(self):
         """Representacion unicode del objeto rol sistema"""
         return self.nombre_rol_id
-    
-class Sprint(models.Model):
-    """Modelo que reprenseta los Spring de un proyecto relacionados a
-    sus respectivos proyectos mediante un foreign key"""
-    
-    ESTADO_CHOICES = (
-        ('CAN', 'Cancelado'),
-        ('ACT', 'Activo'),
-        ('CON', 'Consulta'),
-    )
-     
-    descripcion = models.CharField(max_length = 200)
-    #HU=models.ManyToManyField(HU)
-    fecha_inicio = models.DateTimeField()
-    duracion = models.FloatField()
-    estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
-    #proyecto=models.ForeignKey(proyecto)
-    
+      
 class Actividades(models.Model):
     """Representacion de la actividad de un flujo relacionada a su proyecto"""
     nombre = models.CharField(max_length = 200)
@@ -235,7 +216,6 @@ class proyecto(models.Model):
         """Representacion unicode del objeto proyecto"""
         return self.nombre_corto
 
-
 class HU(models.Model):
     """Modelo que reprenseta las historias de usuario"""
     VALORES100_CHOICES = zip( range(1,100), range(1,100) )
@@ -260,10 +240,26 @@ class HU(models.Model):
     acumulador_horas = models.FloatField()
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
     estado_en_actividad = models.CharField(max_length = 3, choices = ESTADO_ACTIVIDAD_CHOICES)
-        #este campo va indicar a que proyecto pertenece asi en la vista ya no tenemos que hacer hu.objects.all()
+    #este campo va indicar a que proyecto pertenece asi en la vista ya no tenemos que hacer hu.objects.all()
     proyecto=models.ForeignKey(proyecto)
-    #valido=models.BooleanField() # rl productOwner debe validar
-   
+    valido=models.BooleanField(default=False) # rl productOwner debe validar
+
+class Sprint(models.Model):
+    """Modelo que reprenseta los Spring de un proyecto relacionados a
+    sus respectivos proyectos mediante un foreign key"""
+    
+    ESTADO_CHOICES = (
+        ('CAN', 'Cancelado'),
+        ('ACT', 'Activo'),
+        ('CON', 'Consulta'),
+    )
+     
+    descripcion = models.CharField(max_length = 200)
+    HU=models.ManyToManyField(HU)
+    fecha_inicio = models.DateTimeField()
+    duracion = models.FloatField()
+    estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
+    proyecto=models.ForeignKey(proyecto)
     
 #Modelo para asignacion de actividades con HU en un flujo determinado
 class asignacion(models.Model):
@@ -274,8 +270,7 @@ class asignacion(models.Model):
     def __unicode__(self):
         """Representacion unicode del objeto asignacion"""
         return str(self.id)    
-
-
+    
 #Modelo para asignacion de roles de proyecto
 class asigna_sistema(models.Model):
     """MOdelo que representa la asignaciones de roles de sistema a usuarios con clave foranea a 
@@ -289,15 +284,10 @@ class asigna_sistema(models.Model):
 class delegacion(models.Model):
     """Modelo que especifica una delegacion de una HU a un usuario en un proyecto"""
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL)
-    HU=models.ForeignKey(HU)
-    proyecto=models.ForeignKey(proyecto)
-    
+    HU=models.ForeignKey(HU)  
 
 class asignaHU_actividad_flujo(models.Model):
     """Modelo intermedio para la relacion varios a varios del modelo flujo con actividades"""
     lista_de_HU = models.ManyToManyField(HU)
     flujo_al_que_pertenece = models.ForeignKey(Flujo)
     actividad_al_que_pertenece = models.ForeignKey(Actividades)
-        
-
-       
