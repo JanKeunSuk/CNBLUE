@@ -486,7 +486,7 @@ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
             s.estado=estado
             s.fecha_inicio=fecha_inicio
             s.duracion=duracion
-             s.hu=hu
+            s.hu=hu
             s.save() #Guardamos el modelo de manera Editada
             return HttpResponse('El Sprint ha sido modificado exitosamente')
         else:
