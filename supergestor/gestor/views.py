@@ -71,7 +71,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     
     if rolx.tiene_permiso('Can add rol'):
             roles=rol.objects.all()
-            enlaces.append(enlacex('/crearRol/'+usuario_id+'/'+proyectoid+'/'+rol_id,'add'))
+            enlaces.append(enlacex('/crearRol/'+usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar rol'))
     else:
             roles =[]#lista vacia si no tiene permiso de ver roles
      
@@ -80,7 +80,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         """Tiene permiso de crear un nuevo flujo, obtengo todos los flujos y enlancef envia el url de crear con el nombre del
         permiso correspondiente al rol-flujo-para-scrum.html"""
         flujos=Flujo.objects.all().filter(estado='ACT')
-        enlacef.append(enlacex('/crearFlujo/'+usuario_id+'/'+proyectoid+'/'+rol_id,'add Flujo'))
+        enlacef.append(enlacex('/crearFlujo/'+usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar Flujo'))
     else:
         flujos = []#lista vacia si no tiene permiso de ver flujos
         
@@ -97,7 +97,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     
     if rolx.tiene_permiso('Can add hu'):
         HUs = HU.objects.filter(proyecto=proyectox).filter(estado='ACT')
-        enlaceHU.append(enlacex('/crearHU/'+usuario_id+'/'+proyectoid+'/'+rol_id,'add'))
+        enlaceHU.append(enlacex('/crearHU/'+usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar HU'))
     
     if rolx.tiene_permiso('Can change hu'):
         HUs = HU.objects.filter(proyecto=proyectox).filter(estado='ACT')
@@ -126,7 +126,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         is_Scrum=2
 
     if rolx.tiene_permiso('Can add sprint'):
-        enlaceSprint.append(enlacex('/crearSprint/'+usuario_id+'/'+proyectoid+'/'+rol_id,'add Sprint'))
+        enlaceSprint.append(enlacex('/crearSprint/'+usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar Sprint'))
     else:
         sprints = []#lista vacia si no tiene permiso de ver flujos
         
@@ -238,9 +238,12 @@ def guardarHUProdOwnerView(request,HU_id_rec,is_Scrum):
             else:
                 horas_a_agregar = request.POST['horas_agregar']
                 acumulador_horas = float(horas_a_agregar)+h.acumulador_horas
-                h.acumulador_horas=acumulador_horas
-                h.save()
-                return HttpResponse('Las horas se han agregado exitosamente')
+                if h.duracion >= acumulador_horas:
+                    h.acumulador_horas=acumulador_horas
+                    h.save()
+                    return HttpResponse('Las horas se han agregado exitosamente')
+                else:
+                    return HttpResponse('Contactar con el Scrum para aumentar la duracion de la HU, ya que ha sobrepasado el tiempo de realizacion de HU')
     except ObjectDoesNotExist:
             print "Either the entry or blog doesn't exist." 
             return HttpResponseRedirect('/crearHU/')
@@ -447,7 +450,7 @@ class FormularioSprintProyecto(forms.ModelForm):
     """
     class Meta:
         model= Sprint
-        fields=['descripcion','fecha_inicio','duracion','estado']
+        fields=['descripcion','fecha_inicio','duracion','estado','hu',]
         
 def visualizarSprintProyectoView(request,usuario_id, proyectoid, rolid, Sprint_id_rec):
     """
@@ -469,6 +472,7 @@ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
     Vista que utiliza el formulario FlujoProyecto para desplegar los datos editables
     del Flujo que se quiere modificar.
     """
+    estados=['ACT','CAN','CON']
     s=Sprint.objects.get(id=Sprint_id_rec)
     if request.method == 'POST':
         form = FormularioSprintProyecto(request.POST)
@@ -477,22 +481,42 @@ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
             estado=form.cleaned_data['estado']
             fecha_inicio=form.cleaned_data['fecha_inicio']
             duracion=form.cleaned_data['duracion']
+            hu=form.cleaned_data['hu']
             s.descripcion=descripcion
             s.estado=estado
             s.fecha_inicio=fecha_inicio
             s.duracion=duracion
+             s.hu=hu
             s.save() #Guardamos el modelo de manera Editada
             return HttpResponse('El Sprint ha sido modificado exitosamente')
-    else:
-        
+        else:
+            return HttpResponse('El Sprint no es valido'+str(form.errors))
+    else:    
         form = FormularioSprintProyecto(initial={
                                          'descripcion': s.descripcion,
                                          'estado': s.estado,
                                          'fecha_inicio': s.fecha_inicio,
                                          'duracion': s.duracion,
+                                         'hu':[t.id for t in s.hu.all()],
    
                                          })
-        ctx = {'form':form, 'Sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
+        proyectox=proyecto.objects.get(id=proyectoid)
+        HUs = HU.objects.filter(proyecto=proyectox)
+        for x in Sprint.objects.all():
+            for h in x.hu.all():
+                HUs=HUs.exclude(id=h.id)
+                
+        lista_restante=[]
+        for permitido in HUs:
+            x=0
+            for perm_hu in s.hu.all():
+                if permitido.id==perm_hu.id:
+                    x=1
+            if x==0:
+                lista_restante.append(permitido)
+        fecha = str(s.fecha_inicio)
+        
+        ctx = {'estados':estados, 'fecha':fecha[:-6],'form':form,'HUs':HUs,'lista_HU_sin_asignar':lista_restante,'Sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
         return render_to_response('modificarSprint.html', ctx ,context_instance=RequestContext(request))
     
 class FormularioHU(forms.ModelForm):
@@ -502,7 +526,7 @@ class FormularioHU(forms.ModelForm):
     """
     class Meta:
         model= HU
-        fields=['estado','valor_tecnico','prioridad','duracion']
+        fields=['valor_tecnico','prioridad','duracion','estado']
         
 def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec):
     """
@@ -522,34 +546,35 @@ def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
     Vista que utiliza el formulario FlujoProyecto para desplegar los datos editables
     del Flujo que se quiere modificar.
     """
+    estados=['ACT','CAN']
     VALORES10_CHOICES = range(1,10)
     h=HU.objects.get(id=HU_id_rec)
     if (is_Scrum == '1'):
         if request.method == 'POST':
             form = FormularioHU(request.POST)
             if form.is_valid():
-                estado=form.cleaned_data['estado']
                 valor_tecnico=form.cleaned_data['valor_tecnico']
                 prioridad=form.cleaned_data['prioridad']
                 duracion=form.cleaned_data['duracion']
-                h.estado=estado
+                estado=form.cleaned_data['estado']
                 h.valor_tecnico=valor_tecnico
                 h.prioridad=prioridad
                 h.duracion=duracion
+                h.estado=estado
                 h.save() #Guardamos el modelo de manera Editada
                 return HttpResponse('La HU ha sido modificado exitosamente')
         else:
         
             form = FormularioHU(initial={
-                                        'estado': h.estado,
                                         'valor_tecnico': h.valor_tecnico,
                                         'prioridad': h.prioridad,
                                         'duracion':h.duracion,
+                                        'estado':h.estado
                                          })
-            ctx = {'valores':VALORES10_CHOICES,'form':form, 'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum}
+            ctx = {'estados':estados, 'valores':VALORES10_CHOICES,'form':form, 'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum}
             return render_to_response('modificarHU.html', ctx ,context_instance=RequestContext(request))
     else:
-        return render(request,'modificarHU.html', {'valores':VALORES10_CHOICES,'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum})
+        return render(request,'modificarHU.html', {'estados':estados, 'valores':VALORES10_CHOICES,'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum})
 
 def crearRol(request,usuario_id,proyectoid,rolid):
     """
@@ -585,8 +610,12 @@ def crearSprint(request,usuario_id,proyectoid,rolid):
     Vista que realiza la creacion de flujos de proyecto desde la vista del Scrum.
     """
     proyectox = proyecto.objects.get(id=proyectoid)
+    HUs = HU.objects.filter(proyecto=proyectox)
+    for x in Sprint.objects.all():
+        for h in x.hu.all():
+            HUs=HUs.exclude(id=h.id)
     if request.method == 'GET':
-        return render(request, 'crearSprint.html',{'HUs':HU.objects.filter(proyecto=proyectox),'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
+        return render(request, 'crearSprint.html',{'HUs':HUs,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
 
 def crearHU(request,usuario_id,proyectoid,rolid):
     """

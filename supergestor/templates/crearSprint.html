@@ -132,7 +132,7 @@
                     
                         <label class="required" for="id_usuarios">HUs:</label>
                         
-                            <select id="id_usuarios" name="HUs">
+                            <select multiple = "multiple" id="id_usuarios" name="HUs">
                             {%for HU in HUs %}
 								<option value="{{HU.id}}">{{HU.descripcion}}</option>
 							{%endfor%}

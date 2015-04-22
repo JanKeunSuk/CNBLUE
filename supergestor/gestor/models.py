@@ -243,6 +243,10 @@ class HU(models.Model):
     #este campo va indicar a que proyecto pertenece asi en la vista ya no tenemos que hacer hu.objects.all()
     proyecto=models.ForeignKey(proyecto)
     valido=models.BooleanField(default=False) # rl productOwner debe validar
+    
+    def __unicode__(self):
+        """Representacion unicode del objeto proyecto"""
+        return self.descripcion
 
 class Sprint(models.Model):
     """Modelo que reprenseta los Spring de un proyecto relacionados a
