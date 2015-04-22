@@ -111,6 +111,18 @@
 			{%endfor%}
 		</select>
     </div>
+    <div>
+        <label class="required" for="id_permisos">Estado:</label>
+        <select id="id_actividades" name="estado">
+           {%for e in estados %}
+          		{%if e == HU.estado%}
+          			<option value="{{e}}" selected="selected">{{e}}</option>
+          		{%else%}
+					<option value="{{e}}">{{e}}</option>
+				{%endif%}
+			{%endfor%}
+		</select>
+    </div>
 
 <input type="submit" name="Submit" value="Guardar" tabindex="2" />
 </form>
