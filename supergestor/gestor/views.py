@@ -17,6 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django.forms.widgets import CheckboxSelectMultiple
 from django.contrib.auth.models import Permission
 from datetime import datetime 
+from docutils.parsers.rst.directives.html import Meta
 # Create your views and forms here.
 @login_required
 def holaView(request):
@@ -537,11 +538,12 @@ def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec):
     en el Flujo que se quiere visualizar.
     """
     HU_disponible= HU.objects.get(id=HU_id_rec)
+    HU_val=HU.valido
     formulario =  FormularioHU(initial={
                                                      'descripcion': HU_disponible.descripcion,
                                                      'valor_negocio': HU_disponible.valor_negocio,
                                                      })      
-    return render_to_response('visualizarHU.html',{'formulario':formulario, 'HU':HU_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid},
+    return render_to_response('visualizarHU.html',{'formulario':formulario, 'HU':HU_disponible,'HU_val':HU_val, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid},
                                   context_instance=RequestContext(request))
 
 def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
@@ -850,4 +852,20 @@ def delegarHU(request,usuario_id,proyectoid,rolid,hu_id):
                 
         
         return render(request,'asignaHU.html',{'proyecto':proyectox,'usuarios':users,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+            
+def validarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
+    hu_x=HU.objects.get(id=HU_id_rec)
+    if request.method == 'GET':       
+        return render(request,'validarHU.html',{'hu':HU_id_rec, 'HU':hu_x, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum})
+    else:
+        if hu_x == False:
+            hu_x.valido=True
+            hu_x.save()
+            return HttpResponse('Se ha validado exitosamente') 
+        else:
+            hu_x.valido=False
+            hu_x.save()
+            return HttpResponse('Se ha invalidado exitosamente')
+
+    
 

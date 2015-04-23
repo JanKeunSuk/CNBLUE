@@ -265,6 +265,10 @@ class Sprint(models.Model):
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
     proyecto=models.ForeignKey(proyecto)
     
+    def __unicode__(self):
+        """Representacion unicode del objeto proyecto"""
+        return str(self.id)
+    
 #Modelo para asignacion de actividades con HU en un flujo determinado
 class asignacion(models.Model):
     """Modelo que especifica una asignacion de un rol a un usuario en un proyecto"""
