@@ -432,6 +432,8 @@ def modificarFlujo(request, usuario_id, proyectoid, rolid, flujo_id_rec):
             f.actividades=actividades
             f.save() #Guardamos el modelo de manera Editada
             return HttpResponse('El flujo a sido modificado exitosamente')
+        else:
+            return HttpResponse('Error'+str(form.errors))
     else:
         
         form = FormularioFlujoProyecto(initial={
@@ -563,6 +565,8 @@ def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
                 h.estado=estado
                 h.save() #Guardamos el modelo de manera Editada
                 return HttpResponse('La HU ha sido modificado exitosamente')
+            else:
+                return HttpResponse('error'+str(form.errors))
         else:
         
             form = FormularioHU(initial={
