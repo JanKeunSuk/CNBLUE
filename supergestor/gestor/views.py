@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django.forms.widgets import CheckboxSelectMultiple
 from django.contrib.auth.models import Permission
 from datetime import datetime 
-from docutils.parsers.rst.directives.html import Meta
+
 # Create your views and forms here.
 @login_required
 def holaView(request):
@@ -106,8 +106,8 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
         is_Scrum=0
     elif rolx.tiene_permiso('Can change hu nivel Scrum'):
-        HUs = HU.objects.filter(proyecto=proyectox).filter(estado='ACT')
-        HUsm = HU.objects.filter(proyecto=proyectox).filter(estado='ACT')
+        HUs = HU.objects.filter(proyecto=proyectox)
+        HUsm = HU.objects.filter(proyecto=proyectox)
         enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
         is_Scrum=1
     
@@ -122,7 +122,8 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     if rolx.tiene_permiso('Agregar horas trabajadas'):
         for d in delegacion.objects.all():
             if d.HU.proyecto == proyectox and str(d.usuario.id) == usuario_id:
-                HUs_add_horas.append(d.HU)
+                if d.HU.estado == 'ACT':
+                    HUs_add_horas.append(d.HU)
         enlaceHU_agregar.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar horas'))
         is_Scrum=2
 
