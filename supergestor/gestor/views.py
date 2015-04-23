@@ -101,13 +101,13 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         enlaceHU.append(enlacex('/crearHU/'+usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar HU'))
     
     if rolx.tiene_permiso('Can change hu'):
-        HUs = HU.objects.filter(proyecto=proyectox).filter(estado='ACT')
-        HUsm = HU.objects.filter(proyecto=proyectox).filter(estado='ACT')
+        HUs = HU.objects.filter(proyecto=proyectox)
+        HUsm = HU.objects.filter(proyecto=proyectox)
         enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
         is_Scrum=0
     elif rolx.tiene_permiso('Can change hu nivel Scrum'):
-        HUs = HU.objects.filter(proyecto=proyectox)
-        HUsm = HU.objects.filter(proyecto=proyectox)
+        HUs = HU.objects.filter(proyecto=proyectox).filter(estado='ACT')
+        HUsm = HU.objects.filter(proyecto=proyectox).filter(estado='ACT')
         enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
         is_Scrum=1
     
