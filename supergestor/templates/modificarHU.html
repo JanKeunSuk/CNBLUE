@@ -89,7 +89,7 @@
 		{{form.as_p}}
             
 	</div>
-	{% if HU_val == False %}
+	{% if HU.valido == False %}
 		<p><a href="/validarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{HU.id}}/{{is_Scrum}}/">Validar HU</a></p>
 	{%else%}
 		<p><a href="/validarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{HU.id}}/{{is_Scrum}}/">Invalidar HU</a></p>

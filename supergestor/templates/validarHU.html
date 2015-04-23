@@ -70,7 +70,7 @@
         <div id="content-main">
 <form action="/validarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{hu}}/{{is_Scrum}}/" method="post">      
         {% csrf_token %}
-        {%if HU == False%}
+        {%if HU.valido == False%}
 	<div>
 		<b>Desea validar la HU? </b><br/>
 	</div>

@@ -865,6 +865,3 @@ def validarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
             hu_x.valido=False
             hu_x.save()
             return HttpResponse('Se ha invalidado exitosamente')
-
-    
-
