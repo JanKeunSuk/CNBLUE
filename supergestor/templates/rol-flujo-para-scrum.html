@@ -180,6 +180,12 @@
             	<td><a href="{{enlace.url}}">{{enlace.nombre}}</a></td>
             		
             {%endfor%}
+            <!-- si tiene permiso modificar(no me refiero al nivel scrum) entonces debera ver el boton CREAR PRODUCT BACKLOG
+            el cual chequeara que todas las HU esten validadas 
+            Crear backlog deberia validar todas las hu automatiamente-->
+            {% if HUsm|length > 0%}
+            	<td><a href="/visualizarBacklog/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/">Visualizar Product Backlog</a></td>
+            {%endif%}
             
           {% if sprints|length > 0%}
             <table>

@@ -106,8 +106,8 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
         is_Scrum=0
     elif rolx.tiene_permiso('Can change hu nivel Scrum'):
-        HUs = HU.objects.filter(proyecto=proyectox).filter(estado='ACT')
-        HUsm = HU.objects.filter(proyecto=proyectox).filter(estado='ACT')
+        HUs = HU.objects.filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True).filter(delegacion__isnull=True)
+        HUsm = HU.objects.filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True).filter(delegacion__isnull=True)
         enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
         is_Scrum=1
     
@@ -865,3 +865,12 @@ def validarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
             hu_x.valido=False
             hu_x.save()
             return HttpResponse('Se ha invalidado exitosamente')
+        
+        
+        
+        
+def visualizarBacklog(request, usuario_id, proyectoid, rolid):
+    proyectox=proyecto.objects.get(id=proyectoid)
+    huss=HU.objects.all().filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True).filter(delegacion__isnull=True)    
+    return render(request,'visualizarBacklog.html',{'huss':huss, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    
