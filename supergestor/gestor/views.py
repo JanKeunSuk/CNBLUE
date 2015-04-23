@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django.forms.widgets import CheckboxSelectMultiple
 from django.contrib.auth.models import Permission
 from datetime import datetime 
-from docutils.parsers.rst.directives.html import Meta
+
 # Create your views and forms here.
 @login_required
 def holaView(request):
