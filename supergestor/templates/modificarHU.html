@@ -89,11 +89,6 @@
 		{{form.as_p}}
             
 	</div>
-	{% if HU.valido == False %}
-		<p><a href="/validarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{HU.id}}/{{is_Scrum}}/">Validar HU</a></p>
-	{%else%}
-		<p><a href="/validarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{HU.id}}/{{is_Scrum}}/">Invalidar HU</a></p>
-	{% endif %}
 <div class="submit-row">
 <input type="submit" value="Guardar" class="modificarProyecto" name="_save" />
 {%elif is_Scrum == "0"%}
@@ -128,7 +123,11 @@
 			{%endfor%}
 		</select>
     </div>
-
+	{% if HU.valido == False %}
+		<p><a href="/validarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{HU.id}}/{{is_Scrum}}/">Validar HU</a></p>
+	{%else%}
+		<p><a href="/validarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{HU.id}}/{{is_Scrum}}/">Invalidar HU</a></p>
+	{% endif %}
 <input type="submit" name="Submit" value="Guardar" tabindex="2" />
 </form>
 

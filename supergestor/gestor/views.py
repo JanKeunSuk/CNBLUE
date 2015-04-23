@@ -855,9 +855,9 @@ def delegarHU(request,usuario_id,proyectoid,rolid,hu_id):
 def validarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
     hu_x=HU.objects.get(id=HU_id_rec)
     if request.method == 'GET':       
-        return render(request,'validarHU.html',{'hu':HU_id_rec, 'HU':hu_x, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum})
+        return render(request,'validarHU.html',{'hu':HU_id_rec, 'HU':hu_x.valido, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum})
     else:
-        if hu_x == False:
+        if hu_x.valido == False:
             hu_x.valido=True
             hu_x.save()
             return HttpResponse('Se ha validado exitosamente') 
