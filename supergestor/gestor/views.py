@@ -27,18 +27,44 @@ def holaView(request):
     if request.user.is_staff:
         return HttpResponseRedirect(reverse('admin:index'))
     else:
-        nombres_de_proyecto_enlace = {}
-        nombres_de_proyecto_sin_enlace = {}
+        proyecto_cliente=[]
+        proyectos_enlace={}
+        proyectos_sin_enlace={}
+        roles_enlace = []
+        roles_sin_enlace = []
         for a in asignacion.objects.all():
             if a.usuario.id == request.user.id:
                 rol_lista = rol.objects.get(id = a.rol.id)
                 for p in proyecto.objects.all():
                     if p.id == a.proyecto.id:
                         if rol_lista.tiene_permiso('Can change proyecto'):
-                            nombres_de_proyecto_enlace[p] = rol_lista
+                            roles_enlace.append(rol_lista)
                         else:
-                            nombres_de_proyecto_sin_enlace[p] = rol_lista
-        return render(request,'hola.html',{'usuario':request.user, 'proyectos_enlace':nombres_de_proyecto_enlace, 'proyectos_sin_enlace':nombres_de_proyecto_sin_enlace})
+                            roles_sin_enlace.append(rol_lista)
+                            if rol_lista.tiene_permiso('Visualizar proyecto') and rol_lista.tiene_permiso('Visualizar equipo'):
+                                proyecto_cliente.append(a.proyecto.id)
+            if roles_enlace:
+                if proyectos_enlace.has_key(a.proyecto):
+                    r=list(set(roles_enlace+proyectos_enlace[a.proyecto]))
+                    proyectos_enlace[a.proyecto]=r
+                else:
+                    proyectos_enlace[a.proyecto]=roles_enlace
+                roles_enlace=[]
+                    
+            if roles_sin_enlace:
+                if proyectos_sin_enlace.has_key(a.proyecto):
+                    r=list(set(roles_sin_enlace+proyectos_sin_enlace[a.proyecto]))
+                    proyectos_sin_enlace[a.proyecto]=r
+                else:
+                    proyectos_sin_enlace[a.proyecto]=roles_sin_enlace
+                roles_sin_enlace = []
+        proyectos_completo=[]
+        for p in proyecto.objects.all():
+            if (proyectos_sin_enlace.has_key(p) or proyectos_enlace.has_key(p)):
+                proyectos_completo.append(p)
+                    
+        proyecto_cliente=set(proyecto_cliente)
+        return render(request,'hola.html',{'proyectos_completo':proyectos_completo,'proyecto_cliente':proyecto_cliente, 'usuario':request.user, 'proyectos_enlace':proyectos_enlace, 'proyectos_sin_enlace':proyectos_sin_enlace})
 
 def holaScrumView(request,usuario_id,proyectoid,rol_id):
     """
@@ -80,15 +106,15 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     if rolx.tiene_permiso('Can add flujo'):
         """Tiene permiso de crear un nuevo flujo, obtengo todos los flujos y enlancef envia el url de crear con el nombre del
         permiso correspondiente al rol-flujo-para-scrum.html"""
-        flujos=Flujo.objects.all().filter(estado='ACT')
+        flujos=Flujo.objects.all()
         enlacef.append(enlacex('/crearFlujo/'+usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar Flujo'))
     else:
         flujos = []#lista vacia si no tiene permiso de ver flujos
         
     if rolx.tiene_permiso('Can change flujo'):
         """Tiene permiso de modificar flujo, obtengo todos los flujos para enviar al rol-flujo-para-scrum.html"""
-        flujosm=Flujo.objects.all().filter(estado='ACT')
-        flujos=Flujo.objects.all().filter(estado='ACT')
+        flujosm=Flujo.objects.all()
+        flujos=Flujo.objects.all()
         enlacefm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar Flujo'))
     else:
         flujosm = []#lista vacia si no tiene permiso de ver flujos
@@ -101,23 +127,32 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         enlaceHU.append(enlacex('/crearHU/'+usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar HU'))
     
     if rolx.tiene_permiso('Can change hu'):
-        HUs = HU.objects.filter(proyecto=proyectox).filter(estado='ACT')
-        HUsm = HU.objects.filter(proyecto=proyectox).filter(estado='ACT')
+        HUs = HU.objects.filter(proyecto=proyectox)
+        HUsm = HU.objects.filter(proyecto=proyectox)
         enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
         is_Scrum=0
     elif rolx.tiene_permiso('Can change hu nivel Scrum'):
-        HUs = HU.objects.filter(proyecto=proyectox)
-        HUsm = HU.objects.filter(proyecto=proyectox)
+        HUs = HU.objects.filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True)
+        HUsm = HU.objects.filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True)
         enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
         is_Scrum=1
     
     if rolx.tiene_permiso('Can add hu') or rolx.tiene_permiso('Can change hu') or rolx.tiene_permiso('Can change hu nivel Scrum'):
         enlaceHUv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
-        if rolx.tiene_permiso('Can add delegacion'):
-            enlaceHUa.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Asignar'))
-            HUsa=1
-        else:
-            HUsa=0
+    
+    HU_no_asignada=[]
+    if rolx.tiene_permiso('Can add delegacion'):
+        enlaceHUa.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Asignar'))
+        HUsa=1
+        for h in HU.objects.filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True):
+            x=0
+            for d in delegacion.objects.all():
+                if d.HU == h:
+                    x=1
+            if x == 0:
+                HU_no_asignada.append(h)
+    else:
+        HUsa=0
     
     if rolx.tiene_permiso('Agregar horas trabajadas'):
         for d in delegacion.objects.all():
@@ -126,7 +161,19 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
                     HUs_add_horas.append(d.HU)
         enlaceHU_agregar.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar horas'))
         is_Scrum=2
-
+    HUc={}
+    HUv=[]
+    if rolx.tiene_permiso('Visualizar HU'):
+        HUv=HU.objects.filter(proyecto=proyectox).filter(estado='ACT')
+        for h in HUv:
+            hay=0
+            for d in delegacion.objects.all():
+                if d.HU == h:
+                    HUc[h]=(delegacion.objects.get(HU=h)).usuario
+                    hay=1
+            if hay == 0:
+                HUc[h]=None
+                
     if rolx.tiene_permiso('Can add sprint'):
         enlaceSprint.append(enlacex('/crearSprint/'+usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar Sprint'))
     else:
@@ -134,16 +181,16 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         
     if rolx.tiene_permiso('Can change sprint'):
         """Tiene permiso de modificar flujo, obtengo todos los flujos para enviar al rol-flujo-para-scrum.html"""
-        sprintsm=Sprint.objects.filter(proyecto=proyectox).filter(estado='ACT')
-        sprints=Sprint.objects.filter(proyecto=proyectox).filter(estado='ACT')
+        sprintsm=Sprint.objects.filter(proyecto=proyectox)
+        sprints=Sprint.objects.filter(proyecto=proyectox)
         enlaceSprintm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar Sprint'))
     else:
         sprintsm = []#lista vacia si no tiene permiso de ver flujos
         
     if rolx.tiene_permiso('Can add sprint') or rolx.tiene_permiso('Can change sprint'):
         enlaceSprintv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
-        
-    return render(request,'rol-flujo-para-scrum.html',{'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsf':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id})
+          
+    return render(request,'rol-flujo-para-scrum.html',{'HU_no_asignada':HU_no_asignada,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsf':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id})
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
 def registrarUsuarioView(request):
@@ -158,8 +205,8 @@ def guardarUsuarioView(request):
     que se utiliza en la interfaz devuelta por /registrar """
     try:
     
-        usuario = MyUser.objects.create_superuser(username=request.POST['username'], password=request.POST['password1'],email=request.POST['email'])
-        usuario.is_admin=True
+        usuario = MyUser.objects.create_user(username=request.POST['username'], password=request.POST['password1'],email=request.POST['email'])
+        usuario.is_admin=False
         usuario.direccion = request.POST['direccion']
         usuario.last_name = request.POST['last_name']
         usuario.user_name = request.POST['user_name']
@@ -169,6 +216,18 @@ def guardarUsuarioView(request):
     except ObjectDoesNotExist:
         print "Either the entry or blog doesn't exist." 
         return HttpResponseRedirect('/registrar')
+    
+def modificarCuenta(request, usuario_id):
+    usuario = MyUser.objects.get(id=usuario_id)
+    if request.method == 'POST':
+        usuario.user_name=request.POST['user_name']
+        usuario.last_name=request.POST['last_name']
+        usuario.direccion=request.POST['direccion']
+        usuario.save()
+        return HttpResponse('Su cuenta se ha modificado exitosamente')
+    else:
+        return render_to_response('modificarUsuario.html', {'usuario': usuario},
+                              context_instance=RequestContext(request))
     
 def guardarRolView(request,usuario_id):
     """Vista de guardado de nuevo usuario relacionado con un correo autorizado en la tabla Permitidos
@@ -233,16 +292,22 @@ def guardarHUProdOwnerView(request,HU_id_rec,is_Scrum):
             if is_Scrum == '0':
                 valor_negocio=request.POST['valor_negocio']
                 descripcion=request.POST['descripcion']
+                estado=request.POST['estado']
                 h.valor_negocio=valor_negocio
                 h.descripcion=descripcion
+                h.estado=estado
                 h.save() #Guardamos el modelo de manera Editada
                 return HttpResponse('La descripcion y valor de negocio de la HU a sido modificado exitosamente')
             else:
+                proyectox=proyecto.objects.get(id=h.proyecto.id)
                 horas_a_agregar = request.POST['horas_agregar']
                 acumulador_horas = float(horas_a_agregar)+h.acumulador_horas
                 if h.duracion >= acumulador_horas:
                     h.acumulador_horas=acumulador_horas
                     h.save()
+                    if proyectox.estado == 'PEN' and acumulador_horas > 0:
+                        proyectox.estado='ACT'
+                        proyectox.save()
                     return HttpResponse('Las horas se han agregado exitosamente')
                 else:
                     return HttpResponse('Contactar con el Scrum para aumentar la duracion de la HU, ya que ha sobrepasado el tiempo de realizacion de HU')
@@ -865,3 +930,10 @@ def validarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
             hu_x.valido=False
             hu_x.save()
             return HttpResponse('Se ha invalidado exitosamente')
+  
+def visualizarBacklog(request, usuario_id, proyectoid, rolid):
+    proyectox=proyecto.objects.get(id=proyectoid)
+    huss=HU.objects.all().filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True).filter(sprint__hu__isnull=True)
+    h=sorted(huss,key=lambda x: x.prioridad, reverse=True)
+    return render(request,'visualizarBacklog.html',{'huss':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    

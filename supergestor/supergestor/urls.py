@@ -47,4 +47,6 @@ urlpatterns = patterns('',
     url(r'^modificarSprint/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<Sprint_id_rec>\d+)/$', views.modificarSprint, name='modificar_Sprint'),
     url(r'^delegarHU/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<hu_id>\d+)/$',views.delegarHU,name='delegarhu'),
     url(r'^validarHU/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<HU_id_rec>\d+)/(?P<is_Scrum>\d+)/$',views.validarHU,name='validarhu'),
+    url(r'^modificarCuenta/(?P<usuario_id>\d+)/', views.modificarCuenta, name='modificar_usuario'),
+    url(r'^visualizarBacklog/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$',views.visualizarBacklog,name='verBacklog')
 )

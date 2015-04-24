@@ -137,14 +137,26 @@
                 		
                 		{% endif %}
                 		
-                		{%if HUsa == 1%}
-                	
-                	
-                	{%for enlace in enlaceHUa%}
+                {%if HUsa == 1%}
+                	{%for h in HU_no_asignada%}
+                		{%if h.id == HU.id%}
+                			{%for enlace in enlaceHUa%}
             		
-                		<td><a href="/delegarHU/{{enlace.url}}/{{HU.id}}" class="asignlink">Asignar</a></td>
+                				<td><a href="/delegarHU/{{enlace.url}}/{{HU.id}}" class="asignlink">Asignar</a></td>
                 		
+                			{%endfor%}
+                		{%endif%}
                 	{%endfor%}
+                {%else%}
+                	{% if HU.valido == False %}
+						{%for enlace in enlaceHUm%}
+							<td><a href="/validarHU/{{usuarioid}}/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Validar HU</a></td>
+						{%endfor%}
+					{%else%}
+						{%for enlace in enlaceHUm%}
+							<td><a href="/validarHU/{{usuarioid}}/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Invalidar HU</a></td>
+						{%endfor%}
+					{% endif %}
                 {%endif%}
                 	{%endif%}
                 	
@@ -157,12 +169,13 @@
             {% if HUs_add_horas|length > 0%}
             <table>
             <th>Lista de HU's a las que estas asignado </th>
-        
+        	<th> <B>Duracion/Horas Trabajadas</B> </th>
             <tr class="model-proyecto">
             	
 				{% for HU in HUs_add_horas %}
 			            
   				<td> {{HU.descripcion}} a </td>
+  				<td> <B>{{HU.duracion}} / {{HU.acumulador_horas}}</B> </td><td></td><td></td><td></td>
   					{%for enlace in enlaceHU_agregar%}
   		           
                 		<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Agregar horas trabajadas</a></td>
@@ -180,6 +193,13 @@
             	<td><a href="{{enlace.url}}">{{enlace.nombre}}</a></td>
             		
             {%endfor%}
+            
+          <!-- si tiene permiso modificar(no me refiero al nivel scrum) entonces debera ver el boton CREAR PRODUCT BACKLOG
+            el cual chequeara que todas las HU esten validadas 
+            Crear backlog deberia validar todas las hu automatiamente-->
+            {% if HUsm|length > 0%}
+            	<td><a href="/visualizarBacklog/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/">Visualizar Product Backlog</a></td>
+            {%endif%}
             
           {% if sprints|length > 0%}
             <table>
@@ -217,7 +237,23 @@
             	<td><a href="{{enlace.url}}">{{enlace.nombre}}</a></td>
             		
             {%endfor%}
-      
+            
+            <!-- Cliente, visualizacion de HU con usuario asignado -->
+            
+            {%if HUv|length > 0%}
+            	<p><font size = 5><b>Reporte para el cliente</b></font>(parcial)</p>
+            	<p>-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*--*-*-*-*-*-*-*-*-*-*-</p>
+            	<p><b><font size = 3>HU's</font></b></p>
+            	{%for h,u in HUc.items%}
+            		{%if u == None %}
+            			<p><b>{{h}} </b>aun no se asignado a ningun usuario </p> 
+            		{%else%}
+            			<p><b>{{h}} </b>asignado a <b>{{u}}</b></p> 
+            		{%endif%} 
+            	{%endfor%}
+            	<p>-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*--*-*-*-*-*-*-*-*-*-*-</p>
+            {%endif%}
+      		
         </table>   <!--
         <form method="get" action="/crearFlujo/{{usuario.id}}/{{proyecto.id}}/">
 
