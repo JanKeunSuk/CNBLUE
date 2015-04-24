@@ -10,6 +10,9 @@ from django.test.client import RequestFactory
 from django.contrib.auth.models import Permission
 from django.utils import timezone
 import datetime
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys     
+from django.test import LiveServerTestCase
 
 
 class MyUserManagerTests(TestCase):
@@ -384,28 +387,17 @@ class SprintTest(TestCase):
         #self.user = authenticate(username='testuser', password='hello') 
         login = self.client.login(username='anonimo2', password='1234') 
         self.assertFalse(login)
-"""        
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys     
-from django.test import LiveServerTestCase
+        
 
-class AdminTest(LiveServerTestCase):
+class loginTest(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
-
-    #def tearDown(self):
-        #self.browser.quit()
-
-    #def test_admin_site(self):
-        # user opens web browser, navigates to admin page
-        #self.browser.get(self.live_server_url + '/admin/')
-        #body = self.browser.find_element_by_tag_name('body')
-        #self.assertIn('Administracion\nUsername:\nContrasenha:\n', body.text)
   
-    def test_admin_site(self):
+    def test_admin_login(self):
     # user opens web browser, navigates to admin page
-        self.browser.get(self.live_server_url + '/login/')
+        #self.browser.get(self.live_server_url + '/login/')
+        self.browser.get("http://localhost/login/")
         #body = self.browser.find_element_by_tag_name('body')
         #self.assertIn('Username:\nPassword:', body.text)
         # users types in username and passwords and presses enter
@@ -415,6 +407,8 @@ class AdminTest(LiveServerTestCase):
         password_field.send_keys('1234')
         password_field.send_keys(Keys.RETURN)
         # login credentials are correct, and the user is redirected to the main admin page
-        #title = self.browser.find_element_by_tag_name('body')
-        #self.assertIn('Pagina Principal', title.text)
-"""
+        title = self.browser.find_element_by_tag_name('body')
+        self.assertIn('Pagina Principal', title.text)
+        
+    def tearDown(self):
+        self.browser.quit()
