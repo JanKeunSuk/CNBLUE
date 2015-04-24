@@ -4,8 +4,8 @@ Casos de prueba para los modelos existentes dentro del sistema.
 
 """
 from django.test import TestCase, Client
-from gestor.models import MyUser, Permitido, rol, rol_sistema, Actividades, Flujo, proyecto, asignacion, asigna_sistema
-from gestor.views import FormularioRolProyecto, proyectoFrom, FormularioFlujoProyecto, formularioActividad
+from gestor.models import MyUser, Permitido, rol, rol_sistema, Actividades, Flujo, proyecto, asignacion, asigna_sistema, HU, Sprint, delegacion
+from gestor.views import FormularioRolProyecto, proyectoFrom, FormularioFlujoProyecto, formularioActividad, FormularioHU, FormularioSprintProyecto
 from django.test.client import RequestFactory
 from django.contrib.auth.models import Permission
 from django.utils import timezone
@@ -133,7 +133,7 @@ class RolTest(TestCase):
         self.rol=rol.objects.create(nombre_rol_id="nuevoRol", descripcion="nuevo_rol", usuario_creador=MyUser.objects.create_user('kathe', Permitido.objects.create(email='kathe@gmail.com'), '1234'))
         
     def test_rol_view(self):
-        response=self.client.get('/crearRol/2/1/')
+        response=self.client.get('/crearRol/2/1/1/')
         self.assertEqual(response.status_code, 200)
          
 class Rol_sistemaTest(TestCase):
@@ -205,7 +205,7 @@ class FlujoTest(TestCase):
         self.assertEqual(w.__unicode__(), str(w.id) + w.nombre)
     
     def test_crear_flujo_views(self):
-        response=self.client.get('/crearFlujo/2/1/')
+        response=self.client.get('/crearFlujo/2/1/1/')
         self.assertEqual(response.status_code, 200)  
         
 class proyectoTest(TestCase):
@@ -285,9 +285,81 @@ class asigna_sistemacionTest(TestCase):
         post_data={'proyecto':w.id,'rol':x.id, 'usuario':x.usuario_creador}
         asignarRol_url='/asignarRol/1/1/'
         self.client.post(asignarRol_url, data=post_data)
-                
+              
+class huTest(TestCase):
+    def create_hu(self, descripcion="hu", valor_negocio="7", valor_tecnico="0", prioridad="0", duracion="0", acumulador_horas="0", estado="ACT", estado_en_actividad="PEN", valido="FALSE", proyecto_id="1"):
+            return HU.objects.create(descripcion=descripcion, valor_negocio=valor_negocio, valor_tecnico=valor_tecnico, prioridad=prioridad, duracion=duracion, acumulador_horas=acumulador_horas, estado=estado, estado_en_actividad=estado_en_actividad, valido=valido, proyecto_id=proyecto_id)
+        
+    def test_hu_creation(self):
+        w=self.create_hu()
+        self.assertTrue(isinstance(w, HU))
+        self.assertEqual(w.__unicode__(), w.descripcion)
+        
+    def test_crear_hu(self):
+        response=self.client.get('/crearHU/1/1/1/')
+        self.assertEqual(response.status_code, 200)
+        
+    def test_formularioHU_valido(self):
+        w=HU.objects.create(valor_tecnico='1', valor_negocio='1', prioridad='1', duracion='1',acumulador_horas='1', estado='ACT', proyecto_id='1')
+        data={'valor_tecnico':w.valor_tecnico, 'valor_negocio':w.valor_negocio, 'prioridad':w.prioridad, 'duracion':w.duracion, 'acumulador_horas':w.acumulador_horas, 'estado':w.estado,'proyecto_id':w.proyecto_id}
+        form=FormularioHU(data=data)
+        self.assertTrue(form.is_valid())
+        
+    def test_formularioHU_invalido(self):
+        w=HU.objects.create(valor_tecnico='1', valor_negocio='1', prioridad='1', duracion='1',acumulador_horas='1', estado='ACT', proyecto_id='1')
+        data={'valor_tecnico':w.valor_tecnico, 'valor_negocio':w.valor_negocio, 'prioridad':w.prioridad, 'duracion':w.duracion, 'acumulador_horas':w.acumulador_horas}
+        form=FormularioHU(data=data)
+        self.assertFalse(form.is_valid())
+        
+    def create_proyecto(self):
+        return proyecto(nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio=timezone.now(), fecha_fin=datetime.timedelta(days=1), estado="PEN")
 
- 
+    def create_rol(self):
+        return rol.objects.create( nombre_rol_id="nuevoRol", descripcion="nuevo_rol", usuario_creador= MyUser.objects.create_user('delsy', Permitido.objects.create(email='delsy@gmail.com'), '1234'))
+
+    def test_modificar_hu(self):
+        w=HU.objects.create(valor_tecnico='1', valor_negocio='1', prioridad='1', duracion='1',acumulador_horas='1', estado='ACT', proyecto_id='1')
+        w.valor_negocio=2
+        w.save()
+        self.assertEqual(w.valor_negocio, 2)
         
-     
+    def test_cambioestado_hu(self):
+        w=HU.objects.create(valor_tecnico='1', valor_negocio='1', prioridad='1', duracion='1',acumulador_horas='1', estado='ACT', proyecto_id='1')
+        w.estado='CAN'
+        w.save()
+        self.assertEqual(w.estado, 'CAN')
+    
+    def test_delegaHU(self):
+        hu=self.create_hu()
+        u=MyUser.objects.create_user('anonimo', Permitido.objects.create(email='anonimo2@hotmail.com'), '1234')
+        delegacionx= delegacion.objects.create(usuario=u ,HU=hu)
+        delegacionx.save()
+        self.assertEqual(delegacionx.HU.id, 2 )    
         
+    def test_validaHU(self):
+        #hu=HU.objects.create(valor_tecnico='1', valor_negocio='1', prioridad='1', duracion='1',acumulador_horas='1', estado='ACT', proyecto_id='1')
+        hu=self.create_hu()
+        hu.valido=True
+        hu.save()
+        self.assertEqual(hu.valido, True)        
+
+class SprintTest(TestCase):
+    def create_sprint(self):
+        return Sprint.objects.create( descripcion='sprint1', fecha_inicio=timezone.now(), duracion='3', estado='ACT', proyecto_id='1')
+    
+    def test_sprint_creation(self):
+        w=self.create_sprint()
+        self.assertTrue(isinstance(w, Sprint))
+        self.assertEqual(w.__unicode__(), str(w.id))
+        
+    def test_FormularioSprintProyecto_invalido(self):
+        w=Sprint.objects.create(descripcion='sprint1', fecha_inicio=timezone.now(), duracion='3', estado='ACT', proyecto_id='1')
+        data={'descripcion':w.descripcion, 'fecha_inicio':w.fecha_inicio, 'duracion':w.duracion}
+        form=FormularioSprintProyecto(data=data)
+        self.assertFalse(form.is_valid())
+          
+    def test_modificar_hu(self):
+        sprint=self.create_sprint()
+        sprint.duracion=4
+        sprint.save()
+        self.assertEqual(sprint.duracion, 4)  
