@@ -1,3 +1,4 @@
+#coding: utf-8
 """
 
 Casos de prueba para los modelos existentes dentro del sistema.
@@ -404,7 +405,7 @@ class loginTest(LiveServerTestCase):
         password_field = self.browser.find_element_by_name('password')
         password_field.send_keys('1234')
         password_field.send_keys(Keys.RETURN)
-        # Las credenciales de inicio de sesión son correctos, y el usuario es redirigido a la página principal de HOLA
+        # Las credenciales de inicio de sesion son correctos, y el usuario es redirigido a la página principal de HOLA
         title = self.browser.find_element_by_tag_name('body')
         self.assertIn('Pagina Principal', title.text)
     #cierra el browser   
