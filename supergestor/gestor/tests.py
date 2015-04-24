@@ -10,7 +10,6 @@ from django.test.client import RequestFactory
 from django.contrib.auth.models import Permission
 from django.utils import timezone
 import datetime
-from django.contrib.auth import authenticate
 
 
 class MyUserManagerTests(TestCase):
