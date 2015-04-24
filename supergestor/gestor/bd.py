@@ -42,6 +42,13 @@ c="insert into auth_permission (name, content_type_id, codename) values ('Agrega
 cur.execute(c)
 c="insert into auth_permission (name, content_type_id, codename) values ('Can change hu nivel Scrum','13','cambiar hu nivel Scrum');"
 cur.execute(c)
+c="insert into auth_permission (name, content_type_id, codename) values ('Visualizar proyecto','12','Visualizar proyecto');"
+cur.execute(c)
+c="insert into auth_permission (name, content_type_id, codename) values ('Visualizar Equipo','12','Visualizar Equipo');"
+cur.execute(c)
+c="insert into auth_permission (name, content_type_id, codename) values ('Visualizar HU','13','Visualizar HU');"
+cur.execute(c)
+
 
 conexion.commit()
 #carga de Proyecto
@@ -58,7 +65,7 @@ cur.execute(c)
 c="insert into gestor_rol_sistema (nombre_rol_id, descripcion) values ('admin', 'admin tiene todos los permisos');"
 cur.execute(c)
 #Carga de Rol
-c="insert into gestor_rol (nombre_rol_id, descripcion, usuario_creador_id) values ('Srum Master','permisos adqueridos por el ScrumMaster','1');"
+c="insert into gestor_rol (nombre_rol_id, descripcion, usuario_creador_id) values ('Scrum Master','permisos adqueridos por el ScrumMaster','1');"
 cur.execute(c)
 c="insert into gestor_rol (nombre_rol_id, descripcion, usuario_creador_id) values ('Product Owner','permisos adqueridos por el ProductOwner','1');"
 cur.execute(c)
@@ -138,9 +145,6 @@ cur.execute(c)
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('3','55');"
 cur.execute(c)
 #CLIENTE
-#Agregar horas trabajadas
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('4','55');"
-cur.execute(c)
 
 conexion.commit()
 
