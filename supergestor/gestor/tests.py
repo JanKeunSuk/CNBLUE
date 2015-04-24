@@ -337,7 +337,6 @@ class huTest(TestCase):
         self.assertEqual(delegacionx.HU.id, 2 )    
         
     def test_validaHU(self):
-        #hu=HU.objects.create(valor_tecnico='1', valor_negocio='1', prioridad='1', duracion='1',acumulador_horas='1', estado='ACT', proyecto_id='1')
         hu=self.create_hu()
         hu.valido=True
         hu.save()
@@ -358,7 +357,7 @@ class SprintTest(TestCase):
         form=FormularioSprintProyecto(data=data)
         self.assertFalse(form.is_valid())
           
-    def test_modificar_hu(self):
+    def test_modificar_sprint(self):
         sprint=self.create_sprint()
         sprint.duracion=4
         sprint.save()

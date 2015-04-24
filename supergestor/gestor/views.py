@@ -118,7 +118,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
             HUsa=1
         else:
             HUsa=0
-    
+                
     if rolx.tiene_permiso('Agregar horas trabajadas'):
         for d in delegacion.objects.all():
             if d.HU.proyecto == proyectox and str(d.usuario.id) == usuario_id:

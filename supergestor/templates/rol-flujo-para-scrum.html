@@ -145,7 +145,17 @@
                 		<td><a href="/delegarHU/{{enlace.url}}/{{HU.id}}" class="asignlink">Asignar</a></td>
                 		
                 	{%endfor%}
-                {%endif%}
+                	{%else%}
+						{% if HU.valido == False %}
+							{%for enlace in enlaceHUm%}
+								<td><a href="/validarHU/{{usuarioid}}/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Validar HU</a></td>
+							{%endfor%}
+						{%else%}
+							{%for enlace in enlaceHUm%}
+								<td><a href="/validarHU/{{usuarioid}}/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Invalidar HU</a></td>
+							{%endfor%}
+						{% endif %}
+                	{%endif%}
                 	{%endif%}
                 	
               		</tr>
@@ -157,12 +167,13 @@
             {% if HUs_add_horas|length > 0%}
             <table>
             <th>Lista de HU's a las que estas asignado </th>
-        
+            <th> <B>Duracion/Horas Trabajadas</B> </th>
             <tr class="model-proyecto">
             	
 				{% for HU in HUs_add_horas %}
 			            
   				<td> {{HU.descripcion}} a </td>
+  					<td> <B>{{HU.duracion}} / {{HU.acumulador_horas}}</B> </td><td></td><td></td><td></td>
   					{%for enlace in enlaceHU_agregar%}
   		           
                 		<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Agregar horas trabajadas</a></td>
