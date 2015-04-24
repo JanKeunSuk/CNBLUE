@@ -1,3 +1,4 @@
+#coding: utf-8
 """
 
 Casos de prueba para los modelos existentes dentro del sistema.
@@ -10,6 +11,9 @@ from django.test.client import RequestFactory
 from django.contrib.auth.models import Permission
 from django.utils import timezone
 import datetime
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys     
+from django.test import LiveServerTestCase
 
 
 class MyUserManagerTests(TestCase):
@@ -361,4 +365,49 @@ class SprintTest(TestCase):
         sprint=self.create_sprint()
         sprint.duracion=4
         sprint.save()
-        self.assertEqual(sprint.duracion, 4)  
+        self.assertEqual(sprint.duracion, 4)
+        
+    def test_cambiarestado_sprint(self):
+        sprint=self.create_sprint()
+        sprint.estado='CAN'
+        sprint.save()
+        self.assertEqual(sprint.estado, 'CAN')
+        
+    def test_login_nuevo(self):
+        self.user = MyUser.objects.create_user('anonimo', Permitido.objects.create(email='anonimo2@hotmail.com'), '1234') 
+        self.user.set_password('1234') 
+        self.user.save() 
+        #self.user = authenticate(username='testuser', password='hello') 
+        login = self.client.login(username='anonimo', password='1234') 
+        self.assertTrue(login) 
+        
+    def test_login_nuevo3(self):
+        self.user = MyUser.objects.create_user('anonimo', Permitido.objects.create(email='anonimo2@hotmail.com'), '1234') 
+        self.user.set_password('1234') 
+        self.user.save() 
+        #self.user = authenticate(username='testuser', password='hello') 
+        login = self.client.login(username='anonimo2', password='1234') 
+        self.assertFalse(login)
+        
+
+class loginTest(LiveServerTestCase):
+
+    def setUp(self):
+        self.browser = webdriver.Firefox()
+  
+    def test_admin_login(self):
+    # usuario abre el navegador web, navega a pagina login
+        
+        self.browser.get("http://localhost/login/")
+
+        username_field = self.browser.find_element_by_name('username')
+        username_field.send_keys('delsy')
+        password_field = self.browser.find_element_by_name('password')
+        password_field.send_keys('1234')
+        password_field.send_keys(Keys.RETURN)
+        # Las credenciales de inicio de sesion son correctos, y el usuario es redirigido a la página principal de HOLA
+        title = self.browser.find_element_by_tag_name('body')
+        self.assertIn('Pagina Principal', title.text)
+    #cierra el browser   
+    def tearDown(self):
+        self.browser.quit()
