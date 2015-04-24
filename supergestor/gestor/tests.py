@@ -395,20 +395,18 @@ class loginTest(LiveServerTestCase):
         self.browser = webdriver.Firefox()
   
     def test_admin_login(self):
-    # user opens web browser, navigates to admin page
-        #self.browser.get(self.live_server_url + '/login/')
+    # usuario abre el navegador web, navega a pagina login
+        
         self.browser.get("http://localhost/login/")
-        #body = self.browser.find_element_by_tag_name('body')
-        #self.assertIn('Username:\nPassword:', body.text)
-        # users types in username and passwords and presses enter
+
         username_field = self.browser.find_element_by_name('username')
         username_field.send_keys('delsy')
         password_field = self.browser.find_element_by_name('password')
         password_field.send_keys('1234')
         password_field.send_keys(Keys.RETURN)
-        # login credentials are correct, and the user is redirected to the main admin page
+        # Las credenciales de inicio de sesión son correctos, y el usuario es redirigido a la página principal de HOLA
         title = self.browser.find_element_by_tag_name('body')
         self.assertIn('Pagina Principal', title.text)
-        
+    #cierra el browser   
     def tearDown(self):
         self.browser.quit()
