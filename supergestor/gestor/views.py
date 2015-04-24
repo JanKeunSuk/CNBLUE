@@ -106,8 +106,8 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
         is_Scrum=0
     elif rolx.tiene_permiso('Can change hu nivel Scrum'):
-        HUs = HU.objects.filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True).filter(delegacion__isnull=True)
-        HUsm = HU.objects.filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True).filter(delegacion__isnull=True)
+        HUs = HU.objects.filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True)
+        HUsm = HU.objects.filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True)
         enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
         is_Scrum=1
     
@@ -871,6 +871,7 @@ def validarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
         
 def visualizarBacklog(request, usuario_id, proyectoid, rolid):
     proyectox=proyecto.objects.get(id=proyectoid)
-    huss=HU.objects.all().filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True).filter(delegacion__isnull=True)    
+    huss=HU.objects.all().filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True).filter(sprint__hu__isnull=True)
+    sorted(huss,key=lambda x: x.prioridad, reverse=True)
     return render(request,'visualizarBacklog.html',{'huss':huss, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
     
