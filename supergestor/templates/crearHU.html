@@ -53,79 +53,52 @@
 <a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Pagina Principal</a>
 </div>
 
-    
-
-    
-        
-    
-
     <!-- Content -->
     <div id="content" class="colM">
         
         <h1>Agregar HU</h1>
         <div id="content-main">
 
-
-
 <form enctype="multipart/form-data" action="/guardarHU/{{proyectoid}}/" method="post" id="rol_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
 {% csrf_token %}
 <div>
 
-
-
-
-
-
-
   <fieldset class="module aligned ">
-    
-    
-    
+
         <div class="form-row field-nombre_rol_id">
-            
-            
+
                 <div>
-                    
-                    
+
                         <label class="required" for="id_nombre">Descripcion:</label>
                         
                             <input class="vTextField" id="id_nombre" maxlength="500" name="descripcion" type="text" />
-                        
-                    
-                    
+
                 </div>
             
         </div>
         
             <div class="form-row field-permisos">
-            
-            
+
                 <div>
-                    
-                    
+
                         <label class="required" for="id_permisos">Valor de Negocio:</label>
                         
                             <select id="id_actividades" name="valor_negocio">
-                            {%for valor in valores %}
-								<option value="{{valor}}">{{valor}}</option>
-							{%endfor%}
-</select>
-                        
-                   
-                    
+                            	{%for valor in valores %}
+									<option value="{{valor}}">{{valor}}</option>
+								{%endfor%}
+							</select>
+
                 </div>
             
         </div>
-        
-    
+
 </fieldset>
 
 <div class="submit-row">
 <input type="submit" value="Guardar" />
 
 </div>
-
-
 
     <script type="text/javascript">
         (function($) {
@@ -134,9 +107,6 @@
             });
         })(django.jQuery);
     </script>
-
-
-
 
 <script type="text/javascript">
 (function($) {

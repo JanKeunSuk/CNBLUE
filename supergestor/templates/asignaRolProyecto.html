@@ -98,7 +98,7 @@
                             		<option selected="selected" value="{{u_asig.id}}">{{u_asig.username}}</option>
                             	{%endfor%}
                             {%endif%}
-                            {%if uusuarios_sin_asignar|length > 0%}
+                            {%if usuarios_sin_asignar|length > 0%}
                             	{%for u_sin_a in usuarios_sin_asignar%}
                             		<option value="{{u_sin_a.id}}">{{u_sin_a.username}}</option>
                             	{%endfor%}

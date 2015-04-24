@@ -38,18 +38,13 @@
             
                 Bienvenido
                 <strong>{{usuario}}</strong>.
-            
-            
-                
-                
                 
                 <a href="/password_change/">Cambiar contrasenha</a> /
                 
                 <a href="/logout/">Salir</a>
             
         </div>
-        
-        
+
     </div>
     <!-- END Header -->
     
@@ -57,50 +52,30 @@
 <a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}">Pagina Principal</a>
 </div>
 
-    
-
-    
-        
-    
-
     <!-- Content -->
     <div id="content" class="colM">
         
         <h1>Agregar rol</h1>
         <div id="content-main">
 
-
-
 <form enctype="multipart/form-data" action="/guardarRol/{{usuarioid}}/" method="post" id="rol_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
 {% csrf_token %}
 <div>
 
-
-
-
-
-
-
   <fieldset class="module aligned ">
-    
-    
-    
+
         <div class="form-row field-permisos">
-            
-            
+
                 <div>
-                    
-                    
+
                         <label class="required" for="id_permisos">Permisos:</label>
                         
                             <select multiple="multiple" id="id_permisos" name="permisos">
-                            {%for permission in permissions %}
-								<option value="{{permission.id}}">{{permission.name}}</option>
-							{%endfor%}
-</select>
-                        
-                    
-                    
+                            	{%for permission in permissions %}
+									<option value="{{permission.id}}">{{permission.name}}</option>
+								{%endfor%}
+							</select>
+
                         <p class="help"> Presiona "Control" para seleccionar mas de una opcion.</p>
                     
                 </div>
@@ -108,47 +83,35 @@
         </div>
     
         <div class="form-row field-nombre_rol_id">
-            
-            
+
                 <div>
-                    
-                    
+
                         <label class="required" for="id_nombre_rol_id">Nombre rol id:</label>
                         
                             <input class="vTextField" id="id_nombre_rol_id" maxlength="200" name="nombre_rol_id" type="text" />
-                        
-                    
-                    
+ 
                 </div>
             
         </div>
     
         <div class="form-row field-descripcion">
-            
-            
+
                 <div>
-                    
                     
                         <label class="required" for="id_descripcion">Descripcion:</label>
                         
                             <input class="vTextField" id="id_descripcion" maxlength="200" name="descripcion" type="text" />
-                        
-                    
-                    
+
                 </div>
             
         </div>
     
 </fieldset>
 
-
-
 <div class="submit-row">
 <input type="submit" value="Guardar" />
 
 </div>
-
-
 
     <script type="text/javascript">
         (function($) {
@@ -157,9 +120,6 @@
             });
         })(django.jQuery);
     </script>
-
-
-
 
 <script type="text/javascript">
 (function($) {

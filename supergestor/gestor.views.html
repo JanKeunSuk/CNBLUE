@@ -40,7 +40,9 @@ Cada&nbsp;vista&nbsp;obtiene&nbsp;del&nbsp;request&nbsp;que&nbsp;se&nbsp;le&nbsp
 </font></dt><dd>
 <dl>
 <dt><font face="helvetica, arial"><a href="gestor.views.html#FormularioFlujoProyecto">FormularioFlujoProyecto</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gestor.views.html#FormularioHU">FormularioHU</a>
 </font></dt><dt><font face="helvetica, arial"><a href="gestor.views.html#FormularioRolProyecto">FormularioRolProyecto</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gestor.views.html#FormularioSprintProyecto">FormularioSprintProyecto</a>
 </font></dt><dt><font face="helvetica, arial"><a href="gestor.views.html#formularioActividad">formularioActividad</a>
 </font></dt><dt><font face="helvetica, arial"><a href="gestor.views.html#proyectoFrom">proyectoFrom</a>
 </font></dt></dl>
@@ -67,9 +69,9 @@ Data descriptors defined here:<br>
 </dl>
 <hr>
 Data and other attributes defined here:<br>
-<dl><dt><strong>base_fields</strong> = OrderedDict([('usuario', &lt;django.forms.fields.Ch...ms.fields.EmailField object at 0x7fc6f37a7850&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('usuario', &lt;django.forms.fields.Ch...ms.fields.EmailField object at 0x7f8bb289d5d0&gt;)])</dl>
 
-<dl><dt><strong>declared_fields</strong> = OrderedDict([('usuario', &lt;django.forms.fields.Ch...ms.fields.EmailField object at 0x7fc6f37a7850&gt;)])</dl>
+<dl><dt><strong>declared_fields</strong> = OrderedDict([('usuario', &lt;django.forms.fields.Ch...ms.fields.EmailField object at 0x7f8bb289d5d0&gt;)])</dl>
 
 <hr>
 Methods inherited from <a href="django.forms.forms.html#BaseForm">django.forms.forms.BaseForm</a>:<br>
@@ -180,7 +182,7 @@ Data descriptors defined here:<br>
 Data and other attributes defined here:<br>
 <dl><dt><strong>Meta</strong> = &lt;class gestor.views.Meta&gt;</dl>
 
-<dl><dt><strong>base_fields</strong> = OrderedDict([('nombre', &lt;django.forms.fields.Cha...lMultipleChoiceField object at 0x7fc6f37ba310&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('nombre', &lt;django.forms.fields.Cha...lMultipleChoiceField object at 0x7f8bb28af050&gt;)])</dl>
 
 <dl><dt><strong>declared_fields</strong> = OrderedDict()</dl>
 
@@ -277,6 +279,124 @@ Data descriptors inherited from <a href="django.forms.forms.html#BaseForm">djang
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="FormularioHU">class <strong>FormularioHU</strong></a>(<a href="django.forms.models.html#ModelForm">django.forms.models.ModelForm</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Clase&nbsp;que&nbsp;obtiene&nbsp;el&nbsp;formulario&nbsp;para&nbsp;la&nbsp;creacion,&nbsp;visualizacion&nbsp;y&nbsp;modificacion<br>
+de&nbsp;HU's&nbsp;del&nbsp;proyecto&nbsp;desde&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum&nbsp;y&nbsp;del&nbsp;Product&nbsp;Owner.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gestor.views.html#FormularioHU">FormularioHU</a></dd>
+<dd><a href="django.forms.models.html#ModelForm">django.forms.models.ModelForm</a></dd>
+<dd><a href="django.forms.models.html#BaseModelForm">django.forms.models.BaseModelForm</a></dd>
+<dd><a href="django.forms.forms.html#BaseForm">django.forms.forms.BaseForm</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>media</strong></dt>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>Meta</strong> = &lt;class gestor.views.Meta&gt;</dl>
+
+<dl><dt><strong>base_fields</strong> = OrderedDict([('valor_tecnico', &lt;django.forms.fie...lds.TypedChoiceField object at 0x7f8bb28af9d0&gt;)])</dl>
+
+<dl><dt><strong>declared_fields</strong> = OrderedDict()</dl>
+
+<hr>
+Methods inherited from <a href="django.forms.models.html#BaseModelForm">django.forms.models.BaseModelForm</a>:<br>
+<dl><dt><a name="FormularioHU-__init__"><strong>__init__</strong></a>(self, data<font color="#909090">=None</font>, files<font color="#909090">=None</font>, auto_id<font color="#909090">=u'id_%s'</font>, prefix<font color="#909090">=None</font>, initial<font color="#909090">=None</font>, error_class<font color="#909090">=&lt;class 'django.forms.utils.ErrorList'&gt;</font>, label_suffix<font color="#909090">=None</font>, empty_permitted<font color="#909090">=False</font>, instance<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="FormularioHU-clean"><strong>clean</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="FormularioHU-save"><strong>save</strong></a>(self, commit<font color="#909090">=True</font>)</dt><dd><tt>Saves&nbsp;this&nbsp;``form``'s&nbsp;cleaned_data&nbsp;into&nbsp;model&nbsp;instance<br>
+``self.<strong>instance</strong>``.<br>
+&nbsp;<br>
+If&nbsp;commit=True,&nbsp;then&nbsp;the&nbsp;changes&nbsp;to&nbsp;``instance``&nbsp;will&nbsp;be&nbsp;saved&nbsp;to&nbsp;the<br>
+database.&nbsp;Returns&nbsp;``instance``.</tt></dd></dl>
+
+<dl><dt><a name="FormularioHU-validate_unique"><strong>validate_unique</strong></a>(self)</dt><dd><tt>Calls&nbsp;the&nbsp;instance's&nbsp;<a href="#FormularioHU-validate_unique">validate_unique</a>()&nbsp;method&nbsp;and&nbsp;updates&nbsp;the&nbsp;form's<br>
+validation&nbsp;errors&nbsp;if&nbsp;any&nbsp;were&nbsp;raised.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="django.forms.forms.html#BaseForm">django.forms.forms.BaseForm</a>:<br>
+<dl><dt><a name="FormularioHU-__getitem__"><strong>__getitem__</strong></a>(self, name)</dt><dd><tt>Returns&nbsp;a&nbsp;BoundField&nbsp;with&nbsp;the&nbsp;given&nbsp;name.</tt></dd></dl>
+
+<dl><dt><a name="FormularioHU-__iter__"><strong>__iter__</strong></a>(self)</dt></dl>
+
+<dl><dt><strong>__str__</strong> <em>lambda</em> self</dt></dl>
+
+<dl><dt><a name="FormularioHU-__unicode__"><strong>__unicode__</strong></a> = __str__(self)</dt></dl>
+
+<dl><dt><a name="FormularioHU-add_error"><strong>add_error</strong></a>(self, field, error)</dt><dd><tt>Update&nbsp;the&nbsp;content&nbsp;of&nbsp;`self.<strong>_errors</strong>`.<br>
+&nbsp;<br>
+The&nbsp;`field`&nbsp;argument&nbsp;is&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;field&nbsp;to&nbsp;which&nbsp;the&nbsp;errors<br>
+should&nbsp;be&nbsp;added.&nbsp;If&nbsp;its&nbsp;value&nbsp;is&nbsp;None&nbsp;the&nbsp;errors&nbsp;will&nbsp;be&nbsp;treated&nbsp;as<br>
+NON_FIELD_ERRORS.<br>
+&nbsp;<br>
+The&nbsp;`error`&nbsp;argument&nbsp;can&nbsp;be&nbsp;a&nbsp;single&nbsp;error,&nbsp;a&nbsp;list&nbsp;of&nbsp;errors,&nbsp;or&nbsp;a<br>
+dictionary&nbsp;that&nbsp;maps&nbsp;field&nbsp;names&nbsp;to&nbsp;lists&nbsp;of&nbsp;errors.&nbsp;What&nbsp;we&nbsp;define&nbsp;as<br>
+an&nbsp;"error"&nbsp;can&nbsp;be&nbsp;either&nbsp;a&nbsp;simple&nbsp;string&nbsp;or&nbsp;an&nbsp;instance&nbsp;of<br>
+ValidationError&nbsp;with&nbsp;its&nbsp;message&nbsp;attribute&nbsp;set&nbsp;and&nbsp;what&nbsp;we&nbsp;define&nbsp;as<br>
+list&nbsp;or&nbsp;dictionary&nbsp;can&nbsp;be&nbsp;an&nbsp;actual&nbsp;`list`&nbsp;or&nbsp;`dict`&nbsp;or&nbsp;an&nbsp;instance<br>
+of&nbsp;ValidationError&nbsp;with&nbsp;its&nbsp;`error_list`&nbsp;or&nbsp;`error_dict`&nbsp;attribute&nbsp;set.<br>
+&nbsp;<br>
+If&nbsp;`error`&nbsp;is&nbsp;a&nbsp;dictionary,&nbsp;the&nbsp;`field`&nbsp;argument&nbsp;*must*&nbsp;be&nbsp;None&nbsp;and<br>
+errors&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;fields&nbsp;that&nbsp;correspond&nbsp;to&nbsp;the&nbsp;keys&nbsp;of&nbsp;the<br>
+dictionary.</tt></dd></dl>
+
+<dl><dt><a name="FormularioHU-add_initial_prefix"><strong>add_initial_prefix</strong></a>(self, field_name)</dt><dd><tt>Add&nbsp;a&nbsp;'initial'&nbsp;prefix&nbsp;for&nbsp;checking&nbsp;dynamic&nbsp;initial&nbsp;values</tt></dd></dl>
+
+<dl><dt><a name="FormularioHU-add_prefix"><strong>add_prefix</strong></a>(self, field_name)</dt><dd><tt>Returns&nbsp;the&nbsp;field&nbsp;name&nbsp;with&nbsp;a&nbsp;prefix&nbsp;appended,&nbsp;if&nbsp;this&nbsp;<a href="django.forms.forms.html#Form">Form</a>&nbsp;has&nbsp;a<br>
+prefix&nbsp;set.<br>
+&nbsp;<br>
+Subclasses&nbsp;may&nbsp;wish&nbsp;to&nbsp;override.</tt></dd></dl>
+
+<dl><dt><a name="FormularioHU-as_p"><strong>as_p</strong></a>(self)</dt><dd><tt>Returns&nbsp;this&nbsp;form&nbsp;rendered&nbsp;as&nbsp;HTML&nbsp;&lt;p&gt;s.</tt></dd></dl>
+
+<dl><dt><a name="FormularioHU-as_table"><strong>as_table</strong></a>(self)</dt><dd><tt>Returns&nbsp;this&nbsp;form&nbsp;rendered&nbsp;as&nbsp;HTML&nbsp;&lt;tr&gt;s&nbsp;--&nbsp;excluding&nbsp;the&nbsp;&lt;table&gt;&lt;/table&gt;.</tt></dd></dl>
+
+<dl><dt><a name="FormularioHU-as_ul"><strong>as_ul</strong></a>(self)</dt><dd><tt>Returns&nbsp;this&nbsp;form&nbsp;rendered&nbsp;as&nbsp;HTML&nbsp;&lt;li&gt;s&nbsp;--&nbsp;excluding&nbsp;the&nbsp;&lt;ul&gt;&lt;/ul&gt;.</tt></dd></dl>
+
+<dl><dt><a name="FormularioHU-full_clean"><strong>full_clean</strong></a>(self)</dt><dd><tt>Cleans&nbsp;all&nbsp;of&nbsp;self.<strong>data</strong>&nbsp;and&nbsp;populates&nbsp;self.<strong>_errors</strong>&nbsp;and<br>
+self.<strong>cleaned_data</strong>.</tt></dd></dl>
+
+<dl><dt><a name="FormularioHU-has_changed"><strong>has_changed</strong></a>(self)</dt><dd><tt>Returns&nbsp;True&nbsp;if&nbsp;data&nbsp;differs&nbsp;from&nbsp;initial.</tt></dd></dl>
+
+<dl><dt><a name="FormularioHU-hidden_fields"><strong>hidden_fields</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;the&nbsp;BoundField&nbsp;objects&nbsp;that&nbsp;are&nbsp;hidden&nbsp;fields.<br>
+Useful&nbsp;for&nbsp;manual&nbsp;form&nbsp;layout&nbsp;in&nbsp;templates.</tt></dd></dl>
+
+<dl><dt><a name="FormularioHU-is_multipart"><strong>is_multipart</strong></a>(self)</dt><dd><tt>Returns&nbsp;True&nbsp;if&nbsp;the&nbsp;form&nbsp;needs&nbsp;to&nbsp;be&nbsp;multipart-encoded,&nbsp;i.e.&nbsp;it&nbsp;has<br>
+FileInput.&nbsp;Otherwise,&nbsp;False.</tt></dd></dl>
+
+<dl><dt><a name="FormularioHU-is_valid"><strong>is_valid</strong></a>(self)</dt><dd><tt>Returns&nbsp;True&nbsp;if&nbsp;the&nbsp;form&nbsp;has&nbsp;no&nbsp;errors.&nbsp;Otherwise,&nbsp;False.&nbsp;If&nbsp;errors&nbsp;are<br>
+being&nbsp;ignored,&nbsp;returns&nbsp;False.</tt></dd></dl>
+
+<dl><dt><a name="FormularioHU-non_field_errors"><strong>non_field_errors</strong></a>(self)</dt><dd><tt>Returns&nbsp;an&nbsp;ErrorList&nbsp;of&nbsp;errors&nbsp;that&nbsp;aren't&nbsp;associated&nbsp;with&nbsp;a&nbsp;particular<br>
+field&nbsp;--&nbsp;i.e.,&nbsp;from&nbsp;<a href="django.forms.forms.html#Form">Form</a>.<a href="#FormularioHU-clean">clean</a>().&nbsp;Returns&nbsp;an&nbsp;empty&nbsp;ErrorList&nbsp;if&nbsp;there<br>
+are&nbsp;none.</tt></dd></dl>
+
+<dl><dt><a name="FormularioHU-visible_fields"><strong>visible_fields</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;BoundField&nbsp;objects&nbsp;that&nbsp;aren't&nbsp;hidden&nbsp;fields.<br>
+The&nbsp;opposite&nbsp;of&nbsp;the&nbsp;<a href="#FormularioHU-hidden_fields">hidden_fields</a>()&nbsp;method.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="django.forms.forms.html#BaseForm">django.forms.forms.BaseForm</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>changed_data</strong></dt>
+</dl>
+<dl><dt><strong>errors</strong></dt>
+<dd><tt>Returns&nbsp;an&nbsp;ErrorDict&nbsp;for&nbsp;the&nbsp;data&nbsp;provided&nbsp;for&nbsp;the&nbsp;form</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#000000" face="helvetica, arial"><a name="FormularioRolProyecto">class <strong>FormularioRolProyecto</strong></a>(<a href="django.forms.models.html#ModelForm">django.forms.models.ModelForm</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
@@ -298,7 +418,7 @@ Data descriptors defined here:<br>
 Data and other attributes defined here:<br>
 <dl><dt><strong>Meta</strong> = &lt;class gestor.views.Meta&gt;</dl>
 
-<dl><dt><strong>base_fields</strong> = OrderedDict([('permisos', &lt;django.forms.models.M...rms.fields.CharField object at 0x7fc6f37a7f10&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('permisos', &lt;django.forms.models.M...rms.fields.CharField object at 0x7f8bb289dc50&gt;)])</dl>
 
 <dl><dt><strong>declared_fields</strong> = OrderedDict()</dl>
 
@@ -412,9 +532,9 @@ Data descriptors defined here:<br>
 </dl>
 <hr>
 Data and other attributes defined here:<br>
-<dl><dt><strong>base_fields</strong> = OrderedDict([('password_nueva1', &lt;django.forms.f...rms.fields.CharField object at 0x7fc6f37a79d0&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('password_nueva1', &lt;django.forms.f...rms.fields.CharField object at 0x7f8bb289d750&gt;)])</dl>
 
-<dl><dt><strong>declared_fields</strong> = OrderedDict([('password_nueva1', &lt;django.forms.f...rms.fields.CharField object at 0x7fc6f37a79d0&gt;)])</dl>
+<dl><dt><strong>declared_fields</strong> = OrderedDict([('password_nueva1', &lt;django.forms.f...rms.fields.CharField object at 0x7f8bb289d750&gt;)])</dl>
 
 <hr>
 Methods inherited from <a href="django.forms.forms.html#BaseForm">django.forms.forms.BaseForm</a>:<br>
@@ -504,6 +624,124 @@ Data descriptors inherited from <a href="django.forms.forms.html#BaseForm">djang
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="FormularioSprintProyecto">class <strong>FormularioSprintProyecto</strong></a>(<a href="django.forms.models.html#ModelForm">django.forms.models.ModelForm</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Clase&nbsp;que&nbsp;obtiene&nbsp;el&nbsp;formulario&nbsp;para&nbsp;la&nbsp;creacion,&nbsp;visualizacion&nbsp;y&nbsp;modificacion<br>
+de&nbsp;sprints&nbsp;del&nbsp;proyecto&nbsp;desde&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gestor.views.html#FormularioSprintProyecto">FormularioSprintProyecto</a></dd>
+<dd><a href="django.forms.models.html#ModelForm">django.forms.models.ModelForm</a></dd>
+<dd><a href="django.forms.models.html#BaseModelForm">django.forms.models.BaseModelForm</a></dd>
+<dd><a href="django.forms.forms.html#BaseForm">django.forms.forms.BaseForm</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>media</strong></dt>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>Meta</strong> = &lt;class gestor.views.Meta&gt;</dl>
+
+<dl><dt><strong>base_fields</strong> = OrderedDict([('descripcion', &lt;django.forms.field...lMultipleChoiceField object at 0x7f8bb28af390&gt;)])</dl>
+
+<dl><dt><strong>declared_fields</strong> = OrderedDict()</dl>
+
+<hr>
+Methods inherited from <a href="django.forms.models.html#BaseModelForm">django.forms.models.BaseModelForm</a>:<br>
+<dl><dt><a name="FormularioSprintProyecto-__init__"><strong>__init__</strong></a>(self, data<font color="#909090">=None</font>, files<font color="#909090">=None</font>, auto_id<font color="#909090">=u'id_%s'</font>, prefix<font color="#909090">=None</font>, initial<font color="#909090">=None</font>, error_class<font color="#909090">=&lt;class 'django.forms.utils.ErrorList'&gt;</font>, label_suffix<font color="#909090">=None</font>, empty_permitted<font color="#909090">=False</font>, instance<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="FormularioSprintProyecto-clean"><strong>clean</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="FormularioSprintProyecto-save"><strong>save</strong></a>(self, commit<font color="#909090">=True</font>)</dt><dd><tt>Saves&nbsp;this&nbsp;``form``'s&nbsp;cleaned_data&nbsp;into&nbsp;model&nbsp;instance<br>
+``self.<strong>instance</strong>``.<br>
+&nbsp;<br>
+If&nbsp;commit=True,&nbsp;then&nbsp;the&nbsp;changes&nbsp;to&nbsp;``instance``&nbsp;will&nbsp;be&nbsp;saved&nbsp;to&nbsp;the<br>
+database.&nbsp;Returns&nbsp;``instance``.</tt></dd></dl>
+
+<dl><dt><a name="FormularioSprintProyecto-validate_unique"><strong>validate_unique</strong></a>(self)</dt><dd><tt>Calls&nbsp;the&nbsp;instance's&nbsp;<a href="#FormularioSprintProyecto-validate_unique">validate_unique</a>()&nbsp;method&nbsp;and&nbsp;updates&nbsp;the&nbsp;form's<br>
+validation&nbsp;errors&nbsp;if&nbsp;any&nbsp;were&nbsp;raised.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="django.forms.forms.html#BaseForm">django.forms.forms.BaseForm</a>:<br>
+<dl><dt><a name="FormularioSprintProyecto-__getitem__"><strong>__getitem__</strong></a>(self, name)</dt><dd><tt>Returns&nbsp;a&nbsp;BoundField&nbsp;with&nbsp;the&nbsp;given&nbsp;name.</tt></dd></dl>
+
+<dl><dt><a name="FormularioSprintProyecto-__iter__"><strong>__iter__</strong></a>(self)</dt></dl>
+
+<dl><dt><strong>__str__</strong> <em>lambda</em> self</dt></dl>
+
+<dl><dt><a name="FormularioSprintProyecto-__unicode__"><strong>__unicode__</strong></a> = __str__(self)</dt></dl>
+
+<dl><dt><a name="FormularioSprintProyecto-add_error"><strong>add_error</strong></a>(self, field, error)</dt><dd><tt>Update&nbsp;the&nbsp;content&nbsp;of&nbsp;`self.<strong>_errors</strong>`.<br>
+&nbsp;<br>
+The&nbsp;`field`&nbsp;argument&nbsp;is&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;field&nbsp;to&nbsp;which&nbsp;the&nbsp;errors<br>
+should&nbsp;be&nbsp;added.&nbsp;If&nbsp;its&nbsp;value&nbsp;is&nbsp;None&nbsp;the&nbsp;errors&nbsp;will&nbsp;be&nbsp;treated&nbsp;as<br>
+NON_FIELD_ERRORS.<br>
+&nbsp;<br>
+The&nbsp;`error`&nbsp;argument&nbsp;can&nbsp;be&nbsp;a&nbsp;single&nbsp;error,&nbsp;a&nbsp;list&nbsp;of&nbsp;errors,&nbsp;or&nbsp;a<br>
+dictionary&nbsp;that&nbsp;maps&nbsp;field&nbsp;names&nbsp;to&nbsp;lists&nbsp;of&nbsp;errors.&nbsp;What&nbsp;we&nbsp;define&nbsp;as<br>
+an&nbsp;"error"&nbsp;can&nbsp;be&nbsp;either&nbsp;a&nbsp;simple&nbsp;string&nbsp;or&nbsp;an&nbsp;instance&nbsp;of<br>
+ValidationError&nbsp;with&nbsp;its&nbsp;message&nbsp;attribute&nbsp;set&nbsp;and&nbsp;what&nbsp;we&nbsp;define&nbsp;as<br>
+list&nbsp;or&nbsp;dictionary&nbsp;can&nbsp;be&nbsp;an&nbsp;actual&nbsp;`list`&nbsp;or&nbsp;`dict`&nbsp;or&nbsp;an&nbsp;instance<br>
+of&nbsp;ValidationError&nbsp;with&nbsp;its&nbsp;`error_list`&nbsp;or&nbsp;`error_dict`&nbsp;attribute&nbsp;set.<br>
+&nbsp;<br>
+If&nbsp;`error`&nbsp;is&nbsp;a&nbsp;dictionary,&nbsp;the&nbsp;`field`&nbsp;argument&nbsp;*must*&nbsp;be&nbsp;None&nbsp;and<br>
+errors&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;fields&nbsp;that&nbsp;correspond&nbsp;to&nbsp;the&nbsp;keys&nbsp;of&nbsp;the<br>
+dictionary.</tt></dd></dl>
+
+<dl><dt><a name="FormularioSprintProyecto-add_initial_prefix"><strong>add_initial_prefix</strong></a>(self, field_name)</dt><dd><tt>Add&nbsp;a&nbsp;'initial'&nbsp;prefix&nbsp;for&nbsp;checking&nbsp;dynamic&nbsp;initial&nbsp;values</tt></dd></dl>
+
+<dl><dt><a name="FormularioSprintProyecto-add_prefix"><strong>add_prefix</strong></a>(self, field_name)</dt><dd><tt>Returns&nbsp;the&nbsp;field&nbsp;name&nbsp;with&nbsp;a&nbsp;prefix&nbsp;appended,&nbsp;if&nbsp;this&nbsp;<a href="django.forms.forms.html#Form">Form</a>&nbsp;has&nbsp;a<br>
+prefix&nbsp;set.<br>
+&nbsp;<br>
+Subclasses&nbsp;may&nbsp;wish&nbsp;to&nbsp;override.</tt></dd></dl>
+
+<dl><dt><a name="FormularioSprintProyecto-as_p"><strong>as_p</strong></a>(self)</dt><dd><tt>Returns&nbsp;this&nbsp;form&nbsp;rendered&nbsp;as&nbsp;HTML&nbsp;&lt;p&gt;s.</tt></dd></dl>
+
+<dl><dt><a name="FormularioSprintProyecto-as_table"><strong>as_table</strong></a>(self)</dt><dd><tt>Returns&nbsp;this&nbsp;form&nbsp;rendered&nbsp;as&nbsp;HTML&nbsp;&lt;tr&gt;s&nbsp;--&nbsp;excluding&nbsp;the&nbsp;&lt;table&gt;&lt;/table&gt;.</tt></dd></dl>
+
+<dl><dt><a name="FormularioSprintProyecto-as_ul"><strong>as_ul</strong></a>(self)</dt><dd><tt>Returns&nbsp;this&nbsp;form&nbsp;rendered&nbsp;as&nbsp;HTML&nbsp;&lt;li&gt;s&nbsp;--&nbsp;excluding&nbsp;the&nbsp;&lt;ul&gt;&lt;/ul&gt;.</tt></dd></dl>
+
+<dl><dt><a name="FormularioSprintProyecto-full_clean"><strong>full_clean</strong></a>(self)</dt><dd><tt>Cleans&nbsp;all&nbsp;of&nbsp;self.<strong>data</strong>&nbsp;and&nbsp;populates&nbsp;self.<strong>_errors</strong>&nbsp;and<br>
+self.<strong>cleaned_data</strong>.</tt></dd></dl>
+
+<dl><dt><a name="FormularioSprintProyecto-has_changed"><strong>has_changed</strong></a>(self)</dt><dd><tt>Returns&nbsp;True&nbsp;if&nbsp;data&nbsp;differs&nbsp;from&nbsp;initial.</tt></dd></dl>
+
+<dl><dt><a name="FormularioSprintProyecto-hidden_fields"><strong>hidden_fields</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;the&nbsp;BoundField&nbsp;objects&nbsp;that&nbsp;are&nbsp;hidden&nbsp;fields.<br>
+Useful&nbsp;for&nbsp;manual&nbsp;form&nbsp;layout&nbsp;in&nbsp;templates.</tt></dd></dl>
+
+<dl><dt><a name="FormularioSprintProyecto-is_multipart"><strong>is_multipart</strong></a>(self)</dt><dd><tt>Returns&nbsp;True&nbsp;if&nbsp;the&nbsp;form&nbsp;needs&nbsp;to&nbsp;be&nbsp;multipart-encoded,&nbsp;i.e.&nbsp;it&nbsp;has<br>
+FileInput.&nbsp;Otherwise,&nbsp;False.</tt></dd></dl>
+
+<dl><dt><a name="FormularioSprintProyecto-is_valid"><strong>is_valid</strong></a>(self)</dt><dd><tt>Returns&nbsp;True&nbsp;if&nbsp;the&nbsp;form&nbsp;has&nbsp;no&nbsp;errors.&nbsp;Otherwise,&nbsp;False.&nbsp;If&nbsp;errors&nbsp;are<br>
+being&nbsp;ignored,&nbsp;returns&nbsp;False.</tt></dd></dl>
+
+<dl><dt><a name="FormularioSprintProyecto-non_field_errors"><strong>non_field_errors</strong></a>(self)</dt><dd><tt>Returns&nbsp;an&nbsp;ErrorList&nbsp;of&nbsp;errors&nbsp;that&nbsp;aren't&nbsp;associated&nbsp;with&nbsp;a&nbsp;particular<br>
+field&nbsp;--&nbsp;i.e.,&nbsp;from&nbsp;<a href="django.forms.forms.html#Form">Form</a>.<a href="#FormularioSprintProyecto-clean">clean</a>().&nbsp;Returns&nbsp;an&nbsp;empty&nbsp;ErrorList&nbsp;if&nbsp;there<br>
+are&nbsp;none.</tt></dd></dl>
+
+<dl><dt><a name="FormularioSprintProyecto-visible_fields"><strong>visible_fields</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;BoundField&nbsp;objects&nbsp;that&nbsp;aren't&nbsp;hidden&nbsp;fields.<br>
+The&nbsp;opposite&nbsp;of&nbsp;the&nbsp;<a href="#FormularioSprintProyecto-hidden_fields">hidden_fields</a>()&nbsp;method.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="django.forms.forms.html#BaseForm">django.forms.forms.BaseForm</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>changed_data</strong></dt>
+</dl>
+<dl><dt><strong>errors</strong></dt>
+<dd><tt>Returns&nbsp;an&nbsp;ErrorDict&nbsp;for&nbsp;the&nbsp;data&nbsp;provided&nbsp;for&nbsp;the&nbsp;form</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#000000" face="helvetica, arial"><a name="formularioActividad">class <strong>formularioActividad</strong></a>(<a href="django.forms.models.html#ModelForm">django.forms.models.ModelForm</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
@@ -524,7 +762,7 @@ Data descriptors defined here:<br>
 Data and other attributes defined here:<br>
 <dl><dt><strong>Meta</strong> = &lt;class gestor.views.Meta&gt;</dl>
 
-<dl><dt><strong>base_fields</strong> = OrderedDict([('nombre', &lt;django.forms.fields.Cha...rms.fields.CharField object at 0x7fc6f37bab50&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('nombre', &lt;django.forms.fields.Cha...rms.fields.CharField object at 0x7f8bb28bf150&gt;)])</dl>
 
 <dl><dt><strong>declared_fields</strong> = OrderedDict()</dl>
 
@@ -641,7 +879,7 @@ Data descriptors defined here:<br>
 Data and other attributes defined here:<br>
 <dl><dt><strong>Meta</strong> = &lt;class gestor.views.Meta&gt;</dl>
 
-<dl><dt><strong>base_fields</strong> = OrderedDict([('nombre_corto', &lt;django.forms.fiel...fields.DateTimeField object at 0x7fc6f37ba8d0&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('nombre_corto', &lt;django.forms.fiel...fields.DateTimeField object at 0x7f8bb28afe90&gt;)])</dl>
 
 <dl><dt><strong>declared_fields</strong> = OrderedDict()</dl>
 
@@ -741,7 +979,7 @@ Data descriptors inherited from <a href="django.forms.forms.html#BaseForm">djang
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-asignarRol"><strong>asignarRol</strong></a>(request, rolid, proyectoid, usuario_id)</dt><dd><tt>Vista&nbsp;que&nbsp;permite&nbsp;asignar&nbsp;un&nbsp;rol&nbsp;a&nbsp;un&nbsp;usuario&nbsp;dentro&nbsp;de&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum,&nbsp;valiendose&nbsp;de&nbsp;la&nbsp;URL&nbsp;para&nbsp;obtener<br>
+<td width="100%"><dl><dt><a name="-asignarRol"><strong>asignarRol</strong></a>(request, usuario_id, proyectoid, rolid, rol_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;permite&nbsp;asignar&nbsp;un&nbsp;rol&nbsp;a&nbsp;un&nbsp;usuario&nbsp;dentro&nbsp;de&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum,&nbsp;valiendose&nbsp;de&nbsp;la&nbsp;URL&nbsp;para&nbsp;obtener<br>
 los&nbsp;id's&nbsp;del&nbsp;rol&nbsp;,&nbsp;proyecto&nbsp;ye&nbsp;l&nbsp;usuario&nbsp;creador.</tt></dd></dl>
  <dl><dt><a name="-contactomail"><strong>contactomail</strong></a>(request)</dt><dd><tt>Vista&nbsp;que&nbsp;obtiene&nbsp;los&nbsp;datos&nbsp;del&nbsp;usuario&nbsp;como&nbsp;su&nbsp;nombre&nbsp;identificador&nbsp;de&nbsp;usuario&nbsp;y&nbsp;correo,<br>
 comprueba&nbsp;que&nbsp;el&nbsp;correo&nbsp;le&nbsp;pertenezca&nbsp;y&nbsp;envia&nbsp;la&nbsp;direccion&nbsp;correspondiente&nbsp;al&nbsp;seteo&nbsp;de&nbsp;su&nbsp;contrasenha<br>
@@ -750,16 +988,29 @@ a&nbsp;su&nbsp;correo.&nbsp;En&nbsp;caso&nbsp;de&nbsp;que&nbsp;su&nbsp;correo&nb
 de&nbsp;creacion&nbsp;o&nbsp;modificacion&nbsp;de&nbsp;Flujos&nbsp;del&nbsp;admin,&nbsp;devolviendo&nbsp;un&nbsp;formulario&nbsp;html&nbsp;para&nbsp;crear&nbsp;una&nbsp;nueva&nbsp;actividad</tt></dd></dl>
  <dl><dt><a name="-crearActividadView"><strong>crearActividadView</strong></a>(request, usuario_id, proyectoid)</dt><dd><tt>Vista&nbsp;que&nbsp;se&nbsp;obtiene&nbsp;del&nbsp;regex&nbsp;al&nbsp;presionar&nbsp;el&nbsp;boton&nbsp;Crear&nbsp;Actividad&nbsp;dentro&nbsp;del&nbsp;formulario<br>
 de&nbsp;creacion&nbsp;o&nbsp;modificacion&nbsp;de&nbsp;Flujos,&nbsp;devolviendo&nbsp;un&nbsp;formulario&nbsp;html&nbsp;para&nbsp;crear&nbsp;una&nbsp;nueva&nbsp;actividad</tt></dd></dl>
- <dl><dt><a name="-crearFlujo"><strong>crearFlujo</strong></a>(request, usuario_id, proyectoid)</dt><dd><tt>Vista&nbsp;que&nbsp;realiza&nbsp;la&nbsp;creacion&nbsp;de&nbsp;flujos&nbsp;de&nbsp;proyecto&nbsp;desde&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum.</tt></dd></dl>
- <dl><dt><a name="-crearRol"><strong>crearRol</strong></a>(request, usuario_id, proyectoid)</dt><dd><tt>Vista&nbsp;que&nbsp;realiza&nbsp;la&nbsp;creacion&nbsp;de&nbsp;roles&nbsp;de&nbsp;proyecto&nbsp;desde&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum,&nbsp;excluyendo&nbsp;aquellos&nbsp;permisos&nbsp;que&nbsp;no&nbsp;corresponde<br>
+ <dl><dt><a name="-crearFlujo"><strong>crearFlujo</strong></a>(request, usuario_id, proyectoid, rolid)</dt><dd><tt>Vista&nbsp;que&nbsp;realiza&nbsp;la&nbsp;creacion&nbsp;de&nbsp;flujos&nbsp;de&nbsp;proyecto&nbsp;desde&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum.</tt></dd></dl>
+ <dl><dt><a name="-crearHU"><strong>crearHU</strong></a>(request, usuario_id, proyectoid, rolid)</dt><dd><tt>Vista&nbsp;que&nbsp;realiza&nbsp;la&nbsp;creacion&nbsp;de&nbsp;flujos&nbsp;de&nbsp;proyecto&nbsp;desde&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum.</tt></dd></dl>
+ <dl><dt><a name="-crearRol"><strong>crearRol</strong></a>(request, usuario_id, proyectoid, rolid)</dt><dd><tt>Vista&nbsp;que&nbsp;realiza&nbsp;la&nbsp;creacion&nbsp;de&nbsp;roles&nbsp;de&nbsp;proyecto&nbsp;desde&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum,&nbsp;excluyendo&nbsp;aquellos&nbsp;permisos&nbsp;que&nbsp;no&nbsp;corresponde<br>
 ser&nbsp;vistos&nbsp;por&nbsp;el&nbsp;usuario&nbsp;Scrum.</tt></dd></dl>
- <dl><dt><a name="-guardarFlujoView"><strong>guardarFlujoView</strong></a>(request)</dt><dd><tt>Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;nuevo&nbsp;usuario&nbsp;relacionado&nbsp;con&nbsp;un&nbsp;correo&nbsp;autorizado&nbsp;en&nbsp;la&nbsp;tabla&nbsp;Permitidos<br>
-que&nbsp;se&nbsp;utiliza&nbsp;en&nbsp;la&nbsp;interfaz&nbsp;devuelta&nbsp;por&nbsp;/registrar</tt></dd></dl>
- <dl><dt><a name="-guardarRolView"><strong>guardarRolView</strong></a>(request, usuario_id)</dt><dd><tt>Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;nuevo&nbsp;usuario&nbsp;relacionado&nbsp;con&nbsp;un&nbsp;correo&nbsp;autorizado&nbsp;en&nbsp;la&nbsp;tabla&nbsp;Permitidos<br>
-que&nbsp;se&nbsp;utiliza&nbsp;en&nbsp;la&nbsp;interfaz&nbsp;devuelta&nbsp;por&nbsp;/registrar</tt></dd></dl>
+ <dl><dt><a name="-crearSprint"><strong>crearSprint</strong></a>(request, usuario_id, proyectoid, rolid)</dt><dd><tt>Vista&nbsp;que&nbsp;realiza&nbsp;la&nbsp;creacion&nbsp;de&nbsp;flujos&nbsp;de&nbsp;proyecto&nbsp;desde&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum.</tt></dd></dl>
+ <dl><dt><a name="-delegarHU"><strong>delegarHU</strong></a>(request, usuario_id, proyectoid, rolid, hu_id, reasignar)</dt><dd><tt>Delega&nbsp;o&nbsp;asigna&nbsp;una&nbsp;HU&nbsp;a&nbsp;un&nbsp;usuario&nbsp;miembro&nbsp;del&nbsp;proyecto,&nbsp;y&nbsp;en&nbsp;caso&nbsp;de&nbsp;ser&nbsp;necesario,&nbsp;reasignar&nbsp;la&nbsp;HU<br>
+a&nbsp;otro&nbsp;usuario&nbsp;evitando&nbsp;duplicaciones&nbsp;en&nbsp;la&nbsp;Base&nbsp;de&nbsp;Datos</tt></dd></dl>
+ <dl><dt><a name="-guardarFlujoView"><strong>guardarFlujoView</strong></a>(request)</dt><dd><tt>Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;un&nbsp;nuevo&nbsp;flujo&nbsp;en&nbsp;la&nbsp;base&nbsp;de&nbsp;datos<br>
+que&nbsp;se&nbsp;utiliza&nbsp;en&nbsp;la&nbsp;interfaz&nbsp;devuelta&nbsp;por&nbsp;/crearFlujo/</tt></dd></dl>
+ <dl><dt><a name="-guardarHUProdOwnerView"><strong>guardarHUProdOwnerView</strong></a>(request, HU_id_rec, is_Scrum)</dt><dd><tt>Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;la&nbsp;modificacion&nbsp;de&nbsp;una&nbsp;HU&nbsp;existente&nbsp;modificada&nbsp;por&nbsp;el&nbsp;Product&nbsp;Owner<br>
+que&nbsp;se&nbsp;utiliza&nbsp;en&nbsp;la&nbsp;interfaz&nbsp;devuelta&nbsp;por&nbsp;/modificarHU/&nbsp;<br>
+@0:&nbsp;corresponde&nbsp;a&nbsp;la&nbsp;modificaci[on&nbsp;realizada&nbsp;por&nbsp;el&nbsp;Product&nbsp;Owner<br>
+@1:&nbsp;coresponde&nbsp;a&nbsp;la&nbsp;modificaci[on&nbsp;realizada&nbsp;por&nbsp;el&nbsp;Scrum<br>
+@2:&nbsp;corresponde&nbsp;a&nbsp;la&nbsp;modificaci[on&nbsp;realizada&nbsp;por&nbsp;el&nbsp;Equipo</tt></dd></dl>
+ <dl><dt><a name="-guardarHUView"><strong>guardarHUView</strong></a>(request, proyectoid)</dt><dd><tt>Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;una&nbsp;nueva&nbsp;HU&nbsp;en&nbsp;la&nbsp;base&nbsp;de&nbsp;datos&nbsp;creada&nbsp;por&nbsp;el&nbsp;Product&nbsp;Owner<br>
+que&nbsp;se&nbsp;utiliza&nbsp;en&nbsp;la&nbsp;interfaz&nbsp;devuelta&nbsp;por&nbsp;/crearHU/</tt></dd></dl>
+ <dl><dt><a name="-guardarRolView"><strong>guardarRolView</strong></a>(request, usuario_id)</dt><dd><tt>Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;un&nbsp;nuevo&nbsp;rol&nbsp;en&nbsp;la&nbsp;base&nbsp;de&nbsp;datos<br>
+que&nbsp;se&nbsp;utiliza&nbsp;en&nbsp;la&nbsp;interfaz&nbsp;devuelta&nbsp;por&nbsp;/crearRol/</tt></dd></dl>
+ <dl><dt><a name="-guardarSprintView"><strong>guardarSprintView</strong></a>(request, proyectoid)</dt><dd><tt>Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;un&nbsp;nuevo&nbsp;Sprint&nbsp;en&nbsp;la&nbsp;Base&nbsp;de&nbsp;datos<br>
+que&nbsp;se&nbsp;utiliza&nbsp;en&nbsp;la&nbsp;interfaz&nbsp;devuelta&nbsp;por&nbsp;/crearSprint/</tt></dd></dl>
  <dl><dt><a name="-guardarUsuarioView"><strong>guardarUsuarioView</strong></a>(request)</dt><dd><tt>Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;nuevo&nbsp;usuario&nbsp;relacionado&nbsp;con&nbsp;un&nbsp;correo&nbsp;autorizado&nbsp;en&nbsp;la&nbsp;tabla&nbsp;Permitidos<br>
 que&nbsp;se&nbsp;utiliza&nbsp;en&nbsp;la&nbsp;interfaz&nbsp;devuelta&nbsp;por&nbsp;/registrar</tt></dd></dl>
- <dl><dt><a name="-holaScrumView"><strong>holaScrumView</strong></a>(request, usuario_id, proyectoid)</dt><dd><tt>Vista&nbsp;especial&nbsp;para&nbsp;el&nbsp;usuario&nbsp;scrum&nbsp;en&nbsp;la&nbsp;que&nbsp;le&nbsp;listan&nbsp;los&nbsp;proyectos&nbsp;y&nbsp;los&nbsp;enlaces&nbsp;para&nbsp;la&nbsp;creacion&nbsp;de&nbsp;roles&nbsp;y&nbsp;flujos<br>
+ <dl><dt><a name="-holaScrumView"><strong>holaScrumView</strong></a>(request, usuario_id, proyectoid, rol_id)</dt><dd><tt>Vista&nbsp;especial&nbsp;para&nbsp;el&nbsp;usuario&nbsp;scrum&nbsp;en&nbsp;la&nbsp;que&nbsp;le&nbsp;listan&nbsp;los&nbsp;proyectos&nbsp;y&nbsp;los&nbsp;enlaces&nbsp;para&nbsp;la&nbsp;creacion&nbsp;de&nbsp;roles&nbsp;y&nbsp;flujos<br>
 Vista&nbsp;para&nbsp;los&nbsp;usuario&nbsp;comunes,&nbsp;en&nbsp;la&nbsp;que&nbsp;solo&nbsp;se&nbsp;listan&nbsp;los&nbsp;proyectos&nbsp;sin&nbsp;enlaces,&nbsp;ya&nbsp;que&nbsp;no&nbsp;tiene&nbsp;permiso&nbsp;para&nbsp;ello.</tt></dd></dl>
  <dl><dt><a name="-holaView"><strong>holaView</strong></a>(request, *args, **kwargs)</dt><dd><tt>Vista&nbsp;que&nbsp;redirige&nbsp;a&nbsp;la&nbsp;pagina&nbsp;principal&nbsp;de&nbsp;administracion&nbsp;tanto&nbsp;a&nbsp;usuarios&nbsp;como&nbsp;a<br>
 superusuarios,&nbsp;los&nbsp;superusuarios&nbsp;son&nbsp;redirigidos&nbsp;a&nbsp;la&nbsp;aplicacion&nbsp;admin&nbsp;mientras&nbsp;que&nbsp;los&nbsp;<br>
@@ -770,13 +1021,27 @@ usuario_id&nbsp;se&nbsp;necesita&nbsp;simplemente&nbsp;para&nbsp;el&nbsp;render&
 de&nbsp;la&nbsp;Actividad&nbsp;que&nbsp;se&nbsp;quiere&nbsp;modificar.</tt></dd></dl>
  <dl><dt><a name="-modificarActividadAdmin"><strong>modificarActividadAdmin</strong></a>(request, actividad_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;<a href="#formularioActividad">formularioActividad</a>&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables&nbsp;en&nbsp;el&nbsp;admin<br>
 de&nbsp;la&nbsp;Actividad&nbsp;que&nbsp;se&nbsp;quiere&nbsp;modificar.</tt></dd></dl>
- <dl><dt><a name="-modificarFlujo"><strong>modificarFlujo</strong></a>(request, usuario_id, proyectoid, flujo_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;FlujoProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
+ <dl><dt><a name="-modificarCuenta"><strong>modificarCuenta</strong></a>(request, usuario_id)</dt><dd><tt>Vista&nbsp;que&nbsp;permite&nbsp;a&nbsp;los&nbsp;usuarios&nbsp;activos&nbsp;modificar&nbsp;sus&nbsp;datos&nbsp;personales&nbsp;como<br>
+el&nbsp;su&nbsp;nombre,&nbsp;apellido&nbsp;y&nbsp;direccion.<br>
+El&nbsp;correo&nbsp;y&nbsp;su&nbsp;nombre&nbsp;identificador&nbsp;del&nbsp;usuario&nbsp;solo&nbsp;lo&nbsp;podra&nbsp;modificar&nbsp;el&nbsp;admin.</tt></dd></dl>
+ <dl><dt><a name="-modificarFlujo"><strong>modificarFlujo</strong></a>(request, usuario_id, proyectoid, rolid, flujo_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;FlujoProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
 del&nbsp;Flujo&nbsp;que&nbsp;se&nbsp;quiere&nbsp;modificar.</tt></dd></dl>
+ <dl><dt><a name="-modificarHU"><strong>modificarHU</strong></a>(request, usuario_id, proyectoid, rolid, HU_id_rec, is_Scrum)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;HU&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
+de&nbsp;la&nbsp;HU&nbsp;en&nbsp;tres&nbsp;niveles&nbsp;de&nbsp;modificacion.<br>
+Esta&nbsp;vista&nbsp;corresponde&nbsp;a&nbsp;la&nbsp;modificacion&nbsp;del&nbsp;nivel&nbsp;1,&nbsp;es&nbsp;decir,&nbsp;a&nbsp;nivell&nbsp;Scrum&nbsp;Master</tt></dd></dl>
  <dl><dt><a name="-modificarProyecto"><strong>modificarProyecto</strong></a>(request, usuario_id, proyecto_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;<a href="#proyectoFrom">proyectoFrom</a>&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
 del&nbsp;Proyecto&nbsp;que&nbsp;se&nbsp;quiere&nbsp;modificar.</tt></dd></dl>
- <dl><dt><a name="-modificarRol"><strong>modificarRol</strong></a>(request, usuario_id, proyectoid, rol_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;RolProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
+ <dl><dt><a name="-modificarRol"><strong>modificarRol</strong></a>(request, usuario_id, proyectoid, rolid, rol_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;RolProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
 del&nbsp;Rol&nbsp;que&nbsp;se&nbsp;quiere&nbsp;modificar.</tt></dd></dl>
- <dl><dt><a name="-registrarUsuarioView"><strong>registrarUsuarioView</strong></a>(request)</dt><dd><tt>Vista&nbsp;que&nbsp;se&nbsp;obitene&nbsp;del&nbsp;regex&nbsp;/registrar&nbsp;solicitado&nbsp;al&nbsp;precionar&nbsp;el&nbsp;boton<br>
+ <dl><dt><a name="-modificarSprint"><strong>modificarSprint</strong></a>(request, usuario_id, proyectoid, rolid, Sprint_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;SprintProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
+del&nbsp;Sprint&nbsp;que&nbsp;se&nbsp;quiere&nbsp;modificar.<br>
+La&nbsp;lista&nbsp;de&nbsp;HU&nbsp;asignables&nbsp;se&nbsp;dividen&nbsp;en&nbsp;dos&nbsp;sublistas:&nbsp;las&nbsp;ya&nbsp;asignadas&nbsp;a&nbsp;algun&nbsp;sprint&nbsp;y&nbsp;las&nbsp;que&nbsp;aun<br>
+no&nbsp;han&nbsp;sido&nbsp;asignadas.</tt></dd></dl>
+ <dl><dt><a name="-reactivar"><strong>reactivar</strong></a>(request, usuario_id, proyectoid, rolid, tipo, id_tipo)</dt><dd><tt>Vista&nbsp;que&nbsp;permite&nbsp;reactivar&nbsp;un&nbsp;flujo,&nbsp;HU&nbsp;o&nbsp;Sprint&nbsp;cancelado&nbsp;por&nbsp;el&nbsp;usuario,<br>
+para&nbsp;su&nbsp;correspondiente&nbsp;uso&nbsp;o&nbsp;modificacion,&nbsp;ya&nbsp;que&nbsp;los&nbsp;objetos&nbsp;cancelados<br>
+solo&nbsp;estan&nbsp;disponibles&nbsp;para&nbsp;su&nbsp;visualizacion,&nbsp;no&nbsp;para&nbsp;su&nbsp;asignacion&nbsp;o&nbsp;modificacion.<br>
+Recibe&nbsp;un&nbsp;tipo&nbsp;en&nbsp;la&nbsp;url&nbsp;que&nbsp;le&nbsp;permite&nbsp;distinguir&nbsp;de&nbsp;que&nbsp;tipo&nbsp;de&nbsp;objeto&nbsp;se&nbsp;trata.</tt></dd></dl>
+ <dl><dt><a name="-registrarUsuarioView"><strong>registrarUsuarioView</strong></a>(request)</dt><dd><tt>Vista&nbsp;que&nbsp;se&nbsp;obtiene&nbsp;del&nbsp;regex&nbsp;/registrar&nbsp;solicitado&nbsp;al&nbsp;precionar&nbsp;el&nbsp;boton<br>
 registrar&nbsp;en&nbsp;el&nbsp;login,&nbsp;devuelve&nbsp;un&nbsp;formulario&nbsp;html&nbsp;para&nbsp;crear&nbsp;un&nbsp;nuevo&nbsp;usuario<br>
 con&nbsp;un&nbsp;correo&nbsp;existente</tt></dd></dl>
  <dl><dt><a name="-seleccionarFlujoModificar"><strong>seleccionarFlujoModificar</strong></a>(request, usuario_id, proyectoid)</dt><dd><tt>Al&nbsp;presionar&nbsp;el&nbsp;boton&nbsp;Modificar&nbsp;Actividad,&nbsp;esta&nbsp;vista&nbsp;despliega&nbsp;una&nbsp;lista&nbsp;de&nbsp;todas&nbsp;las&nbsp;actividades&nbsp;seleccionables&nbsp;por&nbsp;el&nbsp;usuario<br>
@@ -786,11 +1051,20 @@ seleccionables&nbsp;por&nbsp;el&nbsp;usuario&nbsp;para&nbsp;su&nbsp;modificacion
  <dl><dt><a name="-seteoPassword"><strong>seteoPassword</strong></a>(request, usuario_id)</dt><dd><tt>Vista&nbsp;que&nbsp;se&nbsp;despliega&nbsp;al&nbsp;estar&nbsp;en&nbsp;el&nbsp;direccionamiento&nbsp;de&nbsp;configuracion&nbsp;de&nbsp;contrasenha,<br>
 comprueba&nbsp;que&nbsp;ambas&nbsp;contrasenhas&nbsp;intruducidas&nbsp;por&nbsp;el&nbsp;usuario&nbsp;coincidan,&nbsp;en&nbsp;caso&nbsp;de&nbsp;que&nbsp;coincidan<br>
 se&nbsp;almacena&nbsp;la&nbsp;nueva&nbsp;contrasenha&nbsp;en&nbsp;la&nbsp;Base&nbsp;de&nbsp;Datos&nbsp;y&nbsp;en&nbsp;caso&nbsp;de&nbsp;que&nbsp;no&nbsp;coincidan&nbsp;se&nbsp;le&nbsp;notifica&nbsp;al&nbsp;usuario.</tt></dd></dl>
- <dl><dt><a name="-visualizarFlujoProyectoView"><strong>visualizarFlujoProyectoView</strong></a>(request, usuario_id, proyectoid, flujo_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;FlujoProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;almacenados<br>
+ <dl><dt><a name="-validarHU"><strong>validarHU</strong></a>(request, usuario_id, proyectoid, rolid, HU_id_rec, is_Scrum)</dt></dl>
+ <dl><dt><a name="-visualizarBacklog"><strong>visualizarBacklog</strong></a>(request, usuario_id, proyectoid, rolid)</dt><dd><tt>Vista&nbsp;disponible&nbsp;para&nbsp;el&nbsp;Scrum&nbsp;y&nbsp;el&nbsp;Product&nbsp;Owner.<br>
+Esta&nbsp;vista&nbsp;contiene&nbsp;la&nbsp;lista&nbsp;de&nbsp;HU&nbsp;pendientes&nbsp;pero&nbsp;ACTIVAS&nbsp;y&nbsp;VALIDADAS&nbsp;ordenadas&nbsp;segun&nbsp;su&nbsp;prioridad<br>
+en&nbsp;orden&nbsp;descendente&nbsp;para&nbsp;la&nbsp;correspondiente&nbsp;asignacion&nbsp;que&nbsp;realizara&nbsp;el&nbsp;Scrum&nbsp;Master.<br>
+A&nbsp;medida&nbsp;que&nbsp;las&nbsp;HU&nbsp;se&nbsp;realizan,&nbsp;estas&nbsp;desapareceran&nbsp;del&nbsp;Product&nbsp;Backlog.</tt></dd></dl>
+ <dl><dt><a name="-visualizarFlujoProyectoView"><strong>visualizarFlujoProyectoView</strong></a>(request, usuario_id, proyectoid, rolid, flujo_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;FlujoProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;almacenados<br>
 en&nbsp;el&nbsp;Flujo&nbsp;que&nbsp;se&nbsp;quiere&nbsp;visualizar.</tt></dd></dl>
+ <dl><dt><a name="-visualizarHUView"><strong>visualizarHUView</strong></a>(request, usuario_id, proyectoid, rolid, HU_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;HU&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;almacenados<br>
+en&nbsp;la&nbsp;HU&nbsp;que&nbsp;se&nbsp;quiere&nbsp;visualizar.</tt></dd></dl>
  <dl><dt><a name="-visualizarProyectoView"><strong>visualizarProyectoView</strong></a>(request, usuario_id, proyecto_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;<a href="#proyectoFrom">proyectoFrom</a>&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;almacenados<br>
 en&nbsp;el&nbsp;Flujo&nbsp;que&nbsp;se&nbsp;quiere&nbsp;visualizar.</tt></dd></dl>
- <dl><dt><a name="-visualizarRolProyectoView"><strong>visualizarRolProyectoView</strong></a>(request, usuario_id, proyectoid, rol_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;RolProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;almacenados<br>
+ <dl><dt><a name="-visualizarRolProyectoView"><strong>visualizarRolProyectoView</strong></a>(request, usuario_id, proyectoid, rolid, rol_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;RolProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;almacenados<br>
 en&nbsp;el&nbsp;Rol&nbsp;que&nbsp;se&nbsp;quiere&nbsp;visualizar.</tt></dd></dl>
+ <dl><dt><a name="-visualizarSprintProyectoView"><strong>visualizarSprintProyectoView</strong></a>(request, usuario_id, proyectoid, rolid, Sprint_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;SprintProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;almacenados<br>
+en&nbsp;el&nbsp;Sprint&nbsp;que&nbsp;se&nbsp;quiere&nbsp;visualizar.</tt></dd></dl>
 </td></tr></table>
 </body></html>

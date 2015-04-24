@@ -57,18 +57,11 @@
  -->
 </div>
 
-    
-
-    
-        
-    
-
     <!-- Content -->
     <div id="content" class="colM">
         
         <h1>Modificar Sprint</h1>
         <div id="content-main">
-
 
   <ul class="object-tools">
     <!-- 
@@ -80,7 +73,6 @@
     
   </ul>
 
-
 <form enctype="multipart/form-data" method="post" id="sprint_form" novalidate>
 {% csrf_token %}
 
@@ -88,24 +80,28 @@
 
 <FORM ACTION="/modificarSprint/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{Sprint.id}}/" METHOD= GET >
 
-<b><label class="required" for="id_fecha_inicio">Descripcion:</label></b>
-<input type="text" size="15" maxlength="30" value="{{Sprint.descripcion}}" name="descripcion">
-<p><b><label class="required" for="id_fecha_inicio">Fecha de inicio:</label></b>
-<input type="text" size="15" maxlength="30" value="{{fecha}}" name="fecha_inicio">
-<p><b><label class="required" for="id_fecha_inicio">Duracion:</label></b>
-<input type="text" size="15" maxlength="30" value="{{Sprint.duracion}}" name="duracion">
-<p><b><label class="required" for="id_fecha_inicio">Estado:</label></b>
-<select name="estado">
-	{%for e in estados%}
-		{%if Sprint.estado == e%}
-    		<option selected="selected" value="{{Sprint.estado}}">{{Sprint.estado}}</option>
-    	{%else%}
-    		<option value="{{e}}">{{e}}</option>
-    	{%endif%}
-    {%endfor%}
-</select>
-<p><b><label class="required" for="id_fecha_inicio">Lista de HUs del Sprint:</label></b>
-<label>Multiple Selection </label>&nbsp;</td>
+	<b><label class="required" for="id_fecha_inicio">Descripcion:</label></b>
+	<input type="text" size="15" maxlength="30" value="{{Sprint.descripcion}}" name="descripcion">
+	
+	<p><b><label class="required" for="id_fecha_inicio">Fecha de inicio:</label></b>
+	<input type="text" size="15" maxlength="30" value="{{fecha}}" name="fecha_inicio">
+	
+	<p><b><label class="required" for="id_fecha_inicio">Duracion:</label></b>
+	<input type="text" size="15" maxlength="30" value="{{Sprint.duracion}}" name="duracion">
+	
+	<p><b><label class="required" for="id_fecha_inicio">Estado:</label></b>
+	<select name="estado">
+		{%for e in estados%}
+			{%if Sprint.estado == e%}
+    			<option selected="selected" value="{{Sprint.estado}}">{{Sprint.estado}}</option>
+    		{%else%}
+    			<option value="{{e}}">{{e}}</option>
+    		{%endif%}
+    	{%endfor%}
+	</select>
+
+	<p><b><label class="required" for="id_fecha_inicio">Lista de HUs del Sprint:</label></b>
+	<label>Multiple Selection </label>&nbsp;</td>
     <select name="hu" multiple="multiple" size=10>
     	{%for h in Sprint.hu.all%}
     			<option selected="selected" value="{{h.id}}">{{h.descripcion}}</option>
@@ -115,12 +111,11 @@
     			<option value="{{h.id}}">{{h.descripcion}}</option>
         {%endfor%}
     </select>
+    
     <input type="submit" name="Submit" value="Guardar" tabindex="2" />
 </FORM> 
             
 </div>
-
-
 
 <script type="text/javascript">
 (function($) {

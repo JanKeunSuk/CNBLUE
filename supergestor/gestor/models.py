@@ -123,14 +123,6 @@ class MyUser(AbstractBaseUser):
        
 class rol(models.Model):
     """Modelo que representa roles con relacion muchos a muchos a la tabla de permisos"""
-
-    #aca va a habr problemas para relacionar con permisos
-    #le puse many to many porque en realidad el foreign key tiene que estar en la otra tabla
-    """ROL_CHOICES = (
-        ("SIS", 'Sistema'),
-        ('PRO', 'Proyecto'),
-    )"""
-    
     permisos= models.ManyToManyField(Permission)
     nombre_rol_id = models.CharField(max_length = 200)
     descripcion = models.CharField(max_length = 200)
@@ -152,10 +144,6 @@ class rol(models.Model):
 class rol_sistema(models.Model): 
     """Modelo que representa roles exclusivos de permisos de sistema, tiene una relacion
     muchos a muchos con permisos"""   
-    """ROL_CHOICES = (
-        ("SIS", 'Sistema'),
-        ('PRO', 'Proyecto'),
-    )"""
     permisos= models.ManyToManyField(Permission)
     nombre_rol_id = models.CharField(max_length = 200)
     descripcion = models.CharField(max_length = 200)
@@ -168,14 +156,9 @@ class Actividades(models.Model):
     """Representacion de la actividad de un flujo relacionada a su proyecto"""
     nombre = models.CharField(max_length = 200)
     descripcion = models.CharField(max_length = 200)
-    #cada Actividad referancia a su respectivo FLujo
-    #flujo=models.ForeignKey(Flujo) NECESITO un campo para asociar con Flujo
-    #pendiente
-    #en_progreso
-    #finalizado
     def __unicode__(self):
         """Representacion unicode del objeto actividad"""
-        return str(self.id)  + " " + self.nombre
+        return str(self.id)  + " - " + self.nombre
     
     
 class Flujo(models.Model):
@@ -218,8 +201,8 @@ class proyecto(models.Model):
 
 class HU(models.Model):
     """Modelo que reprenseta las historias de usuario"""
-    VALORES100_CHOICES = zip( range(1,100), range(1,100) )
-    VALORES10_CHOICES = zip( range(1,10), range(1,100) )
+    VALORES100_CHOICES = zip(range(1,101), range(1,101))
+    VALORES10_CHOICES = zip(range(1,11), range(1,11))
 
     ESTADO_CHOICES = (
         ('CAN', 'Cancelado'),
@@ -240,12 +223,11 @@ class HU(models.Model):
     acumulador_horas = models.FloatField()
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
     estado_en_actividad = models.CharField(max_length = 3, choices = ESTADO_ACTIVIDAD_CHOICES)
-    #este campo va indicar a que proyecto pertenece asi en la vista ya no tenemos que hacer hu.objects.all()
-    proyecto=models.ForeignKey(proyecto)
+    proyecto=models.ForeignKey(proyecto) #este campo va indicar a que proyecto pertenece asi en la vista ya no tenemos que hacer hu.objects.all()
     valido=models.BooleanField(default=False) # rl productOwner debe validar
     
     def __unicode__(self):
-        """Representacion unicode del objeto proyecto"""
+        """Representacion unicode del objeto HU"""
         return self.descripcion
 
 class Sprint(models.Model):
@@ -266,8 +248,8 @@ class Sprint(models.Model):
     proyecto=models.ForeignKey(proyecto)
     
     def __unicode__(self):
-        """Representacion unicode del objeto proyecto"""
-        return str(self.id)
+        """Representacion unicode del objeto sprint"""
+        return self.descripcion
     
 #Modelo para asignacion de actividades con HU en un flujo determinado
 class asignacion(models.Model):
@@ -277,25 +259,31 @@ class asignacion(models.Model):
     proyecto=models.ForeignKey(proyecto)
     def __unicode__(self):
         """Representacion unicode del objeto asignacion"""
-        return str(self.id)    
+        return str(self.id)+" - "+str(self.usuario)+" - "+str(self.rol)+" - "+str(self.proyecto) 
     
 #Modelo para asignacion de roles de proyecto
 class asigna_sistema(models.Model):
-    """MOdelo que representa la asignaciones de roles de sistema a usuarios con clave foranea a 
+    """Modelo que representa la asignaciones de roles de sistema a usuarios con clave foranea a 
     modelo rol sistema"""
     usuario=models.ForeignKey(MyUser)
     rol=models.ForeignKey(rol_sistema)    
     def __unicode__(self):
         """Representacion unicode del objeto asigna sistema"""
-        return str(self.id)
+        return str(self.id)+" - "+str(self.usuario)+" - "+str(self.rol)
 
 class delegacion(models.Model):
     """Modelo que especifica una delegacion de una HU a un usuario en un proyecto"""
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL)
-    HU=models.ForeignKey(HU)  
+    HU=models.ForeignKey(HU)
+    def __unicode__(self):
+        """Representacion unicode del objeto delegacion"""
+        return str(self.id)+" - "+str(self.usuario)+" - "+str(self.HU.descripcion)+" - "+str(self.HU.proyecto)
 
 class asignaHU_actividad_flujo(models.Model):
     """Modelo intermedio para la relacion varios a varios del modelo flujo con actividades"""
     lista_de_HU = models.ManyToManyField(HU)
     flujo_al_que_pertenece = models.ForeignKey(Flujo)
     actividad_al_que_pertenece = models.ForeignKey(Actividades)
+    def __unicode__(self):
+        """Representacion unicode del objeto asignaHU_actividad_flujo"""
+        return str(self.id)+" - "+str(self.flujo_al_que_pertenece)+" - "+str(self.actividad_al_que_pertenece)

@@ -53,56 +53,32 @@
 <a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Pagina Principal</a>
 </div>
 
-    
-
-    
-        
-    
-
     <!-- Content -->
     <div id="content" class="colM">
         
         <h1>Agregar flujo</h1>
         <div id="content-main">
 
-
-
 <form enctype="multipart/form-data" action="/guardarFlujo/" method="post" id="rol_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
 {% csrf_token %}
 <div>
 
-
-
-
-
-
-
   <fieldset class="module aligned ">
-    
-    
-    
+ 
         <div class="form-row field-nombre_rol_id">
-            
-            
+
                 <div>
-                    
-                    
                         <label class="required" for="id_nombre">Nombre:</label>
                         
                             <input class="vTextField" id="id_nombre" maxlength="200" name="nombre" type="text" />
-                        
-                    
-                    
                 </div>
             
         </div>
         
             <div class="form-row field-permisos">
-            
-            
+
                 <div>
-                    
-                    
+
                         <label class="required" for="id_permisos">Actividades:</label>
                         
                             <select multiple="multiple" id="id_actividades" name="actividades">
@@ -110,16 +86,13 @@
 								<option value="{{actividad.id}}">{{actividad.nombre}}</option>
 							{%endfor%}
 </select>
-                        
-                    
-                    
+
                         <p class="help"> Presiona "Control" para seleccionar mas de una opcion.</p>
                     
                 </div>
             
         </div>
-        
-    
+
 </fieldset>
 
 <div class="Flujo">
@@ -132,8 +105,6 @@
 
 </div>
 
-
-
     <script type="text/javascript">
         (function($) {
             $(document).ready(function() {
@@ -142,9 +113,6 @@
         })(django.jQuery);
     </script>
 
-
-
-
 <script type="text/javascript">
 (function($) {
     var field;
@@ -152,7 +120,6 @@
 
 })(django.jQuery);
 </script>
-
 
 </div>
 </form></div>

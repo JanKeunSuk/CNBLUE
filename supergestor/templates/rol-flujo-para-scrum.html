@@ -45,15 +45,14 @@
     
     <!-- Content -->
   		
-  		<div id="content" class="colMS">
+<div id="content" class="colMS">
     
-        <div class="app-gestor module">
+	<div class="app-gestor module">
       
-<table><caption>Gestor</caption>
-            
-           
-            {% if roles|length > 0%}
-            <th>Roles de Proyecto</th>
+		<table><caption>Gestor</caption>
+
+			{% if roles|length > 0%}
+            	<th>Roles de Proyecto</th>
             	{%for rol in roles%}<!-- roles va a ser la lista que tenga o no elementos -->
             		<tr><td><p>{{rol}}</p></td>
             		<td><a href="/visualizarRol/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/{{rol.id}}/"class="addlink">visualizar</a></td>
@@ -63,37 +62,37 @@
             		{%endif%}
             		</tr>
             	{% endfor %}
+            	
             	{%for enlace in enlaces%}
             		<tr><td><a href="{{enlace.url}}">{{enlace.nombre}}</a></td></tr>
             	{%endfor%}
+            	
             {% endif %}
-    <table>        	
             
             
+    	<table>        	
             <!--Lo que se imprima aca va a ser la lista de roles si es que tiene permiso, sino se va a imprimir una lista vacia,lo
             que equivale a no imprimir nada,para lo cual de acuerdo al permiso que tenga este rol, voy a mandar desde la vista una lista
             vacia o una lista llena de roles que estan en la base de datos-->
-			
-            {% if flujos|length > 0%}
-            <table>
-            <th>Flujos disponibles</th>
+<!-- FLUJOS -->
+			{% if flujos|length > 0%}
+            	<table>
+            	<th>Flujos disponibles</th>
         
-            <tr class="model-proyecto">
+            	<tr class="model-proyecto">
             
 				{% for flujo in flujos %}
-			     {%if flujo.estado == 'CAN'%}
-			     	<font color="red"><td><a href="" class="deletelink"/> {{flujo.nombre}} </td></font>
-			     {%else%}
-  					<td> {{flujo.nombre}} </td>
-			     {%endif%}
+			     	{%if flujo.estado == 'CAN'%}
+			     		<font color="red"><td><a href="" class="deletelink"/> {{flujo.nombre}} </td></font>
+			     	{%else%}
+  						<td> {{flujo.nombre}} </td>
+			     	{%endif%}
+			     	
   					{%for enlace in enlacefv%}
-  		           
                 		<td><a href="/visualizarFlujo/{{enlace.url}}/{{flujo.id}}/" class="addlink">Visualizar</a></td>
-                		
              		{% endfor %}
              		
             		{% if flujosm|length > 0%}
-            		
             			{%for enlace in enlacefm%}
                 			{%if flujo.estado == 'CAN'%}
                 				<td><a href="/reactivar/{{enlace.url}}/1/{{flujo.id}}/" class="changelink">Reactivar</a></td>
@@ -104,36 +103,32 @@
                 		
                 	{% endif %}
               	</tr>
-              	
                {% endfor %}
-               
             {% endif %}
             
             {%for enlace in enlacef%}
-                
             	<td><a href="{{enlace.url}}">{{enlace.nombre}}</a></td>
-            		
             {%endfor%}
-            
-            
-           {% if HUs|length > 0%}
-            <table>
-            <th>Lista de HU's del proyecto </th>
+
+<!-- HU'S -->
+
+			{% if HUs|length > 0%}
+            	<table>
+            	<th>Lista de HU's del proyecto </th>
         
-            <tr class="model-proyecto">
+            	<tr class="model-proyecto">
             
 				{% for HU in HUs %}
-			    	{%if HU.descripcion|length > 0%}  
+			    	{%if HU.descripcion|length > 0%}
+			    	
 			    		{%if HU.estado == 'CAN'%}
 			     			<font color="red"><td><a href="" class="deletelink"/> {{HU.descripcion}} </td></font>
 			    	 	{%else%}
   							<td> {{HU.descripcion}} </td>
 			     		{%endif%}    
-			     		
+
   						{%for enlace in enlaceHUv%}
-  		           
                 			<td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/" class="addlink">Visualizar</a></td>
-                		
              			{% endfor %}
 
             			{% if HUsm|length > 0%}
@@ -149,71 +144,63 @@
                 		
                 		{% endif %}
                 		
-                {%if HUsa == 1%}
-                	{%for h in HU_no_asignada%}
-                		{%if h.id == HU.id%}
-            				{%if h.estado != 'CAN'%}
-                				{%for enlace in enlaceHUa%}
-                					<td><a href="/delegarHU/{{enlace.url}}/{{HU.id}}/0/" class="changelink">Asignar</a></td>
-                				{%endfor%}
-                			{%endif%}
-                		{%endif%}
-                	{%endfor%}
-                	
-                	{%for h in HU_asignada%}
-                		{%if h.id == HU.id%}
-                			{%for enlace in enlaceHUa%}
-            		
-                				<td><a href="/delegarHU/{{enlace.url}}/{{HU.id}}/1/" class="changelink">Reasignar</a></td>
-                		
+                		{%if HUsa == 1%}
+                			{%for h in HU_no_asignada%}
+                				{%if h.id == HU.id%}
+            						{%if h.estado != 'CAN'%}
+                						{%for enlace in enlaceHUa%}
+                							<td><a href="/delegarHU/{{enlace.url}}/{{HU.id}}/0/" class="changelink">Asignar</a></td>
+                						{%endfor%}
+                					{%endif%}
+                				{%endif%}
                 			{%endfor%}
-                		{%endif%}
-                	{%endfor%}
-                {%else%}
-                	{% if HU.valido == False %}
-						{%for enlace in enlaceHUm%}
-							<td><a href="/validarHU/{{usuarioid}}/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Validar HU</a></td>
-						{%endfor%}
-					{%else%}
-						{%for enlace in enlaceHUm%}
-							<td><a href="/validarHU/{{usuarioid}}/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Invalidar HU</a></td>
-						{%endfor%}
-					{% endif %}
-                {%endif%}
-                	{%endif%}
                 	
+                			{%for h in HU_asignada%}
+                				{%if h.id == HU.id%}
+                					{%for enlace in enlaceHUa%}
+                						<td><a href="/delegarHU/{{enlace.url}}/{{HU.id}}/1/" class="changelink">Reasignar</a></td>
+                					{%endfor%}
+                				{%endif%}
+                			{%endfor%}
+                		{%else%}
+                  			{%if HU.estado == 'ACT'%}
+                				{% if HU.valido == False %}
+									{%for enlace in enlaceHUm%}
+										<td><a href="/validarHU/{{usuarioid}}/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Validar HU</a></td>
+									{%endfor%}
+								{%else%}
+									{%for enlace in enlaceHUm%}
+										<td><a href="/validarHU/{{usuarioid}}/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Invalidar HU</a></td>
+									{%endfor%}
+								{% endif %}
+				   			{%endif%}
+                		{%endif%}
+                	{%endif%}
               		</tr>
-              	
                	{% endfor %}
-               
             {% endif %}
 
             {% if HUs_add_horas|length > 0%}
-            <table>
-            <th>Lista de HU's a las que estas asignado </th>
-        	<th> <B>Duracion/Horas Trabajadas</B> </th>
-            <tr class="model-proyecto">
+            	<table>
+            		<th>Lista de HU's a las que estas asignado </th>
+        			<th> <B>Duracion/Horas Trabajadas</B> </th>
+            		<tr class="model-proyecto">
             	
-				{% for HU in HUs_add_horas %}
+					{% for HU in HUs_add_horas %}
 			            
-  				<td> {{HU.descripcion}} a </td>
-  				<td> <B>{{HU.duracion}} / {{HU.acumulador_horas}}</B> </td><td></td><td></td><td></td>
-  					{%for enlace in enlaceHU_agregar%}
-  		           
-                		<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Agregar horas trabajadas</a></td>
-                		
-             		{% endfor %}
-                	
-              	</tr>
+  						<td> {{HU.descripcion}} </td>
+  						<td> <B>{{HU.duracion}} / {{HU.acumulador_horas}}</B> </td><td></td><td></td><td></td>
+  						{%for enlace in enlaceHU_agregar%}
+                			<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Agregar horas trabajadas</a></td>
+             			{% endfor %}
+              		</tr>
               	
-               {% endfor %}
+               		{% endfor %}
                
             {% endif %}
             
             {%for enlace in enlaceHU%}
-                
             	<td><a href="{{enlace.url}}">{{enlace.nombre}}</a></td>
-            		
             {%endfor%}
             
           <!-- si tiene permiso modificar(no me refiero al nivel scrum) entonces debera ver el boton CREAR PRODUCT BACKLOG
@@ -223,29 +210,26 @@
             	<td><a href="/visualizarBacklog/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/">Visualizar Product Backlog</a></td>
             {%endif%}
             
+<!-- SPRINTS -->
           {% if sprints|length > 0%}
-            <table>
+			<table>
             <th>Lista de Sprint's del proyecto </th>
         
             <tr class="model-proyecto">
             
 				{% for sprint in sprints %}
 			       {%if sprint.estado == 'CAN'%}
-			     			<font color="red"><td><a href="" class="deletelink"/> {{sprint.descripcion}} </td></font>
-			    	 	{%else%}
-  							<td> {{sprint.descripcion}} </td>
-			     		{%endif%}  
+			     		<font color="red"><td><a href="" class="deletelink"/> {{sprint.descripcion}} </td></font>
+			    	{%else%}
+  						<td> {{sprint.descripcion}} </td>
+			     	{%endif%}  
 
   					{%for enlace in enlaceSprintv%}
-  		           
                 		<td><a href="/visualizarSprint/{{enlace.url}}/{{sprint.id}}/" class="addlink">Visualizar</a></td>
-                		
              		{% endfor %}
 
             		{% if sprintsm|length > 0%}
-            		
             			{%for enlace in enlaceSprintm%}
-            			
                 			{%if sprint.estado == 'CAN'%}
                 				<td><a href="/reactivar/{{enlace.url}}/3/{{sprint.id}}/" class="changelink">Reactivar</a></td>
                 			{%else%}
@@ -255,19 +239,14 @@
                 		
                 	{% endif %} 
               	</tr>
-              	
                {% endfor %}
-               
             {% endif %}
-            
+
             {%for enlace in enlaceSprint%}
-                
             	<td><a href="{{enlace.url}}">{{enlace.nombre}}</a></td>
-            		
             {%endfor%}
             
-            <!-- Cliente, visualizacion de HU con usuario asignado -->
-            
+<!-- Cliente, visualizacion de HU con usuario asignado -->
             {%if HUv|length > 0%}
             	<p><font size = 5><b>Reporte para el cliente</b></font>(parcial)</p>
             	<p>-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*--*-*-*-*-*-*-*-*-*-*-</p>
@@ -281,7 +260,6 @@
             	{%endfor%}
             	<p>-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*--*-*-*-*-*-*-*-*-*-*-</p>
             {%endif%}
-      		
         </table>   <!--
         <form method="get" action="/crearFlujo/{{usuario.id}}/{{proyecto.id}}/">
 
@@ -290,31 +268,9 @@
 		</form>
  -->        
         </div>
-    
 
 </div>
   		
-<!--     
-
-        
-<div id="content-related">
-    <div class="module" id="recent-actions-module">
-        <h2>Recent Actions</h2>
-        <h3>My Actions</h3>
-            
-            
-            
-            <p>None available</p>
-            
-    </div>
-</div>
-
-        <br class="clear" />
-    </div>
-    <!-- END Content -->
-<!-- 
-    <div id="footer"></div>
-</div>
 <!-- END Container -->
 
 </body>

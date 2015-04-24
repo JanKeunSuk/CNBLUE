@@ -65,6 +65,9 @@ class UserChangeForm(forms.ModelForm):
         return self.initial["password"]
 
 class RolCreationForm(forms.ModelForm):
+    """
+    Formulario del modelo Rol con sus campos seleccionados.
+    """
     class Meta:
         model=rol
         fields=('permisos','nombre_rol_id','descripcion')
@@ -105,6 +108,9 @@ class MyUserAdmin(UserAdmin):
     
   
 class FlujoCreationForm(forms.ModelForm):
+    """
+    Formulario del modelo Flujo con sus campos seleccionados.
+    """
     class Meta:
         model=Flujo
         fields=('nombre','actividades') #el estado en el momento de creacion tendra valor por defecto el usuario no decide  
@@ -122,7 +128,7 @@ class FlujoAdmin(admin.ModelAdmin):
     exclude = ('proyecto',)
     save_as = True 
     def save_model(self,request,obj,form,change):
-        """Permite establecer el Estado por defecto en el momento de la creacion que es ACTIVO????"""
+        """Permite establecer el Estado por defecto en el momento de la creacion que es ACTIVO"""
         obj.estado='ACT'
         obj.save()
         
@@ -139,17 +145,13 @@ class RolAdmin(admin.ModelAdmin):
         """Permite establecer al usuario actual utilizando la interfaz admin como creador del rol"""
         obj.usuario_creador = request.user
         obj.save()
-    """add_fieldsets = (
-        (None, {
-            'fields': ('permisos','usuario_rol_id','descripcion')}
-        ),
-    )"""
     save_as = True 
     
-    
-    
-    
+
 class SprintCreationForm(forms.ModelForm):
+    """
+    Formulario del modelo Sprint con sus campos seleccionados.
+    """
     class Meta:
         model=Sprint
         fields=('descripcion','duracion','fecha_inicio') #el estado en el momento de creacion tendra valor por defecto el usuario no decide  
@@ -165,29 +167,30 @@ class SprintAdmin(admin.ModelAdmin):
     ordering = ('id',)
     save_as = True 
     def save_model(self,request,obj,form,change):
-        """Permite establecer el Estado por defecto en el momento de la creacion que es ACTIVO????"""
+        """Permite establecer el Estado por defecto en el momento de la creacion que es de CONSULTA"""
         obj.estado='CON'
         obj.save()
         pass
  
  
 class ProyectoCreationForm(forms.ModelForm):
+    """
+    Formulario del modelo Proyecto con sus campos seleccionados.
+    """
     class Meta:
         model=proyecto
         fields=('nombre_corto','nombre_largo','descripcion','fecha_inicio','fecha_fin','flujos') #el estado en el momento de creacion tendra valor por defecto el usuario no decide  
     
-         
-
 class proyectoAdmin(admin.ModelAdmin):
-    """Configura la vista de administracion de Sprint para un usuario administrador,
-    lista nombre y estado y al modificar permite guardar como"""
+    """Configura la vista de administracion de Proyecto para un usuario administrador,
+    para establecer los proyectos en estado ACTIVO en la creacion"""
     form=ProyectoCreationForm
     list_display = ('id', 'nombre_corto','nombre_largo','fecha_inicio','fecha_fin')
     list_filter = ('estado',)
     ordering = ('nombre_corto',)
     save_as = True 
     def save_model(self,request,obj,form,change):
-        """Permite establecer el Estado por defecto en el momento de la creacion que es ACTIVO????"""
+        """Permite establecer el Estado por defecto en el momento de la creacion que es PENDIENTE"""
         obj.estado='PEN'
         obj.save()
         pass    
@@ -204,6 +207,5 @@ admin.site.register(rol_sistema)
 admin.site.register(Flujo,FlujoAdmin)
 admin.site.register(Sprint,SprintAdmin)
 
-# ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 admin.site.unregister(Group)

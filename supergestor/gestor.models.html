@@ -9,7 +9,7 @@
 <td valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="gestor.html"><font color="#ffffff">gestor</font></a>.models</strong></big></big></font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/seba/git/CNBLUE/supergestor/gestor/models.py">/home/seba/git/CNBLUE/supergestor/gestor/models.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/katherine/IS2Work/git/supergestor/gestor/models.py">/home/katherine/IS2Work/git/supergestor/gestor/models.py</a></font></td></tr></table>
     <p><tt>Archivo&nbsp;donde&nbsp;django&nbsp;busca&nbsp;las&nbsp;definiciones&nbsp;de&nbsp;modelos,&nbsp;con&nbsp;sus&nbsp;atributos&nbsp;,&nbsp;metodos&nbsp;y&nbsp;managers,<br>
 &nbsp;y&nbsp;relaciones&nbsp;de&nbsp;modelos&nbsp;que&nbsp;heredan<br>
 de&nbsp;la&nbsp;clase&nbsp;models&nbsp;de&nbsp;django.db</tt></p>
@@ -302,6 +302,8 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 </dl>
 <hr>
 Methods defined here:<br>
+<dl><dt><a name="HU-__unicode__"><strong>__unicode__</strong></a>(self)</dt><dd><tt>Representacion&nbsp;unicode&nbsp;del&nbsp;objeto&nbsp;<a href="#HU">HU</a></tt></dd></dl>
+
 <dl><dt><a name="HU-get_estado_display"><strong>get_estado_display</strong></a> = _curried(*moreargs, **morekwargs)</dt></dl>
 
 <dl><dt><a name="HU-get_estado_en_actividad_display"><strong>get_estado_en_actividad_display</strong></a> = _curried(*moreargs, **morekwargs)</dt></dl>
@@ -319,6 +321,10 @@ Data descriptors defined here:<br>
 </dl>
 <dl><dt><strong>delegacion_set</strong></dt>
 </dl>
+<dl><dt><strong>proyecto</strong></dt>
+</dl>
+<dl><dt><strong>sprint_set</strong></dt>
+</dl>
 <hr>
 Data and other attributes defined here:<br>
 <dl><dt><strong>DoesNotExist</strong> = &lt;class 'gestor.models.DoesNotExist'&gt;</dl>
@@ -331,7 +337,7 @@ Data and other attributes defined here:<br>
 
 <dl><dt><strong>VALORES100_CHOICES</strong> = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9), (10, 10), (11, 11), (12, 12), (13, 13), (14, 14), (15, 15), (16, 16), (17, 17), (18, 18), (19, 19), (20, 20), ...]</dl>
 
-<dl><dt><strong>VALORES10_CHOICES</strong> = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9)]</dl>
+<dl><dt><strong>VALORES10_CHOICES</strong> = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9), (10, 10)]</dl>
 
 <hr>
 Methods inherited from <a href="django.db.models.base.html#Model">django.db.models.base.Model</a>:<br>
@@ -786,7 +792,7 @@ Data descriptors inherited from <a href="django.db.models.manager.html#BaseManag
 </dl>
 <hr>
 Data and other attributes inherited from <a href="django.db.models.manager.html#BaseManager">django.db.models.manager.BaseManager</a>:<br>
-<dl><dt><strong>creation_counter</strong> = 30</dl>
+<dl><dt><strong>creation_counter</strong> = 31</dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -913,6 +919,8 @@ sus&nbsp;respectivos&nbsp;proyectos&nbsp;mediante&nbsp;un&nbsp;foreign&nbsp;key<
 </dl>
 <hr>
 Methods defined here:<br>
+<dl><dt><a name="Sprint-__unicode__"><strong>__unicode__</strong></a>(self)</dt><dd><tt>Representacion&nbsp;unicode&nbsp;del&nbsp;objeto&nbsp;sprint</tt></dd></dl>
+
 <dl><dt><a name="Sprint-get_estado_display"><strong>get_estado_display</strong></a> = _curried(*moreargs, **morekwargs)</dt></dl>
 
 <dl><dt><a name="Sprint-get_next_by_fecha_inicio"><strong>get_next_by_fecha_inicio</strong></a> = _curried(*moreargs, **morekwargs)</dt></dl>
@@ -920,6 +928,12 @@ Methods defined here:<br>
 <dl><dt><a name="Sprint-get_previous_by_fecha_inicio"><strong>get_previous_by_fecha_inicio</strong></a> = _curried(*moreargs, **morekwargs)</dt></dl>
 
 <strong>objects</strong> = &lt;django.db.models.manager.Manager object&gt;
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>hu</strong></dt>
+</dl>
+<dl><dt><strong>proyecto</strong></dt>
+</dl>
 <hr>
 Data and other attributes defined here:<br>
 <dl><dt><strong>DoesNotExist</strong> = &lt;class 'gestor.models.DoesNotExist'&gt;</dl>
@@ -1023,6 +1037,8 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 </dl>
 <hr>
 Methods defined here:<br>
+<dl><dt><a name="asignaHU_actividad_flujo-__unicode__"><strong>__unicode__</strong></a>(self)</dt><dd><tt>Representacion&nbsp;unicode&nbsp;del&nbsp;objeto&nbsp;<a href="#asignaHU_actividad_flujo">asignaHU_actividad_flujo</a></tt></dd></dl>
+
 <strong>objects</strong> = &lt;django.db.models.manager.Manager object&gt;
 <hr>
 Data descriptors defined here:<br>
@@ -1124,7 +1140,7 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 <font color="#000000" face="helvetica, arial"><a name="asigna_sistema">class <strong>asigna_sistema</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt>MOdelo&nbsp;que&nbsp;representa&nbsp;la&nbsp;asignaciones&nbsp;de&nbsp;roles&nbsp;de&nbsp;sistema&nbsp;a&nbsp;usuarios&nbsp;con&nbsp;clave&nbsp;foranea&nbsp;a&nbsp;<br>
+<td colspan=2><tt>Modelo&nbsp;que&nbsp;representa&nbsp;la&nbsp;asignaciones&nbsp;de&nbsp;roles&nbsp;de&nbsp;sistema&nbsp;a&nbsp;usuarios&nbsp;con&nbsp;clave&nbsp;foranea&nbsp;a&nbsp;<br>
 modelo&nbsp;<a href="#rol">rol</a>&nbsp;sistema<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%"><dl><dt>Method resolution order:</dt>
@@ -1356,12 +1372,12 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 </dl>
 <hr>
 Methods defined here:<br>
+<dl><dt><a name="delegacion-__unicode__"><strong>__unicode__</strong></a>(self)</dt><dd><tt>Representacion&nbsp;unicode&nbsp;del&nbsp;objeto&nbsp;<a href="#delegacion">delegacion</a></tt></dd></dl>
+
 <strong>objects</strong> = &lt;django.db.models.manager.Manager object&gt;
 <hr>
 Data descriptors defined here:<br>
 <dl><dt><strong>HU</strong></dt>
-</dl>
-<dl><dt><strong>proyecto</strong></dt>
 </dl>
 <dl><dt><strong>usuario</strong></dt>
 </dl>
@@ -1483,9 +1499,11 @@ Methods defined here:<br>
 Data descriptors defined here:<br>
 <dl><dt><strong>asignacion_set</strong></dt>
 </dl>
-<dl><dt><strong>delegacion_set</strong></dt>
-</dl>
 <dl><dt><strong>flujos</strong></dt>
+</dl>
+<dl><dt><strong>hu_set</strong></dt>
+</dl>
+<dl><dt><strong>sprint_set</strong></dt>
 </dl>
 <hr>
 Data and other attributes defined here:<br>
@@ -1593,6 +1611,8 @@ Methods defined here:<br>
 <dl><dt><a name="rol-__unicode__"><strong>__unicode__</strong></a>(self)</dt><dd><tt>Representacion&nbsp;unicode&nbsp;del&nbsp;objeto&nbsp;<a href="#rol">rol</a></tt></dd></dl>
 
 <strong>objects</strong> = &lt;django.db.models.manager.Manager object&gt;
+<dl><dt><a name="rol-tiene_permiso"><strong>tiene_permiso</strong></a>(self, perm)</dt><dd><tt>checkea&nbsp;si&nbsp;un&nbsp;<a href="#rol">rol</a>&nbsp;esta&nbsp;compuesto&nbsp;por&nbsp;un&nbsp;permiso</tt></dd></dl>
+
 <hr>
 Data descriptors defined here:<br>
 <dl><dt><strong>asignacion_set</strong></dt>
@@ -1804,6 +1824,6 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>__warningregistry__</strong> = {(u"Model class gestor.models.Actividades doesn't de.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 202): True, (u"Model class gestor.models.Flujo doesn't declare .... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 216): True, (u"Model class gestor.models.HU doesn't declare an .... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 160): True, (u"Model class gestor.models.MyUser doesn't declare.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 62): True, (u"Model class gestor.models.Permitido doesn't decl.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 47): True, (u"Model class gestor.models.Sprint doesn't declare.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 185): True, (u'Model class gestor.models.asignaHU_actividad_flu.... This will no longer be supported in Django 1.9.', &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 232): True, (u"Model class gestor.models.asigna_sistema doesn't.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 270): True, (u"Model class gestor.models.asignacion doesn't dec.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 260): True, (u"Model class gestor.models.delegacion doesn't dec.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 279): True, ...}<br>
+<td width="100%"><strong>__warningregistry__</strong> = {(u"Model class gestor.models.Actividades doesn't de.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 155): True, (u"Model class gestor.models.Flujo doesn't declare .... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 164): True, (u"Model class gestor.models.HU doesn't declare an .... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 202): True, (u"Model class gestor.models.MyUser doesn't declare.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 62): True, (u"Model class gestor.models.Permitido doesn't decl.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 47): True, (u"Model class gestor.models.Sprint doesn't declare.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 233): True, (u'Model class gestor.models.asignaHU_actividad_flu.... This will no longer be supported in Django 1.9.', &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 282): True, (u"Model class gestor.models.asigna_sistema doesn't.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 265): True, (u"Model class gestor.models.asignacion doesn't dec.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 255): True, (u"Model class gestor.models.delegacion doesn't dec.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 274): True, ...}<br>
 <strong>settings</strong> = &lt;django.conf.LazySettings object&gt;</td></tr></table>
 </body></html>

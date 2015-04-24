@@ -92,6 +92,10 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     is_Scrum=0
     HUsa=0
     class enlacex:
+        """
+        La clase  permite enviar al html solo las url que se corresponden con los permisos contenidos
+        en el rol del usuario.
+        """
         def __init__(self,urlx,nombrex):
             self.url=urlx
             self.nombre=nombrex
@@ -197,7 +201,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
 def registrarUsuarioView(request):
-    """Vista que se obitene del regex /registrar solicitado al precionar el boton
+    """Vista que se obtiene del regex /registrar solicitado al precionar el boton
     registrar en el login, devuelve un formulario html para crear un nuevo usuario
     con un correo existente"""
     if request.method == 'GET':
@@ -221,6 +225,11 @@ def guardarUsuarioView(request):
         return HttpResponseRedirect('/registrar')
     
 def modificarCuenta(request, usuario_id):
+    """
+    Vista que permite a los usuarios activos modificar sus datos personales como
+    el su nombre, apellido y direccion.
+    El correo y su nombre identificador del usuario solo lo podra modificar el admin.
+    """
     usuario = MyUser.objects.get(id=usuario_id)
     if request.method == 'POST':
         usuario.user_name=request.POST['user_name']
@@ -233,8 +242,8 @@ def modificarCuenta(request, usuario_id):
                               context_instance=RequestContext(request))
     
 def guardarRolView(request,usuario_id):
-    """Vista de guardado de nuevo usuario relacionado con un correo autorizado en la tabla Permitidos
-    que se utiliza en la interfaz devuelta por /registrar """
+    """Vista de guardado de un nuevo rol en la base de datos
+    que se utiliza en la interfaz devuelta por /crearRol/ """
     try:
         usuario=MyUser.objects.get(id=usuario_id)
         rol_a_crear = rol.objects.create(nombre_rol_id=request.POST['nombre_rol_id'], descripcion=request.POST['descripcion'],usuario_creador=usuario)
@@ -248,8 +257,8 @@ def guardarRolView(request,usuario_id):
         return HttpResponseRedirect('/crearRol/')
     
 def guardarFlujoView(request):
-    """Vista de guardado de nuevo usuario relacionado con un correo autorizado en la tabla Permitidos
-    que se utiliza en la interfaz devuelta por /registrar """
+    """Vista de guardado de un nuevo flujo en la base de datos
+    que se utiliza en la interfaz devuelta por /crearFlujo/ """
     try:
     
         flujo_a_crear = Flujo.objects.create(nombre=request.POST['nombre'],estado="ACT")
@@ -262,8 +271,8 @@ def guardarFlujoView(request):
         return HttpResponseRedirect('/crearFlujo/')
     
 def guardarHUView(request,proyectoid):
-    """Vista de guardado de nuevo usuario relacionado con un correo autorizado en la tabla Permitidos
-    que se utiliza en la interfaz devuelta por /registrar """
+    """Vista de guardado de una nueva HU en la base de datos creada por el Product Owner
+    que se utiliza en la interfaz devuelta por /crearHU/"""
     try:
         proyectox = proyecto.objects.get(id=proyectoid)
         HU_a_crear = HU.objects.create(descripcion=request.POST['descripcion'],estado="ACT",valor_negocio=request.POST['valor_negocio'], valor_tecnico=0, prioridad=0, duracion=0, acumulador_horas=0, estado_en_actividad='PEN',proyecto=proyectox,valido=False)
@@ -274,8 +283,8 @@ def guardarHUView(request,proyectoid):
         return HttpResponseRedirect('/crearHU/')
 
 def guardarSprintView(request, proyectoid):
-    """Vista de guardado de nuevo usuario relacionado con un correo autorizado en la tabla Permitidos
-    que se utiliza en la interfaz devuelta por /registrar """
+    """Vista de guardado de un nuevo Sprint en la Base de datos
+    que se utiliza en la interfaz devuelta por /crearSprint/"""
     try:
         Sprint_a_crear = Sprint.objects.create(descripcion=request.POST['descripcion'],estado="ACT",fecha_inicio=request.POST['fecha_inicio'], duracion=request.POST['duracion'], proyecto=proyecto.objects.get(id=proyectoid))
         for p in request.POST.getlist('HUs'):
@@ -287,8 +296,11 @@ def guardarSprintView(request, proyectoid):
         return HttpResponseRedirect('/crearSprint/')
 
 def guardarHUProdOwnerView(request,HU_id_rec,is_Scrum):
-    """Vista de guardado de nuevo usuario relacionado con un correo autorizado en la tabla Permitidos
-    que se utiliza en la interfaz devuelta por /registrar """
+    """Vista de guardado de la modificacion de una HU existente modificada por el Product Owner
+    que se utiliza en la interfaz devuelta por /modificarHU/ 
+    @0: corresponde a la modificaci[on realizada por el Product Owner
+    @1: coresponde a la modificaci[on realizada por el Scrum
+    @2: corresponde a la modificaci[on realizada por el Equipo"""
     try:
         h=HU.objects.get(id=HU_id_rec)
         if request.method == 'POST':
@@ -518,7 +530,7 @@ def modificarFlujo(request, usuario_id, proyectoid, rolid, flujo_id_rec):
 class FormularioSprintProyecto(forms.ModelForm):
     """
     Clase que obtiene el formulario para la creacion, visualizacion y modificacion
-    de flujos de proyecto desde la vista del Scrum.
+    de sprints del proyecto desde la vista del Scrum.
     """
     class Meta:
         model= Sprint
@@ -526,8 +538,8 @@ class FormularioSprintProyecto(forms.ModelForm):
         
 def visualizarSprintProyectoView(request,usuario_id, proyectoid, rolid, Sprint_id_rec):
     """
-    Vista que utiliza el formulario FlujoProyecto para desplegar los datos almacenados
-    en el Flujo que se quiere visualizar.
+    Vista que utiliza el formulario SprintProyecto para desplegar los datos almacenados
+    en el Sprint que se quiere visualizar.
     """
     Sprint_disponible= Sprint.objects.get(id=Sprint_id_rec)
     formulario =  FormularioSprintProyecto(initial={
@@ -541,8 +553,10 @@ def visualizarSprintProyectoView(request,usuario_id, proyectoid, rolid, Sprint_i
 
 def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
     """
-    Vista que utiliza el formulario FlujoProyecto para desplegar los datos editables
-    del Flujo que se quiere modificar.
+    Vista que utiliza el formulario SprintProyecto para desplegar los datos editables
+    del Sprint que se quiere modificar.
+    La lista de HU asignables se dividen en dos sublistas: las ya asignadas a algun sprint y las que aun
+    no han sido asignadas.
     """
     estados=['ACT','CAN','CON']
     s=Sprint.objects.get(id=Sprint_id_rec)
@@ -594,7 +608,7 @@ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
 class FormularioHU(forms.ModelForm):
     """
     Clase que obtiene el formulario para la creacion, visualizacion y modificacion
-    de flujos de proyecto desde la vista del Scrum.
+    de HU's del proyecto desde la vista del Scrum y del Product Owner.
     """
     class Meta:
         model= HU
@@ -602,8 +616,8 @@ class FormularioHU(forms.ModelForm):
         
 def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec):
     """
-    Vista que utiliza el formulario FlujoProyecto para desplegar los datos almacenados
-    en el Flujo que se quiere visualizar.
+    Vista que utiliza el formulario HU para desplegar los datos almacenados
+    en la HU que se quiere visualizar.
     """
     HU_disponible= HU.objects.get(id=HU_id_rec)
     formulario =  FormularioHU(initial={
@@ -615,8 +629,9 @@ def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec):
 
 def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
     """
-    Vista que utiliza el formulario FlujoProyecto para desplegar los datos editables
-    del Flujo que se quiere modificar.
+    Vista que utiliza el formulario HU para desplegar los datos editables
+    de la HU en tres niveles de modificacion.
+    Esta vista corresponde a la modificacion del nivel 1, es decir, a nivell Scrum Master
     """
     estados=['ACT','CAN']
     VALORES10_CHOICES = range(1,10)
@@ -916,7 +931,8 @@ def listarEquipo(request,proyecto_id_rec,usuario_id):
     return render(request,'formarEquipo.html',{'roles':rol.objects.all(),'lista_asigna':lista, 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario_id':usuario_id})
 
 def delegarHU(request,usuario_id,proyectoid,rolid,hu_id,reasignar):
-    """Copiado del metodo asignar Rol le voy a agregar algunos exclude a usuarios      NO ESTA TERMINADO"""
+    """Delega o asigna una HU a un usuario miembro del proyecto, y en caso de ser necesario, reasignar la HU
+    a otro usuario evitando duplicaciones en la Base de Datos"""
     proyectox=proyecto.objects.get(id=proyectoid)
     hu=HU.objects.get(id=hu_id)
     if request.method=='POST' :
@@ -935,8 +951,6 @@ def delegarHU(request,usuario_id,proyectoid,rolid,hu_id,reasignar):
                     return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')
     else:
         users=[]
-        #users=MyUser.objects.all().exclude(id=usuario_id)  #falta filtrar usuarios sin permisos de agregar horas
-        #Primero obtener todos lo usuarios con rol en este proyectp
         asignaciones= asignacion.objects.filter(proyecto=proyectox)#obtuve todas las asignaciones para este proyecto
         for a in asignaciones:
             rola = a.rol
@@ -965,12 +979,24 @@ def validarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
             return HttpResponse('Se ha invalidado exitosamente')
   
 def visualizarBacklog(request, usuario_id, proyectoid, rolid):
+    """
+    Vista disponible para el Scrum y el Product Owner.
+    Esta vista contiene la lista de HU pendientes pero ACTIVAS y VALIDADAS ordenadas segun su prioridad
+    en orden descendente para la correspondiente asignacion que realizara el Scrum Master.
+    A medida que las HU se realizan, estas desapareceran del Product Backlog.
+    """
     proyectox=proyecto.objects.get(id=proyectoid)
     huss=HU.objects.all().filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True).filter(sprint__hu__isnull=True)
     h=sorted(huss,key=lambda x: x.prioridad, reverse=True)
     return render(request,'visualizarBacklog.html',{'huss':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
 
 def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
+    """
+    Vista que permite reactivar un flujo, HU o Sprint cancelado por el usuario,
+    para su correspondiente uso o modificacion, ya que los objetos cancelados
+    solo estan disponibles para su visualizacion, no para su asignacion o modificacion.
+    Recibe un tipo en la url que le permite distinguir de que tipo de objeto se trata.
+    """
     if tipo == '1': #se trata de un flujo
         f=Flujo.objects.get(id=id_tipo)
         f.estado='ACT'

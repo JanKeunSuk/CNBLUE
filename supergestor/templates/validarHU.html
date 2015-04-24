@@ -57,12 +57,6 @@
  -->
 </div>
 
-    
-
-    
-        
-    
-
     <!-- Content -->
     <div id="content" class="colM">
         
@@ -71,13 +65,13 @@
 <form action="/validarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{hu}}/{{is_Scrum}}/" method="post">      
         {% csrf_token %}
         {%if HU == False%}
-		<div>
-			<b>Desea validar la HU? </b><br/>
-		</div>
+			<div>
+				<b>Desea validar la HU? </b><br/>
+			</div>
 		{%else%}
-		<div>
-			<b>Desea invalidar la HU? </b><br/>
-		</div>
+			<div>
+				<b>Desea invalidar la HU? </b><br/>
+			</div>
 		{%endif%}
 <div class="submit-row">
 <input type="submit" value="SI" class="validarHU" name="_save" />

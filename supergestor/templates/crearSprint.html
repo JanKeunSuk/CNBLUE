@@ -44,20 +44,13 @@
                 <a href="/logout/">Salir</a>
             
         </div>
-        
-        
+
     </div>
     <!-- END Header -->
     
 <div class="breadcrumbs">
 <a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Pagina Principal</a>
 </div>
-
-    
-
-    
-        
-    
 
     <!-- Content -->
     <div id="content" class="colM">
@@ -72,64 +65,47 @@
 <div>
 
   <fieldset class="module aligned ">
-    
-    
-    
+
         <div class="form-row field-descripcion">
-            
-            
+
                 <div>
-                    
-                    
+
                         <label class="required" for="id_descripcion">Descripcion:</label>
                         
                             <input class="vTextField" id="id_descripcion" maxlength="500" name="descripcion" type="text" />
-                        
-                    
-                    
+
                 </div>
             
         </div>
         
         <div class="form-row field-fecha-inicio">
-            
-            
+
                 <div>
-                    
-                    
+
                         <label class="required" for="id_fecha_inicio">Fecha de inicio:</label>
                         
                             <input class="vTextField" id="id_descripcion" maxlength="500" name="fecha_inicio" type="text" value={{fecha_ahora}}/>
-                        
-                    
-                    
+
                 </div>
             
         </div>
             
         <div class="form-row field-duracion">
-            
-            
+
                 <div>
-                    
-                    
+
                         <label class="required" for="id_duracion">Duracion:</label>
                         
                             <input class="vTextField" id="id_duracion" maxlength="500" name="duracion" type="text" />
-                        
-                    
-                    
+
                 </div>
-                
-            
+
         </div>
         
         <div class="form-row field-HUs">
-            
-            
+
                 <div>
-                    
-                    
+
                         <label class="required" for="id_usuarios">HUs:</label>
                         
                             <select multiple = "multiple" id="id_usuarios" name="HUs">
@@ -137,24 +113,19 @@
 								<option value="{{HU.id}}">{{HU.descripcion}}</option>
 							{%endfor%}
 </select>
-                        
-                    
-                    
+
                         <p class="help"> Presiona "Control" para seleccionar mas de una opcion.</p>
                     
                 </div>
             
         </div>
-        
-    
+
 </fieldset>
 
 <div class="submit-row">
 <input type="submit" value="Guardar" />
 
 </div>
-
-
 
     <script type="text/javascript">
         (function($) {
@@ -164,9 +135,6 @@
         })(django.jQuery);
     </script>
 
-
-
-
 <script type="text/javascript">
 (function($) {
     var field;
@@ -174,7 +142,6 @@
 
 })(django.jQuery);
 </script>
-
 
 </div>
 </form></div>
