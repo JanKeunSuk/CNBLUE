@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en-us" >
+<head>
+<title>Modificar usuario | Sito de administracion</title>
+<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css" />
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/static/admin/css/ie.css" /><![endif]-->
+
+<script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
+<script type="text/javascript">window.__admin_utc_offset__ = "0";</script>
+
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="/static/admin/js/core.js"></script>
+<script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+<script type="text/javascript" src="/static/admin/js/actions.js"></script>
+
+<meta name="robots" content="NONE,NOARCHIVE" />
+</head>
+
+
+<body class=" app-gestor model-myuser change-form">
+
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        
+<h1 id="site-name"><a href="/hola/">Modificacion de tu cuenta</a></h1>
+
+<form enctype="multipart/form-data" action="/modificarCuenta/{{usuario.id}}/" method="post" id="myuser_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='I2gvMo5vSN0jrTyA6qIeHcNcN5UtgvFS' />
+  {% csrf_token %}
+  
+<form action="/modificarCuenta/{{usuario.id}}/" method="post">
+  <fieldset class="module aligned wide">
+
+        
+        <div class="form-row field-user_name">
+            
+            
+                <div>
+                    
+                    
+                        <label class="required" for="id_user_name">Nombre:</label>
+                        
+                            <input class="vTextField" id="id_user_name" maxlength="255" value="{{usuario.user_name}}" name="user_name" type="text" />
+                        
+                    
+                    
+                </div>
+            
+        </div>
+        
+        <div class="form-row field-last_name">
+            
+            
+                <div>
+                    
+                    
+                        <label class="required" for="id_last_name">Apellido:</label>
+                        
+                            <input class="vTextField" id="id_last_name" maxlength="255" value="{{usuario.last_name}}" name="last_name" type="text" />
+                        
+                    
+                    
+                </div>
+            
+        </div>
+    	
+    	<div class="form-row field-direccion">
+            
+            
+                <div>
+                    
+                    
+                        <label class="required" for="id_direccion">Direccion:</label>
+                        
+                            <input class="vTextField" id="id_direccion" maxlength="255" value="{{usuario.direccion}}"name="direccion" type="text" />
+                        
+                    
+                    
+                </div>
+            
+        </div>
+
+</fieldset>
+
+
+
+ 
+
+<script type="text/javascript">document.getElementById("id_username").focus();</script>
+
+
+
+
+
+
+
+
+
+
+<input type="submit" value="Modificar cuenta" />
+</form>
+<!-- 
+<input type="submit" value="Save and add another" name="_addanother" />
+<input type="submit" value="Save and continue editing" name="_continue" />
+</div>
+
+-->
+
+    <script type="text/javascript">
+        (function($) {
+            $(document).ready(function() {
+                $('form#myuser_form :input:visible:enabled:first').focus()
+            });
+        })(django.jQuery);
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function($) {
+    var field;
+
+
+})(django.jQuery);
+</script>
+
+
+</div>
+</form></div>
+
+        
+        <br class="clear" />
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+
+</body>
+</html>

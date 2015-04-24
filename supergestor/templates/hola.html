@@ -35,6 +35,8 @@
 
                 <a href="/password_change/">Cambiar contrasenha</a> /
                 
+                <a href="/modificarCuenta/{{usuario.id}}/">Modificar Cuenta</a> /
+                
                 <a href="/logout/">Salir</a>
 
         </div>
@@ -51,25 +53,42 @@
         <table>
 
             <caption>Gestor</caption>
-			<th>Proyectos</th>
-        
+			<th>Proyectos a los que perteneces:</th><th/>
             <tr class="model-proyecto">
+            	{%for p in proyectos_completo%}
+					<th/><tr><tr><td colspan="4"><font size=2><b>Nombre: </b> {{p}} <b> Descripcion: </b>{{p.descripcion}}:</font></tr></tr><th/>
             	{% csrf_token %}
-				{% for proyecto,rol in proyectos_enlace.items %}
-  				
-	  					 <th scope="row"><a href="/scrum/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}" >Perteneces a {{proyecto}} {{proyecto.descripcion}} con el rol {{rol}}</a></td>
-	  					<td><a href="/modificarProyecto/{{usuario.id}}/{{proyecto.id}}/" class="changelink">Modificar</a></td>
+				{% for proyecto,roles in proyectos_enlace.items %}
+					{%if p == proyecto%}
+  					{%for rol in roles%}
+  					<tr>
+	  					 <th><a href="/scrum/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}" >{{rol}}</a>
+	  					<td><a href="/modificarProyecto/{{usuario.id}}/{{proyecto.id}}/" class="changelink">Modificar</a>
 	  					<td><a href="/equipoProyecto/{{proyecto.id}}/{{usuario.id}}" class="addlink">Visualizar Equipo</a></td>
-	                <td><a href="/visualizarProyecto/{{usuario.id}}/{{proyecto.id}}/" class="addlink">Visualizar</a></td>
+	                	<td><a href="/visualizarProyecto/{{usuario.id}}/{{proyecto.id}}/" class="addlink">Visualizar</a></td>
 	            
-	              </tr>
+	              	</tr>
+	              	{%endfor%}
+	              	{%endif%}
             	{% endfor %}
-            	{% for proyecto,rol in proyectos_sin_enlace.items %}
-            	<tr>
-            		<th scope="row"><a href="/scrum/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}" >Perteneces a {{proyecto}} {{proyecto.descripcion}} con el rol {{rol}}</a></td>
-            		<td><a href="/visualizarProyecto/{{usuario.id}}/{{proyecto.id}}/" class="addlink">Visualizar</a></td></tr>
+            	{% for proyecto,roles in proyectos_sin_enlace.items %}
+            	  {%if p == proyecto%}
+            	  {%for rol in roles%}
+            	  <tr>
+            		<th><a href="/scrum/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}" >{{rol}}</a></th>
+            		<td><a href="/visualizarProyecto/{{usuario.id}}/{{proyecto.id}}/" class="addlink">Visualizar</a></td>
+            		{%if proyecto_cliente|length > 0%}
+            			{%for c in proyecto_cliente%}
+            				{%if c == proyecto.id%}
+            					<td><a href="/equipoProyecto/{{proyecto.id}}/{{usuario.id}}" class="addlink">Visualizar Equipo</a></td>
+            				{%endif%}
+            			{%endfor%}
+            		{%endif%}
+            	</tr>
+            	  {%endfor%}
+            	  {%endif%}
            		{% endfor %}
-        
+        	{%endfor%}
         </table>
         </div>
     
