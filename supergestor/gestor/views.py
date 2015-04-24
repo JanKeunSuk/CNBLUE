@@ -132,8 +132,8 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
         is_Scrum=0
     elif rolx.tiene_permiso('Can change hu nivel Scrum'):
-        HUs = HU.objects.filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True)
-        HUsm = HU.objects.filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True)
+        HUs = HU.objects.filter(proyecto=proyectox).filter(valido=True)
+        HUsm = HU.objects.filter(proyecto=proyectox).filter(valido=True)
         enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
         is_Scrum=1
     
@@ -141,6 +141,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         enlaceHUv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
     
     HU_no_asignada=[]
+    HU_asignada=[]
     if rolx.tiene_permiso('Can add delegacion'):
         enlaceHUa.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Asignar'))
         HUsa=1
@@ -151,6 +152,8 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
                     x=1
             if x == 0:
                 HU_no_asignada.append(h)
+            else:
+                HU_asignada.append(h)
     else:
         HUsa=0
     
@@ -169,7 +172,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
             hay=0
             for d in delegacion.objects.all():
                 if d.HU == h:
-                    HUc[h]=(delegacion.objects.get(HU=h)).usuario
+                    HUc[h]=d.usuario
                     hay=1
             if hay == 0:
                 HUc[h]=None
@@ -190,7 +193,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     if rolx.tiene_permiso('Can add sprint') or rolx.tiene_permiso('Can change sprint'):
         enlaceSprintv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
           
-    return render(request,'rol-flujo-para-scrum.html',{'HU_no_asignada':HU_no_asignada,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsf':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id})
+    return render(request,'rol-flujo-para-scrum.html',{'HU_asignada':HU_asignada, 'HU_no_asignada':HU_no_asignada,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsf':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id})
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
 def registrarUsuarioView(request):
@@ -866,18 +869,37 @@ def asignarRol(request,usuario_id, proyectoid,rolid, rol_id_rec):
     """
     proyectox=proyecto.objects.get(id=proyectoid)
     rolx = rol.objects.get(id=rol_id_rec)
+    x=0
     if request.method=='POST':
         try:
             for p in request.POST.getlist('usuarios'):
-                asignacion_a_crear = asignacion.objects.create(usuario=MyUser.objects.get(id=p),rol=rolx, proyecto=proyectox)
+                u=MyUser.objects.get(id=p)
+                for a in asignacion.objects.all():
+                    if a.usuario == u and a.rol == rolx and a.proyecto == proyectox:
+                        x=1
+            if x == 0:
+                asignacion_a_crear = asignacion.objects.create(usuario=u,rol=rolx, proyecto=proyectox)
                 asignacion_a_crear.save()
-                usuario=MyUser.objects.get(id=usuario_id)
-                return render(request,'rol-flujo-para-scrum.html',{'roles':rol.objects.all(), 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario':usuario, 'rolid':rolid})
+            return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')
         except ObjectDoesNotExist:
             print "Either the entry or blog doesn't exist." 
             return HttpResponseRedirect('/crearFlujo/')
     else:
-        return render(request,'asignaRolProyecto.html',{'proyecto':proyectox,'usuarios':MyUser.objects.all().exclude(id=usuario_id),'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+        usuarios_ya_asignados=[]
+        for a in asignacion.objects.all():
+            if a.rol == rol.objects.get(id=rol_id_rec) and a.proyecto == proyectox:
+                usuarios_ya_asignados.append(a.usuario)
+        usuarios_ya_asignados=set(usuarios_ya_asignados)
+        
+        usuarios_sin_asignar=[]
+        for u in MyUser.objects.all().exclude(id=usuario_id):
+            x=0
+            for u_asig in usuarios_ya_asignados:
+                if u == u_asig:
+                    x=1
+            if x==0:
+                usuarios_sin_asignar.append(u)
+        return render(request,'asignaRolProyecto.html',{'usuarios_sin_asignar':usuarios_sin_asignar,'usuarios_ya_asignados':usuarios_ya_asignados,'proyecto':proyectox,'usuarios':MyUser.objects.all().exclude(id=usuario_id),'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
     
     
     
@@ -893,17 +915,24 @@ def listarEquipo(request,proyecto_id_rec,usuario_id):
             lista[usuario_a]=rol_a#agregar el usuario de esa asignacion a la vista, y mandarlo al template
     return render(request,'formarEquipo.html',{'roles':rol.objects.all(),'lista_asigna':lista, 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario_id':usuario_id})
 
-def delegarHU(request,usuario_id,proyectoid,rolid,hu_id):
+def delegarHU(request,usuario_id,proyectoid,rolid,hu_id,reasignar):
     """Copiado del metodo asignar Rol le voy a agregar algunos exclude a usuarios      NO ESTA TERMINADO"""
     proyectox=proyecto.objects.get(id=proyectoid)
     hu=HU.objects.get(id=hu_id)
     if request.method=='POST' :
-        try:
-            delegacionx= delegacion.objects.create(usuario=MyUser.objects.get(id=request.POST['usuario']),HU=hu)
-            delegacionx.save()
-            return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')
-        except ObjectDoesNotExist:
-            return HttpResponseRedirect('/crearFlujo/') #redirijir a rol flujo para scrum despues
+        if reasignar == '0':
+            try:
+                delegacionx= delegacion.objects.create(usuario=MyUser.objects.get(id=request.POST['usuario']),HU=hu)
+                delegacionx.save()
+                return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')
+            except ObjectDoesNotExist:
+                return HttpResponseRedirect('/crearFlujo/') #redirijir a rol flujo para scrum despues
+        else:
+            for d in delegacion.objects.all():
+                if d.HU == hu:
+                    d.usuario=MyUser.objects.get(id=request.POST['usuario'])
+                    d.save()
+                    return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')
     else:
         users=[]
         #users=MyUser.objects.all().exclude(id=usuario_id)  #falta filtrar usuarios sin permisos de agregar horas
@@ -913,10 +942,14 @@ def delegarHU(request,usuario_id,proyectoid,rolid,hu_id):
             rola = a.rol
             if rola.tiene_permiso('Agregar horas trabajadas'):
                 users.append(a.usuario)
-                
+        usuario_asignado=[]
+        if reasignar == '1':
+            for d in delegacion.objects.all():
+                if d.HU == hu:
+                    usuario_asignado = d.usuario
         
-        return render(request,'asignaHU.html',{'proyecto':proyectox,'usuarios':users,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
-            
+        return render(request,'asignaHU.html',{'usuario_asignado':usuario_asignado, 'proyecto':proyectox,'usuarios':users,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    
 def validarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
     hu_x=HU.objects.get(id=HU_id_rec)
     if request.method == 'GET':       
@@ -936,4 +969,18 @@ def visualizarBacklog(request, usuario_id, proyectoid, rolid):
     huss=HU.objects.all().filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True).filter(sprint__hu__isnull=True)
     h=sorted(huss,key=lambda x: x.prioridad, reverse=True)
     return render(request,'visualizarBacklog.html',{'huss':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
-    
+
+def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
+    if tipo == '1': #se trata de un flujo
+        f=Flujo.objects.get(id=id_tipo)
+        f.estado='ACT'
+        f.save()
+    if tipo == '2': #se trata de una HU
+        h=HU.objects.get(id=id_tipo)
+        h.estado='ACT'
+        h.save()
+    if tipo == '3': #se trata de un sprint
+        s=Sprint.objects.get(id=id_tipo)
+        s.estado='ACT'
+        s.save()
+    return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')

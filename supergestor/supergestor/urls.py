@@ -45,8 +45,9 @@ urlpatterns = patterns('',
     url(r'^crearSprint/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$', views.crearSprint, name='crear_Sprint'),
     url(r'^guardarSprint/(?P<proyectoid>\d+)/$', views.guardarSprintView, name='guardar_nuevo_Sprint'),
     url(r'^modificarSprint/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<Sprint_id_rec>\d+)/$', views.modificarSprint, name='modificar_Sprint'),
-    url(r'^delegarHU/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<hu_id>\d+)/$',views.delegarHU,name='delegarhu'),
+    url(r'^delegarHU/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<hu_id>\d+)/(?P<reasignar>\d+)/$',views.delegarHU,name='delegarhu'),
     url(r'^validarHU/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<HU_id_rec>\d+)/(?P<is_Scrum>\d+)/$',views.validarHU,name='validarhu'),
     url(r'^modificarCuenta/(?P<usuario_id>\d+)/', views.modificarCuenta, name='modificar_usuario'),
-    url(r'^visualizarBacklog/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$',views.visualizarBacklog,name='verBacklog')
+    url(r'^visualizarBacklog/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$',views.visualizarBacklog,name='verBacklog'),
+    url(r'^reactivar/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<tipo>\d+)/(?P<id_tipo>\d+)/$', views.reactivar, name='reactivar'),
 )

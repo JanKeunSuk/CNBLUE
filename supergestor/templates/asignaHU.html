@@ -94,7 +94,11 @@
                         
                             <select id="id_usuarios" name="usuario">
                             {%for usuario in usuarios %}
-								<option value="{{usuario.id}}">{{usuario.username}}</option>
+                            	{%if usuario.id == usuario_asignado.id%}
+                            		<option selected="selected" value="{{usuario.id}}">{{usuario.username}}</option>
+                            	{%else%}
+									<option value="{{usuario.id}}">{{usuario.username}}</option>
+								{%endif%}
 							{%endfor%}
 </select>
                         

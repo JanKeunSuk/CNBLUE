@@ -81,8 +81,11 @@
             <tr class="model-proyecto">
             
 				{% for flujo in flujos %}
-			            
-  				<td> {{flujo.nombre}} </td>
+			     {%if flujo.estado == 'CAN'%}
+			     	<font color="red"><td><a href="" class="deletelink"/> {{flujo.nombre}} </td></font>
+			     {%else%}
+  					<td> {{flujo.nombre}} </td>
+			     {%endif%}
   					{%for enlace in enlacefv%}
   		           
                 		<td><a href="/visualizarFlujo/{{enlace.url}}/{{flujo.id}}/" class="addlink">Visualizar</a></td>
@@ -92,13 +95,14 @@
             		{% if flujosm|length > 0%}
             		
             			{%for enlace in enlacefm%}
-            		
-                			<td><a href="/modificarFlujo/{{enlace.url}}/{{flujo.id}}/" class="changelink">Modificar</a></td>
-                		
+                			{%if flujo.estado == 'CAN'%}
+                				<td><a href="/reactivar/{{enlace.url}}/1/{{flujo.id}}/" class="changelink">Reactivar</a></td>
+                			{%else%}
+                				<td><a href="/modificarFlujo/{{enlace.url}}/{{flujo.id}}/" class="changelink">Modificar</a></td>
+                			{%endif%}
                 		{%endfor%}
                 		
                 	{% endif %}
-                	
               	</tr>
               	
                {% endfor %}
@@ -119,8 +123,13 @@
             <tr class="model-proyecto">
             
 				{% for HU in HUs %}
-			    	{%if HU.descripcion|length > 0%}      
-  						<td> {{HU.descripcion}} </td>
+			    	{%if HU.descripcion|length > 0%}  
+			    		{%if HU.estado == 'CAN'%}
+			     			<font color="red"><td><a href="" class="deletelink"/> {{HU.descripcion}} </td></font>
+			    	 	{%else%}
+  							<td> {{HU.descripcion}} </td>
+			     		{%endif%}    
+			     		
   						{%for enlace in enlaceHUv%}
   		           
                 			<td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/" class="addlink">Visualizar</a></td>
@@ -131,8 +140,11 @@
             		
             				{%for enlace in enlaceHUm%}
             		
-                				<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Modificar</a></td>
-                		
+                				{%if HU.estado == 'CAN'%}
+                					<td><a href="/reactivar/{{enlace.url}}/2/{{HU.id}}/" class="changelink">Reactivar</a></td>
+                				{%else%}
+                					<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Modificar</a></td>
+                				{%endif%}
                 			{%endfor%}
                 		
                 		{% endif %}
@@ -140,9 +152,19 @@
                 {%if HUsa == 1%}
                 	{%for h in HU_no_asignada%}
                 		{%if h.id == HU.id%}
+            				{%if h.estado != 'CAN'%}
+                				{%for enlace in enlaceHUa%}
+                					<td><a href="/delegarHU/{{enlace.url}}/{{HU.id}}/0/" class="changelink">Asignar</a></td>
+                				{%endfor%}
+                			{%endif%}
+                		{%endif%}
+                	{%endfor%}
+                	
+                	{%for h in HU_asignada%}
+                		{%if h.id == HU.id%}
                 			{%for enlace in enlaceHUa%}
             		
-                				<td><a href="/delegarHU/{{enlace.url}}/{{HU.id}}" class="asignlink">Asignar</a></td>
+                				<td><a href="/delegarHU/{{enlace.url}}/{{HU.id}}/1/" class="changelink">Reasignar</a></td>
                 		
                 			{%endfor%}
                 		{%endif%}
@@ -208,8 +230,12 @@
             <tr class="model-proyecto">
             
 				{% for sprint in sprints %}
-			            
-  				<td> {{sprint.descripcion}} </td>
+			       {%if sprint.estado == 'CAN'%}
+			     			<font color="red"><td><a href="" class="deletelink"/> {{sprint.descripcion}} </td></font>
+			    	 	{%else%}
+  							<td> {{sprint.descripcion}} </td>
+			     		{%endif%}  
+
   					{%for enlace in enlaceSprintv%}
   		           
                 		<td><a href="/visualizarSprint/{{enlace.url}}/{{sprint.id}}/" class="addlink">Visualizar</a></td>
@@ -219,13 +245,15 @@
             		{% if sprintsm|length > 0%}
             		
             			{%for enlace in enlaceSprintm%}
-            		
-                			<td><a href="/modificarSprint/{{enlace.url}}/{{sprint.id}}/" class="changelink">Modificar</a></td>
-                		
+            			
+                			{%if sprint.estado == 'CAN'%}
+                				<td><a href="/reactivar/{{enlace.url}}/3/{{sprint.id}}/" class="changelink">Reactivar</a></td>
+                			{%else%}
+                				<td><a href="/modificarSprint/{{enlace.url}}/{{sprint.id}}/" class="changelink">Modificar</a></td>
+                			{%endif%}
                 		{%endfor%}
                 		
                 	{% endif %} 
-                	
               	</tr>
               	
                {% endfor %}

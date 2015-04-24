@@ -145,7 +145,12 @@ cur.execute(c)
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('3','55');"
 cur.execute(c)
 #CLIENTE
-
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('4','57');"
+cur.execute(c)
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('4','58');"
+cur.execute(c)
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('4','59');"
+cur.execute(c)
 conexion.commit()
 
 #Carga de Permisos del Rol de Sistema
