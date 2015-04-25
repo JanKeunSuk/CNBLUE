@@ -189,7 +189,7 @@
 					{% for HU in HUs_add_horas %}
 			            
   						<td> {{HU.descripcion}} </td>
-  						<td> <B>{{HU.duracion}} / {{HU.acumulador_horas}}</B> </td><td></td><td></td><td></td>
+  						<td> <B>{{HU.acumulador_horas}} / {{HU.duracion}}</B> </td><td></td><td></td><td></td>
   						{%for enlace in enlaceHU_agregar%}
                 			<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Agregar horas trabajadas</a></td>
              			{% endfor %}
