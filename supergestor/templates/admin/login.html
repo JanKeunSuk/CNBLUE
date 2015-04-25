@@ -1,6 +1,5 @@
 {% extends "admin/base_site.html" %}
-<html>
-<body background="FondoAzulDegradadoCentro.png">
+
 {% load i18n admin_static %}
 
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/login.css" %}" />{% endblock %}
@@ -55,5 +54,3 @@ document.getElementById('id_username').focus()
 </script>
 </div>
 {% endblock %}
-</body>
-</html>

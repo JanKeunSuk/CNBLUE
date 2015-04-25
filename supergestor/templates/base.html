@@ -1,10 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="style.css" />
     <title>{% block title %}Sistema de desarrollo de Software{% endblock %}</title>
 </head>
-
+<style type="text/css">
+body {
+	background-image:url(/static/nuevo.png);
+	background-repeat:no-repeat;
+	background-size:100% 177%;
+	margin: 100;
+    padding: 50;
+    font-size: 18px;
+    font-family: "Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif;
+	}
+div{
+width: 28em;
+min-width: 200px;
+margin-left: 500px;
+margin-right: auto;
+margin-top: 200px;
+}
+</style>
 <body>
     <div id="content">
         {% block content %}{% endblock %}
