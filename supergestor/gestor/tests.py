@@ -161,7 +161,7 @@ class ActividadesTest(TestCase):
     def test_Actividad_creation(self):
         w=self.create_Actividades()
         self.assertTrue(isinstance(w, Actividades))
-        self.assertEqual(w.__unicode__(), str(w.id)  + " " + w.nombre)
+        self.assertEqual(w.__unicode__(), str(w.id)  + " - " + w.nombre)
         
     def test_valid_formularioActividad(self):
         w = Actividades.objects.create(nombre="nuevaActividad", descripcion='nueva Actividad' )
@@ -259,57 +259,82 @@ class proyectoTest(TestCase):
         self.assertFalse(form.is_valid()) 
         
 class asignacionTest(TestCase):
-    def create_asignacion(self, usuario_id='1', rol_id='1', proyecto_id='1'):
-        return asignacion.objects.create(usuario_id=usuario_id, rol_id=rol_id, proyecto_id=proyecto_id)
-    
-    def test_asignacion_creation(self):
-        w=self.create_asignacion()
-        self.assertTrue(isinstance(w, asignacion))
-        self.assertEqual(w.__unicode__(), str(w.id))
-        
-class asigna_sistemacionTest(TestCase):
-    def create_asigna_sistema(self, usuario_id='1', rol_id='1'):
-        return asigna_sistema.objects.create(usuario_id=usuario_id, rol_id=rol_id) 
-    
-    def test_asigna_sistema_creation(self):
-        w=self.create_asigna_sistema()
-        self.assertTrue(isinstance(w, asigna_sistema))
-        self.assertEqual(w.__unicode__(), str(w.id))
-
     def create_proyecto(self):
-        return proyecto(nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio=timezone.now(), fecha_fin=datetime.timedelta(days=1), estado="PEN")
-
+        return proyecto.objects.create(nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio="2015-03-31 00:00:00-04", fecha_fin="2015-03-31 00:00:00-04" ,estado="PEN" )
         
     def create_rol(self):
         return rol.objects.create( nombre_rol_id="nuevoRol", descripcion="nuevo_rol", usuario_creador= MyUser.objects.create_user('delsy', Permitido.objects.create(email='delsy@gmail.com'), '1234'))
 
+    def create_asignacion(self):
+        usuario=MyUser.objects.create_user('anonimo', Permitido.objects.create(email='anonimo2@hotmail.com'), '1234')
+        rol=self.create_rol()
+        proyecto=self.create_proyecto()
+        return asignacion.objects.create(usuario=usuario, rol=rol, proyecto=proyecto)
+    
+    def test_asignacion_creation(self):
+        w=self.create_asignacion()
+        self.assertEqual(w.usuario.username, 'anonimo')
+        
+class asigna_sistemacionTest(TestCase):
+    def create_proyecto(self):
+        return proyecto(nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio=timezone.now(), fecha_fin=datetime.timedelta(days=1), estado="PEN")
+    
+    def create_rol(self):
+        return rol.objects.create( nombre_rol_id="nuevoRol", descripcion="nuevo_rol", usuario_creador= MyUser.objects.create_user('delsy', Permitido.objects.create(email='delsy@gmail.com'), '1234'))
+    
+    def create_rol_sistema(self):
+        return rol_sistema.objects.create( nombre_rol_id="nuevoRol", descripcion="nuevo_rol")
+    
+    def create_asigna_sistema(self):
+        rol=self.create_rol_sistema()
+        usuario=MyUser.objects.create_user('anonimo', Permitido.objects.create(email='anonimo2@hotmail.com'), '1234')
+        return asigna_sistema.objects.create(usuario=usuario, rol=rol) 
+     
+    def test_asigna_sistema_creation(self):
+        w=self.create_asigna_sistema()
+        self.assertEqual(w.usuario.username, 'anonimo')
+    
     def test_asignarRol_POST(self):
         w=self.create_proyecto()
         x=self.create_rol()
         post_data={'proyecto':w.id,'rol':x.id, 'usuario':x.usuario_creador}
         asignarRol_url='/asignarRol/1/1/'
         self.client.post(asignarRol_url, data=post_data)
-              
+   
 class huTest(TestCase):
     def create_hu(self, descripcion="hu", valor_negocio="7", valor_tecnico="0", prioridad="0", duracion="0", acumulador_horas="0", estado="ACT", estado_en_actividad="PEN", valido="FALSE", proyecto_id="1"):
             return HU.objects.create(descripcion=descripcion, valor_negocio=valor_negocio, valor_tecnico=valor_tecnico, prioridad=prioridad, duracion=duracion, acumulador_horas=acumulador_horas, estado=estado, estado_en_actividad=estado_en_actividad, valido=valido, proyecto_id=proyecto_id)
         
     def test_hu_creation(self):
+        """
+        Test del modelo HU, crea un hu llamando a la create_hu, verifica la condicion de las instancias
+        comprueba si el resultado es el esperado del __unicode__
+        """
         w=self.create_hu()
         self.assertTrue(isinstance(w, HU))
         self.assertEqual(w.__unicode__(), w.descripcion)
         
     def test_crear_hu(self):
+        """
+        Con cliente obtenemos la direccion /crearHU/1/1/1/ y
+        comprueba si el resultado es el esperado
+        """
         response=self.client.get('/crearHU/1/1/1/')
         self.assertEqual(response.status_code, 200)
         
     def test_formularioHU_valido(self):
+        """
+        Test del Formulario HU, prueba que el HU creado sea valido
+        """
         w=HU.objects.create(valor_tecnico='1', valor_negocio='1', prioridad='1', duracion='1',acumulador_horas='1', estado='ACT', proyecto_id='1')
         data={'valor_tecnico':w.valor_tecnico, 'valor_negocio':w.valor_negocio, 'prioridad':w.prioridad, 'duracion':w.duracion, 'acumulador_horas':w.acumulador_horas, 'estado':w.estado,'proyecto_id':w.proyecto_id}
         form=FormularioHU(data=data)
         self.assertTrue(form.is_valid())
         
     def test_formularioHU_invalido(self):
+        """
+        Test del Formulario HU, prueba que el HU creado sea invalido
+        """        
         w=HU.objects.create(valor_tecnico='1', valor_negocio='1', prioridad='1', duracion='1',acumulador_horas='1', estado='ACT', proyecto_id='1')
         data={'valor_tecnico':w.valor_tecnico, 'valor_negocio':w.valor_negocio, 'prioridad':w.prioridad, 'duracion':w.duracion, 'acumulador_horas':w.acumulador_horas}
         form=FormularioHU(data=data)
@@ -322,18 +347,27 @@ class huTest(TestCase):
         return rol.objects.create( nombre_rol_id="nuevoRol", descripcion="nuevo_rol", usuario_creador= MyUser.objects.create_user('delsy', Permitido.objects.create(email='delsy@gmail.com'), '1234'))
 
     def test_modificar_hu(self):
+        """
+        Verifica que el hu se ha modificado correctamente el valor_negocio
+        """
         w=HU.objects.create(valor_tecnico='1', valor_negocio='1', prioridad='1', duracion='1',acumulador_horas='1', estado='ACT', proyecto_id='1')
         w.valor_negocio=2
         w.save()
         self.assertEqual(w.valor_negocio, 2)
         
     def test_cambioestado_hu(self):
+        """
+        Verifica que el hu se ha modificado correctamente su estado
+        """
         w=HU.objects.create(valor_tecnico='1', valor_negocio='1', prioridad='1', duracion='1',acumulador_horas='1', estado='ACT', proyecto_id='1')
         w.estado='CAN'
         w.save()
         self.assertEqual(w.estado, 'CAN')
     
     def test_delegaHU(self):
+        """
+        Crea una delegacion la cual es verificada si se ha creado correctamente con el usuario asignado
+        """
         hu=self.create_hu()
         u=MyUser.objects.create_user('anonimo', Permitido.objects.create(email='anonimo2@hotmail.com'), '1234')
         delegacionx= delegacion.objects.create(usuario=u ,HU=hu)
@@ -341,6 +375,9 @@ class huTest(TestCase):
         self.assertEqual(delegacionx.HU.id, 2 )    
         
     def test_validaHU(self):
+        """
+        Comprueba que se valide correctamente un HU
+        """
         hu=self.create_hu()
         hu.valido=True
         hu.save()
@@ -348,32 +385,46 @@ class huTest(TestCase):
 
 class SprintTest(TestCase):
     def create_sprint(self):
-        return Sprint.objects.create( descripcion='sprint1', fecha_inicio=timezone.now(), duracion='3', estado='ACT', proyecto_id='1')
+        return Sprint.objects.create( descripcion='sprintTest', fecha_inicio=timezone.now(), duracion='3', estado='ACT', proyecto_id='1')
     
     def test_sprint_creation(self):
+        """
+        Verifica la correcta creacion del Sprint
+        """
         w=self.create_sprint()
-        self.assertTrue(isinstance(w, Sprint))
-        self.assertEqual(w.__unicode__(), str(w.id))
+        self.assertEqual(w.descripcion, 'sprintTest')
         
     def test_FormularioSprintProyecto_invalido(self):
+        """
+        Comprobamos que el formulario de Sprint no es valido al faltarle un campo
+        """
         w=Sprint.objects.create(descripcion='sprint1', fecha_inicio=timezone.now(), duracion='3', estado='ACT', proyecto_id='1')
         data={'descripcion':w.descripcion, 'fecha_inicio':w.fecha_inicio, 'duracion':w.duracion}
         form=FormularioSprintProyecto(data=data)
         self.assertFalse(form.is_valid())
           
     def test_modificar_sprint(self):
+        """
+        Verifica que el sprint se ha modificado correctamente su duracion
+        """
         sprint=self.create_sprint()
         sprint.duracion=4
         sprint.save()
         self.assertEqual(sprint.duracion, 4)
         
     def test_cambiarestado_sprint(self):
+        """
+        Verifica que el sprint se ha cambiado correctamente su estado
+        """
         sprint=self.create_sprint()
         sprint.estado='CAN'
         sprint.save()
         self.assertEqual(sprint.estado, 'CAN')
         
-    def test_login_nuevo(self):
+    def test_login_valido(self):
+        """
+        Verifica que el login funcione correctamente, con un usuario creado
+        """
         self.user = MyUser.objects.create_user('anonimo', Permitido.objects.create(email='anonimo2@hotmail.com'), '1234') 
         self.user.set_password('1234') 
         self.user.save() 
@@ -381,7 +432,10 @@ class SprintTest(TestCase):
         login = self.client.login(username='anonimo', password='1234') 
         self.assertTrue(login) 
         
-    def test_login_nuevo3(self):
+    def test_login_invalido(self):
+        """
+        Verifica que el login funcione correctamente, ingresando un usuario incorrecto
+        """
         self.user = MyUser.objects.create_user('anonimo', Permitido.objects.create(email='anonimo2@hotmail.com'), '1234') 
         self.user.set_password('1234') 
         self.user.save() 
@@ -396,6 +450,12 @@ class loginTest(LiveServerTestCase):
         self.browser = webdriver.Firefox()
   
     def test_admin_login(self):
+        """
+        Usando el selenium, podemos simular que un usuario abre el navegador web, y navega a la pagina de login
+        el usuario es dirigido a la pagina http://localhost/login/ que simula ingresar su usuario y contraseña
+        si las credenciales de inicio de sesion son las correctas, el usuario es redirigido a la pagina
+        principal /hola/, y cierra el navegador
+        """
     # usuario abre el navegador web, navega a pagina login
         
         self.browser.get("http://localhost/login/")
