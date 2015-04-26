@@ -144,6 +144,7 @@ class RolAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         """Permite establecer al usuario actual utilizando la interfaz admin como creador del rol"""
         obj.usuario_creador = request.user
+        obj.estado='ACT'
         obj.save()
     save_as = True 
     

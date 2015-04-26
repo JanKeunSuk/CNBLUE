@@ -105,8 +105,19 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
             enlaces.append(enlacex('/crearRol/'+usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar rol'))
     else:
             roles =[]#lista vacia si no tiene permiso de ver roles
-     
-     
+    
+    roles_modificables=[]
+    roles_inmodificables=[]
+    for r in roles:
+        x=0
+        for a in asignacion.objects.all():
+            if a.rol == r:
+                x=1
+        if x == 0:
+            roles_modificables.append(r)
+        else:
+            roles_inmodificables.append(r)
+                
     if rolx.tiene_permiso('Can add flujo'):
         """Tiene permiso de crear un nuevo flujo, obtengo todos los flujos y enlancef envia el url de crear con el nombre del
         permiso correspondiente al rol-flujo-para-scrum.html"""
@@ -197,7 +208,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     if rolx.tiene_permiso('Can add sprint') or rolx.tiene_permiso('Can change sprint'):
         enlaceSprintv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
           
-    return render(request,'rol-flujo-para-scrum.html',{'HU_asignada':HU_asignada, 'HU_no_asignada':HU_no_asignada,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsf':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id})
+    return render(request,'rol-flujo-para-scrum.html',{'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HU_asignada':HU_asignada, 'HU_no_asignada':HU_no_asignada,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsf':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id})
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
 def registrarUsuarioView(request):
@@ -246,7 +257,7 @@ def guardarRolView(request,usuario_id):
     que se utiliza en la interfaz devuelta por /crearRol/ """
     try:
         usuario=MyUser.objects.get(id=usuario_id)
-        rol_a_crear = rol.objects.create(nombre_rol_id=request.POST['nombre_rol_id'], descripcion=request.POST['descripcion'],usuario_creador=usuario)
+        rol_a_crear = rol.objects.create(nombre_rol_id=request.POST['nombre_rol_id'], descripcion=request.POST['descripcion'],usuario_creador=usuario, estado='ACT')
         for p in request.POST.getlist('permisos'):
             rol_a_crear.permisos.add(Permission.objects.get(id=p))
         rol_a_crear.save()
@@ -403,7 +414,7 @@ class FormularioRolProyecto(forms.ModelForm):
     """
     class Meta:
         model= rol
-        fields=['permisos','nombre_rol_id','descripcion']
+        fields=['permisos','nombre_rol_id','descripcion','estado']
 
 def visualizarRolProyectoView(request,usuario_id,proyectoid, rolid, rol_id_rec):
     """
@@ -415,6 +426,7 @@ def visualizarRolProyectoView(request,usuario_id,proyectoid, rolid, rol_id_rec):
                                                      'nombre_rol_id': rolproyecto.nombre_rol_id,
                                                      'permisos': rolproyecto.permisos,
                                                      'descripcion': rolproyecto.descripcion,
+                                                     'estado':rolproyecto.estado,
                                                      }) 
     return render_to_response('visualizarRol.html',{'formulario':formulario, 'rol':rolproyecto, 'proyectoid':proyectoid,'usuarioid':usuario_id,'rolid':rolid},
                                   context_instance=RequestContext(request))
@@ -432,10 +444,12 @@ def modificarRol(request, usuario_id, proyectoid, rolid, rol_id_rec):
             nombre_rol_id=form.cleaned_data['nombre_rol_id']
             descripcion=form.cleaned_data['descripcion']
             permisos=form.cleaned_data['permisos']
+            estado=form.cleaned_data['estado']
             f.nombre_rol_id=nombre_rol_id
             f.descripcion=descripcion
             f.permisos=permisos
             f.usuario_creador=u
+            f.estado=estado
             f.save() #Guardamos el modelo de manera Editada
             return HttpResponse('El rol a sido modificado exitosamente')
     else:
@@ -467,7 +481,8 @@ def modificarRol(request, usuario_id, proyectoid, rolid, rol_id_rec):
                     x=1
             if x==0:
                 lista_restante.append(permitido)
-        ctx = {'form':form, 'rol':f, 'proyectoid':proyectoid,'usuarioid':usuario_id,'rolid':rolid ,'permisos':lista_restante}
+        estados=['ACT','CAN']
+        ctx = {'form':form, 'rol':f, 'proyectoid':proyectoid,'usuarioid':usuario_id,'rolid':rolid ,'permisos':lista_restante,'estados':estados}
         return render_to_response('modificarRol.html', ctx ,context_instance=RequestContext(request))
 
 class FormularioFlujoProyecto(forms.ModelForm):
@@ -907,7 +922,7 @@ def asignarRol(request,usuario_id, proyectoid,rolid, rol_id_rec):
         usuarios_ya_asignados=set(usuarios_ya_asignados)
         
         usuarios_sin_asignar=[]
-        for u in MyUser.objects.all().exclude(id=usuario_id):
+        for u in MyUser.objects.all().exclude(id=usuario_id).exclude(username='admin'):
             x=0
             for u_asig in usuarios_ya_asignados:
                 if u == u_asig:
@@ -1007,6 +1022,10 @@ def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
         h.save()
     if tipo == '3': #se trata de un sprint
         s=Sprint.objects.get(id=id_tipo)
+        s.estado='ACT'
+        s.save()
+    if tipo == '4': #se trata de un rol
+        s=rol.objects.get(id=id_tipo)
         s.estado='ACT'
         s.save()
     return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')

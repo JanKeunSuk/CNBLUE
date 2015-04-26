@@ -123,10 +123,15 @@ class MyUser(AbstractBaseUser):
        
 class rol(models.Model):
     """Modelo que representa roles con relacion muchos a muchos a la tabla de permisos"""
+    ESTADO_CHOICES = (
+        ('CAN', 'Cancelado'),
+        ('ACT', 'Activo'),
+    )
     permisos= models.ManyToManyField(Permission)
     nombre_rol_id = models.CharField(max_length = 200)
     descripcion = models.CharField(max_length = 200)
     usuario_creador = models.ForeignKey(MyUser)
+    estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
     
     def tiene_permiso(self,perm):
         """checkea si un rol esta compuesto por un permiso"""
@@ -135,8 +140,7 @@ class rol(models.Model):
             return True
         else:
             return False
-    #tipo = models.CharField(max_length = 3, choices = ROL_CHOICES)
-    
+
     def __unicode__(self):
         """Representacion unicode del objeto rol"""
         return self.nombre_rol_id
