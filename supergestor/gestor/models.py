@@ -244,9 +244,9 @@ class HU(models.Model):
         """Representacion unicode del objeto HU"""
         return self.descripcion
       
-class archivoAdjunto(models.Model):
+class archivoadjunto(models.Model):
     archivo=models.FileField()
-    HU=models.OneToOneField(HU)
+    hU=models.OneToOneField(HU)
 
 class Sprint(models.Model):
     """Modelo que reprenseta los Spring de un proyecto relacionados a
