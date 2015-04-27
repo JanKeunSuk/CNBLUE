@@ -202,6 +202,9 @@ class proyecto(models.Model):
     def __unicode__(self):
         """Representacion unicode del objeto proyecto"""
         return self.nombre_corto
+    
+    
+
 
 class HU(models.Model):
     """Modelo que reprenseta las historias de usuario"""
@@ -230,9 +233,16 @@ class HU(models.Model):
     proyecto=models.ForeignKey(proyecto) #este campo va indicar a que proyecto pertenece asi en la vista ya no tenemos que hacer hu.objects.all()
     valido=models.BooleanField(default=False) # rl productOwner debe validar
     
+    
     def __unicode__(self):
         """Representacion unicode del objeto HU"""
         return self.descripcion
+    
+    
+    
+class archivoAdjunto(models.Model):
+    archivo=models.FileField()
+    HU=models.OneToOneField(HU)
 
 class Sprint(models.Model):
     """Modelo que reprenseta los Spring de un proyecto relacionados a
@@ -291,3 +301,5 @@ class asignaHU_actividad_flujo(models.Model):
     def __unicode__(self):
         """Representacion unicode del objeto asignaHU_actividad_flujo"""
         return str(self.id)+" - "+str(self.flujo_al_que_pertenece)+" - "+str(self.actividad_al_que_pertenece)
+    
+    
