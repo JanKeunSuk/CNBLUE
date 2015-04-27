@@ -50,4 +50,5 @@ urlpatterns = patterns('',
     url(r'^modificarCuenta/(?P<usuario_id>\d+)/', views.modificarCuenta, name='modificar_usuario'),
     url(r'^visualizarBacklog/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$',views.visualizarBacklog,name='verBacklog'),
     url(r'^reactivar/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<tipo>\d+)/(?P<id_tipo>\d+)/$', views.reactivar, name='reactivar'),
+    url(r'^adminAdjunto/(?P<hu_id>\d+)/$',views.adminAdjunto,name='adminAdjunto'),
 )

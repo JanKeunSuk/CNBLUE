@@ -246,7 +246,7 @@ class HU(models.Model):
       
 class archivoadjunto(models.Model):
     archivo=models.FileField()
-    hU=models.OneToOneField(HU)
+    hU=models.ForeignKey(HU)
 
 class Sprint(models.Model):
     """Modelo que reprenseta los Spring de un proyecto relacionados a

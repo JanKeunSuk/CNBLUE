@@ -52,6 +52,11 @@
         		<td>{{des.descripcion_horas_trabajadas}}</td>
         		</tr>
         	{% endfor %}
+        	
+        	{%for adjunto in adjuntos%}
+        	<tr><td>{{adjunto}}</td></tr>
+        	{%endfor%}
+        	
         	</table>
         <input type="submit" value="Volver" class="boton"/>	        	
         </form>
