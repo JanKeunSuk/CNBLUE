@@ -21,6 +21,8 @@ c="insert into gestor_permitido (email) values ('katherinevera94@gmail.com');"
 cur.execute(c)
 c="insert into gestor_permitido (email) values ('gsebacatt@gmail.com');"
 cur.execute(c)
+c="insert into gestor_permitido (email) values ('valeria@gmail.com');"
+cur.execute(c)
 #Efectuamos los cambios en la base de datos
 conexion.commit()
 
@@ -37,6 +39,10 @@ cur.execute(c)
 #contraseña: 1234
 c="insert into gestor_myuser (password,last_login,username, user_name, last_name, direccion, is_active, is_admin, email_id) values ('pbkdf2_sha256$15000$Wwp6bhAeZDZv$d82uJ3SqwA08rtuY4Vm91tvT27KPkL5kF/YJ3Z3bzI8=','2015-03-31 09:16:23.277637-04','sebas','sebas','sebas', 'Asuncion', 'TRUE', 'FALSE','gsebacatt@gmail.com');"
 cur.execute(c)
+#contraseña: 1234
+c="insert into gestor_myuser (password,last_login,username, user_name, last_name, direccion, is_active, is_admin, email_id) values ('pbkdf2_sha256$15000$Wwp6bhAeZDZv$d82uJ3SqwA08rtuY4Vm91tvT27KPkL5kF/YJ3Z3bzI8=','2015-03-31 09:16:23.277637-04','valeria','valeria','valeria', 'Asuncion', 'TRUE', 'FALSE','valeria@gmail.com');"
+cur.execute(c)
+
 #Permisos
 c="insert into auth_permission (name, content_type_id, codename) values ('Agregar horas trabajadas','13','agregar horas trabajadas');"
 cur.execute(c)
@@ -65,13 +71,15 @@ cur.execute(c)
 c="insert into gestor_rol_sistema (nombre_rol_id, descripcion) values ('admin', 'admin tiene todos los permisos');"
 cur.execute(c)
 #Carga de Rol
-c="insert into gestor_rol (nombre_rol_id, descripcion, usuario_creador_id) values ('Scrum Master','permisos adqueridos por el ScrumMaster','1');"
+c="insert into gestor_rol (nombre_rol_id, descripcion, usuario_creador_id, estado) values ('Scrum Master','permisos adqueridos por el ScrumMaster','1','ACT');"
 cur.execute(c)
-c="insert into gestor_rol (nombre_rol_id, descripcion, usuario_creador_id) values ('Product Owner','permisos adqueridos por el ProductOwner','1');"
+c="insert into gestor_rol (nombre_rol_id, descripcion, usuario_creador_id, estado) values ('Product Owner','permisos adqueridos por el ProductOwner','1','ACT');"
 cur.execute(c)
-c="insert into gestor_rol (nombre_rol_id, descripcion, usuario_creador_id) values ('Equipo','permisos adqueridos por el Equipo','1');"
+c="insert into gestor_rol (nombre_rol_id, descripcion, usuario_creador_id, estado) values ('Equipo','permisos adqueridos por el Equipo','1','ACT');"
 cur.execute(c)
-c="insert into gestor_rol (nombre_rol_id, descripcion, usuario_creador_id) values ('Cliente','permisos adqueridos por el Cliente','1');"
+c="insert into gestor_rol (nombre_rol_id, descripcion, usuario_creador_id, estado) values ('Cliente','permisos adqueridos por el Cliente','1','ACT');"
+cur.execute(c)
+c="insert into gestor_rol (nombre_rol_id, descripcion, usuario_creador_id, estado) values ('Rol creado por Scrum','permisos designados por el Scrum','2','ACT');"
 cur.execute(c)
 conexion.commit()
 
@@ -268,6 +276,8 @@ c="insert into gestor_asignacion (proyecto_id, rol_id, usuario_id) values ('1','
 cur.execute(c)
 c="insert into gestor_asignacion (proyecto_id, rol_id, usuario_id) values ('1','3', '4');"
 cur.execute(c)
+c="insert into gestor_asignacion (proyecto_id, rol_id, usuario_id) values ('1','4', '5');"
+cur.execute(c)
 c="insert into gestor_asignacion (proyecto_id, rol_id, usuario_id) values ('2','1', '4');"
 cur.execute(c)
 c="insert into gestor_asignacion (proyecto_id, rol_id, usuario_id) values ('2','3', '3');"
@@ -279,12 +289,17 @@ cur.execute(c)
 c="insert into gestor_asignacion (proyecto_id, rol_id, usuario_id) values ('3','3', '2');"
 cur.execute(c)
 
+
 #Carga actividades
 c="insert into gestor_actividades (nombre, descripcion) values ('Analisis','analisis');"
 cur.execute(c)
 c="insert into gestor_actividades (nombre, descripcion) values ('Diseño','diseño');"
 cur.execute(c)
 c="insert into gestor_actividades (nombre, descripcion) values ('Despliegue','despliegue');"
+cur.execute(c)
+c="insert into gestor_actividades (nombre, descripcion) values ('Desarrollo','desarrollo');"
+cur.execute(c)
+c="insert into gestor_actividades (nombre, descripcion) values ('Prueba','prueba');"
 cur.execute(c)
 conexion.commit()
 

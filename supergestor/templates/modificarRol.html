@@ -75,11 +75,21 @@
 <div>
 
 <FORM ACTION="/modificarRol/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" METHOD= GET >
-
-<input type="text" size="15" maxlength="30" value="{{rol.nombre_rol_id}}" name="nombre_rol_id">
-
-<input type="text" size="15" maxlength="30" value="{{rol.descripcion}}" name="descripcion">
-
+<b><label class="required" for="id_fecha_inicio">Nombre del rol:</label></b>
+<input type="text" size="15" maxlength="30" value="{{rol.nombre_rol_id}}" name="nombre_rol_id"><br/>
+<b><label class="required" for="id_fecha_inicio">Descripcion:</label></b>
+<input type="text" size="15" maxlength="30" value="{{rol.descripcion}}" name="descripcion"><br/>
+<b><label class="required" for="id_fecha_inicio">Estado:</label></b>
+<select name="estado">
+		{%for e in estados%}
+			{%if rol.estado == e%}
+    			<option selected="selected" value="{{rol.estado}}">{{rol.estado}}</option>
+    		{%else%}
+    			<option value="{{e}}">{{e}}</option>
+    		{%endif%}
+    	{%endfor%}
+</select>
+<br/>
 <label>Multiple Selection </label>&nbsp;</td>
     <select name="permisos" multiple="multiple" size=30>
     	{%for rolperm in rol.permisos.all%}
