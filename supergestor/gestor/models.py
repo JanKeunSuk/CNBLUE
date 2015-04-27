@@ -292,7 +292,7 @@ class asigna_sistema(models.Model):
 class delegacion(models.Model):
     """Modelo que especifica una delegacion de una HU a un usuario en un proyecto"""
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL)
-    HU=models.ForeignKey(HU)
+    hu=models.ForeignKey(HU)
     def __unicode__(self):
         """Representacion unicode del objeto delegacion"""
         return str(self.id)+" - "+str(self.usuario)+" - "+str(self.HU.descripcion)+" - "+str(self.HU.proyecto)
