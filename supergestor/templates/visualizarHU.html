@@ -33,7 +33,8 @@
     <!-- Content -->
     <div class="content">
         
-        <form id="formulario" action="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">{% csrf_token %}
+        <form id="formulario" action="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="GET">
+        {% csrf_token %}
         	<b>Descripcion: </b> {{HU.descripcion}}<br/><br/>
         	<b>Valor de negocio: </b> {{HU.valor_negocio}}<br/><br/>
         	<b>Valor Tecnico: </b> {{HU.valor_tecnico}}<br/><br/>
@@ -42,8 +43,19 @@
         	<b>Horas realizadas: </b> {{HU.acumulador_horas}}<br/><br/>
         	<b>Estado de la HU: </b> {{HU.estado}}<br/><br/>
         	<b>Valido: </b> {{HU.valido}}<br/><br/>
-        	<input type="submit" value="Volver" />
+        	<b>Descripcion de las horas realizadas </b> <br/>
+        	<table>
+        	<th>Horas Cargadas</th><td></td><td></td><th>Descripcion</th>
+        	<tr class="model-proyecto">
+        	{% for des in HU.hu_descripcion.all %}
+        		<td>{{des.horas_trabajadas}}</td><td></td><td></td>
+        		<td>{{des.descripcion_horas_trabajadas}}</td>
+        		</tr>
+        	{% endfor %}
+        	</table>
+        <input type="submit" value="Volver" class="boton"/>	        	
         </form>
+        
      </div>
      <div class="footer">
      <!-- end.footer --></div>

@@ -201,11 +201,17 @@ class proyecto(models.Model):
     
     def __unicode__(self):
         """Representacion unicode del objeto proyecto"""
-        return self.nombre_corto
+        return self.nombre_corto   
+class HU_descripcion(models.Model):
+    """
+    Modelo representa la descripcion de cada hora de trabajo agregada
+    """
+    horas_trabajadas=models.FloatField()  
+    descripcion_horas_trabajadas=models.CharField(max_length = 200)
+    def __unicode__(self):
+        """Representacion unicode del objeto HU_descripcion"""
+        return str(self.id)    
     
-    
-
-
 class HU(models.Model):
     """Modelo que reprenseta las historias de usuario"""
     VALORES100_CHOICES = zip(range(1,101), range(1,101))
@@ -237,9 +243,7 @@ class HU(models.Model):
     def __unicode__(self):
         """Representacion unicode del objeto HU"""
         return self.descripcion
-    
-    
-    
+      
 class archivoAdjunto(models.Model):
     archivo=models.FileField()
     HU=models.OneToOneField(HU)

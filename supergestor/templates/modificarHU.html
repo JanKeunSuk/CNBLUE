@@ -86,7 +86,7 @@
 <div class="submit-row">
 <input type="submit" value="Guardar" class="modificarProyecto" name="_save" />
 {%elif is_Scrum == "0"%}
-<form action="/guardarHU/{{HU.id}}/{{is_Scrum}}/" method="post">
+<form action="/guardarHU/{{HU.id}}/{{is_Scrum}}/" method="post"  required="required" autofocus="autofocus">
 	{% csrf_token %}
 	<div>
      	<label class="required" for="id_nombre">Descripcion:</label>
@@ -131,11 +131,14 @@
     
     <div>
         <label class="required" for="id_horas_trabajadas">Agregar horas trabajadas:</label>
-        <input class="vTextField" id="id_nombre" maxlength="500" name="horas_agregar" type="text" />
+        <input class="vTextField" id="id_nombre" maxlength="500" name="horas_agregar" type="text" required="required" autofocus="autofocus"/><br><br>
+        <label class="required" for="id_descripcion">Descripcion:</label>
+        <textarea name="descripcion_horas" rows="10" cols="40"></textarea>
+         
     </div>
 
-<input type="submit" name="Submit" value="Guardar" tabindex="2" />
-</form>
+<input type="submit" name="Submit" value="Guardar" tabindex="2"/>
+</form> 
 {%endif%}
 
 <script type="text/javascript">
