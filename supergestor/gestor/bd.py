@@ -150,14 +150,14 @@ c="insert into gestor_rol_permisos (rol_id, permission_id) values ('2','42');"
 cur.execute(c)
 #EQUIPO
 #Agregar horas trabajadas
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('3','58');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('3','61');"
 cur.execute(c)
 #CLIENTE
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('4','57');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('4','63');"
 cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('4','58');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('4','64');"
 cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('4','59');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('4','65');"
 cur.execute(c)
 conexion.commit()
 
