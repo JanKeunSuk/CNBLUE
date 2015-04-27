@@ -519,16 +519,26 @@ def modificarFlujo(request, usuario_id, proyectoid, rolid, flujo_id_rec):
     f=Flujo.objects.get(id=flujo_id_rec)
     if request.method == 'POST':
         form = FormularioFlujoProyecto(request.POST)
-        
+            
         if form.is_valid():
             nombre=form.cleaned_data['nombre']
             estado=form.cleaned_data['estado']
             actividades=form.cleaned_data['actividades']
-            f.nombre=nombre
-            f.estado=estado
-            f.actividades=actividades
-            f.save() #Guardamos el modelo de manera Editada
-            return HttpResponse('El flujo a sido modificado exitosamente')
+            if request.REQUEST['_save']=='Guardar nuevo':
+                try:
+                    flujo_a_crear = Flujo.objects.create(nombre=nombre,estado="ACT")
+                    flujo_a_crear.actividades=actividades
+                    flujo_a_crear.save()
+                    return HttpResponse('El flujo nuevo se ha creado')  
+                except ObjectDoesNotExist:
+                    print "No se ha podido crear el nuevo flujo" 
+                return HttpResponse('El flujo a sido creado exitosamente')
+            else:
+                f.nombre=nombre
+                f.estado=estado
+                f.actividades=actividades
+                f.save() #Guardamos el modelo de manera Editada
+                return HttpResponse('El flujo a sido modificado exitosamente')
         else:
             return HttpResponse('Error'+str(form.errors))
     else:
