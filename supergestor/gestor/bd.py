@@ -110,35 +110,35 @@ cur.execute(c)
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','35');"
 cur.execute(c)
 #Administracion de Sprint
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','43');"
-cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','44');"
-cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','45');"
-cur.execute(c)
-#Administracion Asignacion
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','46');"
 cur.execute(c)
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','47');"
 cur.execute(c)
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','48');"
 cur.execute(c)
+#Administracion Asignacion
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','49');"
+cur.execute(c)
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','50');"
+cur.execute(c)
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','51');"
+cur.execute(c)
 #Administracion de delegacion
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','52');"
-cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','53');"
-cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','54');"
-cur.execute(c)
-#Administracion de asigna hu actividad flujo
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','55');"
 cur.execute(c)
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','56');"
 cur.execute(c)
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','57');"
 cur.execute(c)
-#Modificar hu nivel Scrum
+#Administracion de asigna hu actividad flujo
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','58');"
+cur.execute(c)
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','59');"
+cur.execute(c)
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','60');"
+cur.execute(c)
+#Modificar hu nivel Scrum
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','62');"
 cur.execute(c)
 #PRODUCT OWNER
 #Administracion hu
@@ -327,12 +327,13 @@ cur.execute(c)
 c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU4', '8', '0', '0', '0', '0', 'ACT', 'PEN','FALSE', '2');"
 cur.execute(c)
 conexion.commit()
+
 #Delegacion asignar una HU a un Usuario
-c="insert into gestor_delegacion (HU_id, usuario_id) values ('1','4');"
+c="insert into gestor_delegacion (hu_id, usuario_id) values ('1','4');"
 cur.execute(c)
-c="insert into gestor_delegacion (HU_id, usuario_id) values ('2','4');"
+c="insert into gestor_delegacion (hu_id, usuario_id) values ('2','4');"
 cur.execute(c)
-c="insert into gestor_delegacion (HU_id, usuario_id) values ('3','4');"
+c="insert into gestor_delegacion (hu_id, usuario_id) values ('3','4');"
 cur.execute(c)
 conexion.commit()
 #creacion de sprint

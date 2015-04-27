@@ -238,7 +238,7 @@ class HU(models.Model):
     estado_en_actividad = models.CharField(max_length = 3, choices = ESTADO_ACTIVIDAD_CHOICES)
     proyecto=models.ForeignKey(proyecto) #este campo va indicar a que proyecto pertenece asi en la vista ya no tenemos que hacer hu.objects.all()
     valido=models.BooleanField(default=False) # rl productOwner debe validar
-    
+    hu_descripcion=models.ManyToManyField(HU_descripcion)
     
     def __unicode__(self):
         """Representacion unicode del objeto HU"""
