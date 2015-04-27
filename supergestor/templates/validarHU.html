@@ -62,7 +62,7 @@
         
         <h1>Validar HU</h1>
         <div id="content-main">
-<form action="/validarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{hu}}/{{is_Scrum}}/" method="post">      
+<form style="display:inline;" action="/validarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{hu}}/{{is_Scrum}}/" method="post">      
         {% csrf_token %}
         {%if HU == False%}
 			<div>
@@ -74,10 +74,10 @@
 			</div>
 		{%endif%}
 <div class="submit-row">
-<input type="submit" value="SI" class="validarHU" name="_save" />
+<input type="submit" value="SI"  class="boton" name="_save" />
 </form> 
-<form action="/modificarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{hu}}/{{is_Scrum}}/">
-<input type="submit" value="NO" /> 
+<form style="display:inline;" action="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="get">
+<input type="submit" value="NO"  class="boton"/> 
 </form>
 
 

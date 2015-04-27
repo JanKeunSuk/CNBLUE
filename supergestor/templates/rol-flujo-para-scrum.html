@@ -111,7 +111,61 @@
             {%endfor%}
 
 <!-- HU'S -->
-
+<!-- Product Owner -->
+{% if is_Scrum == 0 %}
+			{% if HU_no_asignada_owner|length > 0%}
+            	<table>
+            	<th>Lista de HU's del proyecto Owner </th>
+            	<tr class="model-proyecto">
+				{% for HU in HU_no_asignada_owner %}
+			    	{%if HU.descripcion|length > 0%}
+			    		{%if HU.estado == 'CAN'%}
+			     			<font color="red"><td><a href="" class="deletelink"/> {{HU.descripcion}} </td></font>
+			    	 	{%else%}
+  							<td> {{HU.descripcion}} </td>
+			     		{%endif%}    
+  						{%for enlace in enlaceHUv%}
+                			<td></td><td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/" class="addlink">Visualizar</a></td>
+             			{% endfor %}
+            			{% if HUsm|length > 0%}
+            				{%for enlace in enlaceHUm%}
+                				{%if HU.estado == 'CAN'%}
+                					<td><a href="/reactivar/{{enlace.url}}/2/{{HU.id}}/" class="changelink">Reactivar</a></td>
+                				{%else%}
+                					<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Modificar</a></td>
+                				{%endif%}
+                			{%endfor%}
+                		{% endif %}
+                	{% endif %}
+                	{%if HUsa == 0%}
+                  		{%if HU.estado == 'ACT'%}
+                			{% if HU.valido == False %}
+								{%for enlace in enlaceHUm%}
+									<td><a href="/validarHU/{{usuarioid}}/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Validar HU</a></td>
+								{%endfor%}
+							{%else%}
+								{%for enlace in enlaceHUm%}
+									<td><a href="/validarHU/{{usuarioid}}/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Invalidar HU</a></td>
+								{%endfor%}
+							{% endif %}
+				   		{%endif%}
+                	{%endif%}
+                	</tr>
+               {%endfor%}
+           {%endif%}
+           	{% if HU_asignada_owner|length > 0%}
+               <tr class="model-proyecto">
+               {% for HU in HU_asignada_owner %}
+			    	{%if HU.descripcion|length > 0%}
+  						<td> {{HU.descripcion}} </td>
+  						{%for enlace in enlaceHUv%}
+                			<td></td><td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/" class="addlink">Visualizar</a></td>
+             			{% endfor %}
+             		{%endif%}
+             		</tr>
+             	{% endfor %}
+             {% endif %}
+ {%else%}<!-- Scrum Master -->
 			{% if HUs|length > 0%}
             	<table>
             	<th>Lista de HU's del proyecto </th>
@@ -121,29 +175,23 @@
 				{% for HU in HUs %}
 			    	{%if HU.descripcion|length > 0%}
 			    	
-			    		{%if HU.estado == 'CAN'%}
-			     			<font color="red"><td><a href="" class="deletelink"/> {{HU.descripcion}} </td></font>
-			    	 	{%else%}
+			    		{%if HU.estado == 'ACT'%}
   							<td> {{HU.descripcion}} </td>
 			     		{%endif%}    
 
   						{%for enlace in enlaceHUv%}
+  						{%if HU.estado == 'ACT'%}
                 			<td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/" class="addlink">Visualizar</a></td>
+                		{%endif%}  	
              			{% endfor %}
-
-            			{% if HUsm|length > 0%}
-            		
+             			{% if HUsm|length > 0%}
             				{%for enlace in enlaceHUm%}
-            		
-                				{%if HU.estado == 'CAN'%}
-                					<td><a href="/reactivar/{{enlace.url}}/2/{{HU.id}}/" class="changelink">Reactivar</a></td>
-                				{%else%}
-                					<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Modificar</a></td>
-                				{%endif%}
+						           {%if HU.estado == 'ACT'%}
+                						<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Modificar</a></td>
+                					{%endif%}
                 			{%endfor%}
-                		
                 		{% endif %}
-                		
+                     {%if HU.valor_tecnico != 0 and HU.duracion != 0 and HU.prioridad != 0%}         		
                 		{%if HUsa == 1%}
                 			{%for h in HU_no_asignada%}
                 				{%if h.id == HU.id%}
@@ -162,44 +210,28 @@
                 					{%endfor%}
                 				{%endif%}
                 			{%endfor%}
-                		{%else%}
-                  			{%if HU.estado == 'ACT'%}
-                				{% if HU.valido == False %}
-									{%for enlace in enlaceHUm%}
-										<td><a href="/validarHU/{{usuarioid}}/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Validar HU</a></td>
-									{%endfor%}
-								{%else%}
-									{%for enlace in enlaceHUm%}
-										<td><a href="/validarHU/{{usuarioid}}/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Invalidar HU</a></td>
-									{%endfor%}
-								{% endif %}
-				   			{%endif%}
                 		{%endif%}
                 	{%endif%}
+                 	{%endif%}
               		</tr>
                	{% endfor %}
             {% endif %}
-
+{%endif%}
             {% if HUs_add_horas|length > 0%}
             	<table>
             		<th>Lista de HU's a las que estas asignado </th>
         			<th> <B>Duracion/Horas Trabajadas</B> </th>
             		<tr class="model-proyecto">
-            	
 					{% for HU in HUs_add_horas %}
-			            
   						<td> {{HU.descripcion}} </td>
   						<td> <B>{{HU.acumulador_horas}} / {{HU.duracion}}</B> </td><td></td><td></td><td></td>
   						{%for enlace in enlaceHU_agregar%}
                 			<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Agregar horas trabajadas</a></td>
              			{% endfor %}
-              		</tr>
-              	
+              			</tr>
                		{% endfor %}
-               
             {% endif %}
-            
-            {%for enlace in enlaceHU%}
+			{%for enlace in enlaceHU%}
             	<td><a href="{{enlace.url}}">{{enlace.nombre}}</a></td>
             {%endfor%}
             
@@ -207,7 +239,7 @@
             el cual chequeara que todas las HU esten validadas 
             Crear backlog deberia validar todas las hu automatiamente-->
             {% if HUsm|length > 0%}
-            	<td><a href="/visualizarBacklog/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/">Visualizar Product Backlog</a></td>
+            <td><a href="/visualizarBacklog/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/">Visualizar Product Backlog</a></td>
             {%endif%}
             
 <!-- SPRINTS -->

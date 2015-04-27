@@ -102,47 +102,47 @@ cur.execute(c)
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','35');"
 cur.execute(c)
 #Administracion de Sprint
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','40');"
-cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','41');"
-cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','42');"
-cur.execute(c)
-#Administracion Asignacion
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','43');"
 cur.execute(c)
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','44');"
 cur.execute(c)
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','45');"
 cur.execute(c)
+#Administracion Asignacion
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','46');"
+cur.execute(c)
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','47');"
+cur.execute(c)
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','48');"
+cur.execute(c)
 #Administracion de delegacion
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','49');"
-cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','50');"
-cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','51');"
-cur.execute(c)
-#Administracion de asigna hu actividad flujo
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','52');"
 cur.execute(c)
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','53');"
 cur.execute(c)
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','54');"
 cur.execute(c)
-#Modificar hu nivel Scrum
+#Administracion de asigna hu actividad flujo
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','55');"
+cur.execute(c)
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','56');"
+cur.execute(c)
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','57');"
+cur.execute(c)
+#Modificar hu nivel Scrum
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','59');"
 cur.execute(c)
 #PRODUCT OWNER
 #Administracion hu
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('2','37');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('2','40');"
 cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('2','38');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('2','41');"
 cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('2','39');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('2','42');"
 cur.execute(c)
 #EQUIPO
 #Agregar horas trabajadas
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('3','55');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('3','58');"
 cur.execute(c)
 #CLIENTE
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('4','57');"
@@ -303,11 +303,21 @@ cur.execute(c)
 conexion.commit()
 
 #creacion de HU
-c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU1', '3', '0', '0', '0', '0', 'ACT', 'PEN', 'FALSE', '1');"
+c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU1', '3', '5', '5', '5', '4', 'ACT', 'ACT','TRUE', '1');"
 cur.execute(c)
-c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU2', '5', '0', '0', '0', '0', 'ACT', 'PEN','FALSE', '1');"
+c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas,  estado, estado_en_actividad, valido, proyecto_id) values ('HU2', '5', '7', '5', '9', '4',  'ACT','ACT', 'TRUE', '1');"
 cur.execute(c)
-c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU3', '8', '0', '0', '0', '0', 'ACT', 'PEN','FALSE', '1');"
+c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU3', '8', '6', '3', '8', '4', 'ACT', 'ACT','TRUE', '1');"
+cur.execute(c)
+c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU4', '8', '0', '0', '0', '0', 'ACT', 'PEN','FALSE', '2');"
+cur.execute(c)
+conexion.commit()
+#Delegacion asignar una HU a un Usuario
+c="insert into gestor_delegacion (HU_id, usuario_id) values ('1','4');"
+cur.execute(c)
+c="insert into gestor_delegacion (HU_id, usuario_id) values ('2','4');"
+cur.execute(c)
+c="insert into gestor_delegacion (HU_id, usuario_id) values ('3','4');"
 cur.execute(c)
 conexion.commit()
 #creacion de sprint
@@ -319,6 +329,38 @@ c="insert into gestor_sprint (descripcion, fecha_inicio, duracion, estado, proye
 cur.execute(c)
 #conexion.commit()
 c="insert into gestor_sprint_HU (sprint_id, hu_id) values ('1', '1');"
+cur.execute(c)
+
+#Descripcion de horas trabajadas y su descripcion HU
+c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas) values ('2', 'Tarea1');"
+cur.execute(c)
+c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas) values ('1', 'Tarea2');"
+cur.execute(c)
+c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas) values ('1', 'Tarea3');"
+cur.execute(c)
+c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas) values ('2', 'Tarea1');"
+cur.execute(c)
+c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas) values ('2', 'Tarea2');"
+cur.execute(c)
+c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas) values ('2', 'Tarea1');"
+cur.execute(c)
+c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas) values ('2', 'Tarea2');"
+cur.execute(c)
+conexion.commit()
+#Guarda el hu con su descripcion
+c="insert into gestor_hu_hu_descripcion (hu_id, hu_descripcion_id) values ('1', '1');"
+cur.execute(c)
+c="insert into gestor_hu_hu_descripcion (hu_id, hu_descripcion_id) values ('1', '2');"
+cur.execute(c)
+c="insert into gestor_hu_hu_descripcion (hu_id, hu_descripcion_id) values ('1', '3');"
+cur.execute(c)
+c="insert into gestor_hu_hu_descripcion (hu_id, hu_descripcion_id) values ('2', '4');"
+cur.execute(c)
+c="insert into gestor_hu_hu_descripcion (hu_id, hu_descripcion_id) values ('2', '5');"
+cur.execute(c)
+c="insert into gestor_hu_hu_descripcion (hu_id, hu_descripcion_id) values ('3', '6');"
+cur.execute(c)
+c="insert into gestor_hu_hu_descripcion (hu_id, hu_descripcion_id) values ('3', '7');"
 cur.execute(c)
 
 #Efectuamos los cambios en la base de datos

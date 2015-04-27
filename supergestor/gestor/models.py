@@ -198,7 +198,16 @@ class proyecto(models.Model):
     def __unicode__(self):
         """Representacion unicode del objeto proyecto"""
         return self.nombre_corto
-
+class HU_descripcion(models.Model):
+    """
+    Modelo representa la descripcion de cada hora de trabajo agregada
+    """
+    horas_trabajadas=models.FloatField()  
+    descripcion_horas_trabajadas=models.CharField(max_length = 200)
+    def __unicode__(self):
+        """Representacion unicode del objeto HU_descripcion"""
+        return str(self.id)
+    
 class HU(models.Model):
     """Modelo que reprenseta las historias de usuario"""
     VALORES100_CHOICES = zip(range(1,101), range(1,101))
@@ -225,11 +234,13 @@ class HU(models.Model):
     estado_en_actividad = models.CharField(max_length = 3, choices = ESTADO_ACTIVIDAD_CHOICES)
     proyecto=models.ForeignKey(proyecto) #este campo va indicar a que proyecto pertenece asi en la vista ya no tenemos que hacer hu.objects.all()
     valido=models.BooleanField(default=False) # rl productOwner debe validar
-    
+    hu_descripcion=models.ManyToManyField(HU_descripcion)
     def __unicode__(self):
         """Representacion unicode del objeto HU"""
         return self.descripcion
+    
 
+    
 class Sprint(models.Model):
     """Modelo que reprenseta los Spring de un proyecto relacionados a
     sus respectivos proyectos mediante un foreign key"""
@@ -274,7 +285,7 @@ class asigna_sistema(models.Model):
 class delegacion(models.Model):
     """Modelo que especifica una delegacion de una HU a un usuario en un proyecto"""
     usuario=models.ForeignKey(settings.AUTH_USER_MODEL)
-    HU=models.ForeignKey(HU)
+    hu=models.ForeignKey(HU)
     def __unicode__(self):
         """Representacion unicode del objeto delegacion"""
         return str(self.id)+" - "+str(self.usuario)+" - "+str(self.HU.descripcion)+" - "+str(self.HU.proyecto)
