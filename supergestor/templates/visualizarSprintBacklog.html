@@ -57,14 +57,17 @@
             	{% csrf_token %}
             	<tr>
 						<td><b>Descripcion</b></td>
-						<td><b>Duracion</b></td>
+						<td><b>Historias de Usuario</b></td>
+						{% for d in dias %}
+							<td><b> {{d.dias}} dias</b></td>
+						{%endfor%}
 					</tr>
-				{%for sprint in sprint_activas%}
+				{% for Sprint in sprint %}
 					<tr>
-						<td>{{sprint}}</td>
-						<td>{{sprint.duracion}}</td>
+						<td>{{Sprint}}</td>
 					</tr>
 				{%endfor%}
+	
         	</tr>
         </table>
         </div>

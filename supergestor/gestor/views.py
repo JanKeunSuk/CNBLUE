@@ -1078,13 +1078,22 @@ def adminAdjunto(request,hu_id):
     
 def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     """
-    Vista disponible para el Scrum.
-    Esta vista contiene la lista de sprint ACTIVAS
+    El sprint backlog es una lista de las tareas identificadas por el equipo de Scrum
+    Los equipos estiman el número de horas para cada tarea que se corresponde a alguien del equipo para completar. 
     """
+    cont=0
+    dias=0
     proyectox=proyecto.objects.get(id=proyectoid)
-    sprint_activas=Sprint.objects.all().filter(proyecto=proyectox).filter(estado='ACT')
-    s=sorted(sprint_activas,key=lambda x: x.duracion, reverse=True)
-    return render(request,'visualizarSprintBacklog.html',{'sprint_activas':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    hux=HU.objects.all().filter(proyecto=proyectox)
+    sprint=Sprint.objects.all().filter(proyecto=proyectox)
+    s=sorted(sprint,key=lambda x: x.estado, reverse=True)
+    for sp in sprint:
+        if sp.duracion>cont:
+            cont=sp.duracion
+            
+    while(dias!=cont):
+        dias=dias+1
+    return render(request,'visualizarSprintBacklog.html',{'sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'HUx':hux, 'dias':dias})
 
 
 
