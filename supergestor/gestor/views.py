@@ -335,6 +335,8 @@ def guardarSprintView(request, proyectoid):
         Sprint_a_crear = Sprint.objects.create(descripcion=request.POST['descripcion'],estado="ACT",fecha_inicio=request.POST['fecha_inicio'], duracion=request.POST['duracion'], proyecto=proyecto.objects.get(id=proyectoid))
         for p in request.POST.getlist('HUs'):
             Sprint_a_crear.hu.add(HU.objects.get(id=p))
+        for f in request.POST.getlist('Flujos'):
+            Sprint_a_crear.flujo.add(Flujo.objects.get(id=f))
         Sprint_a_crear.save()
         return HttpResponse('El Sprint se ha creado')  
     except ObjectDoesNotExist:
@@ -647,7 +649,7 @@ class FormularioSprintProyecto(forms.ModelForm):
     """
     class Meta:
         model= Sprint
-        fields=['descripcion','fecha_inicio','duracion','estado','hu',]
+        fields=['descripcion','fecha_inicio','duracion','estado','hu','flujo']
         
 def visualizarSprintProyectoView(request,usuario_id, proyectoid, rolid, Sprint_id_rec):
     """
@@ -681,11 +683,13 @@ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
             fecha_inicio=form.cleaned_data['fecha_inicio']
             duracion=form.cleaned_data['duracion']
             hu=form.cleaned_data['hu']
+            flujo=form.cleaned_data['flujo']
             s.descripcion=descripcion
             s.estado=estado
             s.fecha_inicio=fecha_inicio
             s.duracion=duracion
             s.hu=hu
+            s.flujo=flujo
             s.save() #Guardamos el modelo de manera Editada
             return HttpResponse('El Sprint ha sido modificado exitosamente')
         else:
@@ -697,6 +701,7 @@ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
                                          'fecha_inicio': s.fecha_inicio,
                                          'duracion': s.duracion,
                                          'hu':[t.id for t in s.hu.all()],
+                                         'flujo':[x.id for x in s.flujo.all()]
    
                                          })
         proyectox=proyecto.objects.get(id=proyectoid)
@@ -1178,4 +1183,4 @@ def asignarHUFLujo(request,proyectoid,rolid,sprintid):
     sprintx=Sprint.objects.get(id=sprintid)
     hus=HU.objects.filter(proyecto=proyectox,estado='ACT',valido=True).filter(sprint=sprintx)
     #ese ultimo filtro de arriba nose si esta bien porque es un manytoMany de sprint a HU
-    return render(request,"asignarHUFlujo.html",{'hus':hus,'sprint':sprintx,'proyecto':proyectox})
+    return render(request,"asignarHUFlujo.html",{'hus':hus,'sprint':sprintx,'proyecto':proyectox,'rolid':rolid})
