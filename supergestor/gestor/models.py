@@ -177,6 +177,7 @@ class Flujo(models.Model):
     nombre = models.CharField(max_length = 200)
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
     actividades = models.ManyToManyField(Actividades)
+    orden_actividades = models.TextField(null=True) # JSON-serialized (text) version of your list
     def __unicode__(self):
         """Representacion unicode del objeto flujo"""
         return str(self.id) + self.nombre

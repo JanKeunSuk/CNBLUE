@@ -304,13 +304,39 @@ cur.execute(c)
 conexion.commit()
 
 #Cargar Flujos
-c="insert into gestor_flujo (nombre, estado) values ('Flujo1','ACT');"
+c="insert into gestor_flujo (nombre, estado, orden_actividades) values ('Flujo1','ACT','[1, 3, 4]');"
 cur.execute(c)
-c="insert into gestor_flujo (nombre, estado) values ('Flujo2','ACT');"
+c="insert into gestor_flujo (nombre, estado, orden_actividades) values ('Flujo2','ACT','[5, 4, 3, 1]');"
 cur.execute(c)
-c="insert into gestor_flujo (nombre, estado) values ('Flujo3','ACT');"
+c="insert into gestor_flujo (nombre, estado, orden_actividades) values ('Flujo3','ACT','[1, 2, 5]');"
 cur.execute(c)
 conexion.commit()
+
+#Cargar las actividades en el Flujo 1
+c="insert into gestor_flujo_actividades (flujo_id, actividades_id) values ('1' ,'1');"
+cur.execute(c)
+c="insert into gestor_flujo_actividades (flujo_id, actividades_id) values ('1' ,'3');"
+cur.execute(c)
+c="insert into gestor_flujo_actividades (flujo_id, actividades_id) values ('1' ,'4');"
+cur.execute(c)
+#Cargar las actividades en el Flujo 2
+c="insert into gestor_flujo_actividades (flujo_id, actividades_id) values ('2' ,'5');"
+cur.execute(c)
+c="insert into gestor_flujo_actividades (flujo_id, actividades_id) values ('2' ,'4');"
+cur.execute(c)
+c="insert into gestor_flujo_actividades (flujo_id, actividades_id) values ('2' ,'3');"
+cur.execute(c)
+c="insert into gestor_flujo_actividades (flujo_id, actividades_id) values ('2' ,'1');"
+cur.execute(c)
+#Cargar las actividades en el Flujo 3
+c="insert into gestor_flujo_actividades (flujo_id, actividades_id) values ('3' ,'1');"
+cur.execute(c)
+c="insert into gestor_flujo_actividades (flujo_id, actividades_id) values ('3' ,'2');"
+cur.execute(c)
+c="insert into gestor_flujo_actividades (flujo_id, actividades_id) values ('3' ,'5');"
+cur.execute(c)
+conexion.commit()
+
 
 #carga de Proyecto Flujo
 c="insert into gestor_proyecto_flujos (proyecto_id, flujo_id) values ('1','1');"

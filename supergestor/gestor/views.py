@@ -17,6 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django.forms.widgets import CheckboxSelectMultiple
 from django.contrib.auth.models import Permission
 from datetime import datetime 
+import json
 
 # Create your views and forms here.
 @login_required
@@ -278,19 +279,42 @@ def guardarRolView(request,usuario_id):
         print "Either the entry or blog doesn't exist." 
         return HttpResponseRedirect('/crearRol/')
     
-def guardarFlujoView(request):
+def guardarFlujoView(request, usuario_id, proyectoid, rolid):
     """Vista de guardado de un nuevo flujo en la base de datos
     que se utiliza en la interfaz devuelta por /crearFlujo/ """
-    try:
-    
+    actividades_disponibles=Actividades.objects.all()
+    actividades_asignadas=[]
+    guardar=0
+    for g in request.POST.getlist('_save'):
+        if g == 'Guardar':
+            guardar=1
+    if guardar == 1:
         flujo_a_crear = Flujo.objects.create(nombre=request.POST['nombre'],estado="ACT")
+        orden=[]
         for p in request.POST.getlist('actividades'):
+            orden.append(Actividades.objects.get(id=p).id)
             flujo_a_crear.actividades.add(Actividades.objects.get(id=p))
+        flujo_a_crear.orden_actividades=json.dumps(orden)
         flujo_a_crear.save()
-        return HttpResponse('El flujo se ha creado')  
-    except ObjectDoesNotExist:
-        print "Either the entry or blog doesn't exist." 
-        return HttpResponseRedirect('/crearFlujo/')
+        return HttpResponse('El flujo se ha creado'+str(request.POST.getlist('actividades')))
+    else:
+        if request.POST['boton'] == 'Agregar':
+            act_asi=request.POST.getlist('actividades_asignadas')
+            for a in act_asi:
+                actividades_disponibles=actividades_disponibles.exclude(id=a)
+                actividades_asignadas.append(Actividades.objects.get(id=a))
+            act_dis=request.POST.getlist('actividades_disponibles')
+            for a in act_dis:
+                actividades_asignadas.append(Actividades.objects.get(id=a))
+                actividades_disponibles=actividades_disponibles.exclude(id=a)
+            return render(request, 'crearFlujo.html',{'nombre_flujo':request.POST['nombre'],'proyectoid':proyectoid,'usuarioid':usuario_id,'rolid':rolid ,'actividades_asignadas':actividades_asignadas,'actividades':actividades_disponibles})
+        elif request.POST['boton'] == 'Eliminar':
+            act_asi=request.POST.getlist('actividades_asignadas')
+            for a in act_asi:
+                actividades_disponibles=actividades_disponibles.exclude(id=a)
+                actividades_asignadas.append(Actividades.objects.get(id=a))
+            return render(request, 'crearFlujo.html',{'nombre_flujo':request.POST['nombre'],'proyectoid':proyectoid,'usuarioid':usuario_id,'rolid':rolid ,'actividades_asignadas':actividades_asignadas,'actividades':actividades_disponibles})     
+
     
 def guardarHUView(request,proyectoid):
     """Vista de guardado de una nueva HU en la base de datos creada por el Product Owner
@@ -467,7 +491,9 @@ def modificarRol(request, usuario_id, proyectoid, rolid, rol_id_rec):
             f.usuario_creador=u
             f.estado=estado
             f.save() #Guardamos el modelo de manera Editada
-            return HttpResponse('El rol a sido modificado exitosamente')
+            return HttpResponse('El rol ha sido modificado exitosamente')
+        else:
+            return HttpResponse('Error'+str(form.errors))
     else:
         permisos=Permission.objects.all().exclude(name='Can add group').exclude(name='Can change group') 
         permisos=permisos.exclude(name='Can delete group').exclude(name='Can delete permission') 
@@ -519,12 +545,14 @@ def visualizarFlujoProyectoView(request,usuario_id, proyectoid, rolid, flujo_id_
     en el Flujo que se quiere visualizar.
     """
     flujo_disponible= Flujo.objects.get(id=flujo_id_rec)
+    jsonDec = json.decoder.JSONDecoder()
+    orden=jsonDec.decode(flujo_disponible.orden_actividades)
     formulario =  FormularioRolProyecto(initial={
                                                      'nombre': flujo_disponible.nombre,
                                                      'estado': flujo_disponible.estado,
                                                      'actividades': flujo_disponible.actividades,
                                                      })      
-    return render_to_response('visualizarFlujo.html',{'formulario':formulario, 'flujo':flujo_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid},
+    return render_to_response('visualizarFlujo.html',{'formulario':formulario, 'orden':orden,'flujo':flujo_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid},
                                   context_instance=RequestContext(request))
 
 def modificarFlujo(request, usuario_id, proyectoid, rolid, flujo_id_rec):
@@ -532,40 +560,84 @@ def modificarFlujo(request, usuario_id, proyectoid, rolid, flujo_id_rec):
     Vista que utiliza el formulario FlujoProyecto para desplegar los datos editables
     del Flujo que se quiere modificar.
     """
+    actividades_disponibles=Actividades.objects.all()
+    actividades_asignadas=[]
+    estados=['ACT','CAN']
     f=Flujo.objects.get(id=flujo_id_rec)
+    guardar=0
+    for g in request.POST.getlist('_save'):
+        if g == 'Guardar':
+            guardar=2
+        elif g=='Guardar nuevo':
+            guardar=1
     if request.method == 'POST':
-        form = FormularioFlujoProyecto(request.POST)
-        
-        if form.is_valid():
-            nombre=form.cleaned_data['nombre']
-            estado=form.cleaned_data['estado']
-            actividades=form.cleaned_data['actividades']
-            if request.REQUEST['_save']=='Guardar nuevo':
-                try:
-                    flujo_a_crear = Flujo.objects.create(nombre=nombre,estado="ACT")
-                    flujo_a_crear.actividades=actividades
-                    flujo_a_crear.save()
-                    return HttpResponse('El flujo nuevo se ha creado')  
-                except ObjectDoesNotExist:
-                    print "No se ha podido crear el nuevo flujo" 
-                return HttpResponse('El flujo a sido creado exitosamente')
-            else:
-                f.nombre=nombre
-                f.estado=estado
-                f.actividades=actividades
-                f.save() #Guardamos el modelo de manera Editada
-                return HttpResponse('El flujo a sido modificado exitosamente')
-        else:
-            return HttpResponse('Error'+str(form.errors))
+        if guardar ==0:
+            if request.POST['boton'] == 'Agregar':
+                act_asi=request.POST.getlist('actividades_asignadas')
+                if act_asi:
+                    for a in act_asi:
+                        actividades_disponibles=actividades_disponibles.exclude(id=a)
+                        actividades_asignadas.append(Actividades.objects.get(id=a))
+                act_dis=request.POST.getlist('actividades_disponibles')
+                for a in act_dis:
+                    actividades_asignadas.append(Actividades.objects.get(id=a))
+                    actividades_disponibles=actividades_disponibles.exclude(id=a)
+                ctx = {'estados':estados,'actividades_asignadas':actividades_asignadas,'actividades':actividades_disponibles,'flujo':f, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
+                return render(request,'modificarFlujo.html', ctx)
+            elif request.POST['boton'] == 'Eliminar':
+                act_asi=request.POST.getlist('actividades_asignadas')
+                for a in act_asi:
+                    actividades_disponibles=actividades_disponibles.exclude(id=a)
+                    actividades_asignadas.append(Actividades.objects.get(id=a))
+                ctx = {'estados':estados,'actividades_asignadas':actividades_asignadas,'actividades':actividades_disponibles,'flujo':f, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
+                return render(request,'modificarFlujo.html', ctx)
+        elif guardar == 1:
+            nombre=request.POST['nombre']
+            estado=request.POST['estado']
+            try:
+                flujo_a_crear = Flujo.objects.create(nombre=nombre,estado="ACT")
+                orden=[]
+                for p in request.POST.getlist('actividades_asignadas'):
+                    orden.append(Actividades.objects.get(id=p).id)
+                    flujo_a_crear.actividades.add(Actividades.objects.get(id=p))
+                flujo_a_crear.orden_actividades=json.dumps(orden)
+                flujo_a_crear.save()
+                return HttpResponse('El flujo nuevo se ha creado')  
+            except ObjectDoesNotExist:
+                print "No se ha podido crear el nuevo flujo" 
+            return HttpResponse('El flujo ha sido creado exitosamente')
+        elif guardar == 2:
+            nombre=request.POST['nombre']
+            estado=request.POST['estado']
+            f.nombre=nombre
+            f.estado=estado
+            orden=[]
+            f.actividades=[]
+            f.orden_actividades=orden
+            for p in request.POST.getlist('actividades_asignadas'):
+                orden.append(Actividades.objects.get(id=p).id)
+                f.actividades.add(Actividades.objects.get(id=p))
+            f.orden_actividades=json.dumps(orden)
+            f.save() #Guardamos el modelo de manera Editada
+            return HttpResponse('El flujo ha sido modificado exitosamente')
     else:
+        actividades_asignadas=[]
+        actividades_disponibles=[]
+        jsonDec = json.decoder.JSONDecoder()
+        orden=jsonDec.decode(f.orden_actividades)
+        for o in orden:
+            for a in f.actividades.all():
+                if a.id == o:
+                    actividades_asignadas.append(a)
+        for a in Actividades.objects.all():
+            x=0
+            for asig in actividades_asignadas:
+                if a == asig:
+                    x=1
+            if x == 0:
+                actividades_disponibles.append(a)
         
-        form = FormularioFlujoProyecto(initial={
-                                         'nombre': f.nombre,
-                                         'estado': f.estado,
-                                         'actividades': [t.id for t in f.actividades.all()],
-   
-                                         })
-        ctx = {'form':form, 'flujo':f, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
+        ctx = {'estados':estados,'actividades_asignadas':actividades_asignadas,'actividades':actividades_disponibles,'flujo':f, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
         return render_to_response('modificarFlujo.html', ctx ,context_instance=RequestContext(request))
 
 class FormularioSprintProyecto(forms.ModelForm):
@@ -733,9 +805,11 @@ def crearFlujo(request,usuario_id,proyectoid,rolid):
     """
     Vista que realiza la creacion de flujos de proyecto desde la vista del Scrum.
     """
+    actividades_asignadas=[]
+    actividades_disponibles=Actividades.objects.all()
     if request.method == 'GET':
-        return render(request, 'crearFlujo.html',{'actividades':Actividades.objects.all(),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
-
+        return render(request, 'crearFlujo.html',{'actividades_asignadas':actividades_asignadas,'actividades':actividades_disponibles,'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
+        
 def crearSprint(request,usuario_id,proyectoid,rolid):
     """
     Vista que realiza la creacion de flujos de proyecto desde la vista del Scrum.
