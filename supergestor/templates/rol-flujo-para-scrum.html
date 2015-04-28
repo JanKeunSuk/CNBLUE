@@ -256,7 +256,7 @@
             el cual chequeara que todas las HU esten validadas 
             Crear backlog deberia validar todas las hu automatiamente-->
             {% if HUsm|length > 0%}
-            <td><a href="/visualizarBacklog/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/">Visualizar Product Backlog</a></td>
+            <td><a href="/visualizarBacklog/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Visualizar Product Backlog</a></td>
             {%endif%}
             
 <!-- SPRINTS -->
@@ -289,11 +289,13 @@
                 	{% endif %} 
               	</tr>
                {% endfor %}
+               <td><a href="/visualizarSprintBacklog/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Visualizar Sprint Backlog</a></td>
             {% endif %}
 
             {%for enlace in enlaceSprint%}
             	<td><a href="{{enlace.url}}">{{enlace.nombre}}</a></td>
             {%endfor%}
+            
             
 <!-- Cliente, visualizacion de HU con usuario asignado -->
             {%if HUv|length > 0%}

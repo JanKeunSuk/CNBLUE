@@ -32,7 +32,7 @@
     <div id="header">
         <div id="branding">
         
-<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Modificación de HU</a></h1>
+<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Asignacion de HU a usuario {{rol.nombre_rol_id}}</a></h1>
 
         </div>
         
@@ -49,7 +49,7 @@
     <!-- END Header -->
     
 <div class="breadcrumbs">
-<a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Pagina Principal</a>
+<a href="#">Pagina Principal</a>
 <!-- 
 &rsaquo; <a href="/admin/gestor/">Gestor</a>
 &rsaquo; <a href="/admin/gestor/proyecto/">Proyectos</a>
@@ -57,10 +57,16 @@
  -->
 </div>
 
+    
+
+    
+        
+    
+
     <!-- Content -->
     <div id="content" class="colM">
         
-        <h1>Modificar HU</h1>
+        <h1>Asignar HU a usuario y a Flujos</h1>
         <div id="content-main">
 
 
@@ -74,73 +80,52 @@
     
   </ul>
 
-{%if is_Scrum == "1"%}    
+
 <form enctype="multipart/form-data" method="post" id="proyecto_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='lIrpccfDE0jXqIrun25AwLRBdIxGUDco' />
 {% csrf_token %}
-	<div>
-		<b>Descripcion de Scrum: </b> {{HU.descripcion}}<br/><br/>
-		<b>Valor de negocio: </b> {{HU.valor_negocio}}<br/><br/>
-		{{form.as_p}}
+
+    <div class="form-row field-permisos">
             
-	</div>
+            
+                <div>
+                    
+                    
+                        <label class="required" for="id_usuarios">HUs:</label>
+                        <table>
+                        {%for hu in hus%}
+                        <tr>
+                        	<td>{{hu}}</td>
+                        	<td><a href="#">Asignar a Usuario</a></td>
+                        	<td><a href="#">Asignar a Flujo</a></td>
+                        </tr>
+                        {%endfor%}
+                        </table>
+                            
+
+                        
+                    
+                    
+                       
+                    
+                </div>
+            
+        </div>
+
+
 <div class="submit-row">
 <input type="submit" value="Guardar" class="modificarProyecto" name="_save" />
-{%elif is_Scrum == "0"%}
-<form action="/guardarHU/{{HU.id}}/{{is_Scrum}}/" method="post"  required="required" autofocus="autofocus">
-	{% csrf_token %}
-	<div>
-     	<label class="required" for="id_nombre">Descripcion:</label>
-     	<input class="vTextField" id="id_nombre" maxlength="500" name="descripcion" value={{HU.descripcion}} type="text" />
-    </div>
+<!-- 
     
-    <div>
-        <label class="required" for="id_permisos">Valor de Negocio:</label>
-        <select id="id_actividades" name="valor_negocio">
-           {%for valor in valores %}
-          		{%ifequal valor HU.valor_negocio%}
-          			<option value="{{valor}}" selected="selected">{{valor}}</option>
-          		{%else%}
-					<option value="{{valor}}">{{valor}}</option>
-				{%endifequal%}
-			{%endfor%}
-		</select>
-    </div>
-    <div>
-        <label class="required" for="id_permisos">Estado:</label>
-        <select id="id_actividades" name="estado">
-           {%for e in estados %}
-          		{%if e == HU.estado%}
-          			<option value="{{e}}" selected="selected">{{e}}</option>
-          		{%else%}
-					<option value="{{e}}">{{e}}</option>
-				{%endif%}
-			{%endfor%}
-		</select>
-    </div>
-<input type="submit" name="Submit" value="Guardar" tabindex="2" />
-</form>
+    <p class="deletelink-box"><a href="/admin/gestor/proyecto/2/delete/" class="deletelink">Eliminar</a></p>
 
-{%else%}
-<form action="/guardarHU/{{HU.id}}/{{is_Scrum}}/" method="post">
-	{% csrf_token %}
-	<div>
-		<b>Descripcion de Scrum: </b> {{HU.descripcion}}<br/><br/>
-		<b>Duracion: </b> {{HU.duracion}}<br/><br/>
-		<b>Horas ya trabajadas: </b> {{HU.acumulador_horas}}<br/><br/>      
-	</div>
-    
-    <div>
-        <label class="required" for="id_horas_trabajadas">Agregar horas trabajadas:</label>
-        <input class="vTextField" id="id_nombre" maxlength="500" name="horas_agregar" type="text" required="required" autofocus="autofocus"/><br><br>
-        <label class="required" for="id_descripcion">Descripcion:</label>
-        <textarea name="descripcion_horas" rows="10" cols="40"></textarea>
-         
-    </div>
 
-<input type="submit" name="Submit" value="Guardar" tabindex="2"/>
-<p><a href="/adminAdjunto/{{HU.id}}/">Administrar archivos adjuntos</a></p>
-</form> 
-{%endif%}
+<input type="submit" value="Guardar y agregar otro" name="_addanother" />
+<input type="submit" value="Guardar y continuar editando" name="_continue" />
+</div>
+ -->
+
+
+
 
 
 <script type="text/javascript">

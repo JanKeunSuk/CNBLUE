@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from gestor.models import MyUser, asignacion, proyecto, rol, Flujo, Actividades, HU,\
-    Sprint, delegacion, HU_descripcion
+    Sprint, delegacion, HU_descripcion, archivoadjunto
 from django import forms
 from django.core.mail.message import EmailMessage
 from django.template.context import RequestContext
@@ -701,6 +701,7 @@ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
                                          })
         proyectox=proyecto.objects.get(id=proyectoid)
         HUs = HU.objects.filter(proyecto=proyectox)
+        flujos=Flujo.objects.all()
         for x in Sprint.objects.all():
             for h in x.hu.all():
                 HUs=HUs.exclude(id=h.id)
@@ -715,7 +716,7 @@ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
                 lista_restante.append(permitido)
         fecha = str(s.fecha_inicio)
         
-        ctx = {'estados':estados, 'fecha':fecha[:-6],'form':form,'HUs':HUs,'lista_HU_sin_asignar':lista_restante,'Sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
+        ctx = {'flujos':flujos,'estados':estados, 'fecha':fecha[:-6],'form':form,'HUs':HUs,'lista_HU_sin_asignar':lista_restante,'Sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
         return render_to_response('modificarSprint.html', ctx ,context_instance=RequestContext(request))
     
 class FormularioHU(forms.ModelForm):
@@ -733,11 +734,12 @@ def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec):
     en la HU que se quiere visualizar.
     """
     HU_disponible= HU.objects.get(id=HU_id_rec)
+    adjuntos=archivoadjunto.objects.get(hU=HU_disponible)
     formulario =  FormularioHU(initial={
                                                      'descripcion': HU_disponible.descripcion,
                                                      'valor_negocio': HU_disponible.valor_negocio,
                                                      })      
-    return render_to_response('visualizarHU.html',{'formulario':formulario, 'HU':HU_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid},
+    return render_to_response('visualizarHU.html',{'formulario':formulario, 'HU':HU_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'adjuntos':adjuntos},
                                   context_instance=RequestContext(request))
 
 def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
@@ -773,7 +775,6 @@ def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
                                         'duracion':h.duracion,
                                         #'estado':h.estado
                                          })
-            #ctx = {'estados':estados, 'valores':VALORES10_CHOICES,'form':form, 'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum}
             ctx = {'valores':VALORES10_CHOICES,'form':form, 'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum}
             return render_to_response('modificarHU.html', ctx ,context_instance=RequestContext(request))
     else:
@@ -816,11 +817,12 @@ def crearSprint(request,usuario_id,proyectoid,rolid):
     """
     proyectox = proyecto.objects.get(id=proyectoid)
     HUs = HU.objects.filter(proyecto=proyectox)
+    flujos=Flujo.objects.all()#le mando todos los flujos para que elija los que quiere
     for x in Sprint.objects.all():
         for h in x.hu.all():
             HUs=HUs.exclude(id=h.id)
     if request.method == 'GET':
-        return render(request, 'crearSprint.html',{'HUs':HUs,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
+        return render(request, 'crearSprint.html',{'flujos':flujos,'HUs':HUs,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
 
 def crearHU(request,usuario_id,proyectoid,rolid):
     """
@@ -1130,3 +1132,50 @@ def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
         s.estado='ACT'
         s.save()
     return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')
+
+
+def adminAdjunto(request,hu_id):
+    if request.method=='GET':
+        hux=HU.objects.get(id=hu_id)
+        adjuntos=[]
+        try: 
+            adjuntos=archivoadjunto.objects.filter(hU=hux)
+        except ObjectDoesNotExist:
+            adjuntos = []
+        return render(request,'adjuntos.html',{'HU':hux,'adjuntos':adjuntos})
+    else:
+        archivox = request.FILES['archivo']
+        filex=archivoadjunto.objects.create(archivo=archivox,hU_id=hu_id)
+        filex.save()
+        #archivox.save()
+        return HttpResponseRedirect('/adminAdjunto/'+hu_id+'/')
+    
+def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
+    """
+    El sprint backlog es una lista de las tareas identificadas por el equipo de Scrum
+    Los equipos estiman el número de horas para cada tarea que se corresponde a alguien del equipo para completar. 
+    """
+    cont=0
+    dias=0
+    proyectox=proyecto.objects.get(id=proyectoid)
+    hux=HU.objects.all().filter(proyecto=proyectox)
+    sprint=Sprint.objects.all().filter(proyecto=proyectox)
+    s=sorted(sprint,key=lambda x: x.estado, reverse=True)
+    for sp in sprint:
+        if sp.duracion>cont:
+            cont=sp.duracion
+            
+    while(dias!=cont):
+        dias=dias+1
+    return render(request,'visualizarSprintBacklog.html',{'sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'HUx':hux, 'dias':dias})
+
+
+
+def asignarHUFLujo(request,proyectoid,rolid,sprintid):
+    #Lo que muestra esta vista corresponde al dibujo AsignarHUaUsuarioyClasificarenFlujo.java
+    #Primero obtener todas las HUs de este proyecto activas y validadadasy que pertenecen al sprint actual
+    proyectox=proyecto.objects.get(id=proyectoid)
+    sprintx=Sprint.objects.get(id=sprintid)
+    hus=HU.objects.filter(proyecto=proyectox,estado='ACT',valido=True).filter(sprint=sprintx)
+    #ese ultimo filtro de arriba nose si esta bien porque es un manytoMany de sprint a HU
+    return render(request,"asignarHUFlujo.html",{'hus':hus,'sprint':sprintx,'proyecto':proyectox})
