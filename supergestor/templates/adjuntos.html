@@ -79,8 +79,9 @@
 							{%endfor%}
 							
 					<form enctype="multipart/form-data" method="post" id="adjunto_form">
-						<input type="file" name="archivo" />
-						<input type="submit" name="Subir archivo" value="Subir archivo" >
+					{% csrf_token %}
+						<input type="file" name="archivo" >
+						<input type="submit" name="Subir" value="Subir" >
 						
 					</form>
                         

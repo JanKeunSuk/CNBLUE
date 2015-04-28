@@ -1059,15 +1059,21 @@ def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
 
 
 def adminAdjunto(request,hu_id):
-    if request.Method=='GET':
+    if request.method=='GET':
         hux=HU.objects.get(id=hu_id)
-        adjuntos=archivoadjunto.objects.get(hU=hux)
-        return render(request,'adjuntos.html',{'HU',hux,'adjuntos',adjuntos})
+        adjuntos=[]
+        try: 
+            adjuntos=archivoadjunto.objects.filter(hU=hux)
+        except ObjectDoesNotExist:
+            adjuntos = []
+        return render(request,'adjuntos.html',{'HU':hux,'adjuntos':adjuntos})
     else:
-        archivox = request.REQUEST['archivo']
-        filex=archivoadjunto.objects.create(archivo=archivox)
+        archivox = request.FILES['archivo']
+        filex=archivoadjunto.objects.create(archivo=archivox,hU_id=hu_id)
         filex.save()
+        #archivox.save()
         return HttpResponseRedirect('/adminAdjunto/'+hu_id+'/')
+    
 def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     """
     Vista disponible para el Scrum.
