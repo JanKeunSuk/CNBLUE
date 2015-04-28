@@ -344,7 +344,12 @@ cur.execute(c)
 c="insert into gestor_sprint (descripcion, fecha_inicio, duracion, estado, proyecto_id) values ('sprint3', '2015-04-18 20:10:00-04', '2', 'ACT', '1');"
 cur.execute(c)
 #conexion.commit()
+
 c="insert into gestor_sprint_HU (sprint_id, hu_id) values ('1', '1');"
+cur.execute(c)
+c="insert into gestor_sprint_HU (sprint_id, hu_id) values ('2', '1');"
+cur.execute(c)
+c="insert into gestor_sprint_HU (sprint_id, hu_id) values ('3', '1');"
 cur.execute(c)
 
 #Descripcion de horas trabajadas y su descripcion HU
