@@ -52,5 +52,6 @@ urlpatterns = patterns('',
     url(r'^reactivar/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<tipo>\d+)/(?P<id_tipo>\d+)/$', views.reactivar, name='reactivar'),
     url(r'^adminAdjunto/(?P<hu_id>\d+)/$',views.adminAdjunto,name='adminAdjunto'),
     url(r'^visualizarSprintBacklog/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$',views.visualizarSprintBacklog,name='verSprintBacklog'),
-    url(r'^asignarHUFlujo/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<sprintid>\d+)/$',views.asignarHUFLujo,name='asignarHUFLujo'),
+    url(r'^asignarHUFlujo/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<sprintid>\d+)/$',views.asignarHU_Usuario_FLujo,name='asignarHU_Usuario_FLujo'),
+    url(r'^delegarHUFlujo/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<sprintid>\d+)/(?P<hu_id>\d+)/$',views.asignarHU_a_FLujo,name='asignarHU_a_FLujo'),
 )

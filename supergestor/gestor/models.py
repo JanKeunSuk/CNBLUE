@@ -278,10 +278,7 @@ class Sprint(models.Model):
     def __unicode__(self):
         """Representacion unicode del objeto sprint"""
         return self.descripcion
-    
-    
 
-    
 #Modelo para asignacion de actividades con HU en un flujo determinado
 class asignacion(models.Model):
     """Modelo que especifica una asignacion de un rol a un usuario en un proyecto"""
@@ -316,6 +313,5 @@ class asignaHU_actividad_flujo(models.Model):
     flujo_al_que_pertenece = models.ForeignKey(Flujo)
     def __unicode__(self):
         """Representacion unicode del objeto asignaHU_actividad_flujo"""
-        return str(self.id)+" - "+str(self.flujo_al_que_pertenece)+" - "+str(self.actividad_al_que_pertenece)
-    
+        return str(self.id)+" - "+str(self.flujo_al_que_pertenece)
     

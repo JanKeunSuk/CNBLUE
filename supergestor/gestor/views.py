@@ -8,8 +8,7 @@ from django.http.response import HttpResponseRedirect
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from gestor.models import MyUser, asignacion, proyecto, rol, Flujo, Actividades, HU,\
-    Sprint, delegacion, HU_descripcion, archivoadjunto
+from gestor.models import MyUser, asignacion, proyecto, rol, Flujo, Actividades, HU, Sprint, delegacion, HU_descripcion, archivoadjunto, asignaHU_actividad_flujo
 from django import forms
 from django.core.mail.message import EmailMessage
 from django.template.context import RequestContext
@@ -1176,11 +1175,30 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
 
 
 
-def asignarHUFLujo(request,proyectoid,rolid,sprintid):
+def asignarHU_Usuario_FLujo(request,usuario_id,proyectoid,rolid,sprintid):
     #Lo que muestra esta vista corresponde al dibujo AsignarHUaUsuarioyClasificarenFlujo.java
     #Primero obtener todas las HUs de este proyecto activas y validadadasy que pertenecen al sprint actual
     proyectox=proyecto.objects.get(id=proyectoid)
     sprintx=Sprint.objects.get(id=sprintid)
     hus=HU.objects.filter(proyecto=proyectox,estado='ACT',valido=True).filter(sprint=sprintx)
     #ese ultimo filtro de arriba nose si esta bien porque es un manytoMany de sprint a HU
-    return render(request,"asignarHUFlujo.html",{'hus':hus,'sprint':sprintx,'proyecto':proyectox,'rolid':rolid})
+    return render(request,"asignarHU_Usuario_Flujo.html",{'hus':hus,'sprint':sprintx,'proyecto':proyectox,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+
+def asignarHU_a_FLujo(request,usuario_id,proyectoid,rolid,sprintid,hu_id):
+    if request.method == 'POST':
+        flujo_id=request.POST['flujo']
+        x=0
+        for a in asignaHU_actividad_flujo.objects.all():
+            if str(a.id) == flujo_id:
+                x=a.id
+        if x == 0:       
+            asignar=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=Flujo.objects.get(id=flujo_id))
+            asignar.lista_de_HU.add(HU.objects.get(id=hu_id))
+            asignar.save()
+        else:
+            agregar_a_Flujo=asignaHU_actividad_flujo.objects.get(id=x)
+            agregar_a_Flujo.lista_de_HU.add(HU.objects.get(id=hu_id))
+            agregar_a_Flujo.save()
+        return HttpResponseRedirect('/asignarHUFlujo/'+str(usuario_id)+'/'+str(proyectoid)+'/'+str(rolid)+'/'+str(sprintid))
+    else:
+        return render(request,"asignarHUFlujo.html",{'flujos':Flujo.objects.all(),'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'sprintid':sprintid,'huid':hu_id})
