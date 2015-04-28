@@ -107,3 +107,6 @@ EMAIL_USE_TLS = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_ROOT= '/home/seba/git/CNBLUE/supergestor/media/'
+MEDIA_URL='/media/'

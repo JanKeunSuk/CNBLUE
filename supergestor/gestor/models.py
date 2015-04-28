@@ -247,6 +247,10 @@ class HU(models.Model):
 class archivoadjunto(models.Model):
     archivo=models.FileField()
     hU=models.ForeignKey(HU)
+    
+    def __unicode__(self):
+        """Representacion unicode del objeto HU"""
+        return self.archivo.name
 
 class Sprint(models.Model):
     """Modelo que reprenseta los Spring de un proyecto relacionados a
