@@ -180,7 +180,7 @@ class ProyectoCreationForm(forms.ModelForm):
     """
     class Meta:
         model=proyecto
-        fields=('nombre_corto','nombre_largo','descripcion','fecha_inicio','fecha_fin','flujos') #el estado en el momento de creacion tendra valor por defecto el usuario no decide  
+        fields=('nombre_corto','nombre_largo','descripcion','fecha_inicio','fecha_fin') #el estado en el momento de creacion tendra valor por defecto el usuario no decide  
     
 class proyectoAdmin(admin.ModelAdmin):
     """Configura la vista de administracion de Proyecto para un usuario administrador,

@@ -32,7 +32,7 @@
     <div id="header">
         <div id="branding">
         
-<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Asignacion de HU a Flujo</a></h1>
+<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Asignacion de HU a usuario {{rol.nombre_rol_id}}</a></h1>
 
         </div>
         
@@ -49,7 +49,7 @@
     <!-- END Header -->
     
 <div class="breadcrumbs">
-<a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Pagina Principal</a>
+<a href="#">Pagina Principal</a>
 <!-- 
 &rsaquo; <a href="/admin/gestor/">Gestor</a>
 &rsaquo; <a href="/admin/gestor/proyecto/">Proyectos</a>
@@ -66,7 +66,7 @@
     <!-- Content -->
     <div id="content" class="colM">
         
-        <h1>Asignar hu a flujo</h1>
+        <h1>Asignar HU a usuario y a Flujos</h1>
         <div id="content-main">
 
 
@@ -81,7 +81,7 @@
   </ul>
 
 
-<form enctype="multipart/form-data" action="/delegarHUFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprintid}}/{{huid}}/" method="post" id="proyecto_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='lIrpccfDE0jXqIrun25AwLRBdIxGUDco' />
+<form enctype="multipart/form-data" method="post" id="proyecto_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='lIrpccfDE0jXqIrun25AwLRBdIxGUDco' />
 {% csrf_token %}
 
     <div class="form-row field-permisos">
@@ -90,17 +90,22 @@
                 <div>
                     
                     
-                        <label class="required" for="id_usuarios">Flujos selecionados en Sprint:</label>
-                        
-                            <select id="id_usuarios" name="flujo">
-                            {%for flujo in flujos %}
-								<option value="{{flujo.id}}">{{flujo.nombre}}</option>
-							{%endfor%}
-</select>
+                        <label class="required" for="id_usuarios">HUs:</label>
+                        <table>
+                        {%for hu in hus%}
+                        <tr>
+                        	<td>{{hu}}</td>
+                        	<td><a href="/delegarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{hu.id}}/0/">Asignar a Usuario</a></td>
+                        	<td><a href="/delegarHUFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprint.id}}/{{hu.id}}/">Asignar a Flujo</a></td>
+                        </tr>
+                        {%endfor%}
+                        </table>
+                            
+
                         
                     
                     
-                        <p class="help"> Presiona "Control" para seleccionar mas de una opcion.</p>
+                       
                     
                 </div>
             

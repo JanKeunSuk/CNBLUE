@@ -50,13 +50,12 @@ c="insert into auth_permission (name, content_type_id, codename) values ('Can ch
 cur.execute(c)
 c="insert into auth_permission (name, content_type_id, codename) values ('Visualizar proyecto','12','Visualizar proyecto');"
 cur.execute(c)
-c="insert into auth_permission (name, content_type_id, codename) values ('Visualizar Equipo','12','Visualizar Equipo');"
+c="insert into auth_permission (name, content_type_id, codename) values ('Visualizar Equipo','12','Visualizar equipo');"
 cur.execute(c)
 c="insert into auth_permission (name, content_type_id, codename) values ('Visualizar HU','13','Visualizar HU');"
 cur.execute(c)
-
-
 conexion.commit()
+
 #carga de Proyecto
 c="insert into gestor_proyecto (nombre_corto, nombre_largo, descripcion, fecha_inicio, fecha_fin, estado) values ('p1','proyecto1', 'proyecto1','2015-03-31','2015-04-01', 'PEN');"
 cur.execute(c)
@@ -334,12 +333,6 @@ cur.execute(c)
 c="insert into gestor_flujo_actividades (flujo_id, actividades_id) values ('3' ,'2');"
 cur.execute(c)
 c="insert into gestor_flujo_actividades (flujo_id, actividades_id) values ('3' ,'5');"
-cur.execute(c)
-conexion.commit()
-
-
-#carga de Proyecto Flujo
-c="insert into gestor_proyecto_flujos (proyecto_id, flujo_id) values ('1','1');"
 cur.execute(c)
 conexion.commit()
 
