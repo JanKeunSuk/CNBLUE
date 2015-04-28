@@ -95,7 +95,9 @@
                         {%for hu in hus%}
                         <tr>
                         	<td>{{hu}}</td>
-                        	<td><a href="#">Asignar a Usuario</a></td>
+                        	<td><a href="/delegarHU/1/{{proyecto.id}}/{{rolid}}/{{hu.id}}/0/">Asignar a Usuario</a></td>
+                        	<!-- Le puse uno porque creo que no importa usuario_id mejor retroceder con la flecha nomas revisar despues
+                        	porque es una cadena enorme de envios de parametros para poder mandarle el usuario correcto -->
                         	<td><a href="#">Asignar a Flujo</a></td>
                         </tr>
                         {%endfor%}
