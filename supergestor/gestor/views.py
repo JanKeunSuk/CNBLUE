@@ -734,7 +734,7 @@ def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec):
     en la HU que se quiere visualizar.
     """
     HU_disponible= HU.objects.get(id=HU_id_rec)
-    adjuntos=archivoadjunto.objects.get(hU=HU_disponible)
+    adjuntos=archivoadjunto.objects.filter(hU=HU_disponible)
     formulario =  FormularioHU(initial={
                                                      'descripcion': HU_disponible.descripcion,
                                                      'valor_negocio': HU_disponible.valor_negocio,
