@@ -36,7 +36,14 @@
         <form id="formulario" action="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">{% csrf_token %}
         	<b>Nombre del flujo: </b> {{flujo.nombre}}<br/><br/>
         	<b>Estado: </b> {{flujo.estado}}<br/><br/>
-        	<b>Actividades: </b> <br/><br/>{% for actividad in flujo.actividades.all %}{{ actividad.nombre }}<br/><br/>{% endfor %}
+        	<b>Actividades ordenadas: </b> <br/><br/>
+        	{%for o in orden%}
+        		{% for actividad in flujo.actividades.all %}
+        			{%if o == actividad.id%}
+        				{{ actividad.nombre }}<br/><br/>
+        			{%endif%}
+        		{% endfor %}
+        	{% endfor %}
         	<input type="submit" value="Volver" />
         </form>
      </div>
