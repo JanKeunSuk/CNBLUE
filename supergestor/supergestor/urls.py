@@ -52,4 +52,5 @@ urlpatterns = patterns('',
     url(r'^reactivar/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<tipo>\d+)/(?P<id_tipo>\d+)/$', views.reactivar, name='reactivar'),
     url(r'^adminAdjunto/(?P<hu_id>\d+)/$',views.adminAdjunto,name='adminAdjunto'),
     url(r'^visualizarSprintBacklog/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$',views.visualizarSprintBacklog,name='verSprintBacklog'),
+    url(r'^asignarHUFlujo/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<sprintid>\d+)/$',views.asignarHUFLujo,name='asignarHUFLujo'),
 )

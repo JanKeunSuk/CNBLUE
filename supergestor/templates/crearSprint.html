@@ -119,6 +119,28 @@
                 </div>
             
         </div>
+        <div class="form-row field-Flujos">
+
+                <div>
+
+                        <label class="required" for="id_usuarios">Flujos:</label>
+                        
+                            <select multiple = "multiple" id="id_usuarios" name="HUs">
+                            {%for flujo in flujos %}
+								<option value="{{flujo.id}}"> {{flujo}}</option>
+							{%endfor%}
+</select>
+
+                        <p class="help"> Presiona "Control" para seleccionar mas de una opcion.</p>
+                        <p><a href="/crearFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}">Agregar nuevo</a></p>
+                        <p><a href="#">Modificar seleccionado</a></p>
+                    
+                </div>
+            
+        </div>
+        <div class="form-row field-asignar">
+        <p><a href="/asignarHUFlujo/{{proyectoid}}/{{rolid}}/{{Sprint.id}}">Asignar HU a usuarios y calsificar en los flujos</a></p>
+        </div>
 
 </fieldset>
 
