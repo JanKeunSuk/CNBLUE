@@ -59,13 +59,17 @@
 						<td><b>Descripcion</b></td>
 						<td><b>Historias de Usuario</b></td>
 						{% for d in dias %}
-							<td><b> {{d.dias}} dias</b></td>
+							<td><b> DIA {{d}} </b></td>
 						{%endfor%}
 					</tr>
 				{% for Sprint in sprint %}
 					<tr>
-						<td>{{Sprint}}</td>
+					<td>{{Sprint}}</td>
+					{{Sprint.id}}
 					</tr>
+				{%endfor%}
+				{%for h in sprint.hu.all%}
+					{{h.sprint_id}}
 				{%endfor%}
 	
         	</tr>

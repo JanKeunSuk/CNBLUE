@@ -1155,6 +1155,7 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     El sprint backlog es una lista de las tareas identificadas por el equipo de Scrum
     Los equipos estiman el número de horas para cada tarea que se corresponde a alguien del equipo para completar. 
     """
+    lista=[]
     cont=0
     dias=0
     proyectox=proyecto.objects.get(id=proyectoid)
@@ -1167,7 +1168,8 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
             
     while(dias!=cont):
         dias=dias+1
-    return render(request,'visualizarSprintBacklog.html',{'sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'HUx':hux, 'dias':dias})
+        lista.append(dias)
+    return render(request,'visualizarSprintBacklog.html',{'sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'HUx':hux, 'dias':lista})
 
 
 
