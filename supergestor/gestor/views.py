@@ -174,7 +174,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         for h in HU.objects.filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True):
             x=0
             for d in delegacion.objects.all():
-                if d.HU == h:
+                if d.hu == h:
                     x=1
             if x == 0:
                 HU_no_asignada.append(h)
@@ -1068,3 +1068,12 @@ def adminAdjunto(request,hu_id):
         filex=archivoadjunto.objects.create(archivo=archivox)
         filex.save()
         return HttpResponseRedirect('/adminAdjunto/'+hu_id+'/')
+def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
+    """
+    Vista disponible para el Scrum.
+    Esta vista contiene la lista de sprint ACTIVAS
+    """
+    proyectox=proyecto.objects.get(id=proyectoid)
+    sprint_activas=Sprint.objects.all().filter(proyecto=proyectox).filter(estado='ACT')
+    s=sorted(sprint_activas,key=lambda x: x.duracion, reverse=True)
+    return render(request,'visualizarSprintBacklog.html',{'sprint_activas':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
