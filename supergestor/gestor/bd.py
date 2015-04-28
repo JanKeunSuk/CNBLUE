@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-import psycopg2
+import psycopg20
 
 #Establecemos la conexion con la base de datos
 conexion = psycopg2.connect("dbname=prueba5 host=localhost port=5432 user=seba2 password=seba2")
@@ -50,13 +49,12 @@ c="insert into auth_permission (name, content_type_id, codename) values ('Can ch
 cur.execute(c)
 c="insert into auth_permission (name, content_type_id, codename) values ('Visualizar proyecto','12','Visualizar proyecto');"
 cur.execute(c)
-c="insert into auth_permission (name, content_type_id, codename) values ('Visualizar Equipo','12','Visualizar Equipo');"
+c="insert into auth_permission (name, content_type_id, codename) values ('Visualizar Equipo','12','Visualizar equipo');"
 cur.execute(c)
 c="insert into auth_permission (name, content_type_id, codename) values ('Visualizar HU','13','Visualizar HU');"
 cur.execute(c)
-
-
 conexion.commit()
+
 #carga de Proyecto
 c="insert into gestor_proyecto (nombre_corto, nombre_largo, descripcion, fecha_inicio, fecha_fin, estado) values ('p1','proyecto1', 'proyecto1','2015-03-31','2015-04-01', 'PEN');"
 cur.execute(c)
@@ -337,12 +335,10 @@ c="insert into gestor_flujo_actividades (flujo_id, actividades_id) values ('3' ,
 cur.execute(c)
 conexion.commit()
 
+<<<<<<< HEAD
+=======
 
-#carga de Proyecto Flujo
-c="insert into gestor_proyecto_flujos (proyecto_id, flujo_id) values ('1','1');"
-cur.execute(c)
-conexion.commit()
-
+>>>>>>> branch 'experimento' of https://github.com/JanKeunSuk/CNBLUE.git
 #creacion de HU
 c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU1', '3', '5', '5', '5', '4', 'ACT', 'ACT','TRUE', '1');"
 cur.execute(c)
@@ -416,3 +412,4 @@ conexion.commit()
 cur.close()
 #Cerramos la conexion con la base de datos
 conexion.close()
+

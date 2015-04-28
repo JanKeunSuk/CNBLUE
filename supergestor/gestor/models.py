@@ -165,22 +165,7 @@ class Actividades(models.Model):
         return str(self.id)  + " - " + self.nombre
     
     
-class Flujo(models.Model):
-    """Representacion de un flujo de proyecto relacionado a su respectivo proyecto
-    mediante"""
-    
-    ESTADO_CHOICES = (
-        ('CAN', 'Cancelado'),
-        ('ACT', 'Activo'),
-    )
-     
-    nombre = models.CharField(max_length = 200)
-    estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
-    actividades = models.ManyToManyField(Actividades)
-    orden_actividades = models.TextField(null=True) # JSON-serialized (text) version of your list
-    def __unicode__(self):
-        """Representacion unicode del objeto flujo"""
-        return str(self.id) + self.nombre
+
 
 
 class proyecto(models.Model):
@@ -198,7 +183,7 @@ class proyecto(models.Model):
     fecha_inicio = models.DateTimeField()
     fecha_fin = models.DateTimeField()
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
-    flujos = models.ManyToManyField(Flujo)
+    #flujos = models.ManyToManyField(Flujo)
     
     def __unicode__(self):
         """Representacion unicode del objeto proyecto"""
@@ -252,6 +237,25 @@ class archivoadjunto(models.Model):
     def __unicode__(self):
         """Representacion unicode del objeto HU"""
         return self.archivo.name
+    
+    
+    
+class Flujo(models.Model):
+    """Representacion de un flujo de proyecto relacionado a su respectivo proyecto
+    mediante"""
+    
+    ESTADO_CHOICES = (
+        ('CAN', 'Cancelado'),
+        ('ACT', 'Activo'),
+    )
+     
+    nombre = models.CharField(max_length = 200)
+    estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
+    actividades = models.ManyToManyField(Actividades)
+    orden_actividades = models.TextField(null=True) # JSON-serialized (text) version of your list
+    def __unicode__(self):
+        """Representacion unicode del objeto flujo"""
+        return str(self.id) + self.nombre
 
 class Sprint(models.Model):
     """Modelo que reprenseta los Spring de un proyecto relacionados a
@@ -269,11 +273,12 @@ class Sprint(models.Model):
     duracion = models.FloatField()
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
     proyecto=models.ForeignKey(proyecto)
+    flujo=models.ManyToManyField(Flujo)
     
     def __unicode__(self):
         """Representacion unicode del objeto sprint"""
         return self.descripcion
-    
+
 #Modelo para asignacion de actividades con HU en un flujo determinado
 class asignacion(models.Model):
     """Modelo que especifica una asignacion de un rol a un usuario en un proyecto"""
@@ -306,9 +311,7 @@ class asignaHU_actividad_flujo(models.Model):
     """Modelo intermedio para la relacion varios a varios del modelo flujo con actividades"""
     lista_de_HU = models.ManyToManyField(HU)
     flujo_al_que_pertenece = models.ForeignKey(Flujo)
-    actividad_al_que_pertenece = models.ForeignKey(Actividades)
     def __unicode__(self):
         """Representacion unicode del objeto asignaHU_actividad_flujo"""
-        return str(self.id)+" - "+str(self.flujo_al_que_pertenece)+" - "+str(self.actividad_al_que_pertenece)
-    
+        return str(self.id)+" - "+str(self.flujo_al_que_pertenece)
     

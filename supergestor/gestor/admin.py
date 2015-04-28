@@ -9,7 +9,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField 
 from gestor.models import MyUser, Permitido, rol, asignacion, proyecto,\
-    asigna_sistema, rol_sistema,Flujo, Sprint
+    asigna_sistema, rol_sistema,Flujo, Sprint, archivoadjunto
 
 
 class UserCreationForm(forms.ModelForm):
@@ -180,7 +180,7 @@ class ProyectoCreationForm(forms.ModelForm):
     """
     class Meta:
         model=proyecto
-        fields=('nombre_corto','nombre_largo','descripcion','fecha_inicio','fecha_fin','flujos') #el estado en el momento de creacion tendra valor por defecto el usuario no decide  
+        fields=('nombre_corto','nombre_largo','descripcion','fecha_inicio','fecha_fin') #el estado en el momento de creacion tendra valor por defecto el usuario no decide  
     
 class proyectoAdmin(admin.ModelAdmin):
     """Configura la vista de administracion de Proyecto para un usuario administrador,
@@ -207,6 +207,7 @@ admin.site.register(asigna_sistema)
 admin.site.register(rol_sistema)
 admin.site.register(Flujo,FlujoAdmin)
 admin.site.register(Sprint,SprintAdmin)
+admin.site.register(archivoadjunto)
 
 # unregister the Group model from admin.
 admin.site.unregister(Group)
