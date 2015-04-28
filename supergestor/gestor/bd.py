@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import psycopg20
+import psycopg2
 
 #Establecemos la conexion con la base de datos
 conexion = psycopg2.connect("dbname=prueba5 host=localhost port=5432 user=seba2 password=seba2")
@@ -335,10 +335,6 @@ c="insert into gestor_flujo_actividades (flujo_id, actividades_id) values ('3' ,
 cur.execute(c)
 conexion.commit()
 
-<<<<<<< HEAD
-=======
-
->>>>>>> branch 'experimento' of https://github.com/JanKeunSuk/CNBLUE.git
 #creacion de HU
 c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU1', '3', '5', '5', '5', '4', 'ACT', 'ACT','TRUE', '1');"
 cur.execute(c)
