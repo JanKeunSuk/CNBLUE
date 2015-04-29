@@ -215,13 +215,13 @@ sp1.hu.add(hu1,hu2,hu3)
 
 
 """Creacion de descripciones de hu para posterior asociacion con una HU"""
-dhu1=HU_descripcion.objects.create(horas_trabajadas=2,descripcion_horas_trabajadas='Tarea1')
-dhu2=HU_descripcion.objects.create(horas_trabajadas=1,descripcion_horas_trabajadas='Tarea2')
-dhu3=HU_descripcion.objects.create(horas_trabajadas=1,descripcion_horas_trabajadas='Tarea3')
-dhu4=HU_descripcion.objects.create(horas_trabajadas=2,descripcion_horas_trabajadas='Tarea1')
-dhu5=HU_descripcion.objects.create(horas_trabajadas=2,descripcion_horas_trabajadas='Tarea2')
-dhu6=HU_descripcion.objects.create(horas_trabajadas=2,descripcion_horas_trabajadas='Tarea1')
-dhu7=HU_descripcion.objects.create(horas_trabajadas=2,descripcion_horas_trabajadas='Tarea2')
+dhu1=HU_descripcion.objects.create(horas_trabajadas=2,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.now()))
+dhu2=HU_descripcion.objects.create(horas_trabajadas=1,descripcion_horas_trabajadas='Tarea2',fecha=str(datetime.now()))
+dhu3=HU_descripcion.objects.create(horas_trabajadas=1,descripcion_horas_trabajadas='Tarea3',fecha=str(datetime.now()))
+dhu4=HU_descripcion.objects.create(horas_trabajadas=2,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.now()))
+dhu5=HU_descripcion.objects.create(horas_trabajadas=2,descripcion_horas_trabajadas='Tarea2',fecha=str(datetime.now()))
+dhu6=HU_descripcion.objects.create(horas_trabajadas=2,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.now()))
+dhu7=HU_descripcion.objects.create(horas_trabajadas=2,descripcion_horas_trabajadas='Tarea2',fecha=str(datetime.now()))
 
 """Asociar la hu con una descripcion"""
 hu1.hu_descripcion.add(dhu1)
