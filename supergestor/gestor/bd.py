@@ -336,11 +336,11 @@ cur.execute(c)
 conexion.commit()
 
 #creacion de HU
-c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU1', '3', '5', '5', '5', '4', 'ACT', 'ACT','TRUE', '1');"
+c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU1', '3', '5', '5', '5', '4', 'ACT', 'PEN','TRUE', '1');"
 cur.execute(c)
-c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas,  estado, estado_en_actividad, valido, proyecto_id) values ('HU2', '5', '7', '5', '9', '4',  'ACT','ACT', 'TRUE', '1');"
+c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas,  estado, estado_en_actividad, valido, proyecto_id) values ('HU2', '5', '7', '5', '9', '4',  'ACT','PEN', 'TRUE', '1');"
 cur.execute(c)
-c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU3', '8', '6', '3', '8', '4', 'ACT', 'ACT','TRUE', '1');"
+c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU3', '8', '6', '3', '8', '4', 'ACT', 'PEN','TRUE', '1');"
 cur.execute(c)
 c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU4', '8', '0', '0', '0', '0', 'ACT', 'PEN','FALSE', '2');"
 cur.execute(c)
