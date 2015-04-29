@@ -8,7 +8,6 @@ conexion = psycopg2.connect("dbname=prueba5 host=localhost port=5432 user=seba2 
 #Preparamos el cursor que nos va a ayudar a realizar las operaciones con la base de datos
 cur=conexion.cursor()
 
-
 #Correos permitidos
 # Preparamos el query SQL para insertar un registro en la BD
 c="insert into gestor_permitido (email) values ('admin@gmail.com');"
@@ -371,14 +370,14 @@ c="insert into gestor_sprint_HU (sprint_id, hu_id) values ('3', '1');"
 cur.execute(c)
 
 #Descripcion de horas trabajadas y su descripcion HU
-c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas) values ('2', 'Tarea1');"
+c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas, fecha) values ('2', 'Tarea1', '2015-04-18 20:00:00-04');"
 cur.execute(c)
-c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas) values ('1', 'Tarea2');"
+c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas, fecha) values ('1', 'Tarea2', '2015-04-18 20:00:00-04');"
 cur.execute(c)
-c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas) values ('1', 'Tarea3');"
+c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas, fecha) values ('1', 'Tarea3', '2015-04-18 20:00:00-04');"
 cur.execute(c)
-c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas) values ('2', 'Tarea1');"
-cur.execute(c)
+conexion.commit()
+"""
 c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas) values ('2', 'Tarea2');"
 cur.execute(c)
 c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas) values ('2', 'Tarea1');"
@@ -386,6 +385,7 @@ cur.execute(c)
 c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas) values ('2', 'Tarea2');"
 cur.execute(c)
 conexion.commit()
+
 #Guarda el hu con su descripcion
 c="insert into gestor_hu_hu_descripcion (hu_id, hu_descripcion_id) values ('1', '1');"
 cur.execute(c)
@@ -401,7 +401,7 @@ c="insert into gestor_hu_hu_descripcion (hu_id, hu_descripcion_id) values ('3', 
 cur.execute(c)
 c="insert into gestor_hu_hu_descripcion (hu_id, hu_descripcion_id) values ('3', '7');"
 cur.execute(c)
-
+"""
 #Efectuamos los cambios en la base de datos
 conexion.commit()
 #Cerramos el cursor
