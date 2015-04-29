@@ -163,10 +163,6 @@ class Actividades(models.Model):
     def __unicode__(self):
         """Representacion unicode del objeto actividad"""
         return str(self.id)  + " - " + self.nombre
-    
-    
-
-
 
 class proyecto(models.Model):
     """Modelo que representa los proyectos que se pueden usar en el sistema"""
@@ -221,6 +217,7 @@ class HU(models.Model):
     duracion = models.FloatField()
     acumulador_horas = models.FloatField()
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
+    #actividad=models.ForeignKey(Actividades)
     estado_en_actividad = models.CharField(max_length = 3, choices = ESTADO_ACTIVIDAD_CHOICES)
     proyecto=models.ForeignKey(proyecto) #este campo va indicar a que proyecto pertenece asi en la vista ya no tenemos que hacer hu.objects.all()
     valido=models.BooleanField(default=False) # rl productOwner debe validar

@@ -60,7 +60,7 @@
 
 
 
-<form enctype="multipart/form-data" action="/guardarSprint/{{proyectoid}}/" method="post" id="rol_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
+<form enctype="multipart/form-data" action="/guardarSprint/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="post" id="rol_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
 {% csrf_token %}
 <div>
 
@@ -72,7 +72,7 @@
 
                         <label class="required" for="id_descripcion">Descripcion:</label>
                         
-                            <input class="vTextField" id="id_descripcion" maxlength="500" name="descripcion" type="text" />
+                            <input class="vTextField" id="id_descripcion" maxlength="500" name="descripcion" type="text" value="{{nombre}}"/>
 
                 </div>
             
@@ -89,18 +89,6 @@
                 </div>
             
         </div>
-            
-        <div class="form-row field-duracion">
-
-                <div>
-
-                        <label class="required" for="id_duracion">Duracion:</label>
-                        
-                            <input class="vTextField" id="id_duracion" maxlength="500" name="duracion" type="text" />
-
-                </div>
-
-        </div>
         
         <div class="form-row field-HUs">
 
@@ -110,15 +98,37 @@
                         
                             <select multiple = "multiple" id="id_usuarios" name="HUs">
                             {%for HU in HUs %}
-								<option value="{{HU.id}}">{{HU.descripcion}}</option>
+                            	{%for h in HUs_seleccionadas%}
+                            		{%if HU == h%}
+                            			<option value="{{HU.id}}" selected>{{HU.descripcion}}</option>
+                            		{%endif%}
+                            	{%endfor%}
+                            	{%for h in HUs_no_seleccionadas%}
+                            		{%if HU == h%}
+                            			<option value="{{HU.id}}">{{HU.descripcion}}</option>
+                            		{%endif%}
+                            	{%endfor%}
 							{%endfor%}
-</select>
+						</select>
 
                         <p class="help"> Presiona "Control" para seleccionar mas de una opcion.</p>
                     
                 </div>
-            
+            	<button id="assign" name="boton" onclick="agregar()" value="Calcular">Estimar duracion</button>
         </div>
+        
+        <div class="form-row field-duracion">
+
+                <div>
+
+                        <label class="required" for="id_duracion">Duracion:</label>
+                        
+                            <input class="vTextField" id="id_duracion" maxlength="500" name="duracion" value="{{duracion}}" type="text" />
+
+                </div>
+
+        </div>
+        
         <div class="form-row field-Flujos">
 
                 <div>
@@ -141,7 +151,7 @@
 </fieldset>
 
 <div class="submit-row">
-<input type="submit" value="Guardar" />
+<input type="submit" value="Guardar" name="_save" />
 
 </div>
 
