@@ -17,6 +17,7 @@ from django.forms.widgets import CheckboxSelectMultiple
 from django.contrib.auth.models import Permission
 from datetime import datetime 
 import json
+from django.utils import timezone
 
 # Create your views and forms here.
 @login_required
@@ -182,13 +183,22 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
                     HU_asignada.append(h)
     else:
         HUsa=0
-    
+    agregar_horas=[]
     if rolx.tiene_permiso('Agregar horas trabajadas'):
         for d in delegacion.objects.all():
             if d.hu.proyecto == proyectox and str(d.usuario.id) == usuario_id:
                 if d.hu.estado == 'ACT':
                     HUs_add_horas.append(d.hu)
-        enlaceHU_agregar.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar horas'))
+        #HU ordenada por prioridad
+        HUs_add_horas=sorted(HUs_add_horas,key=lambda x: x.prioridad, reverse=True)
+        i=0
+        
+        for p in HUs_add_horas:
+            if p.acumulador_horas != p.duracion:
+                agregar_horas=HUs_add_horas[i]             
+                enlaceHU_agregar.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar horas'))
+                break
+            i=i+1
         is_Scrum=2
     HUc={}
     HUv=[]
@@ -219,7 +229,8 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     if rolx.tiene_permiso('Can add sprint') or rolx.tiene_permiso('Can change sprint'):
         enlaceSprintv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
           
-    return render(request,'rol-flujo-para-scrum.html',{'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HU_asignada':HU_asignada, 'HU_no_asignada':HU_no_asignada,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsf':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner})
+    return render(request,'rol-flujo-para-scrum.html',{'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HU_asignada':HU_asignada, 'HU_no_asignada':HU_no_asignada,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsf':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas})
+
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
 def registrarUsuarioView(request):
@@ -348,7 +359,7 @@ def guardarHUProdOwnerView(request,HU_id_rec,is_Scrum):
     @0: corresponde a la modificaci[on realizada por el Product Owner
     @1: coresponde a la modificaci[on realizada por el Scrum
     @2: corresponde a la modificaci[on realizada por el Equipo"""
-    try:        
+    try:
         h=HU.objects.get(id=HU_id_rec)
         if request.method == 'POST':
             if is_Scrum == '0':
@@ -361,23 +372,35 @@ def guardarHUProdOwnerView(request,HU_id_rec,is_Scrum):
                 h.save() #Guardamos el modelo de manera Editada
                 return HttpResponse('La descripcion y valor de negocio de la HU a sido modificado exitosamente')
             else:
-                proyectox=proyecto.objects.get(id=h.proyecto.id)
-                horas_a_agregar = request.POST['horas_agregar']
-                descripcion_horas=request.POST['descripcion_horas']
-                hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas)
-                h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
-                hd.save()
-                acumulador_horas = float(horas_a_agregar)+h.acumulador_horas
-                if h.duracion >= acumulador_horas:
-                    h.acumulador_horas=acumulador_horas
-                    h.save()
-                    if proyectox.estado == 'PEN' and acumulador_horas > 0:
-                        proyectox.estado='ACT'
-                        proyectox.save()               
-                    return HttpResponse('Las horas se han agregado exitosamente')
+                acumulador=0
+                prueba=request.POST['horas_agregar']
+                acumulador=acumulador + float(prueba)
+                y=str(timezone.now())
+                for horas in h.hu_descripcion.all():
+                    x=str(horas.fecha)
+                    if x[:10] == y[:10]:
+                        acumulador=horas.horas_trabajadas + acumulador
+                if acumulador<9:     
+                    proyectox=proyecto.objects.get(id=h.proyecto.id)
+                    horas_a_agregar = request.POST['horas_agregar']
+                    descripcion_horas=request.POST['descripcion_horas']
+                    fecha=timezone.now()
+                    hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas, fecha=fecha)
+                    h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
+                    hd.save()
+                    acumulador_horas = float(horas_a_agregar)+h.acumulador_horas
+                    if h.duracion >= acumulador_horas:
+                        h.acumulador_horas=acumulador_horas
+                        h.save()
+                        if proyectox.estado == 'PEN' and acumulador_horas > 0:
+                            proyectox.estado='ACT'
+                            proyectox.save()               
+                        return HttpResponse('Las horas se han agregado exitosamente')
                 
+                    else:
+                        return HttpResponse('Contactar con el Scrum para aumentar la duracion de la HU, ya que ha sobrepasado el tiempo de realizacion de HU')
                 else:
-                    return HttpResponse('Contactar con el Scrum para aumentar la duracion de la HU, ya que ha sobrepasado el tiempo de realizacion de HU')
+                        return HttpResponse('Las Horas cargadas ya superan las 8 Horas diarias que deben cargarse por dia') 
     except ObjectDoesNotExist:
             print "Either the entry or blog doesn't exist." 
             return HttpResponseRedirect('/crearHU/')
@@ -1175,7 +1198,7 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
         lista.append(dias)
     return render(request,'visualizarSprintBacklog.html',{'sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'HUx':hux, 'dias':lista})
 
-
+ 
 
 def asignarHU_Usuario_FLujo(request,usuario_id,proyectoid,rolid,sprintid):
     #Lo que muestra esta vista corresponde al dibujo AsignarHUaUsuarioyClasificarenFlujo.java
