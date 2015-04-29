@@ -81,7 +81,7 @@
   </ul>
 
 
-<form enctype="multipart/form-data" action="/delegarHUFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprintid}}/{{huid}}/" method="post" id="proyecto_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='lIrpccfDE0jXqIrun25AwLRBdIxGUDco' />
+<form enctype="multipart/form-data" action="/delegarHUFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprintid}}/{{flujo.id}}/" method="post" id="proyecto_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='lIrpccfDE0jXqIrun25AwLRBdIxGUDco' />
 {% csrf_token %}
 
     <div class="form-row field-permisos">
@@ -92,11 +92,12 @@
                     
                         <label class="required" for="id_usuarios">Flujos selecionados en Sprint:</label>
                         
-                            <select id="id_usuarios" name="flujo">
-                            {%for flujo in flujos %}
-								<option value="{{flujo.id}}">{{flujo.nombre}}</option>
+                        	<p> Seleccionar HU para el flujo <b>{{flujo.nombre}}</b></p>
+                        <select id="id_usuarios" name="hu" multiple>
+                            {%for h in hus %}
+								<option value="{{h.id}}">{{h}}</option>
 							{%endfor%}
-</select>
+						</select>
                         
                     
                     

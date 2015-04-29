@@ -338,21 +338,43 @@ def guardarHUView(request,proyectoid):
         print "Either the entry or blog doesn't exist." 
         return HttpResponseRedirect('/crearHU/')
 
-def guardarSprintView(request, proyectoid):
+def guardarSprintView(request, usuario_id, proyectoid, rolid):
     """Vista de guardado de un nuevo Sprint en la Base de datos
     que se utiliza en la interfaz devuelta por /crearSprint/"""
-    try:
-        Sprint_a_crear = Sprint.objects.create(descripcion=request.POST['descripcion'],estado="ACT",fecha_inicio=request.POST['fecha_inicio'], duracion=request.POST['duracion'], proyecto=proyecto.objects.get(id=proyectoid))
-        for p in request.POST.getlist('HUs'):
-            Sprint_a_crear.hu.add(HU.objects.get(id=p))
-        for f in request.POST.getlist('Flujos'):
-            Sprint_a_crear.flujo.add(Flujo.objects.get(id=f))
-        Sprint_a_crear.save()
-        return HttpResponse('El Sprint se ha creado')  
-    except ObjectDoesNotExist:
-        print "Either the entry or blog doesn't exist." 
-        return HttpResponseRedirect('/crearSprint/')
-
+    guardar=0
+    for g in request.POST.getlist('_save'):
+        if g == 'Guardar':
+            guardar=1
+    if guardar == 1:
+        try:
+            Sprint_a_crear = Sprint.objects.create(descripcion=request.POST['descripcion'],estado="ACT",fecha_inicio=request.POST['fecha_inicio'], duracion=request.POST['duracion'], proyecto=proyecto.objects.get(id=proyectoid))
+            for p in request.POST.getlist('HUs'):
+                Sprint_a_crear.hu.add(HU.objects.get(id=p))
+            for f in request.POST.getlist('Flujos'):
+                Sprint_a_crear.flujo.add(Flujo.objects.get(id=f))
+            Sprint_a_crear.save()
+            return HttpResponse('El Sprint se ha creado')  
+        except ObjectDoesNotExist:
+            print "Either the entry or blog doesn't exist." 
+            return HttpResponseRedirect('/crearSprint/')
+    else:
+        if request.POST['boton'] == 'Calcular':
+            proyectox = proyecto.objects.get(id=proyectoid)
+            HUs = HU.objects.filter(proyecto=proyectox)
+            flujos=Flujo.objects.all()#le mando todos los flujos para que elija los que quiere
+            for x in Sprint.objects.all():
+                for h in x.hu.all():
+                    HUs=HUs.exclude(id=h.id)
+            max=0
+            hus_seleccionadas=[]
+            HUs_no_seleccionadas=HUs
+            for h in request.POST.getlist('HUs'):
+                hus_seleccionadas.append(HU.objects.get(id=h))
+                HUs_no_seleccionadas=HUs_no_seleccionadas.exclude(id=h)
+                if HU.objects.get(id=h).duracion > max:
+                    max=HU.objects.get(id=h).duracion
+        return render(request, 'crearSprint.html',{'nombre':request.POST['descripcion'],'duracion':int(max/8),'flujos':flujos,'HUs':HUs,'HUs_seleccionadas':hus_seleccionadas,'HUs_no_seleccionadas':HUs_no_seleccionadas,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
+            
 def guardarHUProdOwnerView(request,HU_id_rec,is_Scrum):
     """Vista de guardado de la modificacion de una HU existente modificada por el Product Owner
     que se utiliza en la interfaz devuelta por /modificarHU/ 
@@ -849,7 +871,7 @@ def crearSprint(request,usuario_id,proyectoid,rolid):
         for h in x.hu.all():
             HUs=HUs.exclude(id=h.id)
     if request.method == 'GET':
-        return render(request, 'crearSprint.html',{'flujos':flujos,'HUs':HUs,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
+        return render(request, 'crearSprint.html',{'HUs_no_seleccionadas':HUs,'flujos':flujos,'HUs':HUs,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
 
 def crearHU(request,usuario_id,proyectoid,rolid):
     """
@@ -1206,24 +1228,50 @@ def asignarHU_Usuario_FLujo(request,usuario_id,proyectoid,rolid,sprintid):
     proyectox=proyecto.objects.get(id=proyectoid)
     sprintx=Sprint.objects.get(id=sprintid)
     hus=HU.objects.filter(proyecto=proyectox,estado='ACT',valido=True).filter(sprint=sprintx)
-    #ese ultimo filtro de arriba nose si esta bien porque es un manytoMany de sprint a HU
-    return render(request,"asignarHU_Usuario_Flujo.html",{'hus':hus,'sprint':sprintx,'proyecto':proyectox,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
-
-def asignarHU_a_FLujo(request,usuario_id,proyectoid,rolid,sprintid,hu_id):
-    if request.method == 'POST':
-        flujo_id=request.POST['flujo']
-        x=0
+    hu_en_flujo={}
+    for f in Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)):
         for a in asignaHU_actividad_flujo.objects.all():
-            if str(a.id) == flujo_id:
-                x=a.id
-        if x == 0:       
-            asignar=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=Flujo.objects.get(id=flujo_id))
-            asignar.lista_de_HU.add(HU.objects.get(id=hu_id))
-            asignar.save()
-        else:
-            agregar_a_Flujo=asignaHU_actividad_flujo.objects.get(id=x)
-            agregar_a_Flujo.lista_de_HU.add(HU.objects.get(id=hu_id))
-            agregar_a_Flujo.save()
+            if f == a.flujo_al_que_pertenece:
+                for h in a.lista_de_HU.all():
+                    if h.proyecto == proyectox:
+                        hu_en_flujo[f]=a.lista_de_HU.all()
+                        break
+    HU_no_asignada=[]
+    HU_asignada={}
+    for HUa in hus:
+            x=0
+            for d in delegacion.objects.all():
+                if d.hu == HUa:
+                    x=1
+                    HU_asignada[HUa]=d.usuario
+            if x == 0:
+                HU_no_asignada.append(HUa)
+
+    return render(request,"asignarHU_Usuario_Flujo.html",{'hu_en_flujo':hu_en_flujo,'flujos':Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)),'HU_no_asignada':HU_no_asignada,'HU_asignada':HU_asignada,'hus':hus,'sprint':sprintx,'proyecto':proyectox,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+
+def asignarHU_a_FLujo(request,usuario_id,proyectoid,rolid,sprintid,flujo_id):
+    sprintx=Sprint.objects.get(id=sprintid)
+    proyectox=proyecto.objects.get(id=proyectoid)
+    flujo=Flujo.objects.get(id=flujo_id)
+    hus=HU.objects.filter(proyecto=proyectox,estado='ACT',valido=True).filter(sprint=sprintx)
+    for f in Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)):
+        for a in asignaHU_actividad_flujo.objects.all():
+            if a.flujo_al_que_pertenece == f:
+                for h in a.lista_de_HU.all():
+                    if h.proyecto == proyectox:
+                        hus=hus.exclude(id=h.id)
+    if request.method == 'POST':
+        for a in request.POST.getlist('hu'):
+            asig=asignaHU_actividad_flujo.objects.filter(flujo_al_que_pertenece=flujo)
+            if asig:
+                for f in asig:
+                    if f.lista_de_HU.filter(proyecto=proyectox):
+                        f.lista_de_HU.add(HU.objects.get(id=a))
+                        f.save()
+            else:
+                asignar=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=Flujo.objects.get(id=flujo_id))
+                asignar.lista_de_HU.add(HU.objects.get(id=a))
+                asignar.save()
         return HttpResponseRedirect('/asignarHUFlujo/'+str(usuario_id)+'/'+str(proyectoid)+'/'+str(rolid)+'/'+str(sprintid))
     else:
-        return render(request,"asignarHUFlujo.html",{'flujos':Flujo.objects.all(),'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'sprintid':sprintid,'huid':hu_id})
+        return render(request,"asignarHUFlujo.html",{'flujo':flujo,'hus':hus,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'sprintid':sprintid,'flujo_id':flujo_id})

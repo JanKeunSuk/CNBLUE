@@ -88,25 +88,42 @@
             
             
                 <div>
-                    
-                    
-                        <label class="required" for="id_usuarios">HUs:</label>
-                        <table>
-                        {%for hu in hus%}
-                        <tr>
-                        	<td>{{hu}}</td>
-                        	<td><a href="/delegarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{hu.id}}/0/">Asignar a Usuario</a></td>
-                        	<td><a href="/delegarHUFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprint.id}}/{{hu.id}}/">Asignar a Flujo</a></td>
-                        </tr>
-                        {%endfor%}
-                        </table>
-                            
+                    <label class="required" for="id_usuarios">Flujos:</label>
+                    {%for f in flujos%}
+                    <br/><br/>
+                    	<p>
+                    		<font size="2"><b>{{f.nombre}} </b></font>
+                    		<a href="/delegarHUFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprint.id}}/{{f.id}}/"> &nbsp; &nbsp; &nbsp; &nbsp;Asignar hu a flujo</a></td>
+                    	</p>
+                    	{%for flujo,hus in hu_en_flujo.items%}
+                    		{%if f == flujo%}
+                    			{%for hu_no in HU_no_asignada%}
+                    				{%for h in hus%}
+                    					{%if h == hu_no%}
+                    						<ul>
+                    						<p>
+                    						<li>{{h}}
+                    						<a href="/delegarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{h.id}}/0/"> &nbsp; &nbsp; &nbsp; &nbsp;Asignar a Usuario</a>
+                    						</p>
+                    						</ul>
+                    					{%endif%}
+                    				{%endfor%}
+                    			{%endfor%}
+                    			{%for hu,u in HU_asignada.items%}
+                    				{%for h in hus%}
+                    					{%if h == hu%}
+                    						<ul>
+                    						<p>
+                    						<li>{{h}} ya asignada a <b>{{u}}</b>
+                    						</p>
+                    						</ul>
+                    					{%endif%}
+                    				{%endfor%}
+                    			{%endfor%}
+                    		{%endif%}	
+                    	{%endfor%}
+                    {%endfor%}
 
-                        
-                    
-                    
-                       
-                    
                 </div>
             
         </div>
