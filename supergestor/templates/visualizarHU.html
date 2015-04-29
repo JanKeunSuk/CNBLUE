@@ -35,6 +35,7 @@
         
         <form id="formulario" action="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="GET">
         {% csrf_token %}
+        {%if is_Scrum == "1"%}
         	<b>Descripcion: </b> {{HU.descripcion}}<br/><br/>
         	<b>Valor de negocio: </b> {{HU.valor_negocio}}<br/><br/>
         	<b>Valor Tecnico: </b> {{HU.valor_tecnico}}<br/><br/>
@@ -43,6 +44,7 @@
         	<b>Horas realizadas: </b> {{HU.acumulador_horas}}<br/><br/>
         	<b>Estado de la HU: </b> {{HU.estado}}<br/><br/>
         	<b>Valido: </b> {{HU.valido}}<br/><br/>
+        {%endif%}
         	<b>Descripcion de las horas realizadas </b> <br/>
         	<table>
         	<th>Horas Cargadas</th><td></td><td></td><th>Descripcion</th>

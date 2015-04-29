@@ -45,7 +45,7 @@
     
     <!-- Content -->
   		
-<div id="content" class="colMS">
+<div>
     
 	<div class="app-gestor module">
       
@@ -198,7 +198,7 @@
 
   						{%for enlace in enlaceHUv%}
   						{%if HU.estado == 'ACT'%}
-                			<td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/" class="addlink">Visualizar</a></td>
+                			<td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/1/" class="addlink">Visualizar</a></td>
                 		{%endif%}  	
              			{% endfor %}
              			{% if HUsm|length > 0%}
@@ -243,7 +243,29 @@
   						<td> {{HU.descripcion}} </td>
   						<td> <B>{{HU.acumulador_horas}} / {{HU.duracion}}</B> </td><td></td><td></td><td></td>
   						{%for enlace in enlaceHU_agregar%}
-                			<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Agregar horas trabajadas</a></td>
+  								<td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Ver historial de tareas</a></td>
+  							{%if HU.acumulador_horas != HU.duracion%}
+  								{%if HU.estado_en_actividad != 'FIN'%}
+                					<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Agregar horas trabajadas</a></td>
+             					{%else%}
+             						<td><font color="green"><b>HU Finalizada antes de tiempo</b></font></td>
+             					{%endif%}
+             				{%endif%}
+             				{%if HU.acumulador_horas == HU.duracion%}
+             					{%if HU.estado_en_actividad == 'FIN'%}
+             						<td><b>HU Finalizada a tiempo</b></td>
+             					{%else%}
+             						{%if HU.acumulador_horas != 0%}
+             							<td><font color="red"><b>HU No finalizada. Tiempo agotado. Contactar con Scrum</b></font></td>
+             						{%else%}
+             							{%if HU.duracion != 0%}
+             								<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Agregar horas trabajadas</a></td>
+             							{%else%}
+             								<td><font color="blue"><b>Scrum aun no ha estimado duracion. Contactar con Scrum</b></font></td>
+             							{%endif%}
+             						{%endif%}
+             					{%endif%}
+             				{%endif%}
              			{% endfor %}
               			</tr>
                		{% endfor %}

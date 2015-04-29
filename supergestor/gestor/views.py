@@ -364,46 +364,91 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
                     max=HU.objects.get(id=h).duracion
         return render(request, 'crearSprint.html',{'nombre':request.POST['descripcion'],'duracion':int(max/8),'flujos':flujos,'HUs':HUs,'HUs_seleccionadas':hus_seleccionadas,'HUs_no_seleccionadas':HUs_no_seleccionadas,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
             
-def guardarHUProdOwnerView(request,HU_id_rec,is_Scrum):
+def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
     """Vista de guardado de la modificacion de una HU existente modificada por el Product Owner
     que se utiliza en la interfaz devuelta por /modificarHU/ 
     @0: corresponde a la modificaci[on realizada por el Product Owner
     @1: coresponde a la modificaci[on realizada por el Scrum
     @2: corresponde a la modificaci[on realizada por el Equipo"""
-    try:        
-        h=HU.objects.get(id=HU_id_rec)
-        if request.method == 'POST':
-            if is_Scrum == '0':
-                valor_negocio=request.POST['valor_negocio']
-                descripcion=request.POST['descripcion']
-                estado=request.POST['estado']
-                h.valor_negocio=valor_negocio
-                h.descripcion=descripcion
-                h.estado=estado
-                h.save() #Guardamos el modelo de manera Editada
-                return HttpResponse('La descripcion y valor de negocio de la HU a sido modificado exitosamente')
+          
+    h=HU.objects.get(id=HU_id_rec)
+    if request.method == 'POST':
+        if is_Scrum == '0':
+            valor_negocio=request.POST['valor_negocio']
+            descripcion=request.POST['descripcion']
+            estado=request.POST['estado']
+            h.valor_negocio=valor_negocio
+            h.descripcion=descripcion
+            h.estado=estado
+            h.save() #Guardamos el modelo de manera Editada
+            return HttpResponse('La descripcion y valor de negocio de la HU a sido modificado exitosamente')
+        else:
+            guardar=0
+            for g in request.POST.getlist('_save'):
+                if g == 'Guardar':
+                    guardar=1
+            if guardar == 1:
+                try:
+                    proyectox=proyecto.objects.get(id=h.proyecto.id)
+                    horas_a_agregar = request.POST['horas_agregar']
+                    descripcion_horas=request.POST['descripcion_horas']
+                    hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas)
+                    h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
+                    hd.save()
+                    acumulador_horas = float(horas_a_agregar)+h.acumulador_horas
+                    if h.duracion >= acumulador_horas:
+                        h.acumulador_horas=acumulador_horas
+                        h.estado_en_actividad='PRO'
+                        h.save()
+                        if proyectox.estado == 'PEN' and acumulador_horas > 0:
+                            proyectox.estado='ACT'
+                            proyectox.save()               
+                        return render(request,'modificarHU.html', {'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':2})
+                    else:
+                        return HttpResponse('Contactar con el Scrum para aumentar la duracion de la HU, ya que ha sobrepasado el tiempo de realizacion de HU')
+                except ObjectDoesNotExist:
+                    print "Either the entry or blog doesn't exist." 
+                    return HttpResponseRedirect('/crearHU/')
             else:
-                proyectox=proyecto.objects.get(id=h.proyecto.id)
-                horas_a_agregar = request.POST['horas_agregar']
-                descripcion_horas=request.POST['descripcion_horas']
-                hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas)
-                h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
-                hd.save()
-                acumulador_horas = float(horas_a_agregar)+h.acumulador_horas
-                if h.duracion >= acumulador_horas:
-                    h.acumulador_horas=acumulador_horas
-                    h.save()
-                    if proyectox.estado == 'PEN' and acumulador_horas > 0:
-                        proyectox.estado='ACT'
-                        proyectox.save()               
-                    return HttpResponse('Las horas se han agregado exitosamente')
-                
-                else:
-                    return HttpResponse('Contactar con el Scrum para aumentar la duracion de la HU, ya que ha sobrepasado el tiempo de realizacion de HU')
-    except ObjectDoesNotExist:
-            print "Either the entry or blog doesn't exist." 
-            return HttpResponseRedirect('/crearHU/')
-    
+                if request.POST['boton'] == 'Finalizar':
+                    for a in asignaHU_actividad_flujo.objects.all():
+                        for hu in a.lista_de_HU.all():
+                            if hu==h:
+                                flujo=a.flujo_al_que_pertenece
+                                break
+                    jsonDec = json.decoder.JSONDecoder()
+                    orden=jsonDec.decode(flujo.orden_actividades)
+                    proyectox=proyecto.objects.get(id=h.proyecto.id)
+                    horas_a_agregar = request.POST['horas_agregar']
+                    descripcion_horas=request.POST['descripcion_horas']
+                    hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas)
+                    h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
+                    hd.save()
+                    acumulador_horas = float(horas_a_agregar)+h.acumulador_horas
+                    if h.duracion >= acumulador_horas:
+                        h.acumulador_horas=acumulador_horas
+                        h.save()
+
+                    x=1
+                    for o in orden:
+                        if Actividades.objects.get(id=o) == h.actividad:
+                            break
+                        else:
+                            x=x+1
+                    if x >= len(orden) and h.acumulador_horas <= h.duracion:
+                        h.estado_en_actividad='FIN'
+                        h.save()
+                        return HttpResponse("Todas las actividades de HU finalizadas")
+                    elif x < len(orden) and h.acumulador_horas == h.duracion:
+                        h.estado_en_actividad='PEN'
+                        h.save()
+                        return HttpResponse("Duracion de HU finalizada sin terminar todas las actividades. Contactar con el Scrum")
+                    else:
+                        h.actividad=Actividades.objects.get(id=orden[x])
+                        h.estado_en_actividad='PEN'
+                        h.save()
+                    return render(request,'modificarHU.html', {'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':2})
+
 class FormularioContacto(forms.Form):
     """
     Clase utilizada para obtener el formulario de peticion de seto de contrasenha.
@@ -754,7 +799,7 @@ class FormularioHU(forms.ModelForm):
         model= HU
         fields=['valor_tecnico','prioridad','duracion']
         
-def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec):
+def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
     """
     Vista que utiliza el formulario HU para desplegar los datos almacenados
     en la HU que se quiere visualizar.
@@ -765,7 +810,7 @@ def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec):
                                                      'descripcion': HU_disponible.descripcion,
                                                      'valor_negocio': HU_disponible.valor_negocio,
                                                      })      
-    return render_to_response('visualizarHU.html',{'formulario':formulario, 'HU':HU_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'adjuntos':adjuntos},
+    return render_to_response('visualizarHU.html',{'formulario':formulario, 'HU':HU_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'adjuntos':adjuntos,'is_Scrum':is_Scrum},
                                   context_instance=RequestContext(request))
 
 def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
@@ -1230,6 +1275,8 @@ def asignarHU_a_FLujo(request,usuario_id,proyectoid,rolid,sprintid,flujo_id):
     sprintx=Sprint.objects.get(id=sprintid)
     proyectox=proyecto.objects.get(id=proyectoid)
     flujo=Flujo.objects.get(id=flujo_id)
+    jsonDec = json.decoder.JSONDecoder()
+    orden=jsonDec.decode(flujo.orden_actividades)
     hus=HU.objects.filter(proyecto=proyectox,estado='ACT',valido=True).filter(sprint=sprintx)
     for f in Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)):
         for a in asignaHU_actividad_flujo.objects.all():
@@ -1239,6 +1286,9 @@ def asignarHU_a_FLujo(request,usuario_id,proyectoid,rolid,sprintid,flujo_id):
                         hus=hus.exclude(id=h.id)
     if request.method == 'POST':
         for a in request.POST.getlist('hu'):
+            h=HU.objects.get(id=a)
+            h.actividad=Actividades.objects.get(id=orden[0])
+            h.save()
             asig=asignaHU_actividad_flujo.objects.filter(flujo_al_que_pertenece=flujo)
             if asig:
                 for f in asig:

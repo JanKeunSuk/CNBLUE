@@ -217,7 +217,7 @@ class HU(models.Model):
     duracion = models.FloatField()
     acumulador_horas = models.FloatField()
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
-    #actividad=models.ForeignKey(Actividades)
+    actividad=models.ForeignKey(Actividades, null=True, blank=True)
     estado_en_actividad = models.CharField(max_length = 3, choices = ESTADO_ACTIVIDAD_CHOICES)
     proyecto=models.ForeignKey(proyecto) #este campo va indicar a que proyecto pertenece asi en la vista ya no tenemos que hacer hu.objects.all()
     valido=models.BooleanField(default=False) # rl productOwner debe validar
