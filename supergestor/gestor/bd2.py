@@ -231,9 +231,7 @@ hu2.hu_descripcion.add(dhu4)
 hu2.hu_descripcion.add(dhu5)
 hu3.hu_descripcion.add(dhu6)
 hu3.hu_descripcion.add(dhu7)
-
-
-#un comentario pasando por aqui
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
 
 
 
