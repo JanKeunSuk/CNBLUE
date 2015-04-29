@@ -96,18 +96,16 @@ c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','29');"
 cur.execute(c)
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','30');"
 cur.execute(c)
-#Modifica Proyecto
+#Administracion Flujo
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','31');"
+cur.execute(c)
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','32');"
 cur.execute(c)
-#Administracion Flujo
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','43');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','33');"
 cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','44');"
+#Modifica Proyecto
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','35');"
 cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','45');"
-cur.execute(c)
-
-
 #Administracion de Sprint
 c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','46');"
 cur.execute(c)
@@ -141,11 +139,11 @@ c="insert into gestor_rol_permisos (rol_id, permission_id) values ('1','62');"
 cur.execute(c)
 #PRODUCT OWNER
 #Administracion hu
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('2','37');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('2','40');"
 cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('2','38');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('2','41');"
 cur.execute(c)
-c="insert into gestor_rol_permisos (rol_id, permission_id) values ('2','39');"
+c="insert into gestor_rol_permisos (rol_id, permission_id) values ('2','42');"
 cur.execute(c)
 #EQUIPO
 #Agregar horas trabajadas
@@ -337,11 +335,11 @@ cur.execute(c)
 conexion.commit()
 
 #creacion de HU
-c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU1', '8', '0', '0', '0', '0', 'ACT', 'PEN','FALSE', '1');"
+c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU1', '3', '5', '5', '5', '4', 'ACT', 'PEN','TRUE', '1');"
 cur.execute(c)
-c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU2', '8', '0', '0', '0', '0', 'ACT', 'PEN','FALSE', '1');"
+c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas,  estado, estado_en_actividad, valido, proyecto_id) values ('HU2', '5', '7', '5', '9', '4',  'ACT','PEN', 'TRUE', '1');"
 cur.execute(c)
-c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU3', '8', '0', '0', '0', '0', 'ACT', 'PEN','FALSE', '1');"
+c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU3', '8', '6', '3', '8', '4', 'ACT', 'PEN','TRUE', '1');"
 cur.execute(c)
 c="insert into gestor_hu (descripcion, valor_negocio, valor_tecnico, prioridad, duracion, acumulador_horas, estado, estado_en_actividad, valido, proyecto_id) values ('HU4', '8', '0', '0', '0', '0', 'ACT', 'PEN','FALSE', '2');"
 cur.execute(c)
@@ -363,10 +361,9 @@ cur.execute(c)
 c="insert into gestor_sprint (descripcion, fecha_inicio, duracion, estado, proyecto_id) values ('sprint3', '2015-04-18 20:10:00-04', '2', 'ACT', '1');"
 cur.execute(c)
 #conexion.commit()
-"""
+
 c="insert into gestor_sprint_HU (sprint_id, hu_id) values ('1', '1');"
 cur.execute(c)
-
 c="insert into gestor_sprint_HU (sprint_id, hu_id) values ('2', '1');"
 cur.execute(c)
 c="insert into gestor_sprint_HU (sprint_id, hu_id) values ('3', '1');"
@@ -380,12 +377,29 @@ cur.execute(c)
 c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas, fecha) values ('1', 'Tarea3', '2015-04-18 20:00:00-04');"
 cur.execute(c)
 conexion.commit()
+"""
+c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas) values ('2', 'Tarea2');"
+cur.execute(c)
+c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas) values ('2', 'Tarea1');"
+cur.execute(c)
+c="insert into gestor_hu_descripcion (horas_trabajadas, descripcion_horas_trabajadas) values ('2', 'Tarea2');"
+cur.execute(c)
+conexion.commit()
+
 #Guarda el hu con su descripcion
 c="insert into gestor_hu_hu_descripcion (hu_id, hu_descripcion_id) values ('1', '1');"
 cur.execute(c)
 c="insert into gestor_hu_hu_descripcion (hu_id, hu_descripcion_id) values ('1', '2');"
 cur.execute(c)
 c="insert into gestor_hu_hu_descripcion (hu_id, hu_descripcion_id) values ('1', '3');"
+cur.execute(c)
+c="insert into gestor_hu_hu_descripcion (hu_id, hu_descripcion_id) values ('2', '4');"
+cur.execute(c)
+c="insert into gestor_hu_hu_descripcion (hu_id, hu_descripcion_id) values ('2', '5');"
+cur.execute(c)
+c="insert into gestor_hu_hu_descripcion (hu_id, hu_descripcion_id) values ('3', '6');"
+cur.execute(c)
+c="insert into gestor_hu_hu_descripcion (hu_id, hu_descripcion_id) values ('3', '7');"
 cur.execute(c)
 """
 #Efectuamos los cambios en la base de datos
