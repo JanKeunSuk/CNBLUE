@@ -17,6 +17,7 @@ from django.forms.widgets import CheckboxSelectMultiple
 from django.contrib.auth.models import Permission
 from datetime import datetime 
 import json
+from django.utils import timezone
 
 # Create your views and forms here.
 @login_required
@@ -182,13 +183,22 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
                     HU_asignada.append(h)
     else:
         HUsa=0
-    
+    agregar_horas=[]
     if rolx.tiene_permiso('Agregar horas trabajadas'):
         for d in delegacion.objects.all():
             if d.hu.proyecto == proyectox and str(d.usuario.id) == usuario_id:
                 if d.hu.estado == 'ACT':
                     HUs_add_horas.append(d.hu)
-        enlaceHU_agregar.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar horas'))
+        #HU ordenada por prioridad
+        HUs_add_horas=sorted(HUs_add_horas,key=lambda x: x.prioridad, reverse=True)
+        i=0
+        
+        for p in HUs_add_horas:
+            if p.acumulador_horas != p.duracion:
+                agregar_horas=HUs_add_horas[i]             
+                enlaceHU_agregar.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar horas'))
+                break
+            i=i+1
         is_Scrum=2
     HUc={}
     HUv=[]
@@ -219,7 +229,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     if rolx.tiene_permiso('Can add sprint') or rolx.tiene_permiso('Can change sprint'):
         enlaceSprintv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
           
-    return render(request,'rol-flujo-para-scrum.html',{'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HU_asignada':HU_asignada, 'HU_no_asignada':HU_no_asignada,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsf':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner})
+    return render(request,'rol-flujo-para-scrum.html',{'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HU_asignada':HU_asignada, 'HU_no_asignada':HU_no_asignada,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsf':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas})
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
 def registrarUsuarioView(request):
@@ -410,6 +420,14 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                     print "Either the entry or blog doesn't exist." 
                     return HttpResponseRedirect('/crearHU/')
             else:
+                acumulador=0
+                prueba=request.POST['horas_agregar']
+                acumulador=acumulador + float(prueba)
+                y=str(timezone.now())
+                for horas in h.hu_descripcion.all():
+                    x=str(horas.fecha)
+                    if x[:10] == y[:10]:
+                        acumulador=horas.horas_trabajadas + acumulador
                 if request.POST['boton'] == 'Finalizar':
                     for a in asignaHU_actividad_flujo.objects.all():
                         for hu in a.lista_de_HU.all():
@@ -418,36 +436,39 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                                 break
                     jsonDec = json.decoder.JSONDecoder()
                     orden=jsonDec.decode(flujo.orden_actividades)
-                    proyectox=proyecto.objects.get(id=h.proyecto.id)
-                    horas_a_agregar = request.POST['horas_agregar']
-                    descripcion_horas=request.POST['descripcion_horas']
-                    hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas)
-                    h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
-                    hd.save()
-                    acumulador_horas = float(horas_a_agregar)+h.acumulador_horas
-                    if h.duracion >= acumulador_horas:
-                        h.acumulador_horas=acumulador_horas
-                        h.save()
-
-                    x=1
-                    for o in orden:
-                        if Actividades.objects.get(id=o) == h.actividad:
-                            break
+                    if acumulador<9:     
+                        proyectox=proyecto.objects.get(id=h.proyecto.id)
+                        horas_a_agregar = request.POST['horas_agregar']
+                        descripcion_horas=request.POST['descripcion_horas']
+                        fecha=timezone.now()
+                        hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas, fecha=fecha)
+                        h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
+                        hd.save()
+                        acumulador_horas = float(horas_a_agregar)+h.acumulador_horas
+                        if h.duracion >= acumulador_horas:
+                            h.acumulador_horas=acumulador_horas
+                            h.save()
+                        x=1
+                        for o in orden:
+                            if Actividades.objects.get(id=o) == h.actividad:
+                                break
+                            else:
+                                x=x+1
+                        if x >= len(orden) and h.acumulador_horas <= h.duracion:
+                            h.estado_en_actividad='FIN'
+                            h.save()
+                            return HttpResponse("Todas las actividades de HU finalizadas")
+                        elif x < len(orden) and h.acumulador_horas == h.duracion:
+                            h.estado_en_actividad='PEN'
+                            h.save()
+                            return HttpResponse("Duracion de HU finalizada sin terminar todas las actividades. Contactar con el Scrum")
                         else:
-                            x=x+1
-                    if x >= len(orden) and h.acumulador_horas <= h.duracion:
-                        h.estado_en_actividad='FIN'
-                        h.save()
-                        return HttpResponse("Todas las actividades de HU finalizadas")
-                    elif x < len(orden) and h.acumulador_horas == h.duracion:
-                        h.estado_en_actividad='PEN'
-                        h.save()
-                        return HttpResponse("Duracion de HU finalizada sin terminar todas las actividades. Contactar con el Scrum")
+                            h.actividad=Actividades.objects.get(id=orden[x])
+                            h.estado_en_actividad='PEN'
+                            h.save()
+                            return render(request,'modificarHU.html', {'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':2})
                     else:
-                        h.actividad=Actividades.objects.get(id=orden[x])
-                        h.estado_en_actividad='PEN'
-                        h.save()
-                    return render(request,'modificarHU.html', {'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':2})
+                        return HttpResponse('Las Horas cargadas ya superan las 8 Horas diarias que deben cargarse por dia') 
 
 class FormularioContacto(forms.Form):
     """

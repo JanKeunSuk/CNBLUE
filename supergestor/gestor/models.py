@@ -186,10 +186,12 @@ class proyecto(models.Model):
         return self.nombre_corto   
 class HU_descripcion(models.Model):
     """
-    Modelo representa la descripcion de cada hora de trabajo agregada
+    Modelo representa la descripcion de cada hora de trabajo agregada mostrando de la fecha de la misma
     """
     horas_trabajadas=models.FloatField()  
     descripcion_horas_trabajadas=models.CharField(max_length = 200)
+    fecha=models.DateTimeField()
+    
     def __unicode__(self):
         """Representacion unicode del objeto HU_descripcion"""
         return str(self.id)    
@@ -222,6 +224,7 @@ class HU(models.Model):
     proyecto=models.ForeignKey(proyecto) #este campo va indicar a que proyecto pertenece asi en la vista ya no tenemos que hacer hu.objects.all()
     valido=models.BooleanField(default=False) # rl productOwner debe validar
     hu_descripcion=models.ManyToManyField(HU_descripcion)
+    
     
     def __unicode__(self):
         """Representacion unicode del objeto HU"""

@@ -237,18 +237,20 @@
             {% if HUs_add_horas|length > 0%}
             	<table>
             		<th>Lista de HU's a las que estas asignado </th>
-        			<th> <B>Duracion/Horas Trabajadas</B> </th>
+        			<th> <B>Horas Trabajadas / Duracion</B> </th>
             		<tr class="model-proyecto">
 					{% for HU in HUs_add_horas %}
   						<td> {{HU.descripcion}} </td>
   						<td> <B>{{HU.acumulador_horas}} / {{HU.duracion}}</B> </td><td></td><td></td><td></td>
   						{%for enlace in enlaceHU_agregar%}
   								<td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Ver historial de tareas</a></td>
-  							{%if HU.acumulador_horas != HU.duracion%}
-  								{%if HU.estado_en_actividad != 'FIN'%}
-                					<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Agregar horas trabajadas</a></td>
-             					{%else%}
-             						<td><font color="green"><b>HU Finalizada antes de tiempo</b></font></td>
+  							{%if HU == HU_cargar%}
+  								{%if HU.acumulador_horas != HU.duracion%}
+  									{%if HU.estado_en_actividad != 'FIN'%}
+                						<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Agregar horas trabajadas</a></td>
+             						{%else%}
+             							<td><font color="green"><b>HU Finalizada antes de tiempo</b></font></td>
+             						{%endif%}
              					{%endif%}
              				{%endif%}
              				{%if HU.acumulador_horas == HU.duracion%}
