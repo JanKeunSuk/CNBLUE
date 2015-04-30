@@ -393,50 +393,51 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
             h.save() #Guardamos el modelo de manera Editada
             return HttpResponse('La descripcion y valor de negocio de la HU a sido modificado exitosamente')
         else:
-            guardar=0
-            for g in request.POST.getlist('_save'):
-                if g == 'Guardar':
-                    guardar=1
-            if guardar == 1:
-                try:
-                    proyectox=proyecto.objects.get(id=h.proyecto.id)
-                    horas_a_agregar = request.POST['horas_agregar']
-                    descripcion_horas=request.POST['descripcion_horas']
-                    hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas)
-                    h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
-                    hd.save()
-                    acumulador_horas = float(horas_a_agregar)+h.acumulador_horas
-                    if h.duracion >= acumulador_horas:
-                        h.acumulador_horas=acumulador_horas
-                        h.estado_en_actividad='PRO'
-                        h.save()
-                        if proyectox.estado == 'PEN' and acumulador_horas > 0:
-                            proyectox.estado='ACT'
-                            proyectox.save()               
-                        return render(request,'modificarHU.html', {'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':2})
-                    else:
-                        return HttpResponse('Contactar con el Scrum para aumentar la duracion de la HU, ya que ha sobrepasado el tiempo de realizacion de HU')
-                except ObjectDoesNotExist:
-                    print "Either the entry or blog doesn't exist." 
-                    return HttpResponseRedirect('/crearHU/')
-            else:
-                acumulador=0
-                prueba=request.POST['horas_agregar']
-                acumulador=acumulador + float(prueba)
-                y=str(timezone.now())
-                for horas in h.hu_descripcion.all():
-                    x=str(horas.fecha)
-                    if x[:10] == y[:10]:
-                        acumulador=horas.horas_trabajadas + acumulador
-                if request.POST['boton'] == 'Finalizar':
-                    for a in asignaHU_actividad_flujo.objects.all():
-                        for hu in a.lista_de_HU.all():
-                            if hu==h:
-                                flujo=a.flujo_al_que_pertenece
-                                break
-                    jsonDec = json.decoder.JSONDecoder()
-                    orden=jsonDec.decode(flujo.orden_actividades)
-                    if acumulador<9:     
+            acumulador=0
+            prueba=request.POST['horas_agregar']
+            acumulador=acumulador + float(prueba)
+            y=str(timezone.now())
+            for horas in h.hu_descripcion.all():
+                x=str(horas.fecha)
+                if x[:10] == y[:10]:
+                    acumulador=horas.horas_trabajadas + acumulador
+            if acumulador<9:
+                guardar=0
+                for g in request.POST.getlist('_save'):
+                    if g == 'Guardar':
+                        guardar=1
+                if guardar == 1:
+                    try:
+                        proyectox=proyecto.objects.get(id=h.proyecto.id)
+                        horas_a_agregar = request.POST['horas_agregar']
+                        descripcion_horas=request.POST['descripcion_horas']
+                        hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas,fecha=datetime.now())
+                        h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
+                        hd.save()
+                        acumulador_horas = float(horas_a_agregar)+h.acumulador_horas
+                        if h.duracion >= acumulador_horas:
+                            h.acumulador_horas=acumulador_horas
+                            h.estado_en_actividad='PRO'
+                            h.save()
+                            if proyectox.estado == 'PEN' and acumulador_horas > 0:
+                                proyectox.estado='ACT'
+                                proyectox.save()               
+                            return render(request,'modificarHU.html', {'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':2})
+                        else:
+                            return HttpResponse('Contactar con el Scrum para aumentar la duracion de la HU, ya que ha sobrepasado el tiempo de realizacion de HU')
+                    except ObjectDoesNotExist:
+                        print "Either the entry or blog doesn't exist." 
+                        return HttpResponseRedirect('/crearHU/')
+                else:
+                    if request.POST['boton'] == 'Finalizar':
+                        for a in asignaHU_actividad_flujo.objects.all():
+                            for hu in a.lista_de_HU.all():
+                                if hu==h:
+                                    flujo=a.flujo_al_que_pertenece
+                                    break
+                        jsonDec = json.decoder.JSONDecoder()
+                        orden=jsonDec.decode(flujo.orden_actividades)
+                         
                         proyectox=proyecto.objects.get(id=h.proyecto.id)
                         horas_a_agregar = request.POST['horas_agregar']
                         descripcion_horas=request.POST['descripcion_horas']
@@ -467,8 +468,8 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                             h.estado_en_actividad='PEN'
                             h.save()
                             return render(request,'modificarHU.html', {'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':2})
-                    else:
-                        return HttpResponse('Las Horas cargadas ya superan las 8 Horas diarias que deben cargarse por dia') 
+            else:
+                return HttpResponse('Las Horas cargadas ya superan las 8 Horas diarias que deben cargarse por dia') 
 
 class FormularioContacto(forms.Form):
     """
