@@ -47,14 +47,16 @@
         {%endif%}
         	<b>Descripcion de las horas realizadas </b> <br/>
         	<table>
-        	<th>Horas Cargadas</th><td></td><td></td><th>Descripcion</th>
+        	<th>Horas Cargadas</th><td></td><td></td><th>Descripcion</th><td></td><td></td><th>Actividades</th><td></td><td></td><th>Estado</th><td></td><td></td><th>Sprint</th>
         	<tr class="model-proyecto">
         	{% for des in HU.hu_descripcion.all %}
         		<td>{{des.horas_trabajadas}}</td><td></td><td></td>
-        		<td>{{des.descripcion_horas_trabajadas}}</td>
+        		<td>{{des.descripcion_horas_trabajadas}}</td><td></td><td></td>
+        		<td>{{HU.actividad}}</td><td></td><td></td>
+        		<td>{{HU.estado_en_actividad}}</td><td></td><td></td>
+        		<td>{{sprint}}</td>
         		</tr>
         	{% endfor %}
-        	
         	{%for adjunto in adjuntos%}
         	<tr><td>{{adjunto}}</td></tr>
         	{%endfor%}
