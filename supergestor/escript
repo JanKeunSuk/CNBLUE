@@ -1,0 +1,22 @@
+#!/bin/bash
+
+
+
+echo "Ahora se eliminara la BD anterior"
+sudo -u postgres psql postgres -c "DROP DATABASE prueba5;"
+
+echo "Ahora se creara la BD"
+sudo -u postgres psql postgres -c "CREATE DATABASE prueba5 OWNER seba2;"
+
+#Make Migrations
+echo "manage.py makemigrations"
+./manage.py makemigrations gestor
+
+#Migrate
+echo "manage.py migrate"
+./manage.py migrate
+
+#Populate
+#echo "Script de python para poblar"
+
+./manage.py shell < gestor/bd2.py
