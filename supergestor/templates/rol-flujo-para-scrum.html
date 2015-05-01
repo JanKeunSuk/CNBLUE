@@ -142,7 +142,7 @@
   							<td> {{HU.descripcion}} </td>
 			     		{%endif%}    
   						{%for enlace in enlaceHUv%}
-                			<td></td><td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/" class="addlink">Visualizar</a></td>
+                			<td></td><td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/0/" class="addlink">Visualizar</a></td>
              			{% endfor %}
             			{% if HUsm|length > 0%}
             				{%for enlace in enlaceHUm%}
@@ -176,7 +176,7 @@
 			    	{%if HU.descripcion|length > 0%}
   						<td> {{HU.descripcion}} </td>
   						{%for enlace in enlaceHUv%}
-                			<td></td><td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/" class="addlink">Visualizar</a></td>
+                			<td></td><td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/0/" class="addlink">Visualizar</a></td>
              			{% endfor %}
              		{%endif%}
              		</tr>
@@ -239,19 +239,18 @@
             		<th>Lista de HU's a las que estas asignado </th>
         			<th> <B>Horas Trabajadas / Duracion</B> </th>
             		<tr class="model-proyecto">
+
 					{% for HU in HUs_add_horas %}
   						<td> {{HU.descripcion}} </td>
   						<td> <B>{{HU.acumulador_horas}} / {{HU.duracion}}</B> </td><td></td><td></td><td></td>
   						{%for enlace in enlaceHU_agregar%}
   								<td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Ver historial de tareas</a></td>
   							{%if HU == HU_cargar%}
-  								{%if HU.acumulador_horas != HU.duracion%}
-  									{%if HU.estado_en_actividad != 'FIN'%}
-                						<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Agregar horas trabajadas</a></td>
-             						{%else%}
-             							<td><font color="green"><b>HU Finalizada antes de tiempo</b></font></td>
-             						{%endif%}
-             					{%endif%}
+  								<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Agregar horas trabajadas</a></td>
+  							{%endif%}		
+                						
+             				{%if HU == agregar_horas_fin%}
+             					<td><font color="green"><b>HU Finalizada antes de tiempo</b></font></td>
              				{%endif%}
              				{%if HU.acumulador_horas == HU.duracion%}
              					{%if HU.estado_en_actividad == 'FIN'%}

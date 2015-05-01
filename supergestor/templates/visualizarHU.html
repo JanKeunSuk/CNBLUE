@@ -47,20 +47,23 @@
         {%endif%}
         	<b>Descripcion de las horas realizadas </b> <br/>
         	<table>
-        	<th>Horas Cargadas</th><td></td><td></td><th>Descripcion</th><td></td><td></td><th>Actividades</th><td></td><td></td><th>Estado</th><td></td><td></td><th>Sprint</th>
+        	<th>Horas Cargadas</th><td></td><td></td><th>Descripcion</th><td></td><td></td><th>Actividades</th><td></td><td></td><th>Estado</th><td></td><td></td><th>Sprint</th><td></td><td></td><th>Flujo</th>
         	<tr class="model-proyecto">
         	{% for des in HU.hu_descripcion.all %}
         		<td>{{des.horas_trabajadas}}</td><td></td><td></td>
         		<td>{{des.descripcion_horas_trabajadas}}</td><td></td><td></td>
-        		<td>{{HU.actividad}}</td><td></td><td></td>
-        		<td>{{HU.estado_en_actividad}}</td><td></td><td></td>
-        		<td>{{sprint}}</td>
+        		<td>{{des.actividad}}</td><td></td><td></td>
+        		<td>{{des.estado}}</td><td></td><td></td>
+        		<td>{{sprint}}</td><td></td><td></td>
+        		{%for F in flujo%}
+        			<td>{{F}}</td>
+        		{%endfor%}
+        		
         		</tr>
         	{% endfor %}
         	{%for adjunto in adjuntos%}
         	<tr><td>{{adjunto}}</td></tr>
         	{%endfor%}
-        	
         	</table>
         <input type="submit" value="Volver" class="boton"/>	        	
         </form>
