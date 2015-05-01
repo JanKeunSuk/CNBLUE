@@ -15,6 +15,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys     
 from django.test import LiveServerTestCase
 from selenium.webdriver.firefox.webdriver import WebDriver
+import time
 
 class MyUserManagerTests(TestCase):
 
@@ -471,33 +472,40 @@ class loginCase(LiveServerTestCase):
         # Las credenciales de inicio de sesion son correctos, y el usuario es redirigido a la página principal de HOLA
         title = self.browser.find_element_by_tag_name('body')
         self.assertIn('Pagina Principal', title.text)
+        time.sleep(3)
         user_link = self.browser.find_elements_by_link_text('Scrum Master')
         user_link[0].click()
         user_link = self.browser.find_elements_by_link_text('Visualizar Product Backlog')
         user_link[0].click()
         title = self.browser.find_element_by_tag_name('body')
         self.assertIn('Visualizar Product Backlog', title.text)
+        time.sleep(3)
         user_link2 = self.browser.find_elements_by_link_text('Visualizar Product Backlog')
         user_link2[0].click()
         user_link = self.browser.find_elements_by_link_text('Salir')
         user_link[0].click()
         user_link = self.browser.find_elements_by_link_text('Iniciar sesion de nuevo')
         user_link[0].click()
+        time.sleep(3)
         username_field = self.browser.find_element_by_name('username')
         username_field.send_keys('katherine')
         password_field = self.browser.find_element_by_name('password')
         password_field.send_keys('1234')
         password_field.send_keys(Keys.RETURN)
+        time.sleep(1)
         user_link = self.browser.find_elements_by_link_text('Product Owner')
         user_link[0].click()
+        time.sleep(1)
         user_link = self.browser.find_elements_by_link_text('Agregar HU')
         user_link[0].click()
         self.browser.find_element_by_name('descripcion').send_keys("HU_it4")
         valor_field = self.browser.find_element_by_name('valor_negocio')
         valor_field.send_keys("5")
+        time.sleep(1)
         self.browser.find_element_by_css_selector("input[value='Guardar']").click()
         title = self.browser.find_element_by_tag_name('body')
         self.assertIn('La HU se ha creado y relacionado con el proyecto', title.text)
+        time.sleep(3)
     #cierra el browser   
     def tearDown(self):
         self.browser.quit()
@@ -520,13 +528,26 @@ class AgregarhorasCase(LiveServerTestCase):
         # Las credenciales de inicio de sesion son correctos, y el usuario es redirigido a la página principal de HOLA
         title = self.browser.find_element_by_tag_name('body')
         self.assertIn('Pagina Principal', title.text)
+        time.sleep(2)
         user_link = self.browser.find_elements_by_link_text('Equipo')
         user_link[0].click()
         title = self.browser.find_element_by_tag_name('body')
         self.assertIn('Pagina Principal', title.text)
+        time.sleep(1)
         user_link2 = self.browser.find_elements_by_link_text('Ver historial de tareas')
         user_link2[0].click()
+        time.sleep(2)
         self.browser.find_element_by_css_selector("input[value='Volver']").click()
+        time.sleep(1)
+        user_link2 = self.browser.find_elements_by_link_text('Agregar horas trabajadas')
+        user_link2[0].click()
+        self.browser.find_element_by_name('horas_agregar').send_keys("1")
+        self.browser.find_element_by_name('descripcion_horas').send_keys("Tarea_It4")
+        time.sleep(2)
+        self.browser.find_element_by_css_selector("input[value='Guardar']").click()
+        user_link = self.browser.find_elements_by_link_text('Modificación de HU')
+        user_link[0].click()
+        time.sleep(3)
         #title = self.browser.find_element_by_tag_name('body')
         #self.assertIn('La HU se ha creado y relacionado con el proyecto', title.text)
     #cierra el browser   
