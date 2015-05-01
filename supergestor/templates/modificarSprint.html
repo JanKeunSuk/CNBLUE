@@ -119,19 +119,16 @@
                         <label class="required" for="id_usuarios">Flujos: Multiple seleccion</label>
                         
                             <select multiple = "multiple" id="id_usuarios" name="flujo">
-                            {%for flujo in flujos %}
-								<option value="{{flujo.id}}"{%if flujo in Sprint.flujo.all%}selected="selected"{%endif%}> {{flujo}}</option>
-							{%endfor%}
-</select>
-
+                            	{%for flujo in flujos %}
+									<option value="{{flujo.id}}"{%if flujo in Sprint.flujo.all%}selected="selected"{%endif%}> {{flujo}}</option>
+								{%endfor%}
+							</select>
+							<a href="/crearFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}">Agregar nuevo</a>
                         <p class="help"> Presiona "Control" para seleccionar mas de una opcion.</p>
-                        <p><a href="/crearFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}">Agregar nuevo</a></p>
+                        
                     
                 </div>
             
-        </div>
-        <div class="form-row field-asignar">
-        <p><a href="/asignarHUFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{Sprint.id}}">Asignar HU a usuarios y clasificar en los flujos</a></p>
         </div>
     
     <input type="submit" name="Submit" value="Guardar" tabindex="2" />

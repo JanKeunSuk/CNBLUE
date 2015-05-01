@@ -244,15 +244,15 @@
   						<td> <B>{{HU.acumulador_horas}} / {{HU.duracion}}</B> </td><td></td><td></td><td></td>
   						{%for enlace in enlaceHU_agregar%}
   								<td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Ver historial de tareas</a></td>
-  							{%if HU == HU_cargar%}
   								{%if HU.acumulador_horas != HU.duracion%}
   									{%if HU.estado_en_actividad != 'FIN'%}
-                						<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Agregar horas trabajadas</a></td>
+  										{%if HU == HU_cargar%}
+                							<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Agregar horas trabajadas</a></td>
+             							{%endif%}
              						{%else%}
              							<td><font color="green"><b>HU Finalizada antes de tiempo</b></font></td>
              						{%endif%}
              					{%endif%}
-             				{%endif%}
              				{%if HU.acumulador_horas == HU.duracion%}
              					{%if HU.estado_en_actividad == 'FIN'%}
              						<td><b>HU Finalizada a tiempo</b></td>
@@ -261,7 +261,9 @@
              							<td><font color="red"><b>HU No finalizada. Tiempo agotado. Contactar con Scrum</b></font></td>
              						{%else%}
              							{%if HU.duracion != 0%}
-             								<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Agregar horas trabajadas</a></td>
+             								{%if HU == HU_cargar%}
+             									<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Agregar horas trabajadas</a></td>
+             								{%endif%}
              							{%else%}
              								<td><font color="blue"><b>Scrum aun no ha estimado duracion. Contactar con Scrum</b></font></td>
              							{%endif%}
@@ -299,18 +301,26 @@
 
   					{%for enlace in enlaceSprintv%}
                 		<td><a href="/visualizarSprint/{{enlace.url}}/{{sprint.id}}/" class="addlink">Visualizar</a></td>
+                		{%for s in sprintsvk%}
+                			{%if s == sprint%}
+                				<td><a href="/verKanban/{{enlace.url}}/{{sprint.id}}/" class="changelink">Ver Kanban</a></td>
+                			{%endif%}
+                		{%endfor%}
              		{% endfor %}
 
             		{% if sprintsm|length > 0%}
-            			{%for enlace in enlaceSprintm%}
-                			{%if sprint.estado == 'CAN'%}
-                				<td><a href="/reactivar/{{enlace.url}}/3/{{sprint.id}}/" class="changelink">Reactivar</a></td>
-                			{%else%}
-                				<td><a href="/modificarSprint/{{enlace.url}}/{{sprint.id}}/" class="changelink">Modificar</a></td>
-                				<td><a href="/asignarHUFlujo/{{enlace.url}}/{{sprint.id}}/" class="changelink">Clasificar HU en flujos</a></td>
+            			{%for s in sprintsm%}
+            				{%if s == sprint%}
+            					{%for enlace in enlaceSprintm%}
+                					{%if sprint.estado == 'CAN'%}
+                						<td><a href="/reactivar/{{enlace.url}}/3/{{sprint.id}}/" class="changelink">Reactivar</a></td>
+                					{%else%}
+                						<td><a href="/modificarSprint/{{enlace.url}}/{{sprint.id}}/" class="changelink">Modificar</a></td>
+                						<td><a href="/asignarHUFlujo/{{enlace.url}}/{{sprint.id}}/" class="changelink">Clasificar HU en flujos</a></td>
+                					{%endif%}
+                				{%endfor%}
                 			{%endif%}
                 		{%endfor%}
-                		
                 	{% endif %} 
               	</tr>
                {% endfor %}
