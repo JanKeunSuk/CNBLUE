@@ -492,19 +492,48 @@ class loginCase(LiveServerTestCase):
         user_link[0].click()
         user_link = self.browser.find_elements_by_link_text('Agregar HU')
         user_link[0].click()
-        self.browser.find_element_by_name('descripcion:').send_keys("HU_it4")
-        #descripcion_field = self.browser.find_element_by_name('Descripcion:')
-        #descripcion_field.send_keys("HU_it4")
-        #valor_field = self.browser.find_element_by_name('Valor de Negocio:')
-        #valor_field.send_keys("5")
-        #self.browser.find_element_by_css_selector("input[value='Save']").click()
-        #guardar_link = self.browser.find_elements_by_link_text('Guardar')
-        #guardar_link[0].click()
+        self.browser.find_element_by_name('descripcion').send_keys("HU_it4")
+        valor_field = self.browser.find_element_by_name('valor_negocio')
+        valor_field.send_keys("5")
+        self.browser.find_element_by_css_selector("input[value='Guardar']").click()
+        title = self.browser.find_element_by_tag_name('body')
+        self.assertIn('La HU se ha creado y relacionado con el proyecto', title.text)
+    #cierra el browser   
+    def tearDown(self):
+        self.browser.quit()
+        
+class AgregarhorasCase(LiveServerTestCase):
+
+    def setUp(self):
+        self.browser = webdriver.Firefox()
+  
+    def test_agregar_horas(self):
+    # usuario abre el navegador web, navega a pagina login
+        
+        self.browser.get("http://localhost/login/")
+
+        username_field = self.browser.find_element_by_name('username')
+        username_field.send_keys('sebas')
+        password_field = self.browser.find_element_by_name('password')
+        password_field.send_keys('1234')
+        password_field.send_keys(Keys.RETURN)
+        # Las credenciales de inicio de sesion son correctos, y el usuario es redirigido a la página principal de HOLA
+        title = self.browser.find_element_by_tag_name('body')
+        self.assertIn('Pagina Principal', title.text)
+        user_link = self.browser.find_elements_by_link_text('Equipo')
+        user_link[0].click()
+        title = self.browser.find_element_by_tag_name('body')
+        self.assertIn('Pagina Principal', title.text)
+        user_link2 = self.browser.find_elements_by_link_text('Ver historial de tareas')
+        user_link2[0].click()
+        self.browser.find_element_by_css_selector("input[value='Volver']").click()
         #title = self.browser.find_element_by_tag_name('body')
         #self.assertIn('La HU se ha creado y relacionado con el proyecto', title.text)
     #cierra el browser   
-    #def tearDown(self):
-        #self.browser.quit()
+    def tearDown(self):
+        self.browser.quit()
+
+
 """        
 class BaseTestCase(LiveServerTestCase):
 
