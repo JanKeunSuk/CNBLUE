@@ -56,26 +56,41 @@
             <tr class="model-proyecto">
             	{% csrf_token %}
             	<tr>
-						<td><b>Descripcion</b></td>
-						<td><b>Historias de Usuario</b></td>
-						{% for d in dias %}
-							<td><b> DIA {{d}} </b></td>
-						{%endfor%}
+					<td><b>Descripcion</b></td>
+					<td WIDTH=100 BGCOLOR="Turquoise"><b>Historias de Usuario</b></td>
+					{% for d in dias %}
+						<td WIDTH=100 BGCOLOR="PaleTurquoise"><b> DIA {{d}} </b></td>
+					{%endfor%}
 					</tr>
-				{% for Sprint in sprint %}
+					{% for Sprint in sprint %}
 					<tr>
-					<td>{{Sprint}}</td>
-					{{Sprint.id}}
-					</tr>
-				{%endfor%}
-				{%for h in sprint.hu.all%}
-					{{h.sprint_id}}
-				{%endfor%}
-	
-        	</tr>
+						<td>{{Sprint}}</td>
+						{% for hu in Sprint.hu.all %}
+						
+							<td>{{hu.descripcion}}</td>
+							
+								{%for e in horas%}
+								
+									{%if e.hu_s == hu.descripcion%}
+								
+										<td>{{e.acu}}</td>
+								
+									{%endif%}
+								
+								{%endfor%}
+								<td></td>
+								</tr>	
+							{%endfor%}
+						
+					{%endfor%}
+						
+        		
+
         </table>
         </div>
-    
+        
+
+
 	<!-- <td><a href="#">Volver</a></td> -->
 </div>
   		

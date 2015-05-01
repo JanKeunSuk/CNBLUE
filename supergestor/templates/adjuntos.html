@@ -75,7 +75,7 @@
                     todavia no tiene opcion de borrar-->
                        
                             {%for adjunto in adjuntos %}
-                            	<p>{{adjunto}}</p>
+                            	<p><a a href="{{adjunto.archivo.url}}">{{adjunto.archivo.name}}</a></p>
 							{%endfor%}
 							
 					<form enctype="multipart/form-data" method="post" id="adjunto_form">

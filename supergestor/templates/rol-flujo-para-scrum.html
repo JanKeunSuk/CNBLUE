@@ -142,7 +142,7 @@
   							<td> {{HU.descripcion}} </td>
 			     		{%endif%}    
   						{%for enlace in enlaceHUv%}
-                			<td></td><td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/" class="addlink">Visualizar</a></td>
+                			<td></td><td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/0/" class="addlink">Visualizar</a></td>
              			{% endfor %}
             			{% if HUsm|length > 0%}
             				{%for enlace in enlaceHUm%}
@@ -176,7 +176,7 @@
 			    	{%if HU.descripcion|length > 0%}
   						<td> {{HU.descripcion}} </td>
   						{%for enlace in enlaceHUv%}
-                			<td></td><td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/" class="addlink">Visualizar</a></td>
+                			<td></td><td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/0/" class="addlink">Visualizar</a></td>
              			{% endfor %}
              		{%endif%}
              		</tr>

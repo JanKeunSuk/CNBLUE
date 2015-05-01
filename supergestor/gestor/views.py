@@ -420,9 +420,6 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                         proyectox=proyecto.objects.get(id=h.proyecto.id)
                         horas_a_agregar = request.POST['horas_agregar']
                         descripcion_horas=request.POST['descripcion_horas']
-                        hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas,fecha=datetime.now())
-                        h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
-                        hd.save()
                         acumulador_horas = float(horas_a_agregar)+h.acumulador_horas
                         if h.duracion >= acumulador_horas:
                             h.acumulador_horas=acumulador_horas
@@ -430,7 +427,10 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                             h.save()
                             if proyectox.estado == 'PEN' and acumulador_horas > 0:
                                 proyectox.estado='ACT'
-                                proyectox.save()            
+                                proyectox.save()
+                            hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas,fecha=datetime.now(), actividad=str(h.actividad), estado=str(h.estado_en_actividad))
+                            h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
+                            hd.save()
                             return render(request,'modificarHU.html', {'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':2})
                         else:
                             return HttpResponse('Contactar con el Scrum para aumentar la duracion de la HU, ya que ha sobrepasado el tiempo de realizacion de HU')
@@ -451,9 +451,7 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                         horas_a_agregar = request.POST['horas_agregar']
                         descripcion_horas=request.POST['descripcion_horas']
                         fecha=timezone.now()
-                        hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas, fecha=fecha)
-                        h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
-                        hd.save()
+
                         acumulador_horas = float(horas_a_agregar)+h.acumulador_horas
                         if h.duracion >= acumulador_horas:
                             h.acumulador_horas=acumulador_horas
@@ -467,15 +465,26 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                         if x >= len(orden) and h.acumulador_horas <= h.duracion:
                             h.estado_en_actividad='FIN'
                             h.save()
+                            hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas, fecha=fecha, actividad=str(h.actividad), estado=str(h.estado_en_actividad))
+                            h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
+                            hd.save()
                             return HttpResponse("Todas las actividades de HU finalizadas")
                         elif x < len(orden) and h.acumulador_horas == h.duracion:
                             h.estado_en_actividad='PEN'
                             h.save()
+                            estadoP='PRO'
+                            hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas, fecha=fecha, actividad=str(h.actividad), estado=estadoP)
+                            h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
+                            hd.save()
                             return HttpResponse("Duracion de HU finalizada sin terminar todas las actividades. Contactar con el Scrum")
                         else:
                             h.actividad=Actividades.objects.get(id=orden[x])
                             h.estado_en_actividad='PEN'
                             h.save()
+                            estadoP='PRO'
+                            hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas, fecha=fecha, actividad=str(h.actividad), estado=estadoP)
+                            h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
+                            hd.save()
                             return render(request,'modificarHU.html', {'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':2})
             else:
                 return HttpResponse('Las Horas cargadas ya superan las 8 Horas diarias que deben cargarse por dia. Ya ha cargado '+str(acumulador-int(prueba))+' horas en este dia') 
@@ -835,14 +844,22 @@ def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
     Vista que utiliza el formulario HU para desplegar los datos almacenados
     en la HU que se quiere visualizar.
     """
-    sprint=Sprint.objects.get(id=1)
+    lista_flujo=[]
+    lista_sprint=[]
     HU_disponible= HU.objects.get(id=HU_id_rec)
+    for sprint in Sprint.objects.all():
+        for hu in sprint.hu.all():
+            if HU_disponible == hu:
+                lista_sprint=sprint
+                for flujo in sprint.flujo.all():
+                    lista_flujo.append(flujo)
+                    
     adjuntos=archivoadjunto.objects.filter(hU=HU_disponible)
     formulario =  FormularioHU(initial={
                                                      'descripcion': HU_disponible.descripcion,
                                                      'valor_negocio': HU_disponible.valor_negocio,
                                                      })      
-    return render_to_response('visualizarHU.html',{'formulario':formulario, 'HU':HU_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'adjuntos':adjuntos,'is_Scrum':is_Scrum, 'sprint':sprint},
+    return render_to_response('visualizarHU.html',{'formulario':formulario, 'HU':HU_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'adjuntos':adjuntos,'is_Scrum':is_Scrum, 'sprint':lista_sprint, 'flujo':lista_flujo},
                                   context_instance=RequestContext(request))
 
 def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
@@ -1258,21 +1275,37 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     El sprint backlog es una lista de las tareas identificadas por el equipo de Scrum
     Los equipos estiman el número de horas para cada tarea que se corresponde a alguien del equipo para completar. 
     """
+    class acumuladorx:
+        def __init__(self,hu_s,acu):
+            self.hu_s=hu_s
+            self.acu=acu
     lista=[]
-    cont=0
     dias=0
-    proyectox=proyecto.objects.get(id=proyectoid)
-    hux=HU.objects.all().filter(proyecto=proyectox)
-    sprint=Sprint.objects.all().filter(proyecto=proyectox)
+    hux=HU.objects.all()
+    sprint=Sprint.objects.all()
     s=sorted(sprint,key=lambda x: x.estado, reverse=True)
+    cont=0
+    #duracion maxima
     for sp in sprint:
         if sp.duracion>cont:
             cont=sp.duracion
-            
+    #cantidad de dias segun la duracion
+
     while(dias!=cont):
         dias=dias+1
         lista.append(dias)
-    return render(request,'visualizarSprintBacklog.html',{'sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'HUx':hux, 'dias':lista})
+        
+    #acumulador de horas por dia
+    acumulador=[]
+    cont2=0
+    for hu in hux:
+        for hu_d in hu.hu_descripcion.all():
+            cont2=cont2+hu_d.horas_trabajadas
+        acumulador.append(acumuladorx(hu.descripcion, cont2))
+        cont2=0
+    
+    return render(request,'visualizarSprintBacklog.html',{'sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'HUx':hux, 'dias':lista, 'horas':acumulador})
+
 
 
 
