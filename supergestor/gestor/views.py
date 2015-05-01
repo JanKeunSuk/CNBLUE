@@ -218,7 +218,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         enlaceSprint.append(enlacex('/crearSprint/'+usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar Sprint'))
     else:
         sprints = []#lista vacia si no tiene permiso de ver flujos
-        
+    existe=0
     if rolx.tiene_permiso('Can change sprint'):
         """Tiene permiso de modificar flujo, obtengo todos los flujos para enviar al rol-flujo-para-scrum.html"""
         sprintsm=Sprint.objects.filter(proyecto=proyectox)
@@ -229,16 +229,18 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
             duracion=0
             for h in x.hu.all():
                 duracion=duracion+float(h.acumulador_horas)
-            if duracion>0:
+            if duracion>0 or x.estado == 'CON':
                 sprintsm=sprintsm.exclude(id=x.id)
                 sprintsvk.append(x)
+            if x.estado == 'CON':
+                existe=1
     else:
         sprintsm = []#lista vacia si no tiene permiso de ver flujos
         
     if rolx.tiene_permiso('Can add sprint') or rolx.tiene_permiso('Can change sprint'):
         enlaceSprintv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
           
-    return render(request,'rol-flujo-para-scrum.html',{'sprintsvk':sprintsvk,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HU_asignada':HU_asignada, 'HU_no_asignada':HU_no_asignada,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas})
+    return render(request,'rol-flujo-para-scrum.html',{'existe':existe,'sprintsvk':sprintsvk,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HU_asignada':HU_asignada, 'HU_no_asignada':HU_no_asignada,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas})
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
 def registrarUsuarioView(request):
@@ -411,6 +413,9 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                 if x[:10] == y[:10]:
                     acumulador=horas.horas_trabajadas + acumulador
             if acumulador<9:
+                s=h.sprint()
+                if s is not None and s.termino_Sprint():
+                    s.estado='FIN'
                 guardar=0
                 for g in request.POST.getlist('_save'):
                     if g == 'Guardar':
@@ -428,6 +433,10 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                             if proyectox.estado == 'PEN' and acumulador_horas > 0:
                                 proyectox.estado='ACT'
                                 proyectox.save()
+                            if s is not None:
+                                if s.estado == 'ACT' and acumulador_horas >0:
+                                    s.estado='CON'
+                                    s.save()
                             hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas,fecha=datetime.now(), actividad=str(h.actividad), estado=str(h.estado_en_actividad))
                             h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
                             hd.save()
@@ -1254,21 +1263,21 @@ def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
     return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')
 
 
-def adminAdjunto(request,hu_id):
+def adminAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec):
     if request.method=='GET':
-        hux=HU.objects.get(id=hu_id)
+        hux=HU.objects.get(id=HU_id_rec)
         adjuntos=[]
         try: 
             adjuntos=archivoadjunto.objects.filter(hU=hux)
         except ObjectDoesNotExist:
             adjuntos = []
-        return render(request,'adjuntos.html',{'HU':hux,'adjuntos':adjuntos})
+        return render(request,'adjuntos.html',{'HU':hux,'adjuntos':adjuntos,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
     else:
         archivox = request.FILES['archivo']
-        filex=archivoadjunto.objects.create(archivo=archivox,hU_id=hu_id)
+        filex=archivoadjunto.objects.create(archivo=archivox,hU_id=HU_id_rec)
         filex.save()
         #archivox.save()
-        return HttpResponseRedirect('/adminAdjunto/'+hu_id+'/')
+        return HttpResponseRedirect('/adminAdjunto/'+HU_id_rec+'/')
     
 def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     """
@@ -1303,8 +1312,11 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
             cont2=cont2+hu_d.horas_trabajadas
         acumulador.append(acumuladorx(hu.descripcion, cont2))
         cont2=0
+    longitud_para_tabla={}
+    for i in sprint:
+        longitud_para_tabla[i]=len(i.hu.all())+1
     
-    return render(request,'visualizarSprintBacklog.html',{'sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'HUx':hux, 'dias':lista, 'horas':acumulador})
+    return render(request,'visualizarSprintBacklog.html',{'len':longitud_para_tabla,'sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'HUx':hux, 'dias':lista, 'horas':acumulador})
 
 
 

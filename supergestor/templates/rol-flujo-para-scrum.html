@@ -208,27 +208,6 @@
                 					{%endif%}
                 			{%endfor%}
                 		{% endif %}
-                     {%if HU.valor_tecnico != 0 and HU.duracion != 0 and HU.prioridad != 0%}         		
-                		{%if HUsa == 1%}
-                			{%for h in HU_no_asignada%}
-                				{%if h.id == HU.id%}
-            						{%if h.estado != 'CAN'%}
-                						{%for enlace in enlaceHUa%}
-                							<td><a href="/delegarHU/{{enlace.url}}/{{HU.id}}/0/" class="changelink">Asignar</a></td>
-                						{%endfor%}
-                					{%endif%}
-                				{%endif%}
-                			{%endfor%}
-                	
-                			{%for h in HU_asignada%}
-                				{%if h.id == HU.id%}
-                					{%for enlace in enlaceHUa%}
-                						<td><a href="/delegarHU/{{enlace.url}}/{{HU.id}}/1/" class="changelink">Reasignar</a></td>
-                					{%endfor%}
-                				{%endif%}
-                			{%endfor%}
-                		{%endif%}
-                	{%endif%}
                  	{%endif%}
               		</tr>
                	{% endfor %}
@@ -316,7 +295,9 @@
                 						<td><a href="/reactivar/{{enlace.url}}/3/{{sprint.id}}/" class="changelink">Reactivar</a></td>
                 					{%else%}
                 						<td><a href="/modificarSprint/{{enlace.url}}/{{sprint.id}}/" class="changelink">Modificar</a></td>
-                						<td><a href="/asignarHUFlujo/{{enlace.url}}/{{sprint.id}}/" class="changelink">Clasificar HU en flujos</a></td>
+                						{%if existe == 0%}
+                							<td><a href="/asignarHUFlujo/{{enlace.url}}/{{sprint.id}}/" class="changelink">Clasificar HU en flujos</a></td>
+                						{%endif%}
                 					{%endif%}
                 				{%endfor%}
                 			{%endif%}

@@ -234,7 +234,21 @@ class HU(models.Model):
     def __unicode__(self):
         """Representacion unicode del objeto HU"""
         return self.descripcion
-      
+    
+    def sprint(self):
+        for a in Sprint.objects.all():
+            for h in a.hu.all():
+                if self.id == h.id:
+                    return a
+        return None
+    
+    def flujo(self):
+        for a in Flujo.objects.all():
+            for h in a.hu.all():
+                if self.id == h.id:
+                    return a
+        return None
+    
 class archivoadjunto(models.Model):
     archivo=models.FileField()
     hU=models.ForeignKey(HU)
@@ -270,6 +284,7 @@ class Sprint(models.Model):
         ('CAN', 'Cancelado'),
         ('ACT', 'Activo'),
         ('CON', 'Consulta'),
+        ('FIN', 'Finalizado')
     )
      
     descripcion = models.CharField(max_length = 200)
@@ -283,7 +298,19 @@ class Sprint(models.Model):
     def __unicode__(self):
         """Representacion unicode del objeto sprint"""
         return self.descripcion
-
+    
+    def termino_Sprint(self):
+        suma=0
+        terminaron=True
+        for h in self.hu.all():
+            suma=suma+h.acumulador_horas
+            if h.estado_en_actividad != 'FIN':
+                terminaron=False
+        if float(suma/8) >= self.duracion or terminaron:
+            return True
+        else:
+            return False
+                
 #Modelo para asignacion de actividades con HU en un flujo determinado
 class asignacion(models.Model):
     """Modelo que especifica una asignacion de un rol a un usuario en un proyecto"""

@@ -45,46 +45,44 @@
     
     <!-- Content -->
   		
-  		<div id="content" class="colMS">
+  		<div>
     
-        <div class="app-gestor module">
-        <table>
-
-            <caption>Gestor</caption>
-			<th>Sprint del Backlog</th>
+        <div align="center">
+        	<br/>
+        	<font size="5" color="#088A85" align="center"><b><i>Sprint del Backlog</i></b><font size="2" color="#088A85">
+        	<br/><br/>
+        </div>
+        <table width="900" bordercolor = #8904B1 border="8" align="center">
         
-            <tr class="model-proyecto">
+            <tr>
             	{% csrf_token %}
             	<tr>
-					<td><b>Descripcion</b></td>
-					<td WIDTH=100 BGCOLOR="Turquoise"><b>Historias de Usuario</b></td>
+					<td align="center" bgcolor="#81F7F3"><font size="2" color="black"><b>Descripcion</b></font></td>
+					<td WIDTH=200 BGCOLOR="#A9F5F2" align="center"><font size="2" color="black"><b>Historias de Usuario</b></font></td>
 					{% for d in dias %}
-						<td WIDTH=100 BGCOLOR="PaleTurquoise"><b> DIA {{d}} </b></td>
+						<td WIDTH=100 BGCOLOR="#CEF6F5" align="center"><font size="2" color="black"><b> DIA {{d}} </b></font></td>
 					{%endfor%}
 					</tr>
 					{% for Sprint in sprint %}
 					<tr>
-						<td>{{Sprint}}</td>
-						{% for hu in Sprint.hu.all %}
-						
-							<td>{{hu.descripcion}}</td>
-							
-								{%for e in horas%}
-								
-									{%if e.hu_s == hu.descripcion%}
-								
-										<td>{{e.acu}}</td>
-								
-									{%endif%}
-								
+						{%for s,l in len.items%}
+							{%if s == Sprint%}
+								<td rowspan="{{l}}" align="center"><font size="3" color="#088A85"><b>{{Sprint}}</b></font></td>
+								{% for hu in Sprint.hu.all %}
+									<tr>
+										<td align="center">{{hu.descripcion}}</td>
+										{%for e in horas%}
+											{%if e.hu_s == hu.descripcion%}
+												<td align="center">{{e.acu}}</td>
+											{%endif%}
+										{%endfor%}
+										<td></td>	
+									</tr>
 								{%endfor%}
-								<td></td>
-								</tr>	
-							{%endfor%}
-						
-					{%endfor%}
-						
-        		
+								</tr>
+							{%endif%}
+						{%endfor%}
+				{%endfor%}
 
         </table>
         </div>
