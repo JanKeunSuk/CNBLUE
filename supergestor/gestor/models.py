@@ -191,6 +191,11 @@ class HU_descripcion(models.Model):
     horas_trabajadas=models.FloatField()  
     descripcion_horas_trabajadas=models.CharField(max_length = 200)
     fecha=models.DateTimeField()
+    actividad=models.CharField(max_length = 200)
+    estado=models.CharField(max_length = 200)
+    #acumulador_dia=models.FloatField()  
+    #sprint=models.CharField(max_length = 200)
+    #flujo=models.CharField(max_length = 200)
     
     def __unicode__(self):
         """Representacion unicode del objeto HU_descripcion"""
