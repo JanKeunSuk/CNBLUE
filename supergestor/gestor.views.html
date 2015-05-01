@@ -9,7 +9,7 @@
 <td valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="gestor.html"><font color="#ffffff">gestor</font></a>.views</strong></big></big></font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/katherine/IS2Work/git/supergestor/gestor/views.py">/home/katherine/IS2Work/git/supergestor/gestor/views.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/seba/git/CNBLUE/supergestor/gestor/views.py">/home/seba/git/CNBLUE/supergestor/gestor/views.py</a></font></td></tr></table>
     <p><tt>Archivo&nbsp;que&nbsp;contiene&nbsp;los&nbsp;metodos&nbsp;que&nbsp;responden&nbsp;a&nbsp;las&nbsp;peticiones&nbsp;de&nbsp;las&nbsp;URL&nbsp;que&nbsp;se&nbsp;filtran&nbsp;por&nbsp;medio&nbsp;de&nbsp;las<br>
 expresiones&nbsp;regulares&nbsp;en&nbsp;el&nbsp;archivo&nbsp;urls.py,&nbsp;manipula&nbsp;y&nbsp;gestiona&nbsp;la&nbsp;respuesta&nbsp;que&nbsp;se&nbsp;van&nbsp;a&nbsp;enviar&nbsp;a&nbsp;los&nbsp;clientes.<br>
 Cada&nbsp;vista&nbsp;obtiene&nbsp;del&nbsp;request&nbsp;que&nbsp;se&nbsp;le&nbsp;envio&nbsp;la&nbsp;informacion&nbsp;necesaria&nbsp;para&nbsp;el&nbsp;funcionamiento&nbsp;de&nbsp;los&nbsp;metodos,</tt></p>
@@ -21,7 +21,9 @@ Cada&nbsp;vista&nbsp;obtiene&nbsp;del&nbsp;request&nbsp;que&nbsp;se&nbsp;le&nbsp
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="django.forms.html">django.forms</a><br>
-</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+</td><td width="25%" valign=top><a href="json.html">json</a><br>
+</td><td width="25%" valign=top><a href="django.utils.timezone.html">django.utils.timezone</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
 <td colspan=3 valign=bottom>&nbsp;<br>
@@ -55,7 +57,7 @@ Cada&nbsp;vista&nbsp;obtiene&nbsp;del&nbsp;request&nbsp;que&nbsp;se&nbsp;le&nbsp
 <font color="#000000" face="helvetica, arial"><a name="FormularioContacto">class <strong>FormularioContacto</strong></a>(<a href="django.forms.forms.html#Form">django.forms.forms.Form</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt>Clase&nbsp;utilizada&nbsp;para&nbsp;obtener&nbsp;el&nbsp;formulario&nbsp;de&nbsp;peticion&nbsp;de&nbsp;seto&nbsp;de&nbsp;contrasenha.<br>&nbsp;</tt></td></tr>
+<td colspan=2><tt>Clase&nbsp;utilizada&nbsp;para&nbsp;obtener&nbsp;el&nbsp;formulario&nbsp;de&nbsp;peticion&nbsp;de&nbsp;seteo&nbsp;de&nbsp;contrasenha.<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="gestor.views.html#FormularioContacto">FormularioContacto</a></dd>
@@ -69,9 +71,9 @@ Data descriptors defined here:<br>
 </dl>
 <hr>
 Data and other attributes defined here:<br>
-<dl><dt><strong>base_fields</strong> = OrderedDict([('usuario', &lt;django.forms.fields.Ch...ms.fields.EmailField object at 0x7f8bb289d5d0&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('usuario', &lt;django.forms.fields.Ch...ms.fields.EmailField object at 0x7f8696dca7d0&gt;)])</dl>
 
-<dl><dt><strong>declared_fields</strong> = OrderedDict([('usuario', &lt;django.forms.fields.Ch...ms.fields.EmailField object at 0x7f8bb289d5d0&gt;)])</dl>
+<dl><dt><strong>declared_fields</strong> = OrderedDict([('usuario', &lt;django.forms.fields.Ch...ms.fields.EmailField object at 0x7f8696dca7d0&gt;)])</dl>
 
 <hr>
 Methods inherited from <a href="django.forms.forms.html#BaseForm">django.forms.forms.BaseForm</a>:<br>
@@ -182,7 +184,7 @@ Data descriptors defined here:<br>
 Data and other attributes defined here:<br>
 <dl><dt><strong>Meta</strong> = &lt;class gestor.views.Meta&gt;</dl>
 
-<dl><dt><strong>base_fields</strong> = OrderedDict([('nombre', &lt;django.forms.fields.Cha...lMultipleChoiceField object at 0x7f8bb28af050&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('nombre', &lt;django.forms.fields.Cha...lMultipleChoiceField object at 0x7f8696dde2d0&gt;)])</dl>
 
 <dl><dt><strong>declared_fields</strong> = OrderedDict()</dl>
 
@@ -300,7 +302,7 @@ Data descriptors defined here:<br>
 Data and other attributes defined here:<br>
 <dl><dt><strong>Meta</strong> = &lt;class gestor.views.Meta&gt;</dl>
 
-<dl><dt><strong>base_fields</strong> = OrderedDict([('valor_tecnico', &lt;django.forms.fie...lds.TypedChoiceField object at 0x7f8bb28af9d0&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('valor_tecnico', &lt;django.forms.fie...ms.fields.FloatField object at 0x7f8696ddee50&gt;)])</dl>
 
 <dl><dt><strong>declared_fields</strong> = OrderedDict()</dl>
 
@@ -418,7 +420,7 @@ Data descriptors defined here:<br>
 Data and other attributes defined here:<br>
 <dl><dt><strong>Meta</strong> = &lt;class gestor.views.Meta&gt;</dl>
 
-<dl><dt><strong>base_fields</strong> = OrderedDict([('permisos', &lt;django.forms.models.M...rms.fields.CharField object at 0x7f8bb289dc50&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('permisos', &lt;django.forms.models.M...lds.TypedChoiceField object at 0x7f8696dcaf50&gt;)])</dl>
 
 <dl><dt><strong>declared_fields</strong> = OrderedDict()</dl>
 
@@ -532,9 +534,9 @@ Data descriptors defined here:<br>
 </dl>
 <hr>
 Data and other attributes defined here:<br>
-<dl><dt><strong>base_fields</strong> = OrderedDict([('password_nueva1', &lt;django.forms.f...rms.fields.CharField object at 0x7f8bb289d750&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('password_nueva1', &lt;django.forms.f...rms.fields.CharField object at 0x7f8696dca950&gt;)])</dl>
 
-<dl><dt><strong>declared_fields</strong> = OrderedDict([('password_nueva1', &lt;django.forms.f...rms.fields.CharField object at 0x7f8bb289d750&gt;)])</dl>
+<dl><dt><strong>declared_fields</strong> = OrderedDict([('password_nueva1', &lt;django.forms.f...rms.fields.CharField object at 0x7f8696dca950&gt;)])</dl>
 
 <hr>
 Methods inherited from <a href="django.forms.forms.html#BaseForm">django.forms.forms.BaseForm</a>:<br>
@@ -645,7 +647,7 @@ Data descriptors defined here:<br>
 Data and other attributes defined here:<br>
 <dl><dt><strong>Meta</strong> = &lt;class gestor.views.Meta&gt;</dl>
 
-<dl><dt><strong>base_fields</strong> = OrderedDict([('descripcion', &lt;django.forms.field...lMultipleChoiceField object at 0x7f8bb28af390&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('descripcion', &lt;django.forms.field...lMultipleChoiceField object at 0x7f8696ddea10&gt;)])</dl>
 
 <dl><dt><strong>declared_fields</strong> = OrderedDict()</dl>
 
@@ -762,7 +764,7 @@ Data descriptors defined here:<br>
 Data and other attributes defined here:<br>
 <dl><dt><strong>Meta</strong> = &lt;class gestor.views.Meta&gt;</dl>
 
-<dl><dt><strong>base_fields</strong> = OrderedDict([('nombre', &lt;django.forms.fields.Cha...rms.fields.CharField object at 0x7f8bb28bf150&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('nombre', &lt;django.forms.fields.Cha...rms.fields.CharField object at 0x7f8696deb5d0&gt;)])</dl>
 
 <dl><dt><strong>declared_fields</strong> = OrderedDict()</dl>
 
@@ -879,7 +881,7 @@ Data descriptors defined here:<br>
 Data and other attributes defined here:<br>
 <dl><dt><strong>Meta</strong> = &lt;class gestor.views.Meta&gt;</dl>
 
-<dl><dt><strong>base_fields</strong> = OrderedDict([('nombre_corto', &lt;django.forms.fiel...fields.DateTimeField object at 0x7f8bb28afe90&gt;)])</dl>
+<dl><dt><strong>base_fields</strong> = OrderedDict([('nombre_corto', &lt;django.forms.fiel...fields.DateTimeField object at 0x7f8696deb350&gt;)])</dl>
 
 <dl><dt><strong>declared_fields</strong> = OrderedDict()</dl>
 
@@ -979,92 +981,1466 @@ Data descriptors inherited from <a href="django.forms.forms.html#BaseForm">djang
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-asignarRol"><strong>asignarRol</strong></a>(request, usuario_id, proyectoid, rolid, rol_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;permite&nbsp;asignar&nbsp;un&nbsp;rol&nbsp;a&nbsp;un&nbsp;usuario&nbsp;dentro&nbsp;de&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum,&nbsp;valiendose&nbsp;de&nbsp;la&nbsp;URL&nbsp;para&nbsp;obtener<br>
-los&nbsp;id's&nbsp;del&nbsp;rol&nbsp;,&nbsp;proyecto&nbsp;ye&nbsp;l&nbsp;usuario&nbsp;creador.</tt></dd></dl>
- <dl><dt><a name="-contactomail"><strong>contactomail</strong></a>(request)</dt><dd><tt>Vista&nbsp;que&nbsp;obtiene&nbsp;los&nbsp;datos&nbsp;del&nbsp;usuario&nbsp;como&nbsp;su&nbsp;nombre&nbsp;identificador&nbsp;de&nbsp;usuario&nbsp;y&nbsp;correo,<br>
+<td width="100%"><dl><dt><a name="-adminAdjunto"><strong>adminAdjunto</strong></a>(request, usuario_id, proyectoid, rolid, HU_id_rec)</dt><dd><tt>
+<p><pre>
+def adminAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec):
+    
+    if request.method=='GET':
+        hux=HU.objects.get(id=HU_id_rec)
+        adjuntos=[]
+        try: 
+            adjuntos=archivoadjunto.objects.filter(hU=hux)
+        except ObjectDoesNotExist:
+            adjuntos = []
+        return render(request,'adjuntos.html',{'HU':hux,'adjuntos':adjuntos,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    else:
+        archivox = request.FILES['archivo']
+        filex=archivoadjunto.objects.create(archivo=archivox,hU_id=HU_id_rec)
+        filex.save()
+        #archivox.save()
+        return HttpResponseRedirect('/adminAdjunto/'+HU_id_rec+'/')
+
+</pre></p>
+
+Vista&nbsp;que&nbsp;gestiona&nbsp;el&nbsp;guardado&nbsp;de&nbsp;archivos&nbsp;adjuntos&nbsp;a&nbsp;HUs</tt></dd></dl>
+ <dl><dt><a name="-asignarHU_Usuario_FLujo"><strong>asignarHU_Usuario_FLujo</strong></a>(request, usuario_id, proyectoid, rolid, sprintid)</dt><dd><tt>
+ <p><pre>
+ def asignarHU_Usuario_FLujo(request,usuario_id,proyectoid,rolid,sprintid):
+   
+    proyectox=proyecto.objects.get(id=proyectoid)
+    sprintx=Sprint.objects.get(id=sprintid)
+    hus=HU.objects.filter(proyecto=proyectox,estado='ACT',valido=True).filter(sprint=sprintx)
+    hu_en_flujo={}
+    for f in Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)):
+        for a in asignaHU_actividad_flujo.objects.all():
+            if f == a.flujo_al_que_pertenece:
+                for h in a.lista_de_HU.all():
+                    if h.proyecto == proyectox:
+                        hu_en_flujo[f]=a.lista_de_HU.all()
+                        break
+    HU_no_asignada=[]
+    HU_asignada={}
+    for HUa in hus:
+            x=0
+            for d in delegacion.objects.all():
+                if d.hu == HUa:
+                    x=1
+                    HU_asignada[HUa]=d.usuario
+            if x == 0:
+                HU_no_asignada.append(HUa)
+
+    return render(request,"asignarHU_Usuario_Flujo.html",{'hu_en_flujo':hu_en_flujo,'flujos':Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)),'HU_no_asignada':HU_no_asignada,'HU_asignada':HU_asignada,'hus':hus,'sprint':sprintx,'proyecto':proyectox,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+ 
+ </pre></p>
+ 
+ Vista&nbsp;de&nbsp;asignacion&nbsp;de&nbsp;una&nbsp;HU&nbsp;a&nbsp;un&nbsp;usuario&nbsp;y&nbsp;en&nbsp;un&nbsp;flujo</tt></dd></dl>
+ <dl><dt><a name="-asignarHU_a_FLujo"><strong>asignarHU_a_FLujo</strong></a>(request, usuario_id, proyectoid, rolid, sprintid, flujo_id)</dt><dd><tt>
+ <p><pre>
+ def asignarHU_a_FLujo(request,usuario_id,proyectoid,rolid,sprintid,flujo_id):
+   
+    sprintx=Sprint.objects.get(id=sprintid)
+    proyectox=proyecto.objects.get(id=proyectoid)
+    flujo=Flujo.objects.get(id=flujo_id)
+    jsonDec = json.decoder.JSONDecoder()
+    orden=jsonDec.decode(flujo.orden_actividades)
+    hus=HU.objects.filter(proyecto=proyectox,estado='ACT',valido=True).filter(sprint=sprintx)
+    for f in Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)):
+        for a in asignaHU_actividad_flujo.objects.all():
+            if a.flujo_al_que_pertenece == f:
+                for h in a.lista_de_HU.all():
+                    if h.proyecto == proyectox:
+                        hus=hus.exclude(id=h.id)
+    if request.method == 'POST':
+        for a in request.POST.getlist('hu'):
+            h=HU.objects.get(id=a)
+            h.actividad=Actividades.objects.get(id=orden[0])
+            h.save()
+            asig=asignaHU_actividad_flujo.objects.filter(flujo_al_que_pertenece=flujo)
+            if asig:
+                for f in asig:
+                    if f.lista_de_HU.filter(proyecto=proyectox):
+                        f.lista_de_HU.add(HU.objects.get(id=a))
+                        f.save()
+            else:
+                asignar=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=Flujo.objects.get(id=flujo_id))
+                asignar.lista_de_HU.add(HU.objects.get(id=a))
+                asignar.save()
+        return HttpResponseRedirect('/asignarHUFlujo/'+str(usuario_id)+'/'+str(proyectoid)+'/'+str(rolid)+'/'+str(sprintid))
+    else:
+        return render(request,"asignarHUFlujo.html",{'flujo':flujo,'hus':hus,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'sprintid':sprintid,'flujo_id':flujo_id})
+ 
+ 
+ </pre></p>
+ 
+ Vista&nbsp;donde&nbsp;se&nbsp;asignan&nbsp;las&nbsp;HU&nbsp;a&nbsp;un&nbsp;flujo&nbsp;dentro&nbsp;del&nbsp;spring&nbsp;y&nbsp;a&nbsp;un&nbsp;usuario&nbsp;del&nbsp;proyecto</tt></dd></dl>
+ <dl><dt><a name="-asignarRol"><strong>asignarRol</strong></a>(request, usuario_id, proyectoid, rolid, rol_id_rec)</dt><dd><tt>
+ <p><pre>
+ def asignarRol(request,usuario_id, proyectoid,rolid, rol_id_rec):
+   
+    proyectox=proyecto.objects.get(id=proyectoid)
+    rolx = rol.objects.get(id=rol_id_rec)
+    x=0
+    if request.method=='POST':
+        try:
+            for p in request.POST.getlist('usuarios'):
+                u=MyUser.objects.get(id=p)
+                for a in asignacion.objects.all():
+                    if a.usuario == u and a.rol == rolx and a.proyecto == proyectox:
+                        x=1
+            if x == 0:
+                asignacion_a_crear = asignacion.objects.create(usuario=u,rol=rolx, proyecto=proyectox)
+                asignacion_a_crear.save()
+            return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')
+        except ObjectDoesNotExist:
+            print "Either the entry or blog doesn't exist." 
+            return HttpResponseRedirect('/crearFlujo/')
+    else:
+        usuarios_ya_asignados=[]
+        for a in asignacion.objects.all():
+            if a.rol == rol.objects.get(id=rol_id_rec) and a.proyecto == proyectox:
+                usuarios_ya_asignados.append(a.usuario)
+        usuarios_ya_asignados=set(usuarios_ya_asignados)
+        
+        usuarios_sin_asignar=[]
+        for u in MyUser.objects.all().exclude(id=usuario_id).exclude(username='admin'):
+            x=0
+            for u_asig in usuarios_ya_asignados:
+                if u == u_asig:
+                    x=1
+            if x==0:
+                usuarios_sin_asignar.append(u)
+        return render(request,'asignaRolProyecto.html',{'usuarios_sin_asignar':usuarios_sin_asignar,'usuarios_ya_asignados':usuarios_ya_asignados,'proyecto':proyectox,'usuarios':MyUser.objects.all().exclude(id=usuario_id),'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    
+    
+    
+ 
+ </pre></p>
+ 
+ Vista&nbsp;que&nbsp;permite&nbsp;asignar&nbsp;un&nbsp;rol&nbsp;a&nbsp;un&nbsp;usuario&nbsp;dentro&nbsp;de&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum,&nbsp;valiendose&nbsp;de&nbsp;la&nbsp;URL&nbsp;para&nbsp;obtener<br>
+los&nbsp;id's&nbsp;del&nbsp;rol&nbsp;,&nbsp;proyecto&nbsp;y&nbsp;el&nbsp;usuario&nbsp;creador.</tt></dd></dl>
+ <dl><dt><a name="-contactomail"><strong>contactomail</strong></a>(request)</dt><dd><tt>
+ <p><pre>
+ def contactomail(request):
+   
+    if request.method == 'POST':
+        formulario = FormularioContacto(request.POST)
+        if formulario.is_valid():
+            asunto = 'RECUPERACION DE CONTRASENA'
+            username_cargado = formulario.cleaned_data['usuario']
+            usuario = MyUser.objects.get(username = username_cargado)
+            if (str(usuario.email) == formulario.cleaned_data['correo']):
+                mensaje = 'Puedes dirigirte a esta URL de seteo de tu password:  djangoserver/seteoPassword/' + str(usuario.id) + '/'
+                mail = EmailMessage(asunto, mensaje, to=[request.POST['correo']])
+                mail.send()
+                return HttpResponseRedirect('/login') 
+            else:
+                return HttpResponse('El email no coincide con tu email unico asociado a tu usuario')  
+             
+    else:
+        formulario = FormularioContacto()
+        
+    return render_to_response('contactoMail.html', {'formulario': formulario},
+                              context_instance=RequestContext(request))
+ 
+ </pre></p>
+ 
+ Vista&nbsp;que&nbsp;obtiene&nbsp;los&nbsp;datos&nbsp;del&nbsp;usuario&nbsp;como&nbsp;su&nbsp;nombre&nbsp;identificador&nbsp;de&nbsp;usuario&nbsp;y&nbsp;correo,<br>
 comprueba&nbsp;que&nbsp;el&nbsp;correo&nbsp;le&nbsp;pertenezca&nbsp;y&nbsp;envia&nbsp;la&nbsp;direccion&nbsp;correspondiente&nbsp;al&nbsp;seteo&nbsp;de&nbsp;su&nbsp;contrasenha<br>
 a&nbsp;su&nbsp;correo.&nbsp;En&nbsp;caso&nbsp;de&nbsp;que&nbsp;su&nbsp;correo&nbsp;no&nbsp;coincida&nbsp;con&nbsp;el&nbsp;que&nbsp;le&nbsp;corresponda,&nbsp;notifica&nbsp;al&nbsp;usuario.</tt></dd></dl>
- <dl><dt><a name="-crearActividadAdminView"><strong>crearActividadAdminView</strong></a>(request)</dt><dd><tt>Vista&nbsp;que&nbsp;se&nbsp;obtiene&nbsp;del&nbsp;regex&nbsp;al&nbsp;presionar&nbsp;el&nbsp;boton&nbsp;Crear&nbsp;Actividad&nbsp;dentro&nbsp;del&nbsp;formulario<br>
+ <dl><dt><a name="-crearActividadAdminView"><strong>crearActividadAdminView</strong></a>(request)</dt><dd><tt>
+ <p><pre>
+ def crearActividadAdminView(request):
+   
+    if request.method == 'GET':
+        form = formularioActividad()
+        return render_to_response("crearActividadAdmin.html",{"form":form,}, context_instance = RequestContext(request))
+    
+    else:#request.method == 'POST'
+        form = formularioActividad(request.POST)
+        if form.is_valid():
+            nombre=form.cleaned_data['nombre']
+            descripcion=form.cleaned_data['descripcion']
+            form.nombre=nombre
+            form.descripcion=descripcion
+            form.save()
+            return HttpResponse('Ha sido guardado exitosamente')  
+ 
+ </pre></p>
+ 
+ Vista&nbsp;que&nbsp;se&nbsp;obtiene&nbsp;del&nbsp;regex&nbsp;al&nbsp;presionar&nbsp;el&nbsp;boton&nbsp;Crear&nbsp;Actividad&nbsp;dentro&nbsp;del&nbsp;formulario<br>
 de&nbsp;creacion&nbsp;o&nbsp;modificacion&nbsp;de&nbsp;Flujos&nbsp;del&nbsp;admin,&nbsp;devolviendo&nbsp;un&nbsp;formulario&nbsp;html&nbsp;para&nbsp;crear&nbsp;una&nbsp;nueva&nbsp;actividad</tt></dd></dl>
- <dl><dt><a name="-crearActividadView"><strong>crearActividadView</strong></a>(request, usuario_id, proyectoid)</dt><dd><tt>Vista&nbsp;que&nbsp;se&nbsp;obtiene&nbsp;del&nbsp;regex&nbsp;al&nbsp;presionar&nbsp;el&nbsp;boton&nbsp;Crear&nbsp;Actividad&nbsp;dentro&nbsp;del&nbsp;formulario<br>
+ <dl><dt><a name="-crearActividadView"><strong>crearActividadView</strong></a>(request, usuario_id, proyectoid)</dt><dd><tt>
+ <p><pre>}
+def crearActividadView(request,usuario_id,proyectoid):
+   
+    if request.method == 'GET':
+        form = formularioActividad()
+        return render_to_response("crearActividad.html",{"form":form,'usuarioid':usuario_id,'proyectoid':proyectoid}, context_instance = RequestContext(request))
+    
+    else:#request.method == 'POST'
+        form = formularioActividad(request.POST)
+        if form.is_valid():
+            nombre=form.cleaned_data['nombre']
+            descripcion=form.cleaned_data['descripcion']
+            form.nombre=nombre
+            form.descripcion=descripcion
+            form.save()
+            return HttpResponse('Ha sido guardado exitosamente')       
+
+ </pre></p>
+ 
+ 
+ Vista&nbsp;que&nbsp;se&nbsp;obtiene&nbsp;del&nbsp;regex&nbsp;al&nbsp;presionar&nbsp;el&nbsp;boton&nbsp;Crear&nbsp;Actividad&nbsp;dentro&nbsp;del&nbsp;formulario<br>
 de&nbsp;creacion&nbsp;o&nbsp;modificacion&nbsp;de&nbsp;Flujos,&nbsp;devolviendo&nbsp;un&nbsp;formulario&nbsp;html&nbsp;para&nbsp;crear&nbsp;una&nbsp;nueva&nbsp;actividad</tt></dd></dl>
- <dl><dt><a name="-crearFlujo"><strong>crearFlujo</strong></a>(request, usuario_id, proyectoid, rolid)</dt><dd><tt>Vista&nbsp;que&nbsp;realiza&nbsp;la&nbsp;creacion&nbsp;de&nbsp;flujos&nbsp;de&nbsp;proyecto&nbsp;desde&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum.</tt></dd></dl>
- <dl><dt><a name="-crearHU"><strong>crearHU</strong></a>(request, usuario_id, proyectoid, rolid)</dt><dd><tt>Vista&nbsp;que&nbsp;realiza&nbsp;la&nbsp;creacion&nbsp;de&nbsp;flujos&nbsp;de&nbsp;proyecto&nbsp;desde&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum.</tt></dd></dl>
- <dl><dt><a name="-crearRol"><strong>crearRol</strong></a>(request, usuario_id, proyectoid, rolid)</dt><dd><tt>Vista&nbsp;que&nbsp;realiza&nbsp;la&nbsp;creacion&nbsp;de&nbsp;roles&nbsp;de&nbsp;proyecto&nbsp;desde&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum,&nbsp;excluyendo&nbsp;aquellos&nbsp;permisos&nbsp;que&nbsp;no&nbsp;corresponde<br>
+ <dl><dt><a name="-crearFlujo"><strong>crearFlujo</strong></a>(request, usuario_id, proyectoid, rolid)</dt><dd><tt>
+ <p><pre>
+     
+def crearFlujo(request,usuario_id,proyectoid,rolid):
+    
+    actividades_asignadas=[]
+    actividades_disponibles=Actividades.objects.all()
+    if request.method == 'GET':
+        return render(request, 'crearFlujo.html',{'actividades_asignadas':actividades_asignadas,'actividades':actividades_disponibles,'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
+        
+ 
+ </pre></p>
+ 
+ Vista&nbsp;que&nbsp;realiza&nbsp;la&nbsp;creacion&nbsp;de&nbsp;flujos&nbsp;de&nbsp;proyecto&nbsp;desde&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum.</tt></dd></dl>
+ <dl><dt><a name="-crearHU"><strong>crearHU</strong></a>(request, usuario_id, proyectoid, rolid)</dt><dd><tt>
+ <p><pre>
+ def crearHU(request,usuario_id,proyectoid,rolid):
+   
+    VALORES10_CHOICES = range(1,10)
+    if request.method == 'GET':
+        return render(request, 'crearHU.html',{'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid,'valores':VALORES10_CHOICES})
+    
+ 
+ </pre></p>
+ 
+ Vista&nbsp;que&nbsp;realiza&nbsp;la&nbsp;creacion&nbsp;de&nbsp;flujos&nbsp;de&nbsp;proyecto&nbsp;desde&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum.</tt></dd></dl>
+ <dl><dt><a name="-crearRol"><strong>crearRol</strong></a>(request, usuario_id, proyectoid, rolid)</dt><dd><tt>
+ <p><pre>
+ def crearRol(request,usuario_id,proyectoid,rolid):
+  
+    if request.method == 'GET':
+        permisos=Permission.objects.all().exclude(name='Can add group').exclude(name='Can change group') 
+        permisos=permisos.exclude(name='Can delete group').exclude(name='Can delete permission') 
+        permisos=permisos.exclude(name='Can add my user').exclude(name='Can change my user') 
+        permisos=permisos.exclude(name='Can delete my user').exclude(name='Can delete rol sistema') 
+        permisos=permisos.exclude(name='Can add permission').exclude(name='Can change permission') 
+        permisos=permisos.exclude(name='Can add rol sistema').exclude(name='Can change rol sistema') 
+        permisos=permisos.exclude(name='Can add proyecto').exclude(name='Can change proyecto') 
+        permisos=permisos.exclude(name='Can delete proyecto') 
+        permisos=permisos.exclude(name='Can add asigna sistema').exclude(name='Can change asigna sistema') 
+        permisos=permisos.exclude(name='Can delete asigna sistema') 
+        permisos=permisos.exclude(name='Can add permitido').exclude(name='Can change permitido') 
+        permisos=permisos.exclude(name='Can delete permitido')
+        permisos=permisos.exclude(name='Can add log entry').exclude(name='Can delete log entry').exclude(name='Can change log entry')
+        permisos=permisos.exclude(name='Can add content type').exclude(name='Can delete content type').exclude(name='Can change content type')
+        return render(request, 'crearRol.html',{'permissions':permisos,'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
+    
+ 
+ </pre></p>
+ 
+ Vista&nbsp;que&nbsp;realiza&nbsp;la&nbsp;creacion&nbsp;de&nbsp;roles&nbsp;de&nbsp;proyecto&nbsp;desde&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum,&nbsp;excluyendo&nbsp;aquellos&nbsp;permisos&nbsp;que&nbsp;no&nbsp;corresponde<br>
 ser&nbsp;vistos&nbsp;por&nbsp;el&nbsp;usuario&nbsp;Scrum.</tt></dd></dl>
- <dl><dt><a name="-crearSprint"><strong>crearSprint</strong></a>(request, usuario_id, proyectoid, rolid)</dt><dd><tt>Vista&nbsp;que&nbsp;realiza&nbsp;la&nbsp;creacion&nbsp;de&nbsp;flujos&nbsp;de&nbsp;proyecto&nbsp;desde&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum.</tt></dd></dl>
- <dl><dt><a name="-delegarHU"><strong>delegarHU</strong></a>(request, usuario_id, proyectoid, rolid, hu_id, reasignar)</dt><dd><tt>Delega&nbsp;o&nbsp;asigna&nbsp;una&nbsp;HU&nbsp;a&nbsp;un&nbsp;usuario&nbsp;miembro&nbsp;del&nbsp;proyecto,&nbsp;y&nbsp;en&nbsp;caso&nbsp;de&nbsp;ser&nbsp;necesario,&nbsp;reasignar&nbsp;la&nbsp;HU<br>
+ <dl><dt><a name="-crearSprint"><strong>crearSprint</strong></a>(request, usuario_id, proyectoid, rolid)</dt><dd><tt>
+ <p><pre>
+ def crearSprint(request,usuario_id,proyectoid,rolid):
+   
+    proyectox = proyecto.objects.get(id=proyectoid)
+    HUs = HU.objects.filter(proyecto=proyectox)
+    flujos=Flujo.objects.all()#le mando todos los flujos para que elija los que quiere
+    for x in Sprint.objects.all():
+        for h in x.hu.all():
+            HUs=HUs.exclude(id=h.id)
+    if request.method == 'GET':
+        return render(request, 'crearSprint.html',{'HUs_no_seleccionadas':HUs,'flujos':flujos,'HUs':HUs,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
+ 
+ 
+ </pre></p>
+ 
+ Vista&nbsp;que&nbsp;realiza&nbsp;la&nbsp;creacion&nbsp;de&nbsp;flujos&nbsp;de&nbsp;proyecto&nbsp;desde&nbsp;la&nbsp;vista&nbsp;del&nbsp;Scrum.</tt></dd></dl>
+ <dl><dt><a name="-delegarHU"><strong>delegarHU</strong></a>(request, usuario_id, proyectoid, rolid, hu_id, reasignar)</dt><dd><tt>
+ <p><pre>
+ def delegarHU(request,usuario_id,proyectoid,rolid,hu_id,reasignar):
+   
+    proyectox=proyecto.objects.get(id=proyectoid)
+    hu=HU.objects.get(id=hu_id)
+    if request.method=='POST' :
+        if reasignar == '0':
+            try:
+                delegacionx= delegacion.objects.create(usuario=MyUser.objects.get(id=request.POST['usuario']),hu=hu)
+                delegacionx.save()
+                return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')
+            except ObjectDoesNotExist:
+                return HttpResponseRedirect('/crearFlujo/') #redirijir a rol flujo para scrum despues
+        else:
+            for d in delegacion.objects.all():
+                if d.hu == hu:
+                    d.usuario=MyUser.objects.get(id=request.POST['usuario'])
+                    d.save()
+                    return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')
+    else:
+        users=[]
+        asignaciones= asignacion.objects.filter(proyecto=proyectox)#obtuve todas las asignaciones para este proyecto
+        for a in asignaciones:
+            rola = a.rol
+            if rola.tiene_permiso('Agregar horas trabajadas'):
+                users.append(a.usuario)
+        usuario_asignado=[]
+        if reasignar == '1':
+            for d in delegacion.objects.all():
+                if d.hu == hu:
+                    usuario_asignado = d.usuario
+        
+        return render(request,'asignaHU.html',{'usuario_asignado':usuario_asignado, 'proyecto':proyectox,'usuarios':users,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    
+ </pre></p>
+ 
+ Delega&nbsp;o&nbsp;asigna&nbsp;una&nbsp;HU&nbsp;a&nbsp;un&nbsp;usuario&nbsp;miembro&nbsp;del&nbsp;proyecto,&nbsp;y&nbsp;en&nbsp;caso&nbsp;de&nbsp;ser&nbsp;necesario,&nbsp;reasignar&nbsp;la&nbsp;HU<br>
 a&nbsp;otro&nbsp;usuario&nbsp;evitando&nbsp;duplicaciones&nbsp;en&nbsp;la&nbsp;Base&nbsp;de&nbsp;Datos</tt></dd></dl>
- <dl><dt><a name="-guardarFlujoView"><strong>guardarFlujoView</strong></a>(request)</dt><dd><tt>Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;un&nbsp;nuevo&nbsp;flujo&nbsp;en&nbsp;la&nbsp;base&nbsp;de&nbsp;datos<br>
+ <dl><dt><a name="-guardarFlujoView"><strong>guardarFlujoView</strong></a>(request, usuario_id, proyectoid, rolid)</dt><dd><tt>
+ <p><pre>
+ def guardarFlujoView(request, usuario_id, proyectoid, rolid):
+   
+    actividades_disponibles=Actividades.objects.all()
+    actividades_asignadas=[]
+    guardar=0
+    for g in request.POST.getlist('_save'):
+        if g == 'Guardar':
+            guardar=1
+    if guardar == 1:
+        flujo_a_crear = Flujo.objects.create(nombre=request.POST['nombre'],estado="ACT")
+        orden=[]
+        for p in request.POST.getlist('actividades'):
+            orden.append(Actividades.objects.get(id=p).id)
+            flujo_a_crear.actividades.add(Actividades.objects.get(id=p))
+        flujo_a_crear.orden_actividades=json.dumps(orden)
+        flujo_a_crear.save()
+        return HttpResponse('El flujo se ha creado'+str(request.POST.getlist('actividades')))
+    else:
+        if request.POST['boton'] == 'Agregar':
+            act_asi=request.POST.getlist('actividades_asignadas')
+            for a in act_asi:
+                actividades_disponibles=actividades_disponibles.exclude(id=a)
+                actividades_asignadas.append(Actividades.objects.get(id=a))
+            act_dis=request.POST.getlist('actividades_disponibles')
+            for a in act_dis:
+                actividades_asignadas.append(Actividades.objects.get(id=a))
+                actividades_disponibles=actividades_disponibles.exclude(id=a)
+            return render(request, 'crearFlujo.html',{'nombre_flujo':request.POST['nombre'],'proyectoid':proyectoid,'usuarioid':usuario_id,'rolid':rolid ,'actividades_asignadas':actividades_asignadas,'actividades':actividades_disponibles})
+        elif request.POST['boton'] == 'Eliminar':
+            act_asi=request.POST.getlist('actividades_asignadas')
+            for a in act_asi:
+                actividades_disponibles=actividades_disponibles.exclude(id=a)
+                actividades_asignadas.append(Actividades.objects.get(id=a))
+            return render(request, 'crearFlujo.html',{'nombre_flujo':request.POST['nombre'],'proyectoid':proyectoid,'usuarioid':usuario_id,'rolid':rolid ,'actividades_asignadas':actividades_asignadas,'actividades':actividades_disponibles})     
+ 
+ </pre></p>
+ 
+ Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;un&nbsp;nuevo&nbsp;flujo&nbsp;en&nbsp;la&nbsp;base&nbsp;de&nbsp;datos<br>
 que&nbsp;se&nbsp;utiliza&nbsp;en&nbsp;la&nbsp;interfaz&nbsp;devuelta&nbsp;por&nbsp;/crearFlujo/</tt></dd></dl>
- <dl><dt><a name="-guardarHUProdOwnerView"><strong>guardarHUProdOwnerView</strong></a>(request, HU_id_rec, is_Scrum)</dt><dd><tt>Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;la&nbsp;modificacion&nbsp;de&nbsp;una&nbsp;HU&nbsp;existente&nbsp;modificada&nbsp;por&nbsp;el&nbsp;Product&nbsp;Owner<br>
+ <dl><dt><a name="-guardarHUProdOwnerView"><strong>guardarHUProdOwnerView</strong></a>(request, usuario_id, proyectoid, rolid, HU_id_rec, is_Scrum)</dt><dd><tt>
+ <p><pre>
+ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
+          
+    h=HU.objects.get(id=HU_id_rec)
+    if request.method == 'POST':
+        if is_Scrum == '0':
+            valor_negocio=request.POST['valor_negocio']
+            descripcion=request.POST['descripcion']
+            estado=request.POST['estado']
+            h.valor_negocio=valor_negocio
+            h.descripcion=descripcion
+            h.estado=estado
+            h.save() #Guardamos el modelo de manera Editada
+            return HttpResponse('La descripcion y valor de negocio de la HU a sido modificado exitosamente')
+        else:
+            acumulador=0
+            prueba=request.POST['horas_agregar']
+            acumulador=acumulador + float(prueba)
+            y=str(timezone.now())
+            for horas in h.hu_descripcion.all():
+                x=str(horas.fecha)
+                if x[:10] == y[:10]:
+                    acumulador=horas.horas_trabajadas + acumulador
+            if acumulador<9:
+                s=h.sprint()
+                if s is not None and s.termino_Sprint():
+                    s.estado='FIN'
+                guardar=0
+                for g in request.POST.getlist('_save'):
+                    if g == 'Guardar':
+                        guardar=1
+                if guardar == 1:
+                    try:
+                        proyectox=proyecto.objects.get(id=h.proyecto.id)
+                        horas_a_agregar = request.POST['horas_agregar']
+                        descripcion_horas=request.POST['descripcion_horas']
+                        acumulador_horas = float(horas_a_agregar)+h.acumulador_horas
+                        if h.duracion >= acumulador_horas:
+                            h.acumulador_horas=acumulador_horas
+                            h.estado_en_actividad='PRO'
+                            h.save()
+                            if proyectox.estado == 'PEN' and acumulador_horas > 0:
+                                proyectox.estado='ACT'
+                                proyectox.save()
+                            if s is not None:
+                                if s.estado == 'ACT' and acumulador_horas >0:
+                                    s.estado='CON'
+                                    s.save()
+                            hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas,fecha=datetime.now(), actividad=str(h.actividad), estado=str(h.estado_en_actividad))
+                            h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
+                            hd.save()
+                            return render(request,'modificarHU.html', {'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':2})
+                        else:
+                            return HttpResponse('Contactar con el Scrum para aumentar la duracion de la HU, ya que ha sobrepasado el tiempo de realizacion de HU')
+                    except ObjectDoesNotExist:
+                        print "Either the entry or blog doesn't exist." 
+                        return HttpResponseRedirect('/crearHU/')
+                else:
+                    if request.POST['boton'] == 'Finalizar':
+                        for a in asignaHU_actividad_flujo.objects.all():
+                            for hu in a.lista_de_HU.all():
+                                if hu==h:
+                                    flujo=a.flujo_al_que_pertenece
+                                    break
+                        jsonDec = json.decoder.JSONDecoder()
+                        orden=jsonDec.decode(flujo.orden_actividades)
+                         
+                        proyectox=proyecto.objects.get(id=h.proyecto.id)
+                        horas_a_agregar = request.POST['horas_agregar']
+                        descripcion_horas=request.POST['descripcion_horas']
+                        fecha=timezone.now()
+
+                        acumulador_horas = float(horas_a_agregar)+h.acumulador_horas
+                        if h.duracion >= acumulador_horas:
+                            h.acumulador_horas=acumulador_horas
+                            h.save()
+                        x=1
+                        for o in orden:
+                            if Actividades.objects.get(id=o) == h.actividad:
+                                break
+                            else:
+                                x=x+1
+                        if x >= len(orden) and h.acumulador_horas <= h.duracion:
+                            h.estado_en_actividad='FIN'
+                            h.save()
+                            hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas, fecha=fecha, actividad=str(h.actividad), estado=str(h.estado_en_actividad))
+                            h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
+                            hd.save()
+                            return HttpResponse("Todas las actividades de HU finalizadas")
+                        elif x < len(orden) and h.acumulador_horas == h.duracion:
+                            h.estado_en_actividad='PEN'
+                            h.save()
+                            estadoP='PRO'
+                            hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas, fecha=fecha, actividad=str(h.actividad), estado=estadoP)
+                            h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
+                            hd.save()
+                            return HttpResponse("Duracion de HU finalizada sin terminar todas las actividades. Contactar con el Scrum")
+                        else:
+                            h.actividad=Actividades.objects.get(id=orden[x])
+                            h.estado_en_actividad='PEN'
+                            h.save()
+                            estadoP='PRO'
+                            hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas, fecha=fecha, actividad=str(h.actividad), estado=estadoP)
+                            h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
+                            hd.save()
+                            return render(request,'modificarHU.html', {'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':2})
+            else:
+                return HttpResponse('Las Horas cargadas ya superan las 8 Horas diarias que deben cargarse por dia. Ya ha cargado '+str(acumulador-int(prueba))+' horas en este dia') 
+                
+ </pre></p>
+ 
+ Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;la&nbsp;modificacion&nbsp;de&nbsp;una&nbsp;HU&nbsp;existente&nbsp;modificada&nbsp;por&nbsp;el&nbsp;Product&nbsp;Owner<br>
 que&nbsp;se&nbsp;utiliza&nbsp;en&nbsp;la&nbsp;interfaz&nbsp;devuelta&nbsp;por&nbsp;/modificarHU/&nbsp;<br>
-@0:&nbsp;corresponde&nbsp;a&nbsp;la&nbsp;modificaci[on&nbsp;realizada&nbsp;por&nbsp;el&nbsp;Product&nbsp;Owner<br>
-@1:&nbsp;coresponde&nbsp;a&nbsp;la&nbsp;modificaci[on&nbsp;realizada&nbsp;por&nbsp;el&nbsp;Scrum<br>
-@2:&nbsp;corresponde&nbsp;a&nbsp;la&nbsp;modificaci[on&nbsp;realizada&nbsp;por&nbsp;el&nbsp;Equipo</tt></dd></dl>
- <dl><dt><a name="-guardarHUView"><strong>guardarHUView</strong></a>(request, proyectoid)</dt><dd><tt>Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;una&nbsp;nueva&nbsp;HU&nbsp;en&nbsp;la&nbsp;base&nbsp;de&nbsp;datos&nbsp;creada&nbsp;por&nbsp;el&nbsp;Product&nbsp;Owner<br>
+0&nbsp;corresponde&nbsp;a&nbsp;la&nbsp;modificaci[on&nbsp;realizada&nbsp;por&nbsp;el&nbsp;Product&nbsp;Owner<br>
+1&nbsp;coresponde&nbsp;a&nbsp;la&nbsp;modificaci[on&nbsp;realizada&nbsp;por&nbsp;el&nbsp;Scrum<br>
+2&nbsp;corresponde&nbsp;a&nbsp;la&nbsp;modificaci[on&nbsp;realizada&nbsp;por&nbsp;el&nbsp;Equipo</tt></dd></dl>
+ <dl><dt><a name="-guardarHUView"><strong>guardarHUView</strong></a>(request, proyectoid)</dt><dd><tt>
+ <p><pre>
+ def guardarHUView(request,proyectoid):
+   
+    try:
+        proyectox = proyecto.objects.get(id=proyectoid)
+        HU_a_crear = HU.objects.create(descripcion=request.POST['descripcion'],estado="ACT",valor_negocio=request.POST['valor_negocio'], valor_tecnico=0, prioridad=0, duracion=0, acumulador_horas=0, estado_en_actividad='PEN',proyecto=proyectox,valido=False)
+        HU_a_crear.save()
+        return HttpResponse('La HU se ha creado y relacionado con el proyecto')  
+    except ObjectDoesNotExist:
+        print "Either the entry or blog doesn't exist." 
+        return HttpResponseRedirect('/crearHU/')
+ </pre></p>
+ 
+ Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;una&nbsp;nueva&nbsp;HU&nbsp;en&nbsp;la&nbsp;base&nbsp;de&nbsp;datos&nbsp;creada&nbsp;por&nbsp;el&nbsp;Product&nbsp;Owner<br>
 que&nbsp;se&nbsp;utiliza&nbsp;en&nbsp;la&nbsp;interfaz&nbsp;devuelta&nbsp;por&nbsp;/crearHU/</tt></dd></dl>
- <dl><dt><a name="-guardarRolView"><strong>guardarRolView</strong></a>(request, usuario_id)</dt><dd><tt>Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;un&nbsp;nuevo&nbsp;rol&nbsp;en&nbsp;la&nbsp;base&nbsp;de&nbsp;datos<br>
+ <dl><dt><a name="-guardarRolView"><strong>guardarRolView</strong></a>(request, usuario_id)</dt><dd><tt>
+<p><pre> def guardarRolView(request,usuario_id):
+    
+    try:
+        usuario=MyUser.objects.get(id=usuario_id)
+        rol_a_crear = rol.objects.create(nombre_rol_id=request.POST['nombre_rol_id'], descripcion=request.POST['descripcion'],usuario_creador=usuario, estado='ACT')
+        for p in request.POST.getlist('permisos'):
+            rol_a_crear.permisos.add(Permission.objects.get(id=p))
+        rol_a_crear.save()
+        return HttpResponse('El rol se ha creado')
+      
+    except ObjectDoesNotExist:
+        print "Either the entry or blog doesn't exist." 
+        return HttpResponseRedirect('/crearRol/')
+</pre></p>
+ 
+ Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;un&nbsp;nuevo&nbsp;rol&nbsp;en&nbsp;la&nbsp;base&nbsp;de&nbsp;datos<br>
 que&nbsp;se&nbsp;utiliza&nbsp;en&nbsp;la&nbsp;interfaz&nbsp;devuelta&nbsp;por&nbsp;/crearRol/</tt></dd></dl>
- <dl><dt><a name="-guardarSprintView"><strong>guardarSprintView</strong></a>(request, proyectoid)</dt><dd><tt>Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;un&nbsp;nuevo&nbsp;Sprint&nbsp;en&nbsp;la&nbsp;Base&nbsp;de&nbsp;datos<br>
+ <dl><dt><a name="-guardarSprintView"><strong>guardarSprintView</strong></a>(request, usuario_id, proyectoid, rolid)</dt><dd><tt>
+ <p><pre>
+def guardarSprintView(request, usuario_id, proyectoid, rolid):
+   
+    guardar=0
+    for g in request.POST.getlist('_save'):
+        if g == 'Guardar':
+            guardar=1
+    if guardar == 1:
+        try:
+            Sprint_a_crear = Sprint.objects.create(descripcion=request.POST['descripcion'],estado="ACT",fecha_inicio=request.POST['fecha_inicio'], duracion=request.POST['duracion'], proyecto=proyecto.objects.get(id=proyectoid))
+            for p in request.POST.getlist('HUs'):
+                Sprint_a_crear.hu.add(HU.objects.get(id=p))
+            for f in request.POST.getlist('Flujos'):
+                Sprint_a_crear.flujo.add(Flujo.objects.get(id=f))
+            Sprint_a_crear.save()
+            return HttpResponse('El Sprint se ha creado')  
+        except ObjectDoesNotExist:
+            print "Either the entry or blog doesn't exist." 
+            return HttpResponseRedirect('/crearSprint/')
+    else:
+        if request.POST['boton'] == 'Calcular':
+            proyectox = proyecto.objects.get(id=proyectoid)
+            HUs = HU.objects.filter(proyecto=proyectox)
+            flujos=Flujo.objects.all()#le mando todos los flujos para que elija los que quiere
+            for x in Sprint.objects.all():
+                for h in x.hu.all():
+                    HUs=HUs.exclude(id=h.id)
+            max=0
+            hus_seleccionadas=[]
+            HUs_no_seleccionadas=HUs
+            for h in request.POST.getlist('HUs'):
+                hus_seleccionadas.append(HU.objects.get(id=h))
+                HUs_no_seleccionadas=HUs_no_seleccionadas.exclude(id=h)
+                if HU.objects.get(id=h).duracion > max:
+                    max=HU.objects.get(id=h).duracion
+        return render(request, 'crearSprint.html',{'nombre':request.POST['descripcion'],'duracion':int(max/8),'flujos':flujos,'HUs':HUs,'HUs_seleccionadas':hus_seleccionadas,'HUs_no_seleccionadas':HUs_no_seleccionadas,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
+            
+ </pre></p>
+ 
+ Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;un&nbsp;nuevo&nbsp;Sprint&nbsp;en&nbsp;la&nbsp;Base&nbsp;de&nbsp;datos<br>
 que&nbsp;se&nbsp;utiliza&nbsp;en&nbsp;la&nbsp;interfaz&nbsp;devuelta&nbsp;por&nbsp;/crearSprint/</tt></dd></dl>
- <dl><dt><a name="-guardarUsuarioView"><strong>guardarUsuarioView</strong></a>(request)</dt><dd><tt>Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;nuevo&nbsp;usuario&nbsp;relacionado&nbsp;con&nbsp;un&nbsp;correo&nbsp;autorizado&nbsp;en&nbsp;la&nbsp;tabla&nbsp;Permitidos<br>
+ <dl><dt><a name="-guardarUsuarioView"><strong>guardarUsuarioView</strong></a>(request)</dt><dd><tt>
+ <p><pre>
+ def guardarUsuarioView(request):
+   
+    try:
+    
+        usuario = MyUser.objects.create_user(username=request.POST['username'], password=request.POST['password1'],email=request.POST['email'])
+        usuario.is_admin=False
+        usuario.direccion = request.POST['direccion']
+        usuario.last_name = request.POST['last_name']
+        usuario.user_name = request.POST['user_name']
+        #usuario.save(using=request._db)
+        usuario.save()
+        return HttpResponseRedirect('/login')
+    except ObjectDoesNotExist:
+        print "Either the entry or blog doesn't exist." 
+        return HttpResponseRedirect('/registrar')
+ 
+ </pre></p>
+ 
+ Vista&nbsp;de&nbsp;guardado&nbsp;de&nbsp;nuevo&nbsp;usuario&nbsp;relacionado&nbsp;con&nbsp;un&nbsp;correo&nbsp;autorizado&nbsp;en&nbsp;la&nbsp;tabla&nbsp;Permitidos<br>
 que&nbsp;se&nbsp;utiliza&nbsp;en&nbsp;la&nbsp;interfaz&nbsp;devuelta&nbsp;por&nbsp;/registrar</tt></dd></dl>
- <dl><dt><a name="-holaScrumView"><strong>holaScrumView</strong></a>(request, usuario_id, proyectoid, rol_id)</dt><dd><tt>Vista&nbsp;especial&nbsp;para&nbsp;el&nbsp;usuario&nbsp;scrum&nbsp;en&nbsp;la&nbsp;que&nbsp;le&nbsp;listan&nbsp;los&nbsp;proyectos&nbsp;y&nbsp;los&nbsp;enlaces&nbsp;para&nbsp;la&nbsp;creacion&nbsp;de&nbsp;roles&nbsp;y&nbsp;flujos<br>
+ <dl><dt><a name="-holaScrumView"><strong>holaScrumView</strong></a>(request, usuario_id, proyectoid, rol_id)</dt><dd><tt>
+ <p><pre>
+def holaScrumView(request,usuario_id,proyectoid,rol_id):
+   
+    proyectox=proyecto.objects.get(id=proyectoid)
+    usuario=MyUser.objects.get(id=usuario_id)
+    rolx=rol.objects.get(id=rol_id)
+    enlaces=[]
+    HUs=[]
+    HUsm=[]
+    HUs_add_horas=[]
+    enlacef=[]
+    enlacefm=[]
+    enlacefv=[]
+    enlaceHU=[]
+    enlaceHUv=[]
+    enlaceHUm=[]
+    enlaceHUa=[]
+    enlaceHU_agregar=[]
+    enlaceSprint=[]
+    enlaceSprintv=[]
+    enlaceSprintm=[]
+    is_Scrum=0
+    HUsa=0
+    class enlacex:
+        """
+        La clase  permite enviar al html solo las url que se corresponden con los permisos contenidos
+        en el rol del usuario.
+        """
+        def __init__(self,urlx,nombrex):
+            self.url=urlx
+            self.nombre=nombrex
+    
+    if rolx.tiene_permiso('Can add rol'):
+            roles=rol.objects.all()
+            enlaces.append(enlacex('/crearRol/'+usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar rol'))
+    else:
+            roles =[]#lista vacia si no tiene permiso de ver roles
+    
+    roles_modificables=[]
+    roles_inmodificables=[]
+    for r in roles:
+        x=0
+        for a in asignacion.objects.all():
+            if a.rol == r:
+                x=1
+        if x == 0:
+            roles_modificables.append(r)
+        else:
+            roles_inmodificables.append(r)
+    if rolx.tiene_permiso('Can add flujo'):
+        """Tiene permiso de crear un nuevo flujo, obtengo todos los flujos y enlancef envia el url de crear con el nombre del
+        permiso correspondiente al rol-flujo-para-scrum.html"""
+        flujos=Flujo.objects.all()
+        enlacef.append(enlacex('/crearFlujo/'+usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar Flujo'))
+    else:
+        flujos = []#lista vacia si no tiene permiso de ver flujos
+        
+    if rolx.tiene_permiso('Can change flujo'):
+        """Tiene permiso de modificar flujo, obtengo todos los flujos para enviar al rol-flujo-para-scrum.html"""
+        flujosm=Flujo.objects.all()
+        flujos=Flujo.objects.all()
+        enlacefm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar Flujo'))
+    else:
+        flujosm = []#lista vacia si no tiene permiso de ver flujos
+        
+    if rolx.tiene_permiso('Can add flujo') or rolx.tiene_permiso('Can change flujo'):
+        enlacefv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
+    
+    if rolx.tiene_permiso('Can add hu'):
+        HUs = HU.objects.filter(proyecto=proyectox).filter(estado='ACT')
+        enlaceHU.append(enlacex('/crearHU/'+usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar HU'))
+
+    HU_no_asignada_owner=[]
+    HU_asignada_owner=[]
+    if rolx.tiene_permiso('Can change hu'):
+        HUs = HU.objects.filter(proyecto=proyectox)
+        HUsm = HU.objects.filter(proyecto=proyectox)
+        for HUa in HU.objects.filter(proyecto=proyectox):
+            x=0
+            for d in delegacion.objects.all():
+                if d.hu == HUa:
+                    x=1
+            if x == 0:
+                HU_no_asignada_owner.append(HUa)
+            else:
+                HU_asignada_owner.append(HUa)
+ 
+        enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
+        is_Scrum=0
+    elif rolx.tiene_permiso('Can change hu nivel Scrum'):
+        HUs = HU.objects.filter(proyecto=proyectox).filter(valido=True)
+        HUsm = HU.objects.filter(proyecto=proyectox).filter(valido=True)
+        enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
+        is_Scrum=1
+    
+    if rolx.tiene_permiso('Can add hu') or rolx.tiene_permiso('Can change hu') or rolx.tiene_permiso('Can change hu nivel Scrum'):
+        enlaceHUv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
+          
+    HU_no_asignada=[]
+    HU_asignada=[]
+    if rolx.tiene_permiso('Can add delegacion'):
+        enlaceHUa.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Asignar'))
+        HUsa=1
+        for h in HU.objects.filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True):
+                x=0
+                for d in delegacion.objects.all():
+                    if d.hu == h:
+                        x=1
+                if x == 0:
+                    HU_no_asignada.append(h)
+                else:
+                    HU_asignada.append(h)
+    else:
+        HUsa=0
+    agregar_horas=[]
+    if rolx.tiene_permiso('Agregar horas trabajadas'):
+        for d in delegacion.objects.all():
+            if d.hu.proyecto == proyectox and str(d.usuario.id) == usuario_id:
+                if d.hu.estado == 'ACT':
+                    HUs_add_horas.append(d.hu)
+        #HU ordenada por prioridad
+        HUs_add_horas=sorted(HUs_add_horas,key=lambda x: x.prioridad, reverse=True)
+        
+        i=0
+        for p in HUs_add_horas:
+            if p.acumulador_horas != p.duracion and p.estado_en_actividad != 'FIN':
+                agregar_horas=HUs_add_horas[i]             
+                enlaceHU_agregar.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar horas'))
+                break
+            i=i+1
+        is_Scrum=2
+    HUc={}
+    HUv=[]
+    sprintsvk=[]
+    if rolx.tiene_permiso('Visualizar HU'):
+        HUv=HU.objects.filter(proyecto=proyectox).filter(estado='ACT')
+        for h in HUv:
+            hay=0
+            for d in delegacion.objects.all():
+                if d.hu == h:
+                    HUc[h]=d.usuario
+                    hay=1
+            if hay == 0:
+                HUc[h]=None
+                
+    if rolx.tiene_permiso('Can add sprint'):
+        enlaceSprint.append(enlacex('/crearSprint/'+usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar Sprint'))
+    else:
+        sprints = []#lista vacia si no tiene permiso de ver flujos
+    existe=0
+    if rolx.tiene_permiso('Can change sprint'):
+        """Tiene permiso de modificar flujo, obtengo todos los flujos para enviar al rol-flujo-para-scrum.html"""
+        sprintsm=Sprint.objects.filter(proyecto=proyectox)
+        sprints=Sprint.objects.filter(proyecto=proyectox)
+        sprintsvk=[]
+        enlaceSprintm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar Sprint'))
+        for x in Sprint.objects.filter(proyecto=proyectox):
+            duracion=0
+            for h in x.hu.all():
+                duracion=duracion+float(h.acumulador_horas)
+            if duracion>0 or x.estado == 'CON':
+                sprintsm=sprintsm.exclude(id=x.id)
+                sprintsvk.append(x)
+            if x.estado == 'CON':
+                existe=1
+    else:
+        sprintsm = []#lista vacia si no tiene permiso de ver flujos
+        
+    if rolx.tiene_permiso('Can add sprint') or rolx.tiene_permiso('Can change sprint'):
+        enlaceSprintv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
+          
+    return render(request,'rol-flujo-para-scrum.html',{'existe':existe,'sprintsvk':sprintsvk,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HU_asignada':HU_asignada, 'HU_no_asignada':HU_no_asignada,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas})
+    #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
+
+ </pre></p>
+ 
+ Vista&nbsp;especial&nbsp;para&nbsp;el&nbsp;usuario&nbsp;scrum&nbsp;en&nbsp;la&nbsp;que&nbsp;le&nbsp;listan&nbsp;los&nbsp;proyectos&nbsp;y&nbsp;los&nbsp;enlaces&nbsp;para&nbsp;la&nbsp;creacion&nbsp;de&nbsp;roles&nbsp;y&nbsp;flujos<br>
 Vista&nbsp;para&nbsp;los&nbsp;usuario&nbsp;comunes,&nbsp;en&nbsp;la&nbsp;que&nbsp;solo&nbsp;se&nbsp;listan&nbsp;los&nbsp;proyectos&nbsp;sin&nbsp;enlaces,&nbsp;ya&nbsp;que&nbsp;no&nbsp;tiene&nbsp;permiso&nbsp;para&nbsp;ello.</tt></dd></dl>
- <dl><dt><a name="-holaView"><strong>holaView</strong></a>(request, *args, **kwargs)</dt><dd><tt>Vista&nbsp;que&nbsp;redirige&nbsp;a&nbsp;la&nbsp;pagina&nbsp;principal&nbsp;de&nbsp;administracion&nbsp;tanto&nbsp;a&nbsp;usuarios&nbsp;como&nbsp;a<br>
+ <dl><dt><a name="-holaView"><strong>holaView</strong></a>(request, *args, **kwargs)</dt><dd><tt>
+ <p><pre>
+ def holaView(request):
+   
+    if request.user.is_staff:
+        return HttpResponseRedirect(reverse('admin:index'))
+    else:
+        proyecto_cliente=[]
+        proyectos_enlace={}
+        proyectos_sin_enlace={}
+        roles_enlace = []
+        roles_sin_enlace = []
+        for a in asignacion.objects.all():
+            if a.usuario.id == request.user.id:
+                rol_lista = rol.objects.get(id = a.rol.id)
+                for p in proyecto.objects.all():
+                    if p.id == a.proyecto.id:
+                        if rol_lista.tiene_permiso('Can change proyecto'):
+                            roles_enlace.append(rol_lista)
+                        else:
+                            roles_sin_enlace.append(rol_lista)
+                            if rol_lista.tiene_permiso('Visualizar proyecto') and rol_lista.tiene_permiso('Visualizar equipo'):
+                                proyecto_cliente.append(a.proyecto.id)
+            if roles_enlace:
+                if proyectos_enlace.has_key(a.proyecto):
+                    r=list(set(roles_enlace+proyectos_enlace[a.proyecto]))
+                    proyectos_enlace[a.proyecto]=r
+                else:
+                    proyectos_enlace[a.proyecto]=roles_enlace
+                roles_enlace=[]
+                    
+            if roles_sin_enlace:
+                if proyectos_sin_enlace.has_key(a.proyecto):
+                    r=list(set(roles_sin_enlace+proyectos_sin_enlace[a.proyecto]))
+                    proyectos_sin_enlace[a.proyecto]=r
+                else:
+                    proyectos_sin_enlace[a.proyecto]=roles_sin_enlace
+                roles_sin_enlace = []
+        proyectos_completo=[]
+        for p in proyecto.objects.all():
+            if (proyectos_sin_enlace.has_key(p) or proyectos_enlace.has_key(p)):
+                proyectos_completo.append(p)
+                    
+        proyecto_cliente=set(proyecto_cliente)
+        return render(request,'hola.html',{'proyectos_completo':proyectos_completo,'proyecto_cliente':proyecto_cliente, 'usuario':request.user, 'proyectos_enlace':proyectos_enlace, 'proyectos_sin_enlace':proyectos_sin_enlace})
+ 
+ 
+ </pre></p>
+ 
+ Vista&nbsp;que&nbsp;redirige&nbsp;a&nbsp;la&nbsp;pagina&nbsp;principal&nbsp;de&nbsp;administracion&nbsp;tanto&nbsp;a&nbsp;usuarios&nbsp;como&nbsp;a<br>
 superusuarios,&nbsp;los&nbsp;superusuarios&nbsp;son&nbsp;redirigidos&nbsp;a&nbsp;la&nbsp;aplicacion&nbsp;admin&nbsp;mientras&nbsp;que&nbsp;los&nbsp;<br>
 usuarios&nbsp;obtienen&nbsp;una&nbsp;respuesta&nbsp;con&nbsp;el&nbsp;template&nbsp;hola.html</tt></dd></dl>
- <dl><dt><a name="-listarEquipo"><strong>listarEquipo</strong></a>(request, proyecto_id_rec, usuario_id)</dt><dd><tt>Esta&nbsp;vista&nbsp;debe&nbsp;obtener&nbsp;los&nbsp;datos&nbsp;de&nbsp;los&nbsp;usuarios&nbsp;que&nbsp;han&nbsp;sido&nbsp;asignados&nbsp;a&nbsp;un&nbsp;rol&nbsp;en&nbsp;el&nbsp;proyecto,el&nbsp;parametro<br>
+ <dl><dt><a name="-listarEquipo"><strong>listarEquipo</strong></a>(request, proyecto_id_rec, usuario_id)</dt><dd><tt>
+ <p><pre>
+ def listarEquipo(request,proyecto_id_rec,usuario_id):
+   
+    lista={}
+    proyectox=proyecto.objects.get(id=proyecto_id_rec)
+    for a in asignacion.objects.all():
+        if a.proyecto.id == proyectox.id:#si el proyecto relacionado a una asignacion es el que se esta viendo ahora
+            rol_a=rol.objects.get(id=a.rol.id)
+            usuario_a=MyUser.objects.get(id=a.usuario.id)
+            lista[usuario_a]=rol_a#agregar el usuario de esa asignacion a la vista, y mandarlo al template
+    return render(request,'formarEquipo.html',{'roles':rol.objects.all(),'lista_asigna':lista, 'flujos':Flujo.objects.all(),'proyecto':proyectox,'usuario_id':usuario_id})
+ 
+ </pre></p>
+ 
+ Esta&nbsp;vista&nbsp;debe&nbsp;obtener&nbsp;los&nbsp;datos&nbsp;de&nbsp;los&nbsp;usuarios&nbsp;que&nbsp;han&nbsp;sido&nbsp;asignados&nbsp;a&nbsp;un&nbsp;rol&nbsp;en&nbsp;el&nbsp;proyecto,el&nbsp;parametro<br>
 usuario_id&nbsp;se&nbsp;necesita&nbsp;simplemente&nbsp;para&nbsp;el&nbsp;render&nbsp;para&nbsp;poder&nbsp;retornar&nbsp;a&nbsp;rol-flujo-para-scrum</tt></dd></dl>
- <dl><dt><a name="-modificarActividad"><strong>modificarActividad</strong></a>(request, usuario_id, proyectoid, actividad_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;<a href="#formularioActividad">formularioActividad</a>&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
+ <dl><dt><a name="-modificarActividad"><strong>modificarActividad</strong></a>(request, usuario_id, proyectoid, actividad_id_rec)</dt><dd><tt>
+ <p><pre>
+ def modificarActividad(request,usuario_id,proyectoid,actividad_id_rec):
+    
+    p=Actividades.objects.get(id=actividad_id_rec)
+    if request.method == 'POST':
+        form = formularioActividad(request.POST)
+        if form.is_valid():
+            nombre=form.cleaned_data['nombre']
+            descripcion=form.cleaned_data['descripcion']
+            p.nombre=nombre
+            p.descripcion=descripcion
+            p.save() #Guardamos el modelo de manera Editada
+            return HttpResponse('Se ha guardado exitosamente')
+    else:
+        
+        form = formularioActividad(initial={
+                                         'nombre': p.nombre,
+                                         'descripcion': p.descripcion,                                     
+                                         })
+        ctx = {'form':form, 'Actividad':p,'usuarioid':usuario_id,'proyectoid':proyectoid}
+        return render_to_response('modificarActividad.html', ctx ,context_instance=RequestContext(request)) 
+ 
+ 
+ </pre></p>
+ 
+ Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;<a href="#formularioActividad">formularioActividad</a>&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
 de&nbsp;la&nbsp;Actividad&nbsp;que&nbsp;se&nbsp;quiere&nbsp;modificar.</tt></dd></dl>
- <dl><dt><a name="-modificarActividadAdmin"><strong>modificarActividadAdmin</strong></a>(request, actividad_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;<a href="#formularioActividad">formularioActividad</a>&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables&nbsp;en&nbsp;el&nbsp;admin<br>
+ <dl><dt><a name="-modificarActividadAdmin"><strong>modificarActividadAdmin</strong></a>(request, actividad_id_rec)</dt><dd><tt>
+ <p><pre>
+ def modificarActividadAdmin(request,actividad_id_rec):
+   
+    p=Actividades.objects.get(id=actividad_id_rec)
+    if request.method == 'POST':
+        form = formularioActividad(request.POST)
+        if form.is_valid():
+            nombre=form.cleaned_data['nombre']
+            descripcion=form.cleaned_data['descripcion']
+            p.nombre=nombre
+            p.descripcion=descripcion
+            p.save() #Guardamos el modelo de manera Editada
+            return HttpResponse('Se ha guardado exitosamente')
+    else:
+        
+        form = formularioActividad(initial={
+                                         'nombre': p.nombre,
+                                         'descripcion': p.descripcion,                                     
+                                         })
+        ctx = {'form':form, 'Actividad':p,}
+        return render_to_response('modificarActividadAdmin.html', ctx ,context_instance=RequestContext(request)) 
+ 
+ </pre></p>
+ 
+ Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;<a href="#formularioActividad">formularioActividad</a>&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables&nbsp;en&nbsp;el&nbsp;admin<br>
 de&nbsp;la&nbsp;Actividad&nbsp;que&nbsp;se&nbsp;quiere&nbsp;modificar.</tt></dd></dl>
- <dl><dt><a name="-modificarCuenta"><strong>modificarCuenta</strong></a>(request, usuario_id)</dt><dd><tt>Vista&nbsp;que&nbsp;permite&nbsp;a&nbsp;los&nbsp;usuarios&nbsp;activos&nbsp;modificar&nbsp;sus&nbsp;datos&nbsp;personales&nbsp;como<br>
+ <dl><dt><a name="-modificarCuenta"><strong>modificarCuenta</strong></a>(request, usuario_id)</dt><dd><tt>
+ <p><pre>
+ def modificarCuenta(request, usuario_id):
+   
+    usuario = MyUser.objects.get(id=usuario_id)
+    if request.method == 'POST':
+        usuario.user_name=request.POST['user_name']
+        usuario.last_name=request.POST['last_name']
+        usuario.direccion=request.POST['direccion']
+        usuario.save()
+        return HttpResponse('Su cuenta se ha modificado exitosamente')
+    else:
+        return render_to_response('modificarUsuario.html', {'usuario': usuario},
+                              context_instance=RequestContext(request))
+ 
+ </pre></p>
+ 
+ Vista&nbsp;que&nbsp;permite&nbsp;a&nbsp;los&nbsp;usuarios&nbsp;activos&nbsp;modificar&nbsp;sus&nbsp;datos&nbsp;personales&nbsp;como<br>
 el&nbsp;su&nbsp;nombre,&nbsp;apellido&nbsp;y&nbsp;direccion.<br>
 El&nbsp;correo&nbsp;y&nbsp;su&nbsp;nombre&nbsp;identificador&nbsp;del&nbsp;usuario&nbsp;solo&nbsp;lo&nbsp;podra&nbsp;modificar&nbsp;el&nbsp;admin.</tt></dd></dl>
- <dl><dt><a name="-modificarFlujo"><strong>modificarFlujo</strong></a>(request, usuario_id, proyectoid, rolid, flujo_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;FlujoProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
+ <dl><dt><a name="-modificarFlujo"><strong>modificarFlujo</strong></a>(request, usuario_id, proyectoid, rolid, flujo_id_rec)</dt><dd><tt>
+ <p><pre>
+ def modificarFlujo(request, usuario_id, proyectoid, rolid, flujo_id_rec):
+   
+    actividades_disponibles=Actividades.objects.all()
+    actividades_asignadas=[]
+    estados=['ACT','CAN']
+    f=Flujo.objects.get(id=flujo_id_rec)
+    guardar=0
+    for g in request.POST.getlist('_save'):
+        if g == 'Guardar':
+            guardar=2
+        elif g=='Guardar nuevo':
+            guardar=1
+    if request.method == 'POST':
+        if guardar ==0:
+            if request.POST['boton'] == 'Agregar':
+                act_asi=request.POST.getlist('actividades_asignadas')
+                if act_asi:
+                    for a in act_asi:
+                        actividades_disponibles=actividades_disponibles.exclude(id=a)
+                        actividades_asignadas.append(Actividades.objects.get(id=a))
+                act_dis=request.POST.getlist('actividades_disponibles')
+                for a in act_dis:
+                    actividades_asignadas.append(Actividades.objects.get(id=a))
+                    actividades_disponibles=actividades_disponibles.exclude(id=a)
+                ctx = {'estados':estados,'actividades_asignadas':actividades_asignadas,'actividades':actividades_disponibles,'flujo':f, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
+                return render(request,'modificarFlujo.html', ctx)
+            elif request.POST['boton'] == 'Eliminar':
+                act_asi=request.POST.getlist('actividades_asignadas')
+                for a in act_asi:
+                    actividades_disponibles=actividades_disponibles.exclude(id=a)
+                    actividades_asignadas.append(Actividades.objects.get(id=a))
+                ctx = {'estados':estados,'actividades_asignadas':actividades_asignadas,'actividades':actividades_disponibles,'flujo':f, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
+                return render(request,'modificarFlujo.html', ctx)
+        elif guardar == 1:
+            nombre=request.POST['nombre']
+            estado=request.POST['estado']
+            try:
+                flujo_a_crear = Flujo.objects.create(nombre=nombre,estado="ACT")
+                orden=[]
+                for p in request.POST.getlist('actividades_asignadas'):
+                    orden.append(Actividades.objects.get(id=p).id)
+                    flujo_a_crear.actividades.add(Actividades.objects.get(id=p))
+                flujo_a_crear.orden_actividades=json.dumps(orden)
+                flujo_a_crear.save()
+                return HttpResponse('El flujo nuevo se ha creado')  
+            except ObjectDoesNotExist:
+                print "No se ha podido crear el nuevo flujo" 
+            return HttpResponse('El flujo ha sido creado exitosamente')
+        elif guardar == 2:
+            nombre=request.POST['nombre']
+            estado=request.POST['estado']
+            f.nombre=nombre
+            f.estado=estado
+            orden=[]
+            f.actividades=[]
+            f.orden_actividades=orden
+            for p in request.POST.getlist('actividades_asignadas'):
+                orden.append(Actividades.objects.get(id=p).id)
+                f.actividades.add(Actividades.objects.get(id=p))
+            f.orden_actividades=json.dumps(orden)
+            f.save() #Guardamos el modelo de manera Editada
+            return HttpResponse('El flujo ha sido modificado exitosamente')
+    else:
+        actividades_asignadas=[]
+        actividades_disponibles=[]
+        jsonDec = json.decoder.JSONDecoder()
+        orden=jsonDec.decode(f.orden_actividades)
+        for o in orden:
+            for a in f.actividades.all():
+                if a.id == o:
+                    actividades_asignadas.append(a)
+        for a in Actividades.objects.all():
+            x=0
+            for asig in actividades_asignadas:
+                if a == asig:
+                    x=1
+            if x == 0:
+                actividades_disponibles.append(a)
+        
+        ctx = {'estados':estados,'actividades_asignadas':actividades_asignadas,'actividades':actividades_disponibles,'flujo':f, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
+        return render_to_response('modificarFlujo.html', ctx ,context_instance=RequestContext(request))
+ 
+ 
+ </pre></p>
+ 
+ Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;FlujoProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
 del&nbsp;Flujo&nbsp;que&nbsp;se&nbsp;quiere&nbsp;modificar.</tt></dd></dl>
- <dl><dt><a name="-modificarHU"><strong>modificarHU</strong></a>(request, usuario_id, proyectoid, rolid, HU_id_rec, is_Scrum)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;HU&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
+ <dl><dt><a name="-modificarHU"><strong>modificarHU</strong></a>(request, usuario_id, proyectoid, rolid, HU_id_rec, is_Scrum)</dt><dd><tt>
+ <p><pre>
+ def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
+    
+    estados=['ACT','CAN']
+    VALORES10_CHOICES = range(1,10)
+    h=HU.objects.get(id=HU_id_rec)
+    if (is_Scrum == '1'):
+        if request.method == 'POST':
+            form = FormularioHU(request.POST)
+            if form.is_valid():
+                valor_tecnico=form.cleaned_data['valor_tecnico']
+                prioridad=form.cleaned_data['prioridad']
+                duracion=form.cleaned_data['duracion']
+                #estado=form.cleaned_data['estado']
+                h.valor_tecnico=valor_tecnico
+                h.prioridad=prioridad
+                h.duracion=duracion
+                #h.estado=estado
+                h.save() #Guardamos el modelo de manera Editada
+                return HttpResponse('La HU ha sido modificado exitosamente')
+            else:
+                return HttpResponse('error'+str(form.errors))
+        else:
+        
+            form = FormularioHU(initial={
+                                        'valor_tecnico': h.valor_tecnico,
+                                        'prioridad': h.prioridad,
+                                        'duracion':h.duracion,
+                                        #'estado':h.estado
+                                         })
+            ctx = {'valores':VALORES10_CHOICES,'form':form, 'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum}
+            return render_to_response('modificarHU.html', ctx ,context_instance=RequestContext(request))
+    else:
+        return render(request,'modificarHU.html', {'estados':estados, 'valores':VALORES10_CHOICES,'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum})
+ 
+ </pre></p>
+ 
+ Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;HU&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
 de&nbsp;la&nbsp;HU&nbsp;en&nbsp;tres&nbsp;niveles&nbsp;de&nbsp;modificacion.<br>
 Esta&nbsp;vista&nbsp;corresponde&nbsp;a&nbsp;la&nbsp;modificacion&nbsp;del&nbsp;nivel&nbsp;1,&nbsp;es&nbsp;decir,&nbsp;a&nbsp;nivell&nbsp;Scrum&nbsp;Master</tt></dd></dl>
- <dl><dt><a name="-modificarProyecto"><strong>modificarProyecto</strong></a>(request, usuario_id, proyecto_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;<a href="#proyectoFrom">proyectoFrom</a>&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
+ <dl><dt><a name="-modificarProyecto"><strong>modificarProyecto</strong></a>(request, usuario_id, proyecto_id_rec)</dt><dd><tt>
+ <p><pre>
+ def modificarProyecto(request, usuario_id, proyecto_id_rec):
+    
+    p=proyecto.objects.get(id=proyecto_id_rec)
+    if request.method == 'POST':
+        form = proyectoFrom(request.POST)
+        if form.is_valid():
+            nombre_corto=form.cleaned_data['nombre_corto']
+            nombre_largo=form.cleaned_data['nombre_largo']
+            descripcion=form.cleaned_data['descripcion']
+            estado=form.cleaned_data['estado']
+            fecha_inicio=form.cleaned_data['fecha_inicio']
+            fecha_fin=form.cleaned_data['fecha_fin']
+            p.nombre_corto=nombre_corto
+            p.nombre_largo=nombre_largo
+            p.descripcion=descripcion
+            p.estado=estado
+            p.fecha_inicio=fecha_inicio
+            p.fecha_fin=fecha_fin
+            p.save() #Guardamos el modelo de manera Editada
+            return HttpResponse('Tu proyecto a sido guardado exitosamente')
+    else:
+        
+        form = proyectoFrom(initial={
+                                         'nombre_corto': p.nombre_corto,
+                                         'nombre_largo': p.nombre_largo,
+                                         'descripcion': p.descripcion,
+                                         'estado':p.estado,
+                                         'fecha_inicio': p.fecha_inicio,
+                                         'fecha_fin': p.fecha_fin,
+                                     
+                                         })
+        ctx = {'form':form, 'proyecto':p,'usuarioid':usuario_id}
+        return render_to_response('modificarProyecto.html', ctx ,context_instance=RequestContext(request))
+    
+ </pre></p>
+ 
+ Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;<a href="#proyectoFrom">proyectoFrom</a>&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
 del&nbsp;Proyecto&nbsp;que&nbsp;se&nbsp;quiere&nbsp;modificar.</tt></dd></dl>
- <dl><dt><a name="-modificarRol"><strong>modificarRol</strong></a>(request, usuario_id, proyectoid, rolid, rol_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;RolProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
+ <dl><dt><a name="-modificarRol"><strong>modificarRol</strong></a>(request, usuario_id, proyectoid, rolid, rol_id_rec)</dt><dd><tt>
+ <p><pre>
+ def modificarRol(request, usuario_id, proyectoid, rolid, rol_id_rec):
+    
+    f=rol.objects.get(id=rol_id_rec)
+    u=MyUser.objects.get(id=usuario_id)
+    if request.method == 'POST':
+        form = FormularioRolProyecto(request.POST)
+        if form.is_valid():
+            nombre_rol_id=form.cleaned_data['nombre_rol_id']
+            descripcion=form.cleaned_data['descripcion']
+            permisos=form.cleaned_data['permisos']
+            estado=form.cleaned_data['estado']
+            f.nombre_rol_id=nombre_rol_id
+            f.descripcion=descripcion
+            f.permisos=permisos
+            f.usuario_creador=u
+            f.estado=estado
+            f.save() #Guardamos el modelo de manera Editada
+            return HttpResponse('El rol ha sido modificado exitosamente')
+        else:
+            return HttpResponse('Error'+str(form.errors))
+    else:
+        permisos=Permission.objects.all().exclude(name='Can add group').exclude(name='Can change group') 
+        permisos=permisos.exclude(name='Can delete group').exclude(name='Can delete permission') 
+        permisos=permisos.exclude(name='Can add my user').exclude(name='Can change my user') 
+        permisos=permisos.exclude(name='Can delete my user').exclude(name='Can delete rol sistema') 
+        permisos=permisos.exclude(name='Can add permission').exclude(name='Can change permission') 
+        permisos=permisos.exclude(name='Can add rol sistema').exclude(name='Can change rol sistema') 
+        permisos=permisos.exclude(name='Can add proyecto').exclude(name='Can change proyecto') 
+        permisos=permisos.exclude(name='Can delete proyecto') 
+        permisos=permisos.exclude(name='Can add asigna sistema').exclude(name='Can change asigna sistema') 
+        permisos=permisos.exclude(name='Can delete asigna sistema') 
+        permisos=permisos.exclude(name='Can add permitido').exclude(name='Can change permitido') 
+        permisos=permisos.exclude(name='Can delete permitido')
+        permisos=permisos.exclude(name='Can add log entry').exclude(name='Can delete log entry').exclude(name='Can change log entry')
+        permisos=permisos.exclude(name='Can add content type').exclude(name='Can delete content type').exclude(name='Can change content type')
+        form = FormularioRolProyecto(initial={
+                                         'nombre_rol_id': f.nombre_rol_id,
+                                         'descripcion': f.descripcion,
+                                         'permisos': f.permisos,
+   
+                                         })
+        lista_restante=[]
+        for permitido in permisos.all():
+            x=0
+            for perm_rol in f.permisos.all():
+                if permitido.id==perm_rol.id:
+                    x=1
+            if x==0:
+                lista_restante.append(permitido)
+        estados=['ACT','CAN']
+        ctx = {'form':form, 'rol':f, 'proyectoid':proyectoid,'usuarioid':usuario_id,'rolid':rolid ,'permisos':lista_restante,'estados':estados}
+        return render_to_response('modificarRol.html', ctx ,context_instance=RequestContext(request))
+ 
+ </pre></p>
+ 
+ Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;RolProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
 del&nbsp;Rol&nbsp;que&nbsp;se&nbsp;quiere&nbsp;modificar.</tt></dd></dl>
- <dl><dt><a name="-modificarSprint"><strong>modificarSprint</strong></a>(request, usuario_id, proyectoid, rolid, Sprint_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;SprintProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
+ <dl><dt><a name="-modificarSprint"><strong>modificarSprint</strong></a>(request, usuario_id, proyectoid, rolid, Sprint_id_rec)</dt><dd><tt>
+ <p><pre>
+ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
+    estados=['ACT','CAN','CON']
+    s=Sprint.objects.get(id=Sprint_id_rec)
+    if request.method == 'POST':
+        form = FormularioSprintProyecto(request.POST)
+        if form.is_valid():
+            descripcion=form.cleaned_data['descripcion']
+            estado=form.cleaned_data['estado']
+            fecha_inicio=form.cleaned_data['fecha_inicio']
+            duracion=form.cleaned_data['duracion']
+            hu=form.cleaned_data['hu']
+            flujo=form.cleaned_data['flujo']
+            s.descripcion=descripcion
+            s.estado=estado
+            s.fecha_inicio=fecha_inicio
+            s.duracion=duracion
+            s.hu=hu
+            s.flujo=flujo
+            s.save() #Guardamos el modelo de manera Editada
+            return HttpResponse('El Sprint ha sido modificado exitosamente')
+        else:
+            return HttpResponse('El Sprint no es valido'+str(form.errors))
+    else:    
+        form = FormularioSprintProyecto(initial={
+                                         'descripcion': s.descripcion,
+                                         'estado': s.estado,
+                                         'fecha_inicio': s.fecha_inicio,
+                                         'duracion': s.duracion,
+                                         'hu':[t.id for t in s.hu.all()],
+                                         'flujo':[x.id for x in s.flujo.all()]
+   
+                                         })
+        proyectox=proyecto.objects.get(id=proyectoid)
+        HUs = HU.objects.filter(proyecto=proyectox)
+        flujos=Flujo.objects.all()
+        for x in Sprint.objects.all():
+            for h in x.hu.all():
+                HUs=HUs.exclude(id=h.id)
+                
+        lista_restante=[]
+        for permitido in HUs:
+            x=0
+            for perm_hu in s.hu.all():
+                if permitido.id==perm_hu.id:
+                    x=1
+            if x==0:
+                lista_restante.append(permitido)
+        fecha = str(s.fecha_inicio)
+        
+        ctx = {'flujos':flujos,'estados':estados, 'fecha':fecha[:-6],'form':form,'HUs':HUs,'lista_HU_sin_asignar':lista_restante,'Sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
+        return render_to_response('modificarSprint.html', ctx ,context_instance=RequestContext(request))
+ </pre></p>
+ 
+ Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;SprintProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;editables<br>
 del&nbsp;Sprint&nbsp;que&nbsp;se&nbsp;quiere&nbsp;modificar.<br>
 La&nbsp;lista&nbsp;de&nbsp;HU&nbsp;asignables&nbsp;se&nbsp;dividen&nbsp;en&nbsp;dos&nbsp;sublistas:&nbsp;las&nbsp;ya&nbsp;asignadas&nbsp;a&nbsp;algun&nbsp;sprint&nbsp;y&nbsp;las&nbsp;que&nbsp;aun<br>
 no&nbsp;han&nbsp;sido&nbsp;asignadas.</tt></dd></dl>
- <dl><dt><a name="-reactivar"><strong>reactivar</strong></a>(request, usuario_id, proyectoid, rolid, tipo, id_tipo)</dt><dd><tt>Vista&nbsp;que&nbsp;permite&nbsp;reactivar&nbsp;un&nbsp;flujo,&nbsp;HU&nbsp;o&nbsp;Sprint&nbsp;cancelado&nbsp;por&nbsp;el&nbsp;usuario,<br>
+ <dl><dt><a name="-reactivar"><strong>reactivar</strong></a>(request, usuario_id, proyectoid, rolid, tipo, id_tipo)</dt><dd><tt>
+ <p><pre>
+ def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
+   
+    if tipo == '1': #se trata de un flujo
+        f=Flujo.objects.get(id=id_tipo)
+        f.estado='ACT'
+        f.save()
+    if tipo == '2': #se trata de una HU
+        h=HU.objects.get(id=id_tipo)
+        h.estado='ACT'
+        h.save()
+    if tipo == '3': #se trata de un sprint
+        s=Sprint.objects.get(id=id_tipo)
+        s.estado='ACT'
+        s.save()
+    if tipo == '4': #se trata de un rol
+        s=rol.objects.get(id=id_tipo)
+        s.estado='ACT'
+        s.save()
+    return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')
+ 
+ </pre></p>
+ 
+ 
+ Vista&nbsp;que&nbsp;permite&nbsp;reactivar&nbsp;un&nbsp;flujo,&nbsp;HU&nbsp;o&nbsp;Sprint&nbsp;cancelado&nbsp;por&nbsp;el&nbsp;usuario,<br>
 para&nbsp;su&nbsp;correspondiente&nbsp;uso&nbsp;o&nbsp;modificacion,&nbsp;ya&nbsp;que&nbsp;los&nbsp;objetos&nbsp;cancelados<br>
 solo&nbsp;estan&nbsp;disponibles&nbsp;para&nbsp;su&nbsp;visualizacion,&nbsp;no&nbsp;para&nbsp;su&nbsp;asignacion&nbsp;o&nbsp;modificacion.<br>
 Recibe&nbsp;un&nbsp;tipo&nbsp;en&nbsp;la&nbsp;url&nbsp;que&nbsp;le&nbsp;permite&nbsp;distinguir&nbsp;de&nbsp;que&nbsp;tipo&nbsp;de&nbsp;objeto&nbsp;se&nbsp;trata.</tt></dd></dl>
- <dl><dt><a name="-registrarUsuarioView"><strong>registrarUsuarioView</strong></a>(request)</dt><dd><tt>Vista&nbsp;que&nbsp;se&nbsp;obtiene&nbsp;del&nbsp;regex&nbsp;/registrar&nbsp;solicitado&nbsp;al&nbsp;precionar&nbsp;el&nbsp;boton<br>
+ <dl><dt><a name="-registrarUsuarioView"><strong>registrarUsuarioView</strong></a>(request)</dt><dd><tt>
+ <p><pre>
+ def registrarUsuarioView(request):
+    
+    if request.method == 'GET':
+        return render(request, 'crearusuario.html')
+ 
+ 
+ </pre></p>
+ 
+ 
+ Vista&nbsp;que&nbsp;se&nbsp;obtiene&nbsp;del&nbsp;regex&nbsp;/registrar&nbsp;solicitado&nbsp;al&nbsp;precionar&nbsp;el&nbsp;boton<br>
 registrar&nbsp;en&nbsp;el&nbsp;login,&nbsp;devuelve&nbsp;un&nbsp;formulario&nbsp;html&nbsp;para&nbsp;crear&nbsp;un&nbsp;nuevo&nbsp;usuario<br>
 con&nbsp;un&nbsp;correo&nbsp;existente</tt></dd></dl>
- <dl><dt><a name="-seleccionarFlujoModificar"><strong>seleccionarFlujoModificar</strong></a>(request, usuario_id, proyectoid)</dt><dd><tt>Al&nbsp;presionar&nbsp;el&nbsp;boton&nbsp;Modificar&nbsp;Actividad,&nbsp;esta&nbsp;vista&nbsp;despliega&nbsp;una&nbsp;lista&nbsp;de&nbsp;todas&nbsp;las&nbsp;actividades&nbsp;seleccionables&nbsp;por&nbsp;el&nbsp;usuario<br>
+ <dl><dt><a name="-seleccionarFlujoModificar"><strong>seleccionarFlujoModificar</strong></a>(request, usuario_id, proyectoid)</dt><dd><tt>
+ <p><pre>
+ def seleccionarFlujoModificar(request,usuario_id,proyectoid):
+   
+    return render(request,'seleccionarActividad.html',{'actividades':Actividades.objects.all(),'usuarioid':usuario_id,'proyectoid':proyectoid})
+ 
+ </pre></p>
+ 
+ Al&nbsp;presionar&nbsp;el&nbsp;boton&nbsp;Modificar&nbsp;Actividad,&nbsp;esta&nbsp;vista&nbsp;despliega&nbsp;una&nbsp;lista&nbsp;de&nbsp;todas&nbsp;las&nbsp;actividades&nbsp;seleccionables&nbsp;por&nbsp;el&nbsp;usuario<br>
 para&nbsp;su&nbsp;modificacion.</tt></dd></dl>
- <dl><dt><a name="-seleccionarFlujoModificarAdmin"><strong>seleccionarFlujoModificarAdmin</strong></a>(request)</dt><dd><tt>Al&nbsp;presionar&nbsp;el&nbsp;boton&nbsp;Modificar&nbsp;Actividad&nbsp;en&nbsp;el&nbsp;admin,&nbsp;esta&nbsp;vista&nbsp;despliega&nbsp;una&nbsp;lista&nbsp;de&nbsp;todas&nbsp;las&nbsp;actividades&nbsp;<br>
+ <dl><dt><a name="-seleccionarFlujoModificarAdmin"><strong>seleccionarFlujoModificarAdmin</strong></a>(request)</dt><dd><tt>
+ <p><pre>
+ def seleccionarFlujoModificarAdmin(request):
+    
+    return render(request,'seleccionarActividadAdmin.html',{'actividades':Actividades.objects.all(),})
+ 
+ </pre></p>
+ 
+ Al&nbsp;presionar&nbsp;el&nbsp;boton&nbsp;Modificar&nbsp;Actividad&nbsp;en&nbsp;el&nbsp;admin,&nbsp;esta&nbsp;vista&nbsp;despliega&nbsp;una&nbsp;lista&nbsp;de&nbsp;todas&nbsp;las&nbsp;actividades&nbsp;<br>
 seleccionables&nbsp;por&nbsp;el&nbsp;usuario&nbsp;para&nbsp;su&nbsp;modificacion.</tt></dd></dl>
- <dl><dt><a name="-seteoPassword"><strong>seteoPassword</strong></a>(request, usuario_id)</dt><dd><tt>Vista&nbsp;que&nbsp;se&nbsp;despliega&nbsp;al&nbsp;estar&nbsp;en&nbsp;el&nbsp;direccionamiento&nbsp;de&nbsp;configuracion&nbsp;de&nbsp;contrasenha,<br>
+ <dl><dt><a name="-seteoPassword"><strong>seteoPassword</strong></a>(request, usuario_id)</dt><dd><tt>
+ <p><pre>def seteoPassword(request, usuario_id):
+    
+    if request.method == 'POST':
+        formulario = FormularioSeteoContrasenha(request.POST)
+        if formulario.is_valid():
+            passwor1 = formulario.cleaned_data['password_nueva1']
+            passwor2 = formulario.cleaned_data['password_nueva2']
+            usuario = MyUser.objects.get(id = usuario_id)
+            if (usuario is not None):
+                if passwor1 and passwor2 and passwor1 != passwor2:
+                    return HttpResponse("Las contrasenhas no coinciden, vuelve a la pagina de seteo")
+                else:
+                    usuario.set_password(formulario.cleaned_data['password_nueva1'])
+                    usuario.save()
+                return HttpResponse('Tu contrasenha ha sido cambiada, puedes loguearte con tu nueva contrasenha')    
+    else:
+        formulario = FormularioSeteoContrasenha()
+        
+    return render_to_response('seteoPassword.html', {'formulario': formulario},
+                              context_instance=RequestContext(request))
+    </pre></p>
+ 
+ Vista&nbsp;que&nbsp;se&nbsp;despliega&nbsp;al&nbsp;estar&nbsp;en&nbsp;el&nbsp;direccionamiento&nbsp;de&nbsp;configuracion&nbsp;de&nbsp;contrasenha,<br>
 comprueba&nbsp;que&nbsp;ambas&nbsp;contrasenhas&nbsp;intruducidas&nbsp;por&nbsp;el&nbsp;usuario&nbsp;coincidan,&nbsp;en&nbsp;caso&nbsp;de&nbsp;que&nbsp;coincidan<br>
 se&nbsp;almacena&nbsp;la&nbsp;nueva&nbsp;contrasenha&nbsp;en&nbsp;la&nbsp;Base&nbsp;de&nbsp;Datos&nbsp;y&nbsp;en&nbsp;caso&nbsp;de&nbsp;que&nbsp;no&nbsp;coincidan&nbsp;se&nbsp;le&nbsp;notifica&nbsp;al&nbsp;usuario.</tt></dd></dl>
- <dl><dt><a name="-validarHU"><strong>validarHU</strong></a>(request, usuario_id, proyectoid, rolid, HU_id_rec, is_Scrum)</dt></dl>
- <dl><dt><a name="-visualizarBacklog"><strong>visualizarBacklog</strong></a>(request, usuario_id, proyectoid, rolid)</dt><dd><tt>Vista&nbsp;disponible&nbsp;para&nbsp;el&nbsp;Scrum&nbsp;y&nbsp;el&nbsp;Product&nbsp;Owner.<br>
+ <dl><dt><a name="-validarHU"><strong>validarHU</strong></a>(request, usuario_id, proyectoid, rolid, HU_id_rec, is_Scrum)</dt><dd><tt>
+ <p><pre>
+ def validarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
+   
+    hu_x=HU.objects.get(id=HU_id_rec)
+    if request.method == 'GET':       
+        return render(request,'validarHU.html',{'hu':HU_id_rec, 'HU':hu_x.valido, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum})
+    else:
+        if hu_x.valido == False:
+            hu_x.valido=True
+            hu_x.save()
+            return HttpResponse('Se ha validado exitosamente') 
+        else:
+            hu_x.valido=False
+            hu_x.save()
+            return HttpResponse('Se ha invalidado exitosamente')
+ </pre></p>
+ 
+ Controla&nbsp;la&nbsp;validacion&nbsp;de&nbsp;una&nbsp;HU&nbsp;creada&nbsp;por&nbsp;el&nbsp;product&nbsp;owner</tt></dd></dl>
+ <dl><dt><a name="-verKanban"><strong>verKanban</strong></a>(request, usuario_id, proyectoid, rolid, sprintid)</dt><dd><tt>
+ <p><pre>
+ def verKanban(request,usuario_id,proyectoid,rolid,sprintid):
+   
+    sprintx=Sprint.objects.get(id=sprintid)
+    flujos_hu={}
+    flujos_actividades={}
+    for f in Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)):
+        for a in asignaHU_actividad_flujo.objects.all():
+            if a.flujo_al_que_pertenece == f:
+                flujos_hu[f]=a.lista_de_HU.all()
+    for f in Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)):
+        jsonDec = json.decoder.JSONDecoder()
+        orden=jsonDec.decode(f.orden_actividades)
+        actividades=[]
+        for o in orden:
+            actividades.append(Actividades.objects.get(id=o))
+        flujos_actividades[f]=actividades
+            
+    return render(request,"verKanban.html",{'sprint':sprintx, 'flujos_hu':flujos_hu,'flujos_actividades':flujos_actividades,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+ 
+ </pre></p>
+ 
+ 
+ Vista&nbsp;que&nbsp;permite&nbsp;acceder&nbsp;al&nbsp;template&nbsp;de&nbsp;visualizacion&nbsp;de&nbsp;un&nbsp;flujo&nbsp;graficamente&nbsp;en&nbsp;el&nbsp;kanban</tt></dd></dl>
+ <dl><dt><a name="-visualizarBacklog"><strong>visualizarBacklog</strong></a>(request, usuario_id, proyectoid, rolid)</dt><dd><tt>
+ <p><pre>
+ def visualizarBacklog(request, usuario_id, proyectoid, rolid):
+  
+    proyectox=proyecto.objects.get(id=proyectoid)
+    huss=HU.objects.all().filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True).filter(sprint__hu__isnull=True)
+    h=sorted(huss,key=lambda x: x.prioridad, reverse=True)
+    return render(request,'visualizarBacklog.html',{'huss':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+ </pre></p>
+ 
+ Vista&nbsp;disponible&nbsp;para&nbsp;el&nbsp;Scrum&nbsp;y&nbsp;el&nbsp;Product&nbsp;Owner.<br>
 Esta&nbsp;vista&nbsp;contiene&nbsp;la&nbsp;lista&nbsp;de&nbsp;HU&nbsp;pendientes&nbsp;pero&nbsp;ACTIVAS&nbsp;y&nbsp;VALIDADAS&nbsp;ordenadas&nbsp;segun&nbsp;su&nbsp;prioridad<br>
 en&nbsp;orden&nbsp;descendente&nbsp;para&nbsp;la&nbsp;correspondiente&nbsp;asignacion&nbsp;que&nbsp;realizara&nbsp;el&nbsp;Scrum&nbsp;Master.<br>
 A&nbsp;medida&nbsp;que&nbsp;las&nbsp;HU&nbsp;se&nbsp;realizan,&nbsp;estas&nbsp;desapareceran&nbsp;del&nbsp;Product&nbsp;Backlog.</tt></dd></dl>
- <dl><dt><a name="-visualizarFlujoProyectoView"><strong>visualizarFlujoProyectoView</strong></a>(request, usuario_id, proyectoid, rolid, flujo_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;FlujoProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;almacenados<br>
+ <dl><dt><a name="-visualizarFlujoProyectoView"><strong>visualizarFlujoProyectoView</strong></a>(request, usuario_id, proyectoid, rolid, flujo_id_rec)</dt><dd><tt>
+ <p><pre>
+ def visualizarFlujoProyectoView(request,usuario_id, proyectoid, rolid, flujo_id_rec):
+   
+    flujo_disponible= Flujo.objects.get(id=flujo_id_rec)
+    jsonDec = json.decoder.JSONDecoder()
+    orden=jsonDec.decode(flujo_disponible.orden_actividades)
+    formulario =  FormularioRolProyecto(initial={
+                                                     'nombre': flujo_disponible.nombre,
+                                                     'estado': flujo_disponible.estado,
+                                                     'actividades': flujo_disponible.actividades,
+                                                     })      
+    return render_to_response('visualizarFlujo.html',{'formulario':formulario, 'orden':orden,'flujo':flujo_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid},
+                                  context_instance=RequestContext(request))
+ </pre></p>
+ 
+ Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;FlujoProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;almacenados<br>
 en&nbsp;el&nbsp;Flujo&nbsp;que&nbsp;se&nbsp;quiere&nbsp;visualizar.</tt></dd></dl>
- <dl><dt><a name="-visualizarHUView"><strong>visualizarHUView</strong></a>(request, usuario_id, proyectoid, rolid, HU_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;HU&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;almacenados<br>
+ <dl><dt><a name="-visualizarHUView"><strong>visualizarHUView</strong></a>(request, usuario_id, proyectoid, rolid, HU_id_rec, is_Scrum)</dt><dd><tt>
+ <p><pre>
+ def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
+   
+    lista_flujo=[]
+    lista_sprint=[]
+    HU_disponible= HU.objects.get(id=HU_id_rec)
+    for sprint in Sprint.objects.all():
+        for hu in sprint.hu.all():
+            if HU_disponible == hu:
+                lista_sprint=sprint
+                for flujo in sprint.flujo.all():
+                    lista_flujo.append(flujo)
+                    
+    adjuntos=archivoadjunto.objects.filter(hU=HU_disponible)
+    formulario =  FormularioHU(initial={
+                                                     'descripcion': HU_disponible.descripcion,
+                                                     'valor_negocio': HU_disponible.valor_negocio,
+                                                     })      
+    return render_to_response('visualizarHU.html',{'formulario':formulario, 'HU':HU_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'adjuntos':adjuntos,'is_Scrum':is_Scrum, 'sprint':lista_sprint, 'flujo':lista_flujo},
+                                  context_instance=RequestContext(request))
+ 
+ </pre></p>
+ 
+ Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;HU&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;almacenados<br>
 en&nbsp;la&nbsp;HU&nbsp;que&nbsp;se&nbsp;quiere&nbsp;visualizar.</tt></dd></dl>
- <dl><dt><a name="-visualizarProyectoView"><strong>visualizarProyectoView</strong></a>(request, usuario_id, proyecto_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;<a href="#proyectoFrom">proyectoFrom</a>&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;almacenados<br>
+ <dl><dt><a name="-visualizarProyectoView"><strong>visualizarProyectoView</strong></a>(request, usuario_id, proyecto_id_rec)</dt><dd><tt>
+ <p><pre>
+ def visualizarProyectoView(request,usuario_id, proyecto_id_rec):
+   
+    proyecto_enc= proyecto.objects.get(id=proyecto_id_rec)
+    return render_to_response('visualizarProyecto.html',{'proyecto':proyecto_enc,'usuarioid':usuario_id},
+                                  context_instance=RequestContext(request))
+ 
+ </pre></p>
+ Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;<a href="#proyectoFrom">proyectoFrom</a>&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;almacenados<br>
 en&nbsp;el&nbsp;Flujo&nbsp;que&nbsp;se&nbsp;quiere&nbsp;visualizar.</tt></dd></dl>
- <dl><dt><a name="-visualizarRolProyectoView"><strong>visualizarRolProyectoView</strong></a>(request, usuario_id, proyectoid, rolid, rol_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;RolProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;almacenados<br>
+ <dl><dt><a name="-visualizarRolProyectoView"><strong>visualizarRolProyectoView</strong></a>(request, usuario_id, proyectoid, rolid, rol_id_rec)</dt><dd><tt>
+ <p><pre>
+ def visualizarRolProyectoView(request,usuario_id,proyectoid, rolid, rol_id_rec):
+   
+    rolproyecto= rol.objects.get(id=rol_id_rec)
+    formulario =  FormularioRolProyecto(initial={
+                                                     'nombre_rol_id': rolproyecto.nombre_rol_id,
+                                                     'permisos': rolproyecto.permisos,
+                                                     'descripcion': rolproyecto.descripcion,
+                                                     'estado':rolproyecto.estado,
+                                                     }) 
+    return render_to_response('visualizarRol.html',{'formulario':formulario, 'rol':rolproyecto, 'proyectoid':proyectoid,'usuarioid':usuario_id,'rolid':rolid},
+                                  context_instance=RequestContext(request))
+ </pre></p>
+ Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;RolProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;almacenados<br>
 en&nbsp;el&nbsp;Rol&nbsp;que&nbsp;se&nbsp;quiere&nbsp;visualizar.</tt></dd></dl>
- <dl><dt><a name="-visualizarSprintProyectoView"><strong>visualizarSprintProyectoView</strong></a>(request, usuario_id, proyectoid, rolid, Sprint_id_rec)</dt><dd><tt>Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;SprintProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;almacenados<br>
+ <dl><dt><a name="-visualizarSprintBacklog"><strong>visualizarSprintBacklog</strong></a>(request, usuario_id, proyectoid, rolid)</dt><dd><tt>
+ <p><pre>
+ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
+   
+    class acumuladorx:
+        def __init__(self,hu_s,acu):
+            self.hu_s=hu_s
+            self.acu=acu
+    lista=[]
+    dias=0
+    hux=HU.objects.all()
+    sprint=Sprint.objects.all()
+    s=sorted(sprint,key=lambda x: x.estado, reverse=True)
+    cont=0
+    #duracion maxima
+    for sp in sprint:
+        if sp.duracion>cont:
+            cont=sp.duracion
+    #cantidad de dias segun la duracion
+
+    while(dias!=cont):
+        dias=dias+1
+        lista.append(dias)
+        
+    #acumulador de horas por dia
+    acumulador=[]
+    cont2=0
+    for hu in hux:
+        for hu_d in hu.hu_descripcion.all():
+            cont2=cont2+hu_d.horas_trabajadas
+        acumulador.append(acumuladorx(hu.descripcion, cont2))
+        cont2=0
+    longitud_para_tabla={}
+    for i in sprint:
+        longitud_para_tabla[i]=len(i.hu.all())+1
+    
+    return render(request,'visualizarSprintBacklog.html',{'len':longitud_para_tabla,'sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'HUx':hux, 'dias':lista, 'horas':acumulador})
+ 
+ </pre></p>
+ El&nbsp;sprint&nbsp;backlog&nbsp;es&nbsp;una&nbsp;lista&nbsp;de&nbsp;las&nbsp;tareas&nbsp;identificadas&nbsp;por&nbsp;el&nbsp;equipo&nbsp;de&nbsp;Scrum<br>
+Los&nbsp;equipos&nbsp;estiman&nbsp;el&nbsp;numero&nbsp;de&nbsp;horas&nbsp;para&nbsp;cada&nbsp;tarea&nbsp;que&nbsp;se&nbsp;corresponde&nbsp;a&nbsp;alguien&nbsp;del&nbsp;equipo&nbsp;para&nbsp;completar.</tt></dd></dl>
+ <dl><dt><a name="-visualizarSprintProyectoView"><strong>visualizarSprintProyectoView</strong></a>(request, usuario_id, proyectoid, rolid, Sprint_id_rec)</dt><dd><tt>
+ Vista&nbsp;que&nbsp;utiliza&nbsp;el&nbsp;formulario&nbsp;SprintProyecto&nbsp;para&nbsp;desplegar&nbsp;los&nbsp;datos&nbsp;almacenados<br>
 en&nbsp;el&nbsp;Sprint&nbsp;que&nbsp;se&nbsp;quiere&nbsp;visualizar.</tt></dd></dl>
+<p><pre>
+def visualizarSprintProyectoView(request,usuario_id, proyectoid, rolid, Sprint_id_rec):
+   
+    Sprint_disponible= Sprint.objects.get(id=Sprint_id_rec)
+    formulario =  FormularioSprintProyecto(initial={
+                                                     'descripcion': Sprint_disponible.descripcion,
+                                                     'fecha_inicio': Sprint_disponible.fecha_inicio,
+                                                     'duracion': Sprint_disponible.duracion,
+                                                     'estado': Sprint_disponible.estado,
+                                                     })      
+    return render_to_response('visualizarSprint.html',{'formulario':formulario, 'Sprint':Sprint_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid},
+                                  context_instance=RequestContext(request))
+</pre></p>
 </td></tr></table>
 </body></html>
