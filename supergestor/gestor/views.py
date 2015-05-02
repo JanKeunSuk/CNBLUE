@@ -1310,7 +1310,8 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
 
     lista_hu_horas={}
     lista_horas=[]
-    cont2=0            
+    cont2=0        
+        
     for hu in hux:
         lista_horas=[]
         for h in hu.hu_descripcion.all():
