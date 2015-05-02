@@ -1330,7 +1330,9 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     cont2=0        
         
     for hu in hux:
+        cont2=0
         lista_horas=[]
+        
         for h in hu.hu_descripcion.all():
             x=str(h.fecha)
             if h.id == 1:
@@ -1340,9 +1342,13 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
                 cont2=cont2+h.horas_trabajadas
             else:
                 fecha_x=x[:10]
-                lista_horas.append(cont2)
+                if cont2 != 0:
+                    lista_horas.append(cont2)
                 cont2=0
                 cont2=cont2+h.horas_trabajadas
+            
+        if cont2 != 0:
+            lista_horas.append(cont2)
         lista_hu_horas[hu]=lista_horas
        
     longitud_para_tabla={}
