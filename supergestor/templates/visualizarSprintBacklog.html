@@ -71,9 +71,11 @@
 								{% for hu in Sprint.hu.all %}
 									<tr>
 										<td align="center">{{hu.descripcion}}</td>
-										{%for e in horas%}
-											{%if e.hu_s == hu.descripcion%}
-												<td align="center">{{e.acu}}</td>
+										{%for h, acu in lista.items%}
+											{%if hu == h%}
+												{%for a in acu%}
+													<td align="center">{{a}}</td>
+												{%endfor%}
 											{%endif%}
 										{%endfor%}
 										<td></td>	
@@ -82,12 +84,9 @@
 								</tr>
 							{%endif%}
 						{%endfor%}
-				{%endfor%}
-
+					{%endfor%}
         </table>
         </div>
-        
-
 
 	<!-- <td><a href="#">Volver</a></td> -->
 </div>

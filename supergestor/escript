@@ -8,6 +8,8 @@ sudo -u postgres psql postgres -c "DROP DATABASE prueba5;"
 echo "Ahora se creara la BD"
 sudo -u postgres psql postgres -c "CREATE DATABASE prueba5 OWNER seba2;"
 
+echo "borrando la migracion anterior"
+rm gestor/migrations/0001_initial.py
 #Make Migrations
 echo "manage.py makemigrations"
 ./manage.py makemigrations gestor

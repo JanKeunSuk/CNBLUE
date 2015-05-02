@@ -410,9 +410,9 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
 def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
     """Vista de guardado de la modificacion de una HU existente modificada por el Product Owner
     que se utiliza en la interfaz devuelta por /modificarHU/ 
-    @0: corresponde a la modificaci[on realizada por el Product Owner
-    @1: coresponde a la modificaci[on realizada por el Scrum
-    @2: corresponde a la modificaci[on realizada por el Equipo"""
+    0 corresponde a la modificaci[on realizada por el Product Owner
+    1 coresponde a la modificaci[on realizada por el Scrum
+    2 corresponde a la modificaci[on realizada por el Equipo"""
           
     h=HU.objects.get(id=HU_id_rec)
     if request.method == 'POST':
@@ -522,7 +522,7 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                 
 class FormularioContacto(forms.Form):
     """
-    Clase utilizada para obtener el formulario de peticion de seto de contrasenha.
+    Clase utilizada para obtener el formulario de peticion de seteo de contrasenha.
     """
     usuario = forms.CharField()
     correo = forms.EmailField()
@@ -543,7 +543,7 @@ def contactomail(request):
     if request.method == 'POST':
         formulario = FormularioContacto(request.POST)
         if formulario.is_valid():
-            asunto = 'RECUPERACION DE CONTRASEÑA'
+            asunto = 'RECUPERACION DE CONTRASENA'
             username_cargado = formulario.cleaned_data['usuario']
             usuario = MyUser.objects.get(username = username_cargado)
             if (str(usuario.email) == formulario.cleaned_data['correo']):
@@ -1144,7 +1144,7 @@ def modificarActividad(request,usuario_id,proyectoid,actividad_id_rec):
 def asignarRol(request,usuario_id, proyectoid,rolid, rol_id_rec):
     """
     Vista que permite asignar un rol a un usuario dentro de la vista del Scrum, valiendose de la URL para obtener
-    los id's del rol , proyecto ye l usuario creador.
+    los id's del rol , proyecto y el usuario creador.
     """
     proyectox=proyecto.objects.get(id=proyectoid)
     rolx = rol.objects.get(id=rol_id_rec)
@@ -1229,6 +1229,7 @@ def delegarHU(request,usuario_id,proyectoid,rolid,hu_id,reasignar):
         return render(request,'asignaHU.html',{'usuario_asignado':usuario_asignado, 'proyecto':proyectox,'usuarios':users,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
     
 def validarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
+    """Controla la validacion de una HU creada por el product owner"""
     hu_x=HU.objects.get(id=HU_id_rec)
     if request.method == 'GET':       
         return render(request,'validarHU.html',{'hu':HU_id_rec, 'HU':hu_x.valido, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum})
@@ -1281,6 +1282,7 @@ def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
 
 
 def adminAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec):
+    """Vista que gestiona el guardado de archivos adjuntos a HUs"""
     if request.method=='GET':
         hux=HU.objects.get(id=HU_id_rec)
         adjuntos=[]
@@ -1299,12 +1301,14 @@ def adminAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec):
 def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     """
     El sprint backlog es una lista de las tareas identificadas por el equipo de Scrum
-    Los equipos estiman el número de horas para cada tarea que se corresponde a alguien del equipo para completar. 
+    Los equipos estiman el numero de horas para cada tarea que se corresponde a alguien del equipo para completar. 
     """
     class acumuladorx:
         def __init__(self,hu_s,acu):
             self.hu_s=hu_s
             self.acu=acu
+            
+   
     lista=[]
     dias=0
     hux=HU.objects.all()
@@ -1320,27 +1324,37 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     while(dias!=cont):
         dias=dias+1
         lista.append(dias)
-        
-    #acumulador de horas por dia
-    acumulador=[]
-    cont2=0
+
+    lista_hu_horas={}
+    lista_horas=[]
+    cont2=0            
     for hu in hux:
-        for hu_d in hu.hu_descripcion.all():
-            cont2=cont2+hu_d.horas_trabajadas
-        acumulador.append(acumuladorx(hu.descripcion, cont2))
-        cont2=0
+        lista_horas=[]
+        for h in hu.hu_descripcion.all():
+            x=str(h.fecha)
+            if h.id == 1:
+                fecha_x=x[:10]
+                cont2=cont2+h.horas_trabajadas
+            elif x[:10] == fecha_x:
+                cont2=cont2+h.horas_trabajadas
+            else:
+                fecha_x=x[:10]
+                lista_horas.append(cont2)
+                cont2=0
+                cont2=cont2+h.horas_trabajadas
+        lista_hu_horas[hu]=lista_horas
+       
     longitud_para_tabla={}
     for i in sprint:
         longitud_para_tabla[i]=len(i.hu.all())+1
     
-    return render(request,'visualizarSprintBacklog.html',{'len':longitud_para_tabla,'sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'HUx':hux, 'dias':lista, 'horas':acumulador})
+    return render(request,'visualizarSprintBacklog.html',{'len':longitud_para_tabla,'sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'HUx':hux, 'dias':lista, 'lista':lista_hu_horas})
 
 
 
 
 def asignarHU_Usuario_FLujo(request,usuario_id,proyectoid,rolid,sprintid):
-    #Lo que muestra esta vista corresponde al dibujo AsignarHUaUsuarioyClasificarenFlujo.java
-    #Primero obtener todas las HUs de este proyecto activas y validadadasy que pertenecen al sprint actual
+    """ Vista de asignacion de una HU a un usuario y en un flujo"""
     proyectox=proyecto.objects.get(id=proyectoid)
     sprintx=Sprint.objects.get(id=sprintid)
     hus=HU.objects.filter(proyecto=proyectox,estado='ACT',valido=True).filter(sprint=sprintx)
@@ -1366,6 +1380,7 @@ def asignarHU_Usuario_FLujo(request,usuario_id,proyectoid,rolid,sprintid):
     return render(request,"asignarHU_Usuario_Flujo.html",{'hu_en_flujo':hu_en_flujo,'flujos':Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)),'HU_no_asignada':HU_no_asignada,'HU_asignada':HU_asignada,'hus':hus,'sprint':sprintx,'proyecto':proyectox,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
 
 def asignarHU_a_FLujo(request,usuario_id,proyectoid,rolid,sprintid,flujo_id):
+    """Vista donde se asignan las HU a un flujo dentro del spring y a un usuario del proyecto"""
     sprintx=Sprint.objects.get(id=sprintid)
     proyectox=proyecto.objects.get(id=proyectoid)
     flujo=Flujo.objects.get(id=flujo_id)
@@ -1398,6 +1413,7 @@ def asignarHU_a_FLujo(request,usuario_id,proyectoid,rolid,sprintid,flujo_id):
         return render(request,"asignarHUFlujo.html",{'flujo':flujo,'hus':hus,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'sprintid':sprintid,'flujo_id':flujo_id})
 
 def verKanban(request,usuario_id,proyectoid,rolid,sprintid):
+    """Vista que permite acceder al template de visualizacion de un flujo graficamente en el kanban"""
     sprintx=Sprint.objects.get(id=sprintid)
     flujos_hu={}
     flujos_actividades={}

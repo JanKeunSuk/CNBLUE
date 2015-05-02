@@ -10,6 +10,64 @@
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="gestor.html"><font color="#ffffff">gestor</font></a>.urls</strong></big></big></font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/seba/git/CNBLUE/supergestor/gestor/urls.py">/home/seba/git/CNBLUE/supergestor/gestor/urls.py</a></font></td></tr></table>
+    <p>
+    <pre>
+    from django.conf.urls import patterns, include, url
+	from django.contrib import admin
+	from gestor import views
+
+	urlpatterns = patterns('',
+	    url(r'^admin/', include(admin.site.urls)),
+	    url('^', include('django.contrib.auth.urls')),
+	    url(r'^hola/', views.holaView, name='hola'),
+	    url(r'^registrar/', views.registrarUsuarioView, name='nuevo_usuario'),
+	    url(r'^save/', views.guardarUsuarioView, name='guardar_nuevo_usuario'),
+	    url(r'^contactomail/$', views.contactomail, name='contactoMail'),
+	    url(r'^seteoPassword/(?P<usuario_id>\d+)/$', views.seteoPassword, name='seteoPassword'),
+	    url(r'^modificarProyecto/(?P<usuario_id>\d+)/(?P<proyecto_id_rec>\d+)/$', views.modificarProyecto, name='modificar_proyecto'),
+	    url(r'^visualizarProyecto/(?P<usuario_id>\d+)/(?P<proyecto_id_rec>\d+)/$', views.visualizarProyectoView, name='visualizar_proyecto'),
+	    url(r'^visualizarRol/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<rol_id_rec>\d+)/$', views.visualizarRolProyectoView, name='visualizar_rol'),
+	    url(r'^crearRol/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$', views.crearRol, name='crear_Rol'),
+	    url(r'^guardarRol/(?P<usuario_id>\d+)/', views.guardarRolView, name='guardar_nuevo_rol'),
+	    url(r'^visualizarFlujo/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<flujo_id_rec>\d+)/$', views.visualizarFlujoProyectoView, name='visualizar_flujo'),
+	    url(r'^modificarFlujo/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<flujo_id_rec>\d+)/$', views.modificarFlujo, name='modificar_flujo'),
+	    url(r'^modificarRol/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<rol_id_rec>\d+)/$', views.modificarRol, name='modificar_rol'),
+	    url(r'^crearFlujo/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$', views.crearFlujo, name='crear_Flujo'),
+	    url(r'^guardarFlujo/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$', views.guardarFlujoView, name='guardar_nuevo_flujo'),
+	    url(r'^scrum/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rol_id>\d+)/$', views.holaScrumView, name='roles-flujos'),
+	    url(r'^crearActividad/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/$', views.crearActividadView, name='crearActividad'),
+	    url(r'^modificarActividad/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/$', views.seleccionarFlujoModificar, name='seleccionarFlujoModificar'),
+	    url(r'^modificarActividad/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<actividad_id_rec>\d+)/$', views.modificarActividad, name='modificarActividad'),
+	    url(r'^asignarRol/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<rol_id_rec>\d+)/$',views.asignarRol, name= 'asignaRol'),
+	    url(r'^equipoProyecto/(?P<proyecto_id_rec>\d+)/(?P<usuario_id>\d+)$',views.listarEquipo,name='listaEquipo'),
+	    url(r'^crearActividad/$', views.crearActividadAdminView, name='crearActividadAdmin'),
+	    url(r'^modificarActividad/$', views.seleccionarFlujoModificarAdmin, name='seleccionarFlujoModificarAdmin'),
+	    url(r'^modificarActividad/(?P<actividad_id_rec>\d+)/$', views.modificarActividadAdmin, name='modificarActividadAdmin'),
+	    url(r'^visualizarHU/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<HU_id_rec>\d+)/(?P<is_Scrum>\d+)/$', views.visualizarHUView, name='visualizar_HU'),
+	    url(r'^crearHU/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$', views.crearHU, name='crear_HU'),
+	    url(r'^guardarHU/(?P<proyectoid>\d+)/$', views.guardarHUView, name='guardar_nuevo_HU'),
+	    url(r'^modificarHU/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<HU_id_rec>\d+)/(?P<is_Scrum>\d+)/$', views.modificarHU, name='modificar_HU'),
+	    url(r'^guardarHU/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<HU_id_rec>\d+)/(?P<is_Scrum>\d+)/$', views.guardarHUProdOwnerView, name='guardar_HU_modificada'),
+	    url(r'^visualizarSprint/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<Sprint_id_rec>\d+)/$', views.visualizarSprintProyectoView,name='visualizar_Sprint'),
+	    url(r'^crearSprint/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$', views.crearSprint, name='crear_Sprint'),
+	    url(r'^guardarSprint/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$', views.guardarSprintView, name='guardar_nuevo_Sprint'),
+	    url(r'^modificarSprint/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<Sprint_id_rec>\d+)/$', views.modificarSprint, name='modificar_Sprint'),
+	    url(r'^delegarHU/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<hu_id>\d+)/(?P<reasignar>\d+)/$',views.delegarHU,name='delegarhu'),
+	    url(r'^validarHU/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<HU_id_rec>\d+)/(?P<is_Scrum>\d+)/$',views.validarHU,name='validarhu'),
+	    url(r'^modificarCuenta/(?P<usuario_id>\d+)/', views.modificarCuenta, name='modificar_usuario'),
+	    url(r'^visualizarBacklog/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$',views.visualizarBacklog,name='verBacklog'),
+	    url(r'^reactivar/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<tipo>\d+)/(?P<id_tipo>\d+)/$', views.reactivar, name='reactivar'),
+	    url(r'^adminAdjunto/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<HU_id_rec>\d+)/$',views.adminAdjunto,name='adminAdjunto'),
+	    url(r'^visualizarSprintBacklog/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$',views.visualizarSprintBacklog,name='verSprintBacklog'),
+	    url(r'^asignarHUFlujo/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<sprintid>\d+)/$',views.asignarHU_Usuario_FLujo,name='asignarHU_Usuario_FLujo'),
+	    url(r'^delegarHUFlujo/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<sprintid>\d+)/(?P<flujo_id>\d+)/$',views.asignarHU_a_FLujo,name='asignarHU_a_FLujo'),
+	    url(r'^verKanban/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<sprintid>\d+)/$',views.verKanban,name='ver_Kanban'),
+	)
+    
+    </pre>
+    </p>
+    
+    
     <p><tt>Archivo&nbsp;donde&nbsp;se&nbsp;especifican&nbsp;las&nbsp;expresiones&nbsp;regulares&nbsp;que&nbsp;seran&nbsp;filtradas&nbsp;y&nbsp;<br>
 y&nbsp;redirigidas&nbsp;a&nbsp;una&nbsp;vista&nbsp;para&nbsp;el&nbsp;procesamiento&nbsp;de&nbsp;las&nbsp;peticiiones.&nbsp;El&nbsp;funcionamiento&nbsp;<br>
 depende&nbsp;de&nbsp;la&nbsp;variable&nbsp;urlpatterns&nbsp;que&nbsp;puede&nbsp;incluir&nbsp;otros&nbsp;URLConfs&nbsp;o&nbsp;el&nbsp;nombre&nbsp;de&nbsp;la&nbsp;vista&nbsp;<br>

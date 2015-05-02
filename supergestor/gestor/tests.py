@@ -5,7 +5,7 @@ Casos de prueba para los modelos existentes dentro del sistema.
 
 """
 from django.test import TestCase, Client
-from gestor.models import MyUser, Permitido, rol, rol_sistema, Actividades, Flujo, proyecto, asignacion, asigna_sistema, HU, Sprint, delegacion
+from gestor.models import MyUser, Permitido, rol, rol_sistema, Actividades, Flujo, proyecto, asignacion, asigna_sistema, HU, Sprint, HU_descripcion
 from gestor.views import FormularioRolProyecto, proyectoFrom, FormularioFlujoProyecto, formularioActividad, FormularioHU, FormularioSprintProyecto
 from django.test.client import RequestFactory
 from django.contrib.auth.models import Permission
@@ -14,7 +14,6 @@ import datetime
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys     
 from django.test import LiveServerTestCase
-from selenium.webdriver.firefox.webdriver import WebDriver
 import time
 
 class MyUserManagerTests(TestCase):
@@ -122,7 +121,16 @@ class MyUserTest(TestCase):
         
         response = self.client.get('/save/')
         self.assertEqual(response.status_code, 200)
-     
+        
+    def usuario(self):
+        return MyUser.objects.create_user(username='delsy', email=Permitido.objects.create(email='delsy@gmail.com'), password='1234')
+        
+    def test_modificarUsuario(self):
+        w=self.usuario()
+        w.username='magali'
+        w.save()
+        self.assertEqual(w.username, 'magali') 
+        
 class RolTest(TestCase):
     
     def create_rol(self):
@@ -140,6 +148,18 @@ class RolTest(TestCase):
     def test_rol_view(self):
         response=self.client.get('/crearRol/2/1/1/')
         self.assertEqual(response.status_code, 200)
+    
+    def test_modificarRol(self):
+        w=self.create_rol()
+        w.descripcion='rol_cambiado'
+        w.save()
+        self.assertEqual(w.descripcion, 'rol_cambiado')
+    
+    def test_dato_invalido(self):
+        w=self.create_rol()
+        w.descripcion='rol_cambiado'
+        w.save()
+        self.assertNotEqual(w.descripcion, 'nuevo_rol')
          
 class Rol_sistemaTest(TestCase):
     
@@ -150,6 +170,12 @@ class Rol_sistemaTest(TestCase):
         w=self.create_rol_sistema()
         self.assertTrue(isinstance(w, rol_sistema))
         self.assertEqual(w.__unicode__(), w.nombre_rol_id)
+        
+    def test_modificarRol_sistema(self):
+        w=self.create_rol_sistema()
+        w.nombre_rol_id='rol_prueba'
+        w.save()
+        self.assertEqual(w.nombre_rol_id, 'rol_prueba')
     """
     def test_guardarRolView(self):
         response=self.client.get('/guardarRol/2/',follow=True)
@@ -191,7 +217,7 @@ class ActividadesTest(TestCase):
         return proyecto(nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio=timezone.now(), fecha_fin=datetime.timedelta(days=1), estado="PEN")
     
      
-    def test_modificar_actividad(self):
+    def test_modificar_actividad_views(self):
         w=self.create_proyecto()    
         u= MyUser.objects.create_user('anonimo', Permitido.objects.create(email='anonimo2@hotmail.com'), '1234')
         y= self.create_Actividades()
@@ -199,6 +225,12 @@ class ActividadesTest(TestCase):
         post_data={'usuario':u.id,'proyecto':w.id,'actividad':y.id}
         Actividad_url='/modificarActividad/1/1/'
         self.client.post(Actividad_url, data=post_data)
+    
+    def test_modificarActividad(self):
+        w=self.create_Actividades()
+        w.nombre='actividad_prueba'
+        w.save()
+        self.assertEqual(w.nombre, 'actividad_prueba')
         
 class FlujoTest(TestCase):
     def create_Flujo(self, nombre="nuevoFlujo", estado="ACT" ):
@@ -211,7 +243,13 @@ class FlujoTest(TestCase):
     
     def test_crear_flujo_views(self):
         response=self.client.get('/crearFlujo/2/1/1/')
-        self.assertEqual(response.status_code, 200)  
+        self.assertEqual(response.status_code, 200)
+    
+    def test_flujo_modificar_estado(self):
+        w=self.create_Flujo()
+        w.estado='CAN'
+        w.save()
+        self.assertEqual(w.estado, 'CAN')  
         
 class proyectoTest(TestCase):
     
@@ -259,6 +297,7 @@ class proyectoTest(TestCase):
         form = FormularioFlujoProyecto(data=data)
         self.assertFalse(form.is_valid()) 
         
+        
 class asignacionTest(TestCase):
     def create_proyecto(self):
         return proyecto.objects.create(nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio="2015-03-31 00:00:00-04", fecha_fin="2015-03-31 00:00:00-04" ,estado="PEN" )
@@ -275,6 +314,15 @@ class asignacionTest(TestCase):
     def test_asignacion_creation(self):
         w=self.create_asignacion()
         self.assertEqual(w.usuario.username, 'anonimo')
+        
+    def create_proyecto2(self):
+        return proyecto.objects.create(nombre_corto="P", nombre_largo="proyecto", descripcion="proyecto", fecha_inicio="2015-03-31 00:00:00-04", fecha_fin="2015-03-31 00:00:00-04" ,estado="PEN" )
+        
+    def test_asignacion_modificar(self):
+        w=self.create_asignacion()
+        w.proyecto=self.create_proyecto2()
+        w.save()
+        self.assertEqual(w.proyecto.nombre_corto, 'P')        
         
 class asigna_sistemacionTest(TestCase):
     def create_proyecto(self):
@@ -447,6 +495,14 @@ class SprintTest(TestCase):
         login = self.client.login(username='anonimo2', password='1234') 
         self.assertFalse(login)
         
+    def create_hu_descripcion(self, horas_trabajadas="1", descripcion_horas_trabajadas="Tarea", fecha="2015-04-30 17:40:33.036118-04", actividad="1 - Analisis", estado="PRO" ):
+        return HU_descripcion.objects.create(horas_trabajadas=horas_trabajadas, descripcion_horas_trabajadas=descripcion_horas_trabajadas, fecha=fecha, actividad=actividad, estado=estado)
+
+    def test_hu_descripcion(self):
+        w=self.create_hu_descripcion()
+        self.assertTrue(isinstance(w, HU_descripcion))
+        self.assertEqual(w.__unicode__(), str(w.id))
+        
 
 class loginCase(LiveServerTestCase):
 
@@ -472,7 +528,6 @@ class loginCase(LiveServerTestCase):
         # Las credenciales de inicio de sesion son correctos, y el usuario es redirigido a la página principal de HOLA
         title = self.browser.find_element_by_tag_name('body')
         self.assertIn('Pagina Principal', title.text)
-        time.sleep(3)
         user_link = self.browser.find_elements_by_link_text('Scrum Master')
         user_link[0].click()
         user_link = self.browser.find_elements_by_link_text('Visualizar Product Backlog')
@@ -484,6 +539,8 @@ class loginCase(LiveServerTestCase):
         user_link2[0].click()
         user_link = self.browser.find_elements_by_link_text('Salir')
         user_link[0].click()
+        title = self.browser.find_element_by_tag_name('body')
+        self.assertIn('Gracias por utilizar nuestro sistema', title.text)
         user_link = self.browser.find_elements_by_link_text('Iniciar sesion de nuevo')
         user_link[0].click()
         time.sleep(3)
@@ -496,8 +553,12 @@ class loginCase(LiveServerTestCase):
         user_link = self.browser.find_elements_by_link_text('Product Owner')
         user_link[0].click()
         time.sleep(1)
+        title = self.browser.find_element_by_tag_name('body')
+        self.assertIn('Pagina Principal', title.text)
         user_link = self.browser.find_elements_by_link_text('Agregar HU')
         user_link[0].click()
+        title = self.browser.find_element_by_tag_name('body')
+        self.assertIn('Pagina Principal', title.text)
         self.browser.find_element_by_name('descripcion').send_keys("HU_it4")
         valor_field = self.browser.find_element_by_name('valor_negocio')
         valor_field.send_keys("5")
@@ -548,39 +609,9 @@ class AgregarhorasCase(LiveServerTestCase):
         user_link = self.browser.find_elements_by_link_text('Modificación de HU')
         user_link[0].click()
         time.sleep(3)
-        #title = self.browser.find_element_by_tag_name('body')
-        #self.assertIn('La HU se ha creado y relacionado con el proyecto', title.text)
+        
     #cierra el browser   
     def tearDown(self):
+        self.HU_descripcion.delete()
+        self.HU.delete()
         self.browser.quit()
-
-
-"""        
-class BaseTestCase(LiveServerTestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        cls.driver = WebDriver()
-        super(BaseTestCase, cls).setUpClass()
-
-    @classmethod
-    def tearDownClass(cls):
-        super(BaseTestCase, cls).tearDownClass()
-        cls.driver.quit()
-       
-class AdminTestCase(BaseTestCase):
-    def test_vote(self):
-        self.browser.get("http://localhost/admin/")
-        admin = self.driver.find_element_by_link_text('My users')
-        admin.click()
-        #time.sleep(2)    # Should use accurate WebDriverWait
-        choices = self.driver.find_elements_by_name('choice')
-        self.assertEquals(3, len(choices))
-        choices[2].click()
-        choices[2].submit()
-        lis = self.driver.find_elements_by_tag_name('li')
-        self.assertEquals(3, len(lis))
-        self.assertEquals('Hosted CI service? -- 0 votes', lis[0].text)
-        self.assertEquals('Consulting firm? -- 0 votes', lis[1].text)
-        self.assertEquals('Both! -- 1 vote', lis[2].text)
-        """

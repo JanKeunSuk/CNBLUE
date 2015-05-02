@@ -9,7 +9,7 @@
 <td valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="gestor.html"><font color="#ffffff">gestor</font></a>.models</strong></big></big></font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/katherine/IS2Work/git/supergestor/gestor/models.py">/home/katherine/IS2Work/git/supergestor/gestor/models.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/seba/git/CNBLUE/supergestor/gestor/models.py">/home/seba/git/CNBLUE/supergestor/gestor/models.py</a></font></td></tr></table>
     <p><tt>Archivo&nbsp;donde&nbsp;django&nbsp;busca&nbsp;las&nbsp;definiciones&nbsp;de&nbsp;modelos,&nbsp;con&nbsp;sus&nbsp;atributos&nbsp;,&nbsp;metodos&nbsp;y&nbsp;managers,<br>
 &nbsp;y&nbsp;relaciones&nbsp;de&nbsp;modelos&nbsp;que&nbsp;heredan<br>
 de&nbsp;la&nbsp;clase&nbsp;models&nbsp;de&nbsp;django.db</tt></p>
@@ -47,8 +47,10 @@ de&nbsp;la&nbsp;clase&nbsp;models&nbsp;de&nbsp;django.db</tt></p>
 <dt><font face="helvetica, arial"><a href="gestor.models.html#Actividades">Actividades</a>
 </font></dt><dt><font face="helvetica, arial"><a href="gestor.models.html#Flujo">Flujo</a>
 </font></dt><dt><font face="helvetica, arial"><a href="gestor.models.html#HU">HU</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gestor.models.html#HU_descripcion">HU_descripcion</a>
 </font></dt><dt><font face="helvetica, arial"><a href="gestor.models.html#Permitido">Permitido</a>
 </font></dt><dt><font face="helvetica, arial"><a href="gestor.models.html#Sprint">Sprint</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gestor.models.html#archivoadjunto">archivoadjunto</a>
 </font></dt><dt><font face="helvetica, arial"><a href="gestor.models.html#asignaHU_actividad_flujo">asignaHU_actividad_flujo</a>
 </font></dt><dt><font face="helvetica, arial"><a href="gestor.models.html#asigna_sistema">asigna_sistema</a>
 </font></dt><dt><font face="helvetica, arial"><a href="gestor.models.html#asignacion">asignacion</a>
@@ -63,9 +65,26 @@ de&nbsp;la&nbsp;clase&nbsp;models&nbsp;de&nbsp;django.db</tt></p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="Actividades">class <strong>Actividades</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="Actividades">class <strong>Actividades</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font>
+<p>
+    	<pre>
+    	class Actividades(models.Model):
+    
+    		nombre = models.CharField(max_length = 200)
+   			descripcion = models.CharField(max_length = 200)
+    		def __unicode__(self):
+       		 """Representacion unicode del objeto actividad"""
+        		return str(self.id)  + " - " + self.nombre
+    	</pre>
+    </p>
+
+
+
+
+</td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+
 <td colspan=2><tt>Representacion&nbsp;de&nbsp;la&nbsp;actividad&nbsp;de&nbsp;un&nbsp;flujo&nbsp;relacionada&nbsp;a&nbsp;su&nbsp;<a href="#proyecto">proyecto</a><br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%"><dl><dt>Method resolution order:</dt>
@@ -80,9 +99,9 @@ Methods defined here:<br>
 <strong>objects</strong> = &lt;django.db.models.manager.Manager object&gt;
 <hr>
 Data descriptors defined here:<br>
-<dl><dt><strong>asignahu_actividad_flujo_set</strong></dt>
-</dl>
 <dl><dt><strong>flujo_set</strong></dt>
+</dl>
+<dl><dt><strong>hu_set</strong></dt>
 </dl>
 <hr>
 Data and other attributes defined here:<br>
@@ -173,7 +192,27 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="Flujo">class <strong>Flujo</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="Flujo">class <strong>Flujo</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font>
+<p><pre>
+	class Flujo(models.Model):
+   
+	    ESTADO_CHOICES = (
+	        ('CAN', 'Cancelado'),
+	        ('ACT', 'Activo'),
+	    )
+	     
+	    nombre = models.CharField(max_length = 200)
+	    estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
+	    actividades = models.ManyToManyField(Actividades)
+	    orden_actividades = models.TextField(null=True) # JSON-serialized (text) version of your list
+	    def __unicode__(self):
+	        """Representacion unicode del objeto flujo"""
+	        return str(self.id) + self.nombre
+	
+</pre>
+</p>
+
+</td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>Representacion&nbsp;de&nbsp;un&nbsp;flujo&nbsp;de&nbsp;<a href="#proyecto">proyecto</a>&nbsp;relacionado&nbsp;a&nbsp;su&nbsp;respectivo&nbsp;<a href="#proyecto">proyecto</a><br>
@@ -197,7 +236,7 @@ Data descriptors defined here:<br>
 </dl>
 <dl><dt><strong>asignahu_actividad_flujo_set</strong></dt>
 </dl>
-<dl><dt><strong>proyecto_set</strong></dt>
+<dl><dt><strong>sprint_set</strong></dt>
 </dl>
 <hr>
 Data and other attributes defined here:<br>
@@ -290,7 +329,58 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="HU">class <strong>HU</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="HU">class <strong>HU</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font>
+<p><pre>
+class HU(models.Model):
+   
+    VALORES100_CHOICES = zip(range(1,101), range(1,101))
+    VALORES10_CHOICES = zip(range(1,11), range(1,11))
+
+    ESTADO_CHOICES = (
+        ('CAN', 'Cancelado'),
+        ('ACT', 'Activo'),
+    )
+    
+    ESTADO_ACTIVIDAD_CHOICES = (
+        ('PEN', 'Pendiente'),
+        ('PRO', 'En Progreso'),
+        ('FIN', 'Finalizado'),
+    )
+    
+    descripcion = models.CharField(max_length = 200)
+    valor_negocio = models.IntegerField(choices = VALORES10_CHOICES)
+    valor_tecnico = models.IntegerField(choices = VALORES10_CHOICES)
+    prioridad = models.IntegerField(choices = VALORES100_CHOICES)
+    duracion = models.FloatField()
+    acumulador_horas = models.FloatField()
+    estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
+    actividad=models.ForeignKey(Actividades, null=True, blank=True)
+    estado_en_actividad = models.CharField(max_length = 3, choices = ESTADO_ACTIVIDAD_CHOICES)
+    proyecto=models.ForeignKey(proyecto) #este campo va indicar a que proyecto pertenece asi en la vista ya no tenemos que hacer hu.objects.all()
+    valido=models.BooleanField(default=False) # rl productOwner debe validar
+    hu_descripcion=models.ManyToManyField(HU_descripcion)
+    
+    
+    def __unicode__(self):
+        """Representacion unicode del objeto HU"""
+        return self.descripcion
+    
+    def sprint(self):
+        for a in Sprint.objects.all():
+            for h in a.hu.all():
+                if self.id == h.id:
+                    return a
+        return None
+    
+    def flujo(self):
+        for a in Flujo.objects.all():
+            for h in a.hu.all():
+                if self.id == h.id:
+                    return a
+        return None
+</pre></p>
+
+</td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>Modelo&nbsp;que&nbsp;reprenseta&nbsp;las&nbsp;historias&nbsp;de&nbsp;usuario<br>&nbsp;</tt></td></tr>
@@ -304,6 +394,8 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 Methods defined here:<br>
 <dl><dt><a name="HU-__unicode__"><strong>__unicode__</strong></a>(self)</dt><dd><tt>Representacion&nbsp;unicode&nbsp;del&nbsp;objeto&nbsp;<a href="#HU">HU</a></tt></dd></dl>
 
+<dl><dt><a name="HU-flujo"><strong>flujo</strong></a>(self)</dt></dl>
+
 <dl><dt><a name="HU-get_estado_display"><strong>get_estado_display</strong></a> = _curried(*moreargs, **morekwargs)</dt></dl>
 
 <dl><dt><a name="HU-get_estado_en_actividad_display"><strong>get_estado_en_actividad_display</strong></a> = _curried(*moreargs, **morekwargs)</dt></dl>
@@ -315,11 +407,19 @@ Methods defined here:<br>
 <dl><dt><a name="HU-get_valor_tecnico_display"><strong>get_valor_tecnico_display</strong></a> = _curried(*moreargs, **morekwargs)</dt></dl>
 
 <strong>objects</strong> = &lt;django.db.models.manager.Manager object&gt;
+<dl><dt><a name="HU-sprint"><strong>sprint</strong></a>(self)</dt></dl>
+
 <hr>
 Data descriptors defined here:<br>
+<dl><dt><strong>actividad</strong></dt>
+</dl>
+<dl><dt><strong>archivoadjunto_set</strong></dt>
+</dl>
 <dl><dt><strong>asignahu_actividad_flujo_set</strong></dt>
 </dl>
 <dl><dt><strong>delegacion_set</strong></dt>
+</dl>
+<dl><dt><strong>hu_descripcion</strong></dt>
 </dl>
 <dl><dt><strong>proyecto</strong></dt>
 </dl>
@@ -422,7 +522,199 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="MyUser">class <strong>MyUser</strong></a>(<a href="django.contrib.auth.models.html#AbstractBaseUser">django.contrib.auth.models.AbstractBaseUser</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="HU_descripcion">class <strong>HU_descripcion</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font>
+<p><pre>
+class HU_descripcion(models.Model):
+    
+    horas_trabajadas=models.FloatField()  
+    descripcion_horas_trabajadas=models.CharField(max_length = 200)
+    fecha=models.DateTimeField()
+    actividad=models.CharField(max_length = 200)
+    estado=models.CharField(max_length = 200)
+    #acumulador_dia=models.FloatField()  
+    #sprint=models.CharField(max_length = 200)
+    #flujo=models.CharField(max_length = 200)
+    
+    def __unicode__(self):
+        """Representacion unicode del objeto HU_descripcion"""
+        return str(self.id)    
+
+</pre></p>
+
+</td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Modelo&nbsp;representa&nbsp;la&nbsp;descripcion&nbsp;de&nbsp;cada&nbsp;hora&nbsp;de&nbsp;trabajo&nbsp;agregada&nbsp;mostrando&nbsp;de&nbsp;la&nbsp;fecha&nbsp;de&nbsp;la&nbsp;misma<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gestor.models.html#HU_descripcion">HU_descripcion</a></dd>
+<dd><a href="django.db.models.base.html#Model">django.db.models.base.Model</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="HU_descripcion-__unicode__"><strong>__unicode__</strong></a>(self)</dt><dd><tt>Representacion&nbsp;unicode&nbsp;del&nbsp;objeto&nbsp;<a href="#HU_descripcion">HU_descripcion</a></tt></dd></dl>
+
+<dl><dt><a name="HU_descripcion-get_next_by_fecha"><strong>get_next_by_fecha</strong></a> = _curried(*moreargs, **morekwargs)</dt></dl>
+
+<dl><dt><a name="HU_descripcion-get_previous_by_fecha"><strong>get_previous_by_fecha</strong></a> = _curried(*moreargs, **morekwargs)</dt></dl>
+
+<strong>objects</strong> = &lt;django.db.models.manager.Manager object&gt;
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>hu_set</strong></dt>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>DoesNotExist</strong> = &lt;class 'gestor.models.DoesNotExist'&gt;</dl>
+
+<dl><dt><strong>MultipleObjectsReturned</strong> = &lt;class 'gestor.models.MultipleObjectsReturned'&gt;</dl>
+
+<hr>
+Methods inherited from <a href="django.db.models.base.html#Model">django.db.models.base.Model</a>:<br>
+<dl><dt><a name="HU_descripcion-__eq__"><strong>__eq__</strong></a>(self, other)</dt></dl>
+
+<dl><dt><a name="HU_descripcion-__hash__"><strong>__hash__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="HU_descripcion-__init__"><strong>__init__</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="HU_descripcion-__ne__"><strong>__ne__</strong></a>(self, other)</dt></dl>
+
+<dl><dt><a name="HU_descripcion-__reduce__"><strong>__reduce__</strong></a>(self)</dt><dd><tt>Provides&nbsp;pickling&nbsp;support.&nbsp;Normally,&nbsp;this&nbsp;just&nbsp;dispatches&nbsp;to&nbsp;Python's<br>
+standard&nbsp;handling.&nbsp;However,&nbsp;for&nbsp;models&nbsp;with&nbsp;deferred&nbsp;field&nbsp;loading,&nbsp;we<br>
+need&nbsp;to&nbsp;do&nbsp;things&nbsp;manually,&nbsp;as&nbsp;they're&nbsp;dynamically&nbsp;created&nbsp;classes&nbsp;and<br>
+only&nbsp;module-level&nbsp;classes&nbsp;can&nbsp;be&nbsp;pickled&nbsp;by&nbsp;the&nbsp;default&nbsp;path.</tt></dd></dl>
+
+<dl><dt><a name="HU_descripcion-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="HU_descripcion-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="HU_descripcion-clean"><strong>clean</strong></a>(self)</dt><dd><tt>Hook&nbsp;for&nbsp;doing&nbsp;any&nbsp;extra&nbsp;model-wide&nbsp;validation&nbsp;after&nbsp;<a href="#HU_descripcion-clean">clean</a>()&nbsp;has&nbsp;been<br>
+called&nbsp;on&nbsp;every&nbsp;field&nbsp;by&nbsp;self.<strong>clean_fields</strong>.&nbsp;Any&nbsp;ValidationError&nbsp;raised<br>
+by&nbsp;this&nbsp;method&nbsp;will&nbsp;not&nbsp;be&nbsp;associated&nbsp;with&nbsp;a&nbsp;particular&nbsp;field;&nbsp;it&nbsp;will<br>
+have&nbsp;a&nbsp;special-case&nbsp;association&nbsp;with&nbsp;the&nbsp;field&nbsp;defined&nbsp;by&nbsp;NON_FIELD_ERRORS.</tt></dd></dl>
+
+<dl><dt><a name="HU_descripcion-clean_fields"><strong>clean_fields</strong></a>(self, exclude<font color="#909090">=None</font>)</dt><dd><tt>Cleans&nbsp;all&nbsp;fields&nbsp;and&nbsp;raises&nbsp;a&nbsp;ValidationError&nbsp;containing&nbsp;a&nbsp;dict<br>
+of&nbsp;all&nbsp;validation&nbsp;errors&nbsp;if&nbsp;any&nbsp;occur.</tt></dd></dl>
+
+<dl><dt><a name="HU_descripcion-date_error_message"><strong>date_error_message</strong></a>(self, lookup_type, field_name, unique_for)</dt></dl>
+
+<dl><dt><a name="HU_descripcion-delete"><strong>delete</strong></a>(self, using<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="HU_descripcion-full_clean"><strong>full_clean</strong></a>(self, exclude<font color="#909090">=None</font>, validate_unique<font color="#909090">=True</font>)</dt><dd><tt>Calls&nbsp;clean_fields,&nbsp;clean,&nbsp;and&nbsp;validate_unique,&nbsp;on&nbsp;the&nbsp;model,<br>
+and&nbsp;raises&nbsp;a&nbsp;``ValidationError``&nbsp;for&nbsp;any&nbsp;errors&nbsp;that&nbsp;occurred.</tt></dd></dl>
+
+<dl><dt><a name="HU_descripcion-prepare_database_save"><strong>prepare_database_save</strong></a>(self, unused)</dt></dl>
+
+<dl><dt><a name="HU_descripcion-save"><strong>save</strong></a>(self, force_insert<font color="#909090">=False</font>, force_update<font color="#909090">=False</font>, using<font color="#909090">=None</font>, update_fields<font color="#909090">=None</font>)</dt><dd><tt>Saves&nbsp;the&nbsp;current&nbsp;instance.&nbsp;Override&nbsp;this&nbsp;in&nbsp;a&nbsp;subclass&nbsp;if&nbsp;you&nbsp;want&nbsp;to<br>
+control&nbsp;the&nbsp;saving&nbsp;process.<br>
+&nbsp;<br>
+The&nbsp;'force_insert'&nbsp;and&nbsp;'force_update'&nbsp;parameters&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;insist<br>
+that&nbsp;the&nbsp;"save"&nbsp;must&nbsp;be&nbsp;an&nbsp;SQL&nbsp;insert&nbsp;or&nbsp;update&nbsp;(or&nbsp;equivalent&nbsp;for<br>
+non-SQL&nbsp;backends),&nbsp;respectively.&nbsp;Normally,&nbsp;they&nbsp;should&nbsp;not&nbsp;be&nbsp;set.</tt></dd></dl>
+
+<dl><dt><a name="HU_descripcion-save_base"><strong>save_base</strong></a>(self, raw<font color="#909090">=False</font>, force_insert<font color="#909090">=False</font>, force_update<font color="#909090">=False</font>, using<font color="#909090">=None</font>, update_fields<font color="#909090">=None</font>)</dt><dd><tt>Handles&nbsp;the&nbsp;parts&nbsp;of&nbsp;saving&nbsp;which&nbsp;should&nbsp;be&nbsp;done&nbsp;only&nbsp;once&nbsp;per&nbsp;save,<br>
+yet&nbsp;need&nbsp;to&nbsp;be&nbsp;done&nbsp;in&nbsp;raw&nbsp;saves,&nbsp;too.&nbsp;This&nbsp;includes&nbsp;some&nbsp;sanity<br>
+checks&nbsp;and&nbsp;signal&nbsp;sending.<br>
+&nbsp;<br>
+The&nbsp;'raw'&nbsp;argument&nbsp;is&nbsp;telling&nbsp;save_base&nbsp;not&nbsp;to&nbsp;save&nbsp;any&nbsp;parent<br>
+models&nbsp;and&nbsp;not&nbsp;to&nbsp;do&nbsp;any&nbsp;changes&nbsp;to&nbsp;the&nbsp;values&nbsp;before&nbsp;save.&nbsp;This<br>
+is&nbsp;used&nbsp;by&nbsp;fixture&nbsp;loading.</tt></dd></dl>
+
+<dl><dt><a name="HU_descripcion-serializable_value"><strong>serializable_value</strong></a>(self, field_name)</dt><dd><tt>Returns&nbsp;the&nbsp;value&nbsp;of&nbsp;the&nbsp;field&nbsp;name&nbsp;for&nbsp;this&nbsp;instance.&nbsp;If&nbsp;the&nbsp;field&nbsp;is<br>
+a&nbsp;foreign&nbsp;key,&nbsp;returns&nbsp;the&nbsp;id&nbsp;value,&nbsp;instead&nbsp;of&nbsp;the&nbsp;object.&nbsp;If&nbsp;there's<br>
+no&nbsp;Field&nbsp;object&nbsp;with&nbsp;this&nbsp;name&nbsp;on&nbsp;the&nbsp;model,&nbsp;the&nbsp;model&nbsp;attribute's<br>
+value&nbsp;is&nbsp;returned&nbsp;directly.<br>
+&nbsp;<br>
+Used&nbsp;to&nbsp;serialize&nbsp;a&nbsp;field's&nbsp;value&nbsp;(in&nbsp;the&nbsp;serializer,&nbsp;or&nbsp;form&nbsp;output,<br>
+for&nbsp;example).&nbsp;Normally,&nbsp;you&nbsp;would&nbsp;just&nbsp;access&nbsp;the&nbsp;attribute&nbsp;directly<br>
+and&nbsp;not&nbsp;use&nbsp;this&nbsp;method.</tt></dd></dl>
+
+<dl><dt><a name="HU_descripcion-unique_error_message"><strong>unique_error_message</strong></a>(self, model_class, unique_check)</dt></dl>
+
+<dl><dt><a name="HU_descripcion-validate_unique"><strong>validate_unique</strong></a>(self, exclude<font color="#909090">=None</font>)</dt><dd><tt>Checks&nbsp;unique&nbsp;constraints&nbsp;on&nbsp;the&nbsp;model&nbsp;and&nbsp;raises&nbsp;``ValidationError``<br>
+if&nbsp;any&nbsp;failed.</tt></dd></dl>
+
+<hr>
+Class methods inherited from <a href="django.db.models.base.html#Model">django.db.models.base.Model</a>:<br>
+<dl><dt><a name="HU_descripcion-check"><strong>check</strong></a>(cls, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="django.db.models.base.html#ModelBase">django.db.models.base.ModelBase</a></font></font></dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="django.db.models.base.html#Model">django.db.models.base.Model</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>pk</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="MyUser">class <strong>MyUser</strong></a>(<a href="django.contrib.auth.models.html#AbstractBaseUser">django.contrib.auth.models.AbstractBaseUser</a>)</font>
+<p><pre>
+class MyUser(AbstractBaseUser):
+    
+    username=models.CharField(max_length=40,unique=True)
+    user_name=models.CharField(max_length=50)
+    last_name=models.CharField(max_length=50)
+    direccion=models.CharField(max_length=255)
+    email = models.OneToOneField(Permitido)
+    #email.unique()
+    is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
+
+    objects = MyUserManager()
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email','direccion']
+    
+    def create(self,username,email,password,user_name, last_name,direccion):
+        """Metodo para la creacion de usuarios desde interfaz web completando todos los 
+        atributos"""
+        usuario=MyUser.objects.create_user(username, email, password=None)
+        usuario.last_name=last_name
+        usuario.user_name=user_name
+        usuario.direccion=direccion
+        return usuario
+        
+
+    def get_full_name(self):
+        """Retorna el nombre y apellido del usuario"""
+        # The user is identified by their email address
+        return self.user_name+self.last_name
+    
+    def get_short_name(self):
+        """Retorna el username identificador del usuario"""
+        # The user is identified by their email address
+        return self.username
+
+    def __unicode__(self):
+        """Representacion unicode del objeto usuario"""
+        return self.username
+
+    def has_perm(self, perm, obj=None):
+        "Por implementar: Retornara true si un usuario tiene el permiso indicado como argumento"
+        # Simplest possible answer: Yes, always
+        return True
+
+    def has_module_perms(self, app_label):
+        """Por implementar: Retornarea true si el usuario tiene permiso de acceder a una 
+        applicacion particular"""
+        # Simplest possible answer: Yes, always
+        return True
+
+    @property
+    def is_staff(self):
+        "Retorna true si el usuario es administrador"
+        # Simplest possible answer: All admins are staff
+        return self.is_admin
+    
+</pre></p>
+
+</td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>Clase&nbsp;que&nbsp;representa&nbsp;usuario&nbsp;del&nbsp;modulo&nbsp;de&nbsp;autenticacion&nbsp;customizada&nbsp;con&nbsp;mas&nbsp;atributos,&nbsp;hereda<br>
@@ -595,7 +887,39 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="MyUserManager">class <strong>MyUserManager</strong></a>(<a href="django.contrib.auth.models.html#BaseUserManager">django.contrib.auth.models.BaseUserManager</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="MyUserManager">class <strong>MyUserManager</strong></a>(<a href="django.contrib.auth.models.html#BaseUserManager">django.contrib.auth.models.BaseUserManager</a>)</font>
+<p><pre>class MyUserManager(BaseUserManager):
+    
+    def create_user(self, username, email, password=None):
+        """
+        Crea y guarda un usuario con el nombre de usuario , email y contraseña
+        dados
+        """
+        if not username:
+            raise ValueError('Los usuarios deben tener un nombre de usuario')
+
+        user = self.model(
+            username=username,
+            email=Permitido.objects.get(pk=email),
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, username, email, password):
+        """
+        Crea y guarda un superuser con el nombre de usuario, email y password
+        dados
+        """
+        user = self.create_user(username,
+            password=password,
+            email=Permitido.objects.get(pk=email),
+        )
+        user.is_admin =True
+        user.save(using=self._db)
+        return user
+</pre></p>
+</td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>Clase&nbsp;utilizada&nbsp;para&nbsp;la&nbsp;creacion&nbsp;de&nbsp;managers&nbsp;customizados&nbsp;<br>
@@ -792,13 +1116,31 @@ Data descriptors inherited from <a href="django.db.models.manager.html#BaseManag
 </dl>
 <hr>
 Data and other attributes inherited from <a href="django.db.models.manager.html#BaseManager">django.db.models.manager.BaseManager</a>:<br>
-<dl><dt><strong>creation_counter</strong> = 31</dl>
+<dl><dt><strong>creation_counter</strong> = 34</dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="Permitido">class <strong>Permitido</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="Permitido">class <strong>Permitido</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font>
+<p><pre>
+class Permitido(models.Model):
+    
+    
+    email = models.EmailField(
+        verbose_name='email address',
+        max_length=255,primary_key=True,
+    )
+    
+    def __unicode__(self):
+        """Representacion unicode del objeto permitido"""
+        return self.email
+    
+#    def is_exists(self, email_recibido):
+    #    if self.email
+</pre>
+</p>
+</td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>Este&nbsp;modelos&nbsp;mantiene&nbsp;registros&nbsp;de&nbsp;correos&nbsp;permitidos&nbsp;para&nbsp;la&nbsp;creacion&nbsp;de&nbsp;usuarios<br>&nbsp;</tt></td></tr>
@@ -906,7 +1248,47 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="Sprint">class <strong>Sprint</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="Sprint">class <strong>Sprint</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font>
+<p><pre>
+
+
+class Sprint(models.Model):
+    
+    
+    ESTADO_CHOICES = (
+        ('CAN', 'Cancelado'),
+        ('ACT', 'Activo'),
+        ('CON', 'Consulta'),
+        ('FIN', 'Finalizado')
+    )
+     
+    descripcion = models.CharField(max_length = 200)
+    hu=models.ManyToManyField(HU)
+    fecha_inicio = models.DateTimeField()
+    duracion = models.FloatField()
+    estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
+    proyecto=models.ForeignKey(proyecto)
+    flujo=models.ManyToManyField(Flujo)
+    
+    def __unicode__(self):
+        """Representacion unicode del objeto sprint"""
+        return self.descripcion
+    
+    def termino_Sprint(self):
+        suma=0
+        terminaron=True
+        for h in self.hu.all():
+            suma=suma+h.acumulador_horas
+            if h.estado_en_actividad != 'FIN':
+                terminaron=False
+        if float(suma/8) >= self.duracion or terminaron:
+            return True
+        else:
+            return False
+</pre>
+</p>
+
+</td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>Modelo&nbsp;que&nbsp;reprenseta&nbsp;los&nbsp;Spring&nbsp;de&nbsp;un&nbsp;<a href="#proyecto">proyecto</a>&nbsp;relacionados&nbsp;a<br>
@@ -928,8 +1310,12 @@ Methods defined here:<br>
 <dl><dt><a name="Sprint-get_previous_by_fecha_inicio"><strong>get_previous_by_fecha_inicio</strong></a> = _curried(*moreargs, **morekwargs)</dt></dl>
 
 <strong>objects</strong> = &lt;django.db.models.manager.Manager object&gt;
+<dl><dt><a name="Sprint-termino_Sprint"><strong>termino_Sprint</strong></a>(self)</dt></dl>
+
 <hr>
 Data descriptors defined here:<br>
+<dl><dt><strong>flujo</strong></dt>
+</dl>
 <dl><dt><strong>hu</strong></dt>
 </dl>
 <dl><dt><strong>proyecto</strong></dt>
@@ -938,7 +1324,7 @@ Data descriptors defined here:<br>
 Data and other attributes defined here:<br>
 <dl><dt><strong>DoesNotExist</strong> = &lt;class 'gestor.models.DoesNotExist'&gt;</dl>
 
-<dl><dt><strong>ESTADO_CHOICES</strong> = (('CAN', 'Cancelado'), ('ACT', 'Activo'), ('CON', 'Consulta'))</dl>
+<dl><dt><strong>ESTADO_CHOICES</strong> = (('CAN', 'Cancelado'), ('ACT', 'Activo'), ('CON', 'Consulta'), ('FIN', 'Finalizado'))</dl>
 
 <dl><dt><strong>MultipleObjectsReturned</strong> = &lt;class 'gestor.models.MultipleObjectsReturned'&gt;</dl>
 
@@ -1025,7 +1411,153 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="asignaHU_actividad_flujo">class <strong>asignaHU_actividad_flujo</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="archivoadjunto">class <strong>archivoadjunto</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font>
+<p><pre>
+
+
+class archivoadjunto(models.Model):
+    archivo=models.FileField()
+    hU=models.ForeignKey(HU)
+    
+    def __unicode__(self):
+        """Representacion unicode del objeto HU"""
+        return self.archivo.name
+    
+</pre>
+</p>
+</td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#archivoadjunto">archivoadjunto</a>(id,&nbsp;archivo,&nbsp;hU_id)<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gestor.models.html#archivoadjunto">archivoadjunto</a></dd>
+<dd><a href="django.db.models.base.html#Model">django.db.models.base.Model</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="archivoadjunto-__unicode__"><strong>__unicode__</strong></a>(self)</dt><dd><tt>Representacion&nbsp;unicode&nbsp;del&nbsp;objeto&nbsp;<a href="#HU">HU</a></tt></dd></dl>
+
+<strong>objects</strong> = &lt;django.db.models.manager.Manager object&gt;
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>archivo</strong></dt>
+<dd><tt>The&nbsp;descriptor&nbsp;for&nbsp;the&nbsp;file&nbsp;attribute&nbsp;on&nbsp;the&nbsp;model&nbsp;instance.&nbsp;Returns&nbsp;a<br>
+FieldFile&nbsp;when&nbsp;accessed&nbsp;so&nbsp;you&nbsp;can&nbsp;do&nbsp;stuff&nbsp;like::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;myapp.models&nbsp;import&nbsp;MyModel<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;instance&nbsp;=&nbsp;MyModel.objects.get(pk=1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;instance.file.size<br>
+&nbsp;<br>
+Assigns&nbsp;a&nbsp;file&nbsp;object&nbsp;on&nbsp;assignment&nbsp;so&nbsp;you&nbsp;can&nbsp;do::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;with&nbsp;open('/tmp/hello.world',&nbsp;'r')&nbsp;as&nbsp;f:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;instance.file&nbsp;=&nbsp;File(f)</tt></dd>
+</dl>
+<dl><dt><strong>hU</strong></dt>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>DoesNotExist</strong> = &lt;class 'gestor.models.DoesNotExist'&gt;</dl>
+
+<dl><dt><strong>MultipleObjectsReturned</strong> = &lt;class 'gestor.models.MultipleObjectsReturned'&gt;</dl>
+
+<hr>
+Methods inherited from <a href="django.db.models.base.html#Model">django.db.models.base.Model</a>:<br>
+<dl><dt><a name="archivoadjunto-__eq__"><strong>__eq__</strong></a>(self, other)</dt></dl>
+
+<dl><dt><a name="archivoadjunto-__hash__"><strong>__hash__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="archivoadjunto-__init__"><strong>__init__</strong></a>(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="archivoadjunto-__ne__"><strong>__ne__</strong></a>(self, other)</dt></dl>
+
+<dl><dt><a name="archivoadjunto-__reduce__"><strong>__reduce__</strong></a>(self)</dt><dd><tt>Provides&nbsp;pickling&nbsp;support.&nbsp;Normally,&nbsp;this&nbsp;just&nbsp;dispatches&nbsp;to&nbsp;Python's<br>
+standard&nbsp;handling.&nbsp;However,&nbsp;for&nbsp;models&nbsp;with&nbsp;deferred&nbsp;field&nbsp;loading,&nbsp;we<br>
+need&nbsp;to&nbsp;do&nbsp;things&nbsp;manually,&nbsp;as&nbsp;they're&nbsp;dynamically&nbsp;created&nbsp;classes&nbsp;and<br>
+only&nbsp;module-level&nbsp;classes&nbsp;can&nbsp;be&nbsp;pickled&nbsp;by&nbsp;the&nbsp;default&nbsp;path.</tt></dd></dl>
+
+<dl><dt><a name="archivoadjunto-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="archivoadjunto-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="archivoadjunto-clean"><strong>clean</strong></a>(self)</dt><dd><tt>Hook&nbsp;for&nbsp;doing&nbsp;any&nbsp;extra&nbsp;model-wide&nbsp;validation&nbsp;after&nbsp;<a href="#archivoadjunto-clean">clean</a>()&nbsp;has&nbsp;been<br>
+called&nbsp;on&nbsp;every&nbsp;field&nbsp;by&nbsp;self.<strong>clean_fields</strong>.&nbsp;Any&nbsp;ValidationError&nbsp;raised<br>
+by&nbsp;this&nbsp;method&nbsp;will&nbsp;not&nbsp;be&nbsp;associated&nbsp;with&nbsp;a&nbsp;particular&nbsp;field;&nbsp;it&nbsp;will<br>
+have&nbsp;a&nbsp;special-case&nbsp;association&nbsp;with&nbsp;the&nbsp;field&nbsp;defined&nbsp;by&nbsp;NON_FIELD_ERRORS.</tt></dd></dl>
+
+<dl><dt><a name="archivoadjunto-clean_fields"><strong>clean_fields</strong></a>(self, exclude<font color="#909090">=None</font>)</dt><dd><tt>Cleans&nbsp;all&nbsp;fields&nbsp;and&nbsp;raises&nbsp;a&nbsp;ValidationError&nbsp;containing&nbsp;a&nbsp;dict<br>
+of&nbsp;all&nbsp;validation&nbsp;errors&nbsp;if&nbsp;any&nbsp;occur.</tt></dd></dl>
+
+<dl><dt><a name="archivoadjunto-date_error_message"><strong>date_error_message</strong></a>(self, lookup_type, field_name, unique_for)</dt></dl>
+
+<dl><dt><a name="archivoadjunto-delete"><strong>delete</strong></a>(self, using<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="archivoadjunto-full_clean"><strong>full_clean</strong></a>(self, exclude<font color="#909090">=None</font>, validate_unique<font color="#909090">=True</font>)</dt><dd><tt>Calls&nbsp;clean_fields,&nbsp;clean,&nbsp;and&nbsp;validate_unique,&nbsp;on&nbsp;the&nbsp;model,<br>
+and&nbsp;raises&nbsp;a&nbsp;``ValidationError``&nbsp;for&nbsp;any&nbsp;errors&nbsp;that&nbsp;occurred.</tt></dd></dl>
+
+<dl><dt><a name="archivoadjunto-prepare_database_save"><strong>prepare_database_save</strong></a>(self, unused)</dt></dl>
+
+<dl><dt><a name="archivoadjunto-save"><strong>save</strong></a>(self, force_insert<font color="#909090">=False</font>, force_update<font color="#909090">=False</font>, using<font color="#909090">=None</font>, update_fields<font color="#909090">=None</font>)</dt><dd><tt>Saves&nbsp;the&nbsp;current&nbsp;instance.&nbsp;Override&nbsp;this&nbsp;in&nbsp;a&nbsp;subclass&nbsp;if&nbsp;you&nbsp;want&nbsp;to<br>
+control&nbsp;the&nbsp;saving&nbsp;process.<br>
+&nbsp;<br>
+The&nbsp;'force_insert'&nbsp;and&nbsp;'force_update'&nbsp;parameters&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;insist<br>
+that&nbsp;the&nbsp;"save"&nbsp;must&nbsp;be&nbsp;an&nbsp;SQL&nbsp;insert&nbsp;or&nbsp;update&nbsp;(or&nbsp;equivalent&nbsp;for<br>
+non-SQL&nbsp;backends),&nbsp;respectively.&nbsp;Normally,&nbsp;they&nbsp;should&nbsp;not&nbsp;be&nbsp;set.</tt></dd></dl>
+
+<dl><dt><a name="archivoadjunto-save_base"><strong>save_base</strong></a>(self, raw<font color="#909090">=False</font>, force_insert<font color="#909090">=False</font>, force_update<font color="#909090">=False</font>, using<font color="#909090">=None</font>, update_fields<font color="#909090">=None</font>)</dt><dd><tt>Handles&nbsp;the&nbsp;parts&nbsp;of&nbsp;saving&nbsp;which&nbsp;should&nbsp;be&nbsp;done&nbsp;only&nbsp;once&nbsp;per&nbsp;save,<br>
+yet&nbsp;need&nbsp;to&nbsp;be&nbsp;done&nbsp;in&nbsp;raw&nbsp;saves,&nbsp;too.&nbsp;This&nbsp;includes&nbsp;some&nbsp;sanity<br>
+checks&nbsp;and&nbsp;signal&nbsp;sending.<br>
+&nbsp;<br>
+The&nbsp;'raw'&nbsp;argument&nbsp;is&nbsp;telling&nbsp;save_base&nbsp;not&nbsp;to&nbsp;save&nbsp;any&nbsp;parent<br>
+models&nbsp;and&nbsp;not&nbsp;to&nbsp;do&nbsp;any&nbsp;changes&nbsp;to&nbsp;the&nbsp;values&nbsp;before&nbsp;save.&nbsp;This<br>
+is&nbsp;used&nbsp;by&nbsp;fixture&nbsp;loading.</tt></dd></dl>
+
+<dl><dt><a name="archivoadjunto-serializable_value"><strong>serializable_value</strong></a>(self, field_name)</dt><dd><tt>Returns&nbsp;the&nbsp;value&nbsp;of&nbsp;the&nbsp;field&nbsp;name&nbsp;for&nbsp;this&nbsp;instance.&nbsp;If&nbsp;the&nbsp;field&nbsp;is<br>
+a&nbsp;foreign&nbsp;key,&nbsp;returns&nbsp;the&nbsp;id&nbsp;value,&nbsp;instead&nbsp;of&nbsp;the&nbsp;object.&nbsp;If&nbsp;there's<br>
+no&nbsp;Field&nbsp;object&nbsp;with&nbsp;this&nbsp;name&nbsp;on&nbsp;the&nbsp;model,&nbsp;the&nbsp;model&nbsp;attribute's<br>
+value&nbsp;is&nbsp;returned&nbsp;directly.<br>
+&nbsp;<br>
+Used&nbsp;to&nbsp;serialize&nbsp;a&nbsp;field's&nbsp;value&nbsp;(in&nbsp;the&nbsp;serializer,&nbsp;or&nbsp;form&nbsp;output,<br>
+for&nbsp;example).&nbsp;Normally,&nbsp;you&nbsp;would&nbsp;just&nbsp;access&nbsp;the&nbsp;attribute&nbsp;directly<br>
+and&nbsp;not&nbsp;use&nbsp;this&nbsp;method.</tt></dd></dl>
+
+<dl><dt><a name="archivoadjunto-unique_error_message"><strong>unique_error_message</strong></a>(self, model_class, unique_check)</dt></dl>
+
+<dl><dt><a name="archivoadjunto-validate_unique"><strong>validate_unique</strong></a>(self, exclude<font color="#909090">=None</font>)</dt><dd><tt>Checks&nbsp;unique&nbsp;constraints&nbsp;on&nbsp;the&nbsp;model&nbsp;and&nbsp;raises&nbsp;``ValidationError``<br>
+if&nbsp;any&nbsp;failed.</tt></dd></dl>
+
+<hr>
+Class methods inherited from <a href="django.db.models.base.html#Model">django.db.models.base.Model</a>:<br>
+<dl><dt><a name="archivoadjunto-check"><strong>check</strong></a>(cls, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="django.db.models.base.html#ModelBase">django.db.models.base.ModelBase</a></font></font></dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="django.db.models.base.html#Model">django.db.models.base.Model</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>pk</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="asignaHU_actividad_flujo">class <strong>asignaHU_actividad_flujo</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font>
+<p><pre>
+class asignaHU_actividad_flujo(models.Model):
+   
+    lista_de_HU = models.ManyToManyField(HU)
+    flujo_al_que_pertenece = models.ForeignKey(Flujo)
+    def __unicode__(self):
+        """Representacion unicode del objeto asignaHU_actividad_flujo"""
+        return str(self.id)+" - "+str(self.flujo_al_que_pertenece)
+</pre>
+</p>
+</td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>Modelo&nbsp;intermedio&nbsp;para&nbsp;la&nbsp;relacion&nbsp;varios&nbsp;a&nbsp;varios&nbsp;del&nbsp;modelo&nbsp;flujo&nbsp;con&nbsp;actividades<br>&nbsp;</tt></td></tr>
@@ -1042,8 +1574,6 @@ Methods defined here:<br>
 <strong>objects</strong> = &lt;django.db.models.manager.Manager object&gt;
 <hr>
 Data descriptors defined here:<br>
-<dl><dt><strong>actividad_al_que_pertenece</strong></dt>
-</dl>
 <dl><dt><strong>flujo_al_que_pertenece</strong></dt>
 </dl>
 <dl><dt><strong>lista_de_HU</strong></dt>
@@ -1137,7 +1667,19 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="asigna_sistema">class <strong>asigna_sistema</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="asigna_sistema">class <strong>asigna_sistema</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font>
+<p><pre>
+class asigna_sistema(models.Model):
+    
+    usuario=models.ForeignKey(MyUser)
+    rol=models.ForeignKey(rol_sistema)    
+    def __unicode__(self):
+        """Representacion unicode del objeto asigna sistema"""
+        return str(self.id)+" - "+str(self.usuario)+" - "+str(self.rol)
+
+</pre>
+</p>
+</td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>Modelo&nbsp;que&nbsp;representa&nbsp;la&nbsp;asignaciones&nbsp;de&nbsp;roles&nbsp;de&nbsp;sistema&nbsp;a&nbsp;usuarios&nbsp;con&nbsp;clave&nbsp;foranea&nbsp;a&nbsp;<br>
@@ -1251,7 +1793,17 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 <font color="#000000" face="helvetica, arial"><a name="asignacion">class <strong>asignacion</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt>Modelo&nbsp;que&nbsp;especifica&nbsp;una&nbsp;<a href="#asignacion">asignacion</a>&nbsp;de&nbsp;un&nbsp;<a href="#rol">rol</a>&nbsp;a&nbsp;un&nbsp;usuario&nbsp;en&nbsp;un&nbsp;<a href="#proyecto">proyecto</a><br>&nbsp;</tt></td></tr>
+<td colspan=2><tt>Modelo&nbsp;que&nbsp;especifica&nbsp;una&nbsp;<a href="#asignacion">asignacion</a>&nbsp;de&nbsp;un&nbsp;<a href="#rol">rol</a>&nbsp;a&nbsp;un&nbsp;usuario&nbsp;en&nbsp;un&nbsp;<a href="#proyecto">proyecto</a><br>&nbsp;</tt>
+<p><pre>class asignacion(models.Model):
+    """Modelo que especifica una asignacion de un rol a un usuario en un proyecto"""
+    usuario=models.ForeignKey(MyUser)
+    rol=models.ForeignKey(rol)    
+    proyecto=models.ForeignKey(proyecto)
+    def __unicode__(self):
+        """Representacion unicode del objeto asignacion"""
+        return str(self.id)+" - "+str(self.usuario)+" - "+str(self.rol)+" - "+str(self.proyecto) 
+</pre></p>
+</td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="gestor.models.html#asignacion">asignacion</a></dd>
@@ -1360,10 +1912,23 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="delegacion">class <strong>delegacion</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="delegacion">class <strong>delegacion</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font>
+<p><pre>
+class delegacion(models.Model):
+    
+    usuario=models.ForeignKey(settings.AUTH_USER_MODEL)
+    hu=models.ForeignKey(HU)
+    def __unicode__(self):
+        """Representacion unicode del objeto delegacion"""
+        return str(self.id)+" - "+str(self.usuario)+" - "+str(self.HU.descripcion)+" - "+str(self.HU.proyecto)
+</pre>
+</p>
+</td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt>Modelo&nbsp;que&nbsp;especifica&nbsp;una&nbsp;<a href="#delegacion">delegacion</a>&nbsp;de&nbsp;una&nbsp;<a href="#HU">HU</a>&nbsp;a&nbsp;un&nbsp;usuario&nbsp;en&nbsp;un&nbsp;<a href="#proyecto">proyecto</a><br>&nbsp;</tt></td></tr>
+<td colspan=2><tt>Modelo&nbsp;que&nbsp;especifica&nbsp;una&nbsp;<a href="#delegacion">delegacion</a>&nbsp;de&nbsp;una&nbsp;<a href="#HU">HU</a>&nbsp;a&nbsp;un&nbsp;usuario&nbsp;en&nbsp;un&nbsp;<a href="#proyecto">proyecto</a><br>&nbsp;</tt>
+
+</td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="gestor.models.html#delegacion">delegacion</a></dd>
@@ -1377,7 +1942,7 @@ Methods defined here:<br>
 <strong>objects</strong> = &lt;django.db.models.manager.Manager object&gt;
 <hr>
 Data descriptors defined here:<br>
-<dl><dt><strong>HU</strong></dt>
+<dl><dt><strong>hu</strong></dt>
 </dl>
 <dl><dt><strong>usuario</strong></dt>
 </dl>
@@ -1470,7 +2035,31 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="proyecto">class <strong>proyecto</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="proyecto">class <strong>proyecto</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font>
+<p><pre>
+class proyecto(models.Model):
+   
+    ESTADO_CHOICES = (
+        ('PEN', 'Pendiente'),
+        ('ACT', 'Activo'),
+        ('ANU', 'Anulado'),
+        ('FIN', 'Finalizado'),
+    )
+    
+    nombre_corto = models.CharField(max_length = 200)
+    nombre_largo = models.CharField(max_length = 200)
+    descripcion = models.CharField(max_length = 200)
+    fecha_inicio = models.DateTimeField()
+    fecha_fin = models.DateTimeField()
+    estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
+    #flujos = models.ManyToManyField(Flujo)
+    
+    def __unicode__(self):
+        """Representacion unicode del objeto proyecto"""
+        return self.nombre_corto   
+</pre>
+</p>
+</td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>Modelo&nbsp;que&nbsp;representa&nbsp;los&nbsp;proyectos&nbsp;que&nbsp;se&nbsp;pueden&nbsp;usar&nbsp;en&nbsp;el&nbsp;sistema<br>&nbsp;</tt></td></tr>
@@ -1498,8 +2087,6 @@ Methods defined here:<br>
 <hr>
 Data descriptors defined here:<br>
 <dl><dt><strong>asignacion_set</strong></dt>
-</dl>
-<dl><dt><strong>flujos</strong></dt>
 </dl>
 <dl><dt><strong>hu_set</strong></dt>
 </dl>
@@ -1596,7 +2183,32 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="rol">class <strong>rol</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="rol">class <strong>rol</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font>
+<p><pre>class rol(models.Model):
+    
+    ESTADO_CHOICES = (
+        ('CAN', 'Cancelado'),
+        ('ACT', 'Activo'),
+    )
+    permisos= models.ManyToManyField(Permission)
+    nombre_rol_id = models.CharField(max_length = 200)
+    descripcion = models.CharField(max_length = 200)
+    usuario_creador = models.ForeignKey(MyUser)
+    estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
+    
+    def tiene_permiso(self,perm):
+        """checkea si un rol esta compuesto por un permiso"""
+        permiso= Permission.objects.get(name=perm)
+        if permiso in self.permisos.all():
+            return True
+        else:
+            return False
+
+    def __unicode__(self):
+        """Representacion unicode del objeto rol"""
+        return self.nombre_rol_id
+</pre></p>
+</td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>Modelo&nbsp;que&nbsp;representa&nbsp;roles&nbsp;con&nbsp;relacion&nbsp;muchos&nbsp;a&nbsp;muchos&nbsp;a&nbsp;la&nbsp;tabla&nbsp;de&nbsp;permisos<br>&nbsp;</tt></td></tr>
@@ -1609,6 +2221,8 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 <hr>
 Methods defined here:<br>
 <dl><dt><a name="rol-__unicode__"><strong>__unicode__</strong></a>(self)</dt><dd><tt>Representacion&nbsp;unicode&nbsp;del&nbsp;objeto&nbsp;<a href="#rol">rol</a></tt></dd></dl>
+
+<dl><dt><a name="rol-get_estado_display"><strong>get_estado_display</strong></a> = _curried(*moreargs, **morekwargs)</dt></dl>
 
 <strong>objects</strong> = &lt;django.db.models.manager.Manager object&gt;
 <dl><dt><a name="rol-tiene_permiso"><strong>tiene_permiso</strong></a>(self, perm)</dt><dd><tt>checkea&nbsp;si&nbsp;un&nbsp;<a href="#rol">rol</a>&nbsp;esta&nbsp;compuesto&nbsp;por&nbsp;un&nbsp;permiso</tt></dd></dl>
@@ -1624,6 +2238,8 @@ Data descriptors defined here:<br>
 <hr>
 Data and other attributes defined here:<br>
 <dl><dt><strong>DoesNotExist</strong> = &lt;class 'gestor.models.DoesNotExist'&gt;</dl>
+
+<dl><dt><strong>ESTADO_CHOICES</strong> = (('CAN', 'Cancelado'), ('ACT', 'Activo'))</dl>
 
 <dl><dt><strong>MultipleObjectsReturned</strong> = &lt;class 'gestor.models.MultipleObjectsReturned'&gt;</dl>
 
@@ -1710,7 +2326,21 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="rol_sistema">class <strong>rol_sistema</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="rol_sistema">class <strong>rol_sistema</strong></a>(<a href="django.db.models.base.html#Model">django.db.models.base.Model</a>)</font>
+<p><pre>
+class rol_sistema(models.Model): 
+   
+    permisos= models.ManyToManyField(Permission)
+    nombre_rol_id = models.CharField(max_length = 200)
+    descripcion = models.CharField(max_length = 200)
+    #tipo = models.CharField(max_length = 3, choices = ROL_CHOICES)
+    def __unicode__(self):
+        """Representacion unicode del objeto rol sistema"""
+        return self.nombre_rol_id
+      
+</pre>
+</p>
+</td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>Modelo&nbsp;que&nbsp;representa&nbsp;roles&nbsp;exclusivos&nbsp;de&nbsp;permisos&nbsp;de&nbsp;sistema,&nbsp;tiene&nbsp;una&nbsp;relacion<br>
@@ -1824,6 +2454,6 @@ Data descriptors inherited from <a href="django.db.models.base.html#Model">djang
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>__warningregistry__</strong> = {(u"Model class gestor.models.Actividades doesn't de.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 155): True, (u"Model class gestor.models.Flujo doesn't declare .... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 164): True, (u"Model class gestor.models.HU doesn't declare an .... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 202): True, (u"Model class gestor.models.MyUser doesn't declare.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 62): True, (u"Model class gestor.models.Permitido doesn't decl.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 47): True, (u"Model class gestor.models.Sprint doesn't declare.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 233): True, (u'Model class gestor.models.asignaHU_actividad_flu.... This will no longer be supported in Django 1.9.', &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 282): True, (u"Model class gestor.models.asigna_sistema doesn't.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 265): True, (u"Model class gestor.models.asignacion doesn't dec.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 255): True, (u"Model class gestor.models.delegacion doesn't dec.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 274): True, ...}<br>
+<td width="100%"><strong>__warningregistry__</strong> = {(u"Model class gestor.models.Actividades doesn't de.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 159): True, (u"Model class gestor.models.Flujo doesn't declare .... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 262): True, (u"Model class gestor.models.HU doesn't declare an .... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 204): True, (u"Model class gestor.models.HU_descripcion doesn't.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 187): True, (u"Model class gestor.models.MyUser doesn't declare.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 62): True, (u"Model class gestor.models.Permitido doesn't decl.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 47): True, (u"Model class gestor.models.Sprint doesn't declare.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 279): True, (u"Model class gestor.models.archivoadjunto doesn't.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 252): True, (u'Model class gestor.models.asignaHU_actividad_flu.... This will no longer be supported in Django 1.9.', &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 342): True, (u"Model class gestor.models.asigna_sistema doesn't.... This will no longer be supported in Django 1.9.", &lt;class 'django.utils.deprecation.RemovedInDjango19Warning'&gt;, 325): True, ...}<br>
 <strong>settings</strong> = &lt;django.conf.LazySettings object&gt;</td></tr></table>
 </body></html>
