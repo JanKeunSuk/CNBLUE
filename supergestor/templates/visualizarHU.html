@@ -44,20 +44,20 @@
         	<b>Horas realizadas: </b> {{HU.acumulador_horas}}<br/><br/>
         	<b>Estado de la HU: </b> {{HU.estado}}<br/><br/>
         	<b>Valido: </b> {{HU.valido}}<br/><br/>
+        	<b>Usuario asignado: </b> {{usuario_asignado}}<br/><br/>
+        	<b>Sprint al que pertenece: </b> {{sprint}}<br/><br/>
+        	<b>Flujo al que pertenece: </b> {{flujo}}<br/><br/>
         {%endif%}
+        	<br/>
         	<b>Descripcion de las horas realizadas </b> <br/>
         	<table>
-        	<th>Horas Cargadas</th><td></td><td></td><th>Descripcion</th><td></td><td></td><th>Actividades</th><td></td><td></td><th>Estado</th><td></td><td></td><th>Sprint</th><td></td><td></td><th>Flujo</th>
+        	<th>Horas Cargadas</th><td></td><td></td><th>Descripcion</th><td></td><td></td><th>Actividades</th><td></td><td></td><th>Estado</th><td></td><td></td>
         	<tr class="model-proyecto">
         	{% for des in HU.hu_descripcion.all %}
         		<td>{{des.horas_trabajadas}}</td><td></td><td></td>
         		<td>{{des.descripcion_horas_trabajadas}}</td><td></td><td></td>
         		<td>{{des.actividad}}</td><td></td><td></td>
         		<td>{{des.estado}}</td><td></td><td></td>
-        		<td>{{sprint}}</td><td></td><td></td>
-        		{%for F in flujo%}
-        			<td>{{F}}</td>
-        		{%endfor%}
         		
         		</tr>
         	{% endfor %}
