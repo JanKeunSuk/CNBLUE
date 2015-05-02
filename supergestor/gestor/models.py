@@ -337,7 +337,7 @@ class delegacion(models.Model):
     hu=models.ForeignKey(HU)
     def __unicode__(self):
         """Representacion unicode del objeto delegacion"""
-        return str(self.id)+" - "+str(self.usuario)+" - "+str(self.HU.descripcion)+" - "+str(self.HU.proyecto)
+        return str(self.id)+" - "+str(self.usuario)+" - "+str(self.hu.descripcion)+" - "+str(self.hu.proyecto)
 
 class asignaHU_actividad_flujo(models.Model):
     """Modelo intermedio para la relacion varios a varios del modelo flujo con actividades"""

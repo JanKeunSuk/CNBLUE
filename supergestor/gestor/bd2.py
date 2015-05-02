@@ -5,8 +5,7 @@ import datetime
 
 #from django.db import models
 
-from gestor.models import Permitido, MyUser, HU, proyecto,rol_sistema, rol, asigna_sistema,asignacion, Actividades,Flujo,delegacion,Sprint, HU_descripcion,\
-    asignaHU_actividad_flujo
+from gestor.models import Permitido, MyUser, HU, proyecto,rol_sistema, rol, asigna_sistema,asignacion, Actividades,Flujo,delegacion,Sprint, HU_descripcion,asignaHU_actividad_flujo
 
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
