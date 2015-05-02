@@ -1291,11 +1291,7 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
             self.hu_s=hu_s
             self.acu=acu
             
-    class fecha_dia:
-        def __init__(self,fecha,dia):
-            self.fecha=fecha
-            self.dia=dia    
-    
+   
     lista=[]
     dias=0
     hux=HU.objects.all()
@@ -1311,21 +1307,7 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     while(dias!=cont):
         dias=dias+1
         lista.append(dias)
-    """
-    i=0      
-    fechas=[]
-    for hu in hux:
-        for h in hu.hu_descripcion.all():
-            x=str(h.fecha)
-            if h.id == 1:
-                fecha_x=x[:10]
-                fechas.append(fecha_dia(h.fecha, i))
-            elif x[:10] == fecha_x:
-                fechas.append(fecha_dia(h.fecha, i))
-            else:
-                i=i+1
-                fechas.append(fecha_dia(h.fecha, i))
-    """
+
     lista_hu_horas={}
     lista_horas=[]
     cont2=0            
@@ -1344,18 +1326,7 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
                 cont2=0
                 cont2=cont2+h.horas_trabajadas
         lista_hu_horas[hu]=lista_horas
-        
-    """
-    #acumulador de horas por dia
-    acumulador=[]
-    cont2=0
-    for hu in hux:
-        for hu_d in hu.hu_descripcion.all():                 
-                cont2=cont2+hu_d.horas_trabajadas
-        acumulador.append(acumuladorx(hu.descripcion, cont2))
-        cont2=0
-    """
-    
+       
     longitud_para_tabla={}
     for i in sprint:
         longitud_para_tabla[i]=len(i.hu.all())+1
