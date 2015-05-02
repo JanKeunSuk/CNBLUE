@@ -12,7 +12,6 @@
 <meta name="robots" content="NONE,NOARCHIVE" />
 </head>
 
-
 <body class=" dashboard">
 
 <!-- Container -->
@@ -45,7 +44,7 @@
     
     <!-- Content -->
   		
-<div>
+<div style="width:1500x; height:590px; border:#000 2px solid; overflow:auto">
     
 	<div class="app-gestor module">
       
@@ -108,14 +107,18 @@
   					{%for enlace in enlacefv%}
                 		<td><a href="/visualizarFlujo/{{enlace.url}}/{{flujo.id}}/" class="addlink">Visualizar</a></td>
              		{% endfor %}
-             		
+
             		{% if flujosm|length > 0%}
             			{%for enlace in enlacefm%}
-                			{%if flujo.estado == 'CAN'%}
-                				<td><a href="/reactivar/{{enlace.url}}/1/{{flujo.id}}/" class="changelink">Reactivar</a></td>
-                			{%else%}
-                				<td><a href="/modificarFlujo/{{enlace.url}}/{{flujo.id}}/" class="changelink">Modificar</a></td>
-                			{%endif%}
+            				{%for f in flujosm%}
+            					{%if f == flujo%}
+                					{%if flujo.estado == 'CAN'%}
+                						<td><a href="/reactivar/{{enlace.url}}/1/{{flujo.id}}/" class="changelink">Reactivar</a></td>
+                					{%else%}
+                						<td><a href="/modificarFlujo/{{enlace.url}}/{{flujo.id}}/" class="changelink">Modificar</a></td>
+                					{%endif%}
+                				{%endif%}
+                			{%endfor%}
                 		{%endfor%}
                 		
                 	{% endif %}
@@ -190,10 +193,17 @@
             	<tr class="model-proyecto">
             
 				{% for HU in HUs %}
+				
 			    	{%if HU.descripcion|length > 0%}
 			    	
 			    		{%if HU.estado == 'ACT'%}
-  							<td> {{HU.descripcion}} </td>
+  							<td> {{HU.descripcion}}
+  							{%for h in HUsm_horas_agotadas%}
+  								{%if h == HU%}
+  									&nbsp;&nbsp;&nbsp;<font color="red"><b>Tiempo agotado, se necesita agregar horas!</b></font>
+  								{%endif%}
+  							{%endfor%}
+  							</td>
 			     		{%endif%}    
 
   						{%for enlace in enlaceHUv%}
@@ -204,7 +214,16 @@
              			{% if HUsm|length > 0%}
             				{%for enlace in enlaceHUm%}
 						           {%if HU.estado == 'ACT'%}
-                						<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Modificar</a></td>
+						           		{%for h in HUsm_horas_agotadas%}
+  											{%if h == HU%}
+  												<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Modificar</a></td>
+  											{%endif%}
+  										{%endfor%}
+  										{%for h in HUsm_no_desarrolladas%}
+  											{%if h == HU%}
+  												<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Modificar</a></td>
+  											{%endif%}
+  										{%endfor%}
                 					{%endif%}
                 			{%endfor%}
                 		{% endif %}
@@ -214,13 +233,18 @@
             {% endif %}
 {%endif%}
             {% if HUs_add_horas|length > 0%}
-            	<table>
-            		<th>Lista de HU's a las que estas asignado </th>
-        			<th> <B>Horas Trabajadas / Duracion</B> </th>
+            	<table width="1500">
+					<tr>
+					<td bgcolor="#CEECF5"><font size="2"><b>Descripcion </b></font> </td>
+  						<td bgcolor="#CEECF5"><font size="2"> <B>Horas Trabajadas / Duracion</B></font> </td>
+  						<td bgcolor="#CEECF5"><font size="2"> <B>Prioridad</B></font> </td>
+					</tr>
+
             		<tr class="model-proyecto">
 					{% for HU in HUs_add_horas %}
   						<td> {{HU.descripcion}} </td>
-  						<td> <B>{{HU.acumulador_horas}} / {{HU.duracion}}</B> </td><td></td><td></td><td></td>
+  						<td> <B>{{HU.acumulador_horas}} / {{HU.duracion}}</B> </td>
+  						<td> <B>{{HU.prioridad}}</B> </td>
   						{%for enlace in enlaceHU_agregar%}
   								<td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Ver historial de tareas</a></td>
   								{%if HU.acumulador_horas != HU.duracion%}
@@ -282,6 +306,7 @@
                 		<td><a href="/visualizarSprint/{{enlace.url}}/{{sprint.id}}/" class="addlink">Visualizar</a></td>
                 		{%for s in sprintsvk%}
                 			{%if s == sprint%}
+                				<td><a href="/asignarHUFlujo/{{enlace.url}}/{{sprint.id}}/" class="changelink">Ver HU en flujos</a></td>
                 				<td><a href="/verKanban/{{enlace.url}}/{{sprint.id}}/" class="changelink">Ver Kanban</a></td>
                 			{%endif%}
                 		{%endfor%}

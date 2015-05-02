@@ -79,6 +79,8 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     HUs=[]
     HUsm=[]
     HUs_add_horas=[]
+    HUsm_horas_agotadas=[]
+    HUsm_no_desarrolladas=[]
     enlacef=[]
     enlacefm=[]
     enlacefv=[]
@@ -129,6 +131,12 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     if rolx.tiene_permiso('Can change flujo'):
         """Tiene permiso de modificar flujo, obtengo todos los flujos para enviar al rol-flujo-para-scrum.html"""
         flujosm=Flujo.objects.all()
+        for flujo in flujosm:
+            for s in Sprint.objects.all():
+                if s.estado == 'CON':
+                    for f in s.flujo.all():
+                        if f == flujo:
+                            flujosm=flujosm.exclude(id=f.id)
         flujos=Flujo.objects.all()
         enlacefm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar Flujo'))
     else:
@@ -161,6 +169,20 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     elif rolx.tiene_permiso('Can change hu nivel Scrum'):
         HUs = HU.objects.filter(proyecto=proyectox).filter(valido=True)
         HUsm = HU.objects.filter(proyecto=proyectox).filter(valido=True)
+        for h in HUsm:
+            if h.estado_en_actividad != "FIN" and h.duracion == h.acumulador_horas and h.acumulador_horas !=0:
+                HUsm_horas_agotadas.append(h)
+        for s in Sprint.objects.all():
+            if s.estado == 'CON':
+                hus_desarrollandose=s.hu.all()
+        for h in HUsm:
+            x=0
+            for hu in hus_desarrollandose:
+                if h == hu:
+                    x=1
+            if x == 0:
+                HUsm_no_desarrolladas.append(h)
+        
         enlaceHUm.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Modificar'))
         is_Scrum=1
     
@@ -240,7 +262,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     if rolx.tiene_permiso('Can add sprint') or rolx.tiene_permiso('Can change sprint'):
         enlaceSprintv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
           
-    return render(request,'rol-flujo-para-scrum.html',{'existe':existe,'sprintsvk':sprintsvk,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HU_asignada':HU_asignada, 'HU_no_asignada':HU_no_asignada,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas})
+    return render(request,'rol-flujo-para-scrum.html',{'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'existe':existe,'sprintsvk':sprintsvk,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HU_asignada':HU_asignada, 'HU_no_asignada':HU_no_asignada,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas})
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
 def registrarUsuarioView(request):
@@ -853,22 +875,16 @@ def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
     Vista que utiliza el formulario HU para desplegar los datos almacenados
     en la HU que se quiere visualizar.
     """
-    lista_flujo=[]
-    lista_sprint=[]
     HU_disponible= HU.objects.get(id=HU_id_rec)
-    for sprint in Sprint.objects.all():
-        for hu in sprint.hu.all():
-            if HU_disponible == hu:
-                lista_sprint=sprint
-                for flujo in sprint.flujo.all():
-                    lista_flujo.append(flujo)
-                    
+    usuario_asignado = HU_disponible.saber_usuario() 
+    flujo_al_que_pertenece=HU_disponible.flujo()
+    sprint_al_que_pertenece=HU_disponible.sprint()
     adjuntos=archivoadjunto.objects.filter(hU=HU_disponible)
     formulario =  FormularioHU(initial={
                                                      'descripcion': HU_disponible.descripcion,
                                                      'valor_negocio': HU_disponible.valor_negocio,
                                                      })      
-    return render_to_response('visualizarHU.html',{'formulario':formulario, 'HU':HU_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'adjuntos':adjuntos,'is_Scrum':is_Scrum, 'sprint':lista_sprint, 'flujo':lista_flujo},
+    return render_to_response('visualizarHU.html',{'formulario':formulario,'usuario_asignado':usuario_asignado,'HU':HU_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'adjuntos':adjuntos,'is_Scrum':is_Scrum, 'sprint':sprint_al_que_pertenece, 'flujo':flujo_al_que_pertenece},
                                   context_instance=RequestContext(request))
 
 def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
@@ -950,6 +966,7 @@ def crearSprint(request,usuario_id,proyectoid,rolid):
     for x in Sprint.objects.all():
         for h in x.hu.all():
             HUs=HUs.exclude(id=h.id)
+    HUs=sorted(HUs,key=lambda x: x.prioridad, reverse=True)
     if request.method == 'GET':
         return render(request, 'crearSprint.html',{'HUs_no_seleccionadas':HUs,'flujos':flujos,'HUs':HUs,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
 
