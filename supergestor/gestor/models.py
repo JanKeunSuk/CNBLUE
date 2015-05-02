@@ -243,10 +243,16 @@ class HU(models.Model):
         return None
     
     def flujo(self):
-        for a in Flujo.objects.all():
-            for h in a.hu.all():
+        for a in asignaHU_actividad_flujo.objects.all():
+            for h in a.lista_de_HU.all():
                 if self.id == h.id:
-                    return a
+                    return a.flujo_al_que_pertenece
+        return None
+    
+    def saber_usuario(self): 
+        for d in delegacion.objects.all():
+            if self.id == d.hu.id:
+                return d.usuario
         return None
     
 class archivoadjunto(models.Model):
@@ -274,7 +280,7 @@ class Flujo(models.Model):
     orden_actividades = models.TextField(null=True) # JSON-serialized (text) version of your list
     def __unicode__(self):
         """Representacion unicode del objeto flujo"""
-        return str(self.id) + self.nombre
+        return self.nombre
 
 class Sprint(models.Model):
     """Modelo que reprenseta los Spring de un proyecto relacionados a
@@ -338,7 +344,7 @@ class delegacion(models.Model):
     def __unicode__(self):
         """Representacion unicode del objeto delegacion"""
         return str(self.id)+" - "+str(self.usuario)+" - "+str(self.hu.descripcion)+" - "+str(self.hu.proyecto)
-
+    
 class asignaHU_actividad_flujo(models.Model):
     """Modelo intermedio para la relacion varios a varios del modelo flujo con actividades"""
     lista_de_HU = models.ManyToManyField(HU)
