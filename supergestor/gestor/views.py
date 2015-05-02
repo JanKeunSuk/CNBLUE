@@ -172,6 +172,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         for h in HUsm:
             if h.estado_en_actividad != "FIN" and h.duracion == h.acumulador_horas and h.acumulador_horas !=0:
                 HUsm_horas_agotadas.append(h)
+        hus_desarrollandose=[]
         for s in Sprint.objects.all():
             if s.estado == 'CON':
                 hus_desarrollandose=s.hu.all()
