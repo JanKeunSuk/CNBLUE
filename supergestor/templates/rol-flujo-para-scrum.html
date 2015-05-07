@@ -248,7 +248,7 @@
   						{%for enlace in enlaceHU_agregar%}
   								<td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Ver historial de tareas</a></td>
   								{%if HU.acumulador_horas != HU.duracion%}
-  									{%if HU.estado_en_actividad != 'FIN'%}
+  									{%if HU.estado_en_actividad != 'FIN' and HU.estado_en_actividad != 'APR'%}
   										{%if HU == HU_cargar%}
                 							<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Agregar horas trabajadas</a></td>
              							{%endif%}
@@ -257,7 +257,7 @@
              						{%endif%}
              					{%endif%}
              				{%if HU.acumulador_horas == HU.duracion%}
-             					{%if HU.estado_en_actividad == 'FIN'%}
+             					{%if HU.estado_en_actividad == 'FIN' or HU.estado_en_actividad == 'APR'%}
              						<td><b>HU Finalizada a tiempo</b></td>
              					{%else%}
              						{%if HU.acumulador_horas != 0%}

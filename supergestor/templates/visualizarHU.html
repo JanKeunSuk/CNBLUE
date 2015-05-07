@@ -49,23 +49,24 @@
         	<b>Flujo al que pertenece: </b> {{flujo}}<br/><br/>
         {%endif%}
         	<br/>
-        	<b>Descripcion de las horas realizadas </b> <br/>
-        	<table>
-        	<th>Horas Cargadas</th><td></td><td></td><th>Descripcion</th><td></td><td></td><th>Actividades</th><td></td><td></td><th>Estado</th><td></td><td></td>
-        	<tr class="model-proyecto">
-        	{% for des in HU.hu_descripcion.all %}
-        		<td>{{des.horas_trabajadas}}</td><td></td><td></td>
-        		<td>{{des.descripcion_horas_trabajadas}}</td><td></td><td></td>
-        		<td>{{des.actividad}}</td><td></td><td></td>
-        		<td>{{des.estado}}</td><td></td><td></td>
+        	<div style="width:900px; height:250px; border:#000 2px solid; overflow:auto">
+        		<b>Descripcion de las horas realizadas </b> <br/>
+        		<table>
+        		<th>Horas Cargadas</th><td></td><td></td><th>Descripcion</th><td></td><td></td><th>Actividades</th><td></td><td></td><th>Estado</th><td></td><td></td>
+        		<tr class="model-proyecto">
+        		{% for des in HU.hu_descripcion.all %}
+        			<td>{{des.horas_trabajadas}}</td><td></td><td></td>
+        			<td>{{des.descripcion_horas_trabajadas}}</td><td></td><td></td>
+        			<td>{{des.actividad}}</td><td></td><td></td>
+        			<td>{{des.estado}}</td><td></td><td></td>
         		
-        		</tr>
-        	{% endfor %}
+        			</tr>
+        		{% endfor %}
+        	</div>
         	{%for adjunto in adjuntos%}
         	<tr><td><a a href="{{adjunto.archivo.url}}">{{adjunto.archivo.name}}</a></td></tr>
         	{%endfor%}
-        	</table>
-        <input type="submit" value="Volver" class="boton"/>	        	
+        	</table>    	
         </form>
         
      </div>

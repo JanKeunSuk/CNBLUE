@@ -93,7 +93,17 @@
                     <br/><br/>
                     	<p>
                     		<font size="2"><b>{{f.nombre}} </b></font>
-                    		<a href="/delegarHUFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprint.id}}/{{f.id}}/"> &nbsp; &nbsp; &nbsp; &nbsp;Asignar hu a flujo</a></td>
+                    		{%if flujos_aprobados|length > 0%}
+                    			{%for fa in flujos_aprobados%}
+                    				{%if fa == f%}
+                    					&nbsp; &nbsp; &nbsp; &nbsp; <font color='#0B3B0B'><b>Aprobada por Scrum</b></font>
+                    				{%else%}
+                    					<a href="/delegarHUFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprint.id}}/{{f.id}}/"> &nbsp; &nbsp; &nbsp; &nbsp;Asignar hu a flujo</a></td>
+                    				{%endif%}
+                    			{%endfor%}
+                    		{%else%}
+                    			<a href="/delegarHUFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprint.id}}/{{f.id}}/"> &nbsp; &nbsp; &nbsp; &nbsp;Asignar hu a flujo</a></td>
+                    		{%endif%}
                     	</p>
                     	{%for flujo,hus in hu_en_flujo.items%}
                     		{%if f == flujo%}
@@ -115,6 +125,13 @@
                     						<ul>
                     						<p>
                     						<li>{{h}} ya asignada a <b>{{u}}</b> con prioridad <b>{{hu.prioridad}}</b>
+                    						{%if h.estado_en_actividad != 'FIN' and h.estado_en_actividad != 'APR' %}
+                    							<a href="/delegarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{h.id}}/1/"> &nbsp; &nbsp; &nbsp; &nbsp; Reasignar a Usuario</a>
+                    						{%elif h.estado_en_actividad == 'FIN' %}
+                    							&nbsp; &nbsp; &nbsp; &nbsp; <font color='green'><b>Finalizada</b></font>
+                    						{%else %}
+                    							&nbsp; &nbsp; &nbsp; &nbsp; <font color='#0B3B0B'><b>Aprobada por Scrum</b></font>
+                    						{%endif%}
                     						</p>
                     						</ul>
                     					{%endif%}

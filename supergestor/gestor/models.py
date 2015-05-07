@@ -215,6 +215,7 @@ class HU(models.Model):
         ('PEN', 'Pendiente'),
         ('PRO', 'En Progreso'),
         ('FIN', 'Finalizado'),
+        ('APR', 'Aprobado'),
     )
     
     descripcion = models.CharField(max_length = 200)

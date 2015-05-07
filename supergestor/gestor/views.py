@@ -170,7 +170,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         HUs = HU.objects.filter(proyecto=proyectox).filter(valido=True)
         HUsm = HU.objects.filter(proyecto=proyectox).filter(valido=True)
         for h in HUsm:
-            if h.estado_en_actividad != "FIN" and h.duracion == h.acumulador_horas and h.acumulador_horas !=0:
+            if h.estado_en_actividad != "FIN" and h.estado_en_actividad !='APR' and h.duracion == h.acumulador_horas and h.acumulador_horas !=0:
                 HUsm_horas_agotadas.append(h)
         hus_desarrollandose=[]
         for s in Sprint.objects.all():
@@ -214,12 +214,11 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
                     HUs_add_horas.append(d.hu)
         #HU ordenada por prioridad
         HUs_add_horas=sorted(HUs_add_horas,key=lambda x: x.prioridad, reverse=True)
-        
+        enlaceHU_agregar.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar horas'))
         i=0
         for p in HUs_add_horas:
             if p.acumulador_horas != p.duracion and p.estado_en_actividad != 'FIN':
                 agregar_horas=HUs_add_horas[i]             
-                enlaceHU_agregar.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar horas'))
                 break
             i=i+1
         is_Scrum=2
@@ -1205,7 +1204,7 @@ def delegarHU(request,usuario_id,proyectoid,rolid,hu_id,reasignar):
             try:
                 delegacionx= delegacion.objects.create(usuario=MyUser.objects.get(id=request.POST['usuario']),hu=hu)
                 delegacionx.save()
-                return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')
+                return HttpResponse('La asignacion se realizo correctamente')
             except ObjectDoesNotExist:
                 return HttpResponseRedirect('/crearFlujo/') #redirijir a rol flujo para scrum despues
         else:
@@ -1297,7 +1296,7 @@ def adminAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec):
         filex=archivoadjunto.objects.create(archivo=archivox,hU_id=HU_id_rec)
         filex.save()
         #archivox.save()
-        return HttpResponseRedirect('/adminAdjunto/'+HU_id_rec+'/')
+        return HttpResponseRedirect('/adminAdjunto/'+usuario_id+'/'+proyectoid+'/'+rolid+'/'+HU_id_rec+'/')
     
 def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     """
@@ -1384,8 +1383,15 @@ def asignarHU_Usuario_FLujo(request,usuario_id,proyectoid,rolid,sprintid):
                     HU_asignada[HUa]=d.usuario
             if x == 0:
                 HU_no_asignada.append(HUa)
-
-    return render(request,"asignarHU_Usuario_Flujo.html",{'hu_en_flujo':hu_en_flujo,'flujos':Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)),'HU_no_asignada':HU_no_asignada,'HU_asignada':HU_asignada,'hus':hus,'sprint':sprintx,'proyecto':proyectox,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    flujos_aprobados=[]
+    for f in Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)):
+        x=0
+        for h in hu_en_flujo[f]:
+            if h.estado_en_actividad != 'APR':
+                x=1
+        if x == 0:
+            flujos_aprobados.append(f)
+    return render(request,"asignarHU_Usuario_Flujo.html",{'flujos_aprobados':flujos_aprobados,'hu_en_flujo':hu_en_flujo,'flujos':Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)),'HU_no_asignada':HU_no_asignada,'HU_asignada':HU_asignada,'hus':hus,'sprint':sprintx,'proyecto':proyectox,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
 
 def asignarHU_a_FLujo(request,usuario_id,proyectoid,rolid,sprintid,flujo_id):
     """Vista donde se asignan las HU a un flujo dentro del spring y a un usuario del proyecto"""
@@ -1436,5 +1442,57 @@ def verKanban(request,usuario_id,proyectoid,rolid,sprintid):
         for o in orden:
             actividades.append(Actividades.objects.get(id=o))
         flujos_actividades[f]=actividades
-            
-    return render(request,"verKanban.html",{'sprint':sprintx, 'flujos_hu':flujos_hu,'flujos_actividades':flujos_actividades,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    flujos_aprobados=[]
+    for f in Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)):
+        x=0
+        for h in flujos_hu[f]:
+            if h.estado_en_actividad != 'APR':
+                x=1
+        if x == 0:
+            flujos_aprobados.append(f)
+                   
+    return render(request,"verKanban.html",{'flujos_aprobados':flujos_aprobados,'sprint':sprintx, 'flujos_hu':flujos_hu,'flujos_actividades':flujos_actividades,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+
+def aprobarHU(request, usuario_id, proyectoid, rolid, sprintid, HU_id_rec):
+    """
+    Vista que permite al Scrum aprobar una HU o volver a un estado anterior del flujo.
+    """
+    HU_tratada=HU.objects.get(id=HU_id_rec)
+    usuario_asignado=HU_tratada.saber_usuario()
+    if request.method == 'GET':
+        f=HU_tratada.flujo()
+        estados=['PEN','PRO']
+        jsonDec = json.decoder.JSONDecoder()
+        orden=jsonDec.decode(f.orden_actividades)
+        actividades=[]
+        for o in orden:
+            actividades.append(Actividades.objects.get(id=o))
+        return render(request,"aprobar_finalizacion_Flujo.html",{'usuario_asignado':usuario_asignado,'HU':HU_tratada,'flujo':f,'estados':estados,'actividades':actividades,'sprintid':sprintid,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    else:
+        guardar=0
+        for g in request.POST.getlist('_save'):
+            if g == 'Aprobar':
+                guardar=1
+        if guardar == 1:
+            HU_tratada.estado_en_actividad='APR'
+            HU_tratada.save()
+            hd=HU_descripcion.objects.create(horas_trabajadas=0,descripcion_horas_trabajadas='HU aprobada por SCRUM',fecha=datetime.now(), actividad=str(HU_tratada.actividad), estado=str(HU_tratada.estado_en_actividad))
+            HU_tratada.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
+            hd.save()
+            return HttpResponseRedirect('/verKanban/'+usuario_id+'/'+proyectoid+'/'+rolid+'/'+sprintid+'/')
+        else:
+            actividad=Actividades.objects.get(id=request.POST['actividad'])
+            estado=request.POST['estado']
+            duracion=float(request.POST['duracion'])
+            if duracion >= HU_tratada.duracion:
+                HU_tratada.actividad=actividad
+                HU_tratada.estado_en_actividad=estado
+                HU_tratada.duracion=duracion
+                HU_tratada.save()
+                descripcion=request.POST['descripcion']
+                hd=HU_descripcion.objects.create(horas_trabajadas=0,descripcion_horas_trabajadas=descripcion,fecha=datetime.now(), actividad=str(HU_tratada.actividad), estado=str(HU_tratada.estado_en_actividad))
+                HU_tratada.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
+                hd.save()
+                return HttpResponseRedirect('/verKanban/'+usuario_id+'/'+proyectoid+'/'+rolid+'/'+sprintid+'/')
+            else:
+                return HttpResponse('La duracion no puede ser menor a las horas ya acumuladas, que son: '+str(HU_tratada.acumulador_horas))
