@@ -8,6 +8,7 @@ Tambien incluimos otros modulos URLconf como include(admin.site.urls) y include(
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from gestor import views
+from gestor.views import elegirVersionHU
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
@@ -55,4 +56,6 @@ urlpatterns = patterns('',
     url(r'^asignarHUFlujo/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<sprintid>\d+)/$',views.asignarHU_Usuario_FLujo,name='asignarHU_Usuario_FLujo'),
     url(r'^delegarHUFlujo/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<sprintid>\d+)/(?P<flujo_id>\d+)/$',views.asignarHU_a_FLujo,name='asignarHU_a_FLujo'),
     url(r'^verKanban/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<sprintid>\d+)/$',views.verKanban,name='ver_Kanban'),
+    url(r'^cambiarVersionHU/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<hu_id>\d+)/$', views.cambiarVersionHU, name='Cambiar version hu'),
+    url(r'^elegirVersionHU/(?P<hv_id>\d+)/(?P<hu_id>\d+)/$',views.elegirVersionHU,name='elegir version hu'),
 )

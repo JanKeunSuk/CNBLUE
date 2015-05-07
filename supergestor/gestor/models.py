@@ -191,6 +191,7 @@ class HU_descripcion(models.Model):
     horas_trabajadas=models.FloatField()  
     descripcion_horas_trabajadas=models.CharField(max_length = 200)
     fecha=models.DateTimeField()
+    
     actividad=models.CharField(max_length = 200)
     estado=models.CharField(max_length = 200)
     #acumulador_dia=models.FloatField()  
@@ -215,7 +216,7 @@ class HU(models.Model):
         ('PEN', 'Pendiente'),
         ('PRO', 'En Progreso'),
         ('FIN', 'Finalizado'),
-    )
+    ) 
     
     descripcion = models.CharField(max_length = 200)
     valor_negocio = models.IntegerField(choices = VALORES10_CHOICES)
@@ -229,11 +230,16 @@ class HU(models.Model):
     proyecto=models.ForeignKey(proyecto) #este campo va indicar a que proyecto pertenece asi en la vista ya no tenemos que hacer hu.objects.all()
     valido=models.BooleanField(default=False) # rl productOwner debe validar
     hu_descripcion=models.ManyToManyField(HU_descripcion)
+    version=models.FloatField()
     
     
     def __unicode__(self):
         """Representacion unicode del objeto HU"""
         return self.descripcion
+    
+    
+    def get_gersion(self):
+        return self.version
     
     def sprint(self):
         for a in Sprint.objects.all():
@@ -254,6 +260,26 @@ class HU(models.Model):
             if self.id == d.hu.id:
                 return d.usuario
         return None
+    
+    
+    
+    
+class HU_version(models.Model):
+    """En este modelo se van a guardar los datos correspondientes a las versiones de HU que va cambiando el owner 
+    cada vez que hace modificaciones, cuando se cambie a una version anterior, se van a copiar los datos de un objeto de
+    este modelo y se van a poner en el objeto hu del modelo hu cuya version se esta cambiando"""
+    VALORES10_CHOICES = zip(range(1,11), range(1,11))
+    hu=models.ForeignKey(HU)
+    version = models.FloatField()
+    descripcion=models.CharField(max_length=200)
+    valor_negocio = models.IntegerField(choices = VALORES10_CHOICES)
+    
+    
+    
+    def __unicode__(self):
+        """Representacion unicode del objeto HU version que se mostrara para elegir la version conveninete"""
+        return 'descripcion:'+self.descripcion + 'valor negocio: '+self.valor_negocio
+    
     
 class archivoadjunto(models.Model):
     archivo=models.FileField()
