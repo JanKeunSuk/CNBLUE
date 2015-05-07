@@ -2,7 +2,7 @@
 import django
 django.setup()
 import datetime
-
+import psycopg2
 #from django.db import models
 
 from gestor.models import Permitido, MyUser, HU, proyecto,rol_sistema, rol, asigna_sistema,asignacion, Actividades,Flujo,delegacion,Sprint, HU_descripcion, asignaHU_actividad_flujo
@@ -30,10 +30,10 @@ valeria=MyUser.objects.create(password='pbkdf2_sha256$15000$4FMgo6Ef1xDS$Jmf7hAT
 
 """Creacion de permisos que faltan"""
 content_type = ContentType.objects.get_for_model(HU)
-permission1 = Permission.objects.create(codename='agregar horas trabajadas',
+permission1 = Permission.objects.create(codename='Puede agregar horas trabajadas',
                                        name='Agregar horas trabajadas',
                                        content_type=content_type)
-permission2 = Permission.objects.create(codename='cambiar hu nivel Scrum',
+permission2 = Permission.objects.create(codename='Puede cambiar HU a nivel Scrum',
                                        name='Can change hu nivel Scrum',
                                        content_type=content_type)
 content_type2 = ContentType.objects.get_for_model(proyecto)
@@ -338,3 +338,300 @@ hu3.save()
 """Ya que se comenzo la primera HU de mas alta prioridad del sprint cambiamos su estado de ACT a CON"""
 sp1.estado='CON'
 sp1.save()
+
+"""
+Modificar la tabla Permission para que los permisos se desplieguen en español.
+"""
+#Establecemos la conexion con la base de datos
+conexion = psycopg2.connect("dbname=prueba5 host=localhost port=5432 user=seba2 password=seba2")
+
+#Preparamos el cursor que nos va a ayudar a realizar las operaciones con la base de datos
+cur=conexion.cursor()
+
+c="update auth_permission set codename='Puede agregar una entrada al sistema' where name='Can add log entry'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede cambiar el login de entrada' where name='Can change log entry'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede eliminar el login de entrada' where name='Can delete log entry'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede agredar permisos' where name='Can add permission'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede modificar permisos' where name='Can change permission'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede eliminar permisos' where name='Can delete permission'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede agregar grupos' where name='Can add group'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede modificar grupos' where name='Can change group'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede eliminar grupos' where name='Can delete group'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede agregar Content-Type' where name='Can add content type'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede modificar Content-Type' where name='Can change content type'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede eliminar Content-Type' where name='Can delete content type'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede agregar sesion' where name='Can add session'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede cambiar sesion' where name='Can change session'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede eliminar sesion' where name='Can delete session'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede agregar correos para usuario' where name='Can add permitido'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede modificar correos de usuario' where name='Can change permitido'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede elimnar correos de usuario' where name='Can delete permitido'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+
+c="update auth_permission set codename='Puede agregar usuarios' where name='Can add my user'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede modificar usuarios' where name='Can change my user'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede eliminar usuarios' where name='Can delete my user'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+
+c="update auth_permission set codename='Puede agregar roles de proyecto' where name='Can add rol'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede modificar roles de proyecto' where name='Can change rol'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede eliminar roles de proyecto' where name='Can delete rol'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+
+c="update auth_permission set codename='Puede agregar roles de sistema' where name='Can add rol_sistema'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede modificar roles de sistema' where name='Can change rol_sistema'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede eliminar roles de sistema' where name='Can delete rol_sistema'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+
+c="update auth_permission set codename=' Puede agregar actividades' where name='Can add actividades'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede modificar actividades' where name='Can change actividades'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede eliminar actividades' where name='Can delete actividades'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+
+c="update auth_permission set codename='Puede agregar proyectos' where name='Can add proyecto'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede modificar proyectos' where name='Can change proyecto'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede eliminar proyectos' where name='Can delete proyecto'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+
+c="update auth_permission set codename='Puede agregar descripcion a las HU' where name='Can add h u_descripcion'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede cambiar descripcion a las HU' where name='Can change h u_descripcion'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede eliminar descripcion a las HU' where name='Can delete h u_descripcion'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+
+c="update auth_permission set codename='Puede agregar HU' where name='Can add hu'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede cambiar HU' where name='Can change hu'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede eliminar HU' where name='Can delete hu'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+
+c="update auth_permission set codename='Puede agregar archivo adjunto a la HU' where name='Can add archivoadjunto'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede eliminar archivo adjunto a la HU' where name='Can delete archivoadjunto'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede modificar archivo adjunto a la HU' where name='Can change archivoadjunto'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+
+c="update auth_permission set codename='Puede agregar flujos' where name='Can add flujo'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede modificar flujos' where name='Can change flujo'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede eliminar flujos' where name='Can delete flujo'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+
+c="update auth_permission set codename='Puede agregar sprints' where name='Can add sprint'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede modificar sprints' where name='Can change sprint'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede eliminar sprints' where name='Can delete sprint'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+
+c="update auth_permission set codename='Puede asignar roles de proyectos a usuarios' where name='Can add asignacion'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede modificar las asignaciones de roles de proyectos a usuarios' where name='Can change asignacion'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede eliminar las asignaciones de roles de proyectos a usuarios' where name='Can delete asignacion'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+
+c="update auth_permission set codename='Puede asignar roles de sistema a usuarios' where name='Can add asigna_sistema'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede modificar las asignaciones de roles de sistema a usuarios' where name='Can change asigna_sistema'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede eliminar las asignaciones de roles de sistema a usuarios' where name='Can delete asigna_sistema'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+
+c="update auth_permission set codename='Puede asignar HU a usuarios' where name='Can add delegacion'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede re-asignar HU a usuarios' where name='Can change delegacion'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede eliminar las asignaciones de HU a usuarios' where name='Can delete delegacion'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+
+c="update auth_permission set codename='Puede asignar HU a flujos' where name='Can add asigna h u_actividad_flujo'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede re-asignar HU a flujos' where name='Can change asigna h u_actividad_flujo'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+#Efectuamos los cambios en la base de datos
+
+c="update auth_permission set codename='Puede eliminar las asignaciones de HU a flujos' where name='Can delete asigna h u_actividad_flujo'"
+# Ejecutamos un query SQL usando el método execute() que nos proporciona el cursor
+cur.execute(c)
+
+#Efectuamos los cambios en la base de datos
+conexion.commit()
