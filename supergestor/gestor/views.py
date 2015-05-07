@@ -8,7 +8,7 @@ from django.http.response import HttpResponseRedirect
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from gestor.models import MyUser, asignacion, proyecto, rol, Flujo, Actividades, HU, Sprint, delegacion, HU_descripcion, archivoadjunto, asignaHU_actividad_flujo
+from gestor.models import MyUser, asignacion, proyecto, rol, Flujo, Actividades, HU, Sprint, delegacion, HU_descripcion, archivoadjunto, asignaHU_actividad_flujo, HU_version
 from django import forms
 from django.core.mail.message import EmailMessage
 from django.template.context import RequestContext
@@ -16,6 +16,7 @@ from django.contrib.auth.decorators import login_required
 from django.forms.widgets import CheckboxSelectMultiple
 from django.contrib.auth.models import Permission
 from datetime import datetime 
+import math
 import json
 from django.utils import timezone
 
@@ -406,7 +407,23 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
                 if HU.objects.get(id=h).duracion > max:
                     max=HU.objects.get(id=h).duracion
         return render(request, 'crearSprint.html',{'nombre':request.POST['descripcion'],'duracion':int(max/8),'flujos':flujos,'HUs':HUs,'HUs_seleccionadas':hus_seleccionadas,'HUs_no_seleccionadas':HUs_no_seleccionadas,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
-            
+      
+
+def elegirVersionHU(request,hv_id,hu_id):
+    """Esta vista responde al boton elegir al elegir una version anterior de hu, ya que si vuelvo a hacer un simple modificar
+    pordria volver a crear una version que ya existe, por lo tanto esta vista modifica con datos preexistenes sin
+    crear una nueva version"""
+    """primero obtengo la huversion saco los datos los meto en la hu que tambien tengo que obtener y le doy hu.save()"""
+    huv=HU_version.objects.get(id=hv_id)
+    hu=HU.objects.get(id=hu_id)
+    
+    hu.descripcion=huv.descripcion
+    hu.valor_negocio=huv.valor_negocio
+    hu.version=huv.version
+    hu.save()
+    return HttpResponse('Se ha cambiado de version correctamente')
+
+      
 def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
     """Vista de guardado de la modificacion de una HU existente modificada por el Product Owner
     que se utiliza en la interfaz devuelta por /modificarHU/ 
@@ -417,13 +434,39 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
     h=HU.objects.get(id=HU_id_rec)
     if request.method == 'POST':
         if is_Scrum == '0':
+            hvs=HU_version.objects.filter(hu__id=HU_id_rec)
+            lastx=len(hvs.all())
+            if lastx>0:
+                x=hvs.last().version
+            else:
+                x=1.0
+            
+            
+            if(not h.descripcion==request.POST['descripcion'] and not h.valor_negocio==request.POST['valor_negocio']):
+                x=math.ceil(x)
+                x+=1.0
+            else:
+                x+=0.1
+            
             valor_negocio=request.POST['valor_negocio']
             descripcion=request.POST['descripcion']
             estado=request.POST['estado']
             h.valor_negocio=valor_negocio
             h.descripcion=descripcion
             h.estado=estado
+            h.version=x
             h.save() #Guardamos el modelo de manera Editada
+            
+            
+            """aca tengo que crear una HU version con los datos anteriores (esta es la parte que se hace para el owner)  """
+            hv=HU_version.objects.create(descripcion=h.descripcion,valor_negocio=h.valor_negocio,hu=h,version=x)
+            hv.save()
+            """esto guarda una version nomas pero no el valor flotante correcto de la version"""
+            """para cargar el valor version primero tengo que saber si es una version o una subversion"""
+            """        para saber esto necesito ver los campos cargados ahora con los de la hu actual y ver cuantos cambiaron"""
+            """luego tengo que saber cual fue la ultima version o subversion cargada y aumentarle 1 o 0,1"""
+            """        para saber esto tengo que obtener la ultima hu_version creada de esta hu, si no hay se empieza con 1"""
+            
             return HttpResponse('La descripcion y valor de negocio de la HU a sido modificado exitosamente')
         else:
             acumulador=0
@@ -1496,3 +1539,11 @@ def aprobarHU(request, usuario_id, proyectoid, rolid, sprintid, HU_id_rec):
                 return HttpResponseRedirect('/verKanban/'+usuario_id+'/'+proyectoid+'/'+rolid+'/'+sprintid+'/')
             else:
                 return HttpResponse('La duracion no puede ser menor a las horas ya acumuladas, que son: '+str(HU_tratada.acumulador_horas))
+            
+            
+def cambiarVersionHU(request,usuario_id, proyectoid,rolid,hu_id):
+    #obtener primero todas las HUversion que no sean la actual y enviarlas al template para que el user pueda elegirlas
+    hu_now=HU.objects.get(id=hu_id)
+    huv=HU_version.objects.filter(hu__id=hu_id) 
+    huv=huv.exclude(version=hu_now.version)#tengo que excluir la version actual de la lista
+    return render(request,"listarVersionesHU.html",{'huv':huv,'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid,'huid':hu_id})

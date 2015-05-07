@@ -56,4 +56,6 @@ urlpatterns = patterns('',
     url(r'^delegarHUFlujo/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<sprintid>\d+)/(?P<flujo_id>\d+)/$',views.asignarHU_a_FLujo,name='asignarHU_a_FLujo'),
     url(r'^verKanban/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<sprintid>\d+)/$',views.verKanban,name='ver_Kanban'),
     url(r'^aprobarHU/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<sprintid>\d+)/(?P<HU_id_rec>\d+)/$', views.aprobarHU, name='aprobar'),
+    url(r'^cambiarVersionHU/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<hu_id>\d+)/$', views.cambiarVersionHU, name='Cambiar version hu'),
+    url(r'^elegirVersionHU/(?P<hv_id>\d+)/(?P<hu_id>\d+)/$',views.elegirVersionHU,name='elegir version hu'),
 )
