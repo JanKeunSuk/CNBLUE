@@ -125,7 +125,6 @@ permiso=Permission.objects.get(name='Can delete session')
 permiso.codename='Eliminar session'
 permiso.save()
 
-
 """Creacion de correos electronicos asociados a usuarios"""
 perm4=Permitido.objects.create(email='gsebacatt@gmail.com')
 perm3=Permitido.objects.create(email='katherinevera94@gmail.com')
