@@ -9,7 +9,6 @@ from gestor.models import Permitido, MyUser, HU, proyecto,rol_sistema, rol, asig
 
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import Permission
 
 """Cambia el codename de permission en español"""
 
