@@ -193,9 +193,7 @@ class HU_descripcion(models.Model):
     fecha=models.DateTimeField()
     actividad=models.CharField(max_length = 200)
     estado=models.CharField(max_length = 200)
-    #acumulador_dia=models.FloatField()  
-    #sprint=models.CharField(max_length = 200)
-    #flujo=models.CharField(max_length = 200)
+
     
     def __unicode__(self):
         """Representacion unicode del objeto HU_descripcion"""
@@ -254,6 +252,7 @@ class HU(models.Model):
             if self.id == d.hu.id:
                 return d.usuario
         return None
+    
     
 class archivoadjunto(models.Model):
     archivo=models.FileField()
@@ -353,3 +352,10 @@ class asignaHU_actividad_flujo(models.Model):
         """Representacion unicode del objeto asignaHU_actividad_flujo"""
         return str(self.id)+" - "+str(self.flujo_al_que_pertenece)
     
+class historial_notificacion(models.Model):
+    """Se crea un historial de todos los eventos importantes 
+    y es notificado al usuario en su correo de gmail"""
+    usuario=models.CharField(max_length = 200)
+    fecha_hora=models.DateTimeField()
+    objeto=models.CharField(max_length = 200)
+    evento=models.CharField(max_length = 1000)

@@ -37,7 +37,7 @@
         	<b>Nombre del rol: </b> {{rol.nombre_rol_id}}<br/><br/>
         	<b>Descripcion: </b> {{rol.descripcion}}<br/><br/>
         	<b>Estado: </b> {{rol.estado}}<br/><br/>
-        	<b>Permisos contenidos: </b> <br/><br/>{% for permiso in rol.permisos.all %}{{ permiso.name }}<br/><br/>{% endfor %}
+        	<b>Permisos contenidos: </b> <br/><br/>{% for permiso in rol.permisos.all %}{{ permiso.codename }}<br/><br/>{% endfor %}
         	<input type="submit" value="Volver" />
         </form>
      </div>

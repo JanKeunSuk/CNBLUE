@@ -9,11 +9,127 @@ from gestor.models import Permitido, MyUser, HU, proyecto,rol_sistema, rol, asig
 
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import Permission
+
+"""Cambia el codename de permission en español"""
+
+permiso=Permission.objects.get(name='Can add rol')
+permiso.codename= 'Agregar Rol'
+permiso.save()
+permiso=Permission.objects.get(name='Can change rol')
+permiso.codename= 'Modificar Rol'
+permiso.save()
+permiso=Permission.objects.get(name='Can delete rol')
+permiso.codename='Eliminar Rol'
+permiso.save()
+permiso=Permission.objects.get(name='Can add actividades')
+permiso.codename='Agregar Actividad'
+permiso.save()
+permiso=Permission.objects.get(name='Can change actividades')
+permiso.codename='Modificar Actividad'
+permiso.save()
+permiso=Permission.objects.get(name='Can delete actividades')
+permiso.codename='Eliminar Actividad'
+permiso.save()
+permiso=Permission.objects.get(name='Can add flujo')
+permiso.codename='Agregar Flujo'
+permiso.save()
+permiso=Permission.objects.get(name='Can change flujo')
+permiso.codename='Modificar Flujo'
+permiso.save()
+permiso=Permission.objects.get(name='Can delete flujo')
+permiso.codename='Eliminar Flujo'
+permiso.save()
+permiso=Permission.objects.get(name='Can change proyecto')
+permiso.codename='Modificar Proyecto'
+permiso.save()
+permiso=Permission.objects.get(name='Can add sprint')
+permiso.codename='Agregar Sprint'
+permiso.save()
+permiso=Permission.objects.get(name='Can change sprint')
+permiso.codename='Modificar Sprint'
+permiso.save()
+permiso=Permission.objects.get(name='Can delete sprint')
+permiso.codename='Eliminar Sprint'
+permiso.save()
+permiso=Permission.objects.get(name='Can add asignacion')
+permiso.codename='Agregar Asignacion'
+permiso.save()
+permiso=Permission.objects.get(name='Can change asignacion')
+permiso.codename='Modificar Asignacion'
+permiso.save()
+permiso=Permission.objects.get(name='Can delete asignacion')
+permiso.codename='Eliminar Asignacion'
+permiso.save()
+permiso=Permission.objects.get(name='Can add delegacion')
+permiso.codename='Agregar Delegacion'
+permiso.save()
+permiso=Permission.objects.get(name='Can change delegacion')
+permiso.codename='Modificar Delegacion'
+permiso.save()
+permiso=Permission.objects.get(name='Can delete delegacion')
+permiso.codename='Eliminar Delegacion'
+permiso.save()
+permiso=Permission.objects.get(name='Can add asigna h u_actividad_flujo')
+permiso.codename='Agregar asigna h u_actividad_flujo'
+permiso.save()
+permiso=Permission.objects.get(name='Can change asigna h u_actividad_flujo')
+permiso.codename='Modifica asigna h u_actividad_flujo'
+permiso.save()
+permiso=Permission.objects.get(name='Can delete asigna h u_actividad_flujo')
+permiso.codename='Elminar asigna h u_actividad_flujo'
+permiso.save()
+permiso=Permission.objects.get(name='Can add archivoadjunto')
+permiso.codename='Agregar Archivo Adjunto'
+permiso.save()
+permiso=Permission.objects.get(name='Can change archivoadjunto')
+permiso.codename='Modificar Archivo Adjunto'
+permiso.save()
+permiso=Permission.objects.get(name='Can delete archivoadjunto')
+permiso.codename='Eliminar Archivo Adjunto'
+permiso.save()
+permiso=Permission.objects.get(name='Can add hu')
+permiso.codename='Agregar HU'
+permiso.save()
+permiso=Permission.objects.get(name='Can change hu')
+permiso.codename='Modificar HU'
+permiso.save()
+permiso=Permission.objects.get(name='Can delete hu')
+permiso.codename='Eliminar HU'
+permiso.save()
+permiso=Permission.objects.get(name='Can add asigna_sistema')
+permiso.codename='Agregar asigna_sistema'
+permiso.save()
+permiso=Permission.objects.get(name='Can change asigna_sistema')
+permiso.codename='Modificar asigna_sistema'
+permiso.save()
+permiso=Permission.objects.get(name='Can delete asigna_sistema')
+permiso.codename='Eliminar asigna_sistema'
+permiso.save()
+permiso=Permission.objects.get(name='Can add rol_sistema')
+permiso.codename='Agregar rol_sistema'
+permiso.save()
+permiso=Permission.objects.get(name='Can change rol_sistema')
+permiso.codename='Modificar rol_sistema'
+permiso.save()
+permiso=Permission.objects.get(name='Can delete rol_sistema')
+permiso.codename='Eliminar rol_sistema'
+permiso.save()
+permiso=Permission.objects.get(name='Can add session')
+permiso.codename='Agregar session'
+permiso.save()
+permiso=Permission.objects.get(name='Can change session')
+permiso.codename='Modificar session'
+permiso.save()
+permiso=Permission.objects.get(name='Can delete session')
+permiso.codename='Eliminar session'
+permiso.save()
+
 
 """Creacion de correos electronicos asociados a usuarios"""
 perm4=Permitido.objects.create(email='gsebacatt@gmail.com')
-perm3=Permitido.objects.create(email='katherine@gmail.com')
-perm2=Permitido.objects.create(email='desly@gmail.com')
+perm3=Permitido.objects.create(email='katherinevera94@gmail.com')
+perm2=Permitido.objects.create(email='delsy.denis.21@gmail.com')
 perm1=Permitido.objects.create(email='admin@gmail.com')
 perm5=Permitido.objects.create(email='gabriela@gmail.com')
 perm6=Permitido.objects.create(email='vanessa@gmail.com')
