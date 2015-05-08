@@ -108,5 +108,4 @@ EMAIL_USE_TLS = True
 
 STATIC_URL = '/static/'
 
-MEDIA_ROOT= '/home/katherine/IS2Work/git/supergestor/media/'
-MEDIA_URL='/media/'
+

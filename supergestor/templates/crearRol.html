@@ -72,7 +72,7 @@
                         
                             <select multiple="multiple" id="id_permisos" name="permisos">
                             	{%for permission in permissions %}
-									<option value="{{permission.id}}">{{permission.name}}</option>
+									<option value="{{permission.id}}">{{permission.codename}}</option>
 								{%endfor%}
 							</select>
 
@@ -109,8 +109,14 @@
 </fieldset>
 
 <div class="submit-row">
-<input type="submit" value="Guardar" />
-
+<input type="submit" onclick="enviar();" value="Guardar" />
+<script type="text/javascript">
+function enviar()
+{
+alert('El rol se ha creado exitosamente');
+document.formulario.submit();
+}
+</script>
 </div>
 
     <script type="text/javascript">
