@@ -19,6 +19,7 @@ from datetime import datetime
 import math
 import json
 from django.utils import timezone
+from io import BytesIO
 
 # Create your views and forms here.
 @login_required
@@ -1336,10 +1337,23 @@ def adminAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec):
         return render(request,'adjuntos.html',{'HU':hux,'adjuntos':adjuntos,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
     else:
         archivox = request.FILES['archivo']
-        filex=archivoadjunto.objects.create(archivo=archivox,hU_id=HU_id_rec)
+        file=bytearray()
+        for d in archivox.chunks():
+            file.extend(d)
+        filex=archivoadjunto.objects.create(nombre=archivox.name,content=archivox.content_type,tamanho=archivox.size,archivo=file,hU_id=HU_id_rec)
         filex.save()
         #archivox.save()
         return HttpResponseRedirect('/adminAdjunto/'+usuario_id+'/'+proyectoid+'/'+rolid+'/'+HU_id_rec+'/')
+    
+def descargar(request, usuario_id, proyectoid, rolid, HU_id_rec,archivo_id):
+    archivox=archivoadjunto.objects.get(id=archivo_id)
+    response = HttpResponse(content_type=archivox.content)
+    response['Content-Disposition'] = 'attachment; filename="%s"' % archivox.nombre
+    buffer = BytesIO(archivox.archivo)
+    file = buffer.getvalue()
+    buffer.close()
+    response.write(file)
+    return response
     
 def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     """

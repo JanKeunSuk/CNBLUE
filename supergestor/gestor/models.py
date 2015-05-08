@@ -283,12 +283,15 @@ class HU_version(models.Model):
     
     
 class archivoadjunto(models.Model):
-    archivo=models.FileField()
+    nombre=models.CharField(max_length = 200)
+    content=models.CharField(max_length = 200)
+    archivo=models.BinaryField()
+    tamanho=models.IntegerField()
     hU=models.ForeignKey(HU)
     
     def __unicode__(self):
         """Representacion unicode del objeto HU"""
-        return self.archivo.name
+        return self.archivo.nombre
     
     
     
