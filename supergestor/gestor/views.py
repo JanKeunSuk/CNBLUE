@@ -1474,7 +1474,7 @@ def adminAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec):
         filex=archivoadjunto.objects.create(archivo=archivox,hU_id=HU_id_rec)
         filex.save()
         #archivox.save()
-return HttpResponseRedirect('/adminAdjunto/'+usuario_id+'/'+proyectoid+'/'+rolid+'/'+HU_id_rec+'/')
+        return HttpResponseRedirect('/adminAdjunto/'+usuario_id+'/'+proyectoid+'/'+rolid+'/'+HU_id_rec+'/')
     
 def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     """
