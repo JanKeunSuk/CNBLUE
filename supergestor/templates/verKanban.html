@@ -43,10 +43,13 @@ table.scroll tbody,
 table.scroll thead { display:block;}
 
 table.scroll tbody {
-    height: 500px;overflow-y: auto;overflow-x: auto;
+    height: 440px;overflow-y: auto;overflow-x: auto;
 }
 table.intermedia tbody {
     width:145px;height: 90px;overflow-y: auto;overflow-x: auto;
+}
+table.encabezado tbody {
+    width:145px;height: 30px;overflow-y: auto;overflow-x: auto;
 }
 </style>
 <meta name="robots" content="NONE,NOARCHIVE" />
@@ -82,7 +85,13 @@ table.intermedia tbody {
 <div>
 	{%for flujo, hus in flujos_hu.items%}
 		<br/>
-		<p><b><font size="4" color="#8904B1">{{flujo}}</font></b></p>
+		<p><b><font size="4" color="#8904B1">{{flujo}}</font></b>
+		{%for fa in flujos_aprobados%}
+             {%if fa == flujo%}
+                    &nbsp; &nbsp; <font size="3" color='#0B3B0B'><b>--- Aprobada por Scrum</b></font>
+             {%endif%}
+        {%endfor%}
+        </p>
 		<div style="width:1250px; height:500px; border:#000 2px solid; overflow:auto">
 		<table class="scroll" bordercolor = #8904B1 border="8" width="1300" align="center">
 		{%for f,act in flujos_actividades.items%}
@@ -92,6 +101,7 @@ table.intermedia tbody {
 				{%for a in act%}
 					<td bgcolor="#E0E0F8" colspan="3" align="center"><font size="3" color='#210B61'><b>{{a}}</b></font></td>
 				{%endfor%}
+					<td bgcolor="#BEF781" rowspan="2"><table class="encabezado" border:"0"><tr><td><font size="3" color='#210B61'><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HU aprobada</b></font></td></tr></table></td>
 				</tr>
 				
 				<tr>
@@ -144,7 +154,7 @@ table.intermedia tbody {
 									<table class="intermedia" border:"0">
 										<tr>
 											<td align="center"><font size="2" color = "#F2F2F2"><b>{{h}}</b></font></td></tr>
-										<tr style="border: 0px solid #120A2A;"><td align="center"><font color = "#F2F2F2"><b>Horas hechas / Duracion:</b></font>
+										<tr style="border: 0px solid #F2F2F2;"><td align="center"><font color = "#F2F2F2"><b>Horas hechas / Duracion:</b></font>
 										<br/>
 										<br/></td></tr>
 									</table>
@@ -161,17 +171,17 @@ table.intermedia tbody {
 									<table class="intermedia" border:"0">
 										<tr>
 											<td align="center"><font size="2" color = "#EFFBFB"><b>{{h}}</b></font></td></tr>
-										<tr style="border: 0px solid #120A2A;"><td align="center"><font color = "#EFFBFB"><b>Horas hechas / Duracion:</b></font>
+										<tr style="border: 0px solid #EFFBFB;"><td align="center"><font color = "#EFFBFB"><b>Horas hechas / Duracion:</b></font>
 										<br/>
 										<br/></td></tr>
 									</table>
 								</td>
-							{%else%}
+							{%elif h.estado_en_actividad == 'FIN'%}
 								<td bgcolor="#F2F2F2"> 
 									<table class="intermedia" border:"0">
 										<tr>
 											<td align="center"><font size="2" color = "#F2F2F2"><b>{{h}}</b></font></td></tr>
-										<tr style="border: 0px solid #120A2A;"><td align="center"><font color = "#F2F2F2"><b>Horas hechas / Duracion:</b></font>
+										<tr style="border: 0px solid #F2F2F2;"><td align="center"><font color = "#F2F2F2"><b>Horas hechas / Duracion:</b></font>
 										<br/>
 										<br/></td></tr>
 									</table>
@@ -180,7 +190,7 @@ table.intermedia tbody {
 									<table class="intermedia" border:"0">
 										<tr>
 											<td align="center"><font size="2" color = "white"><b>{{h}}</b></font></td></tr>
-										<tr style="border: 0px solid #120A2A;"><td align="center"><font color = "white"><b>Horas hechas / Duracion:</b></font>
+										<tr style="border: 0px solid white;"><td align="center"><font color = "white"><b>Horas hechas / Duracion:</b></font>
 										<br/>
 										<br/></td></tr>
 									</table>
@@ -188,18 +198,48 @@ table.intermedia tbody {
 								<td bgcolor="#EFFBFB" align="center">
 									<table class="intermedia" style="border: 3px solid #120A2A;">
 										<tr style="border: 2px solid black;">
-											<td align="center"><font size="2" color = "#120A2A"><b>{{h}}</b></font></td></tr>
+											<td align="center"><font size="2" color = "#120A2A"><b>{{h}}</b></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											<a href="/aprobarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprint.id}}/{{h.id}}/" class="addlink">Aprobar?</a>
+											</td></tr>
 										<tr style="border: 2px solid black;"><td align="center"><b>Horas hechas / Duracion:</b>
 										<br/>{{h.acumulador_horas}} / {{h.duracion}} 
 										<br/><a href="/visualizarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{h.id}}/1/" class="changelink">Ver historial de tareas</a></td></tr>
 									</table></td>
+							{%else%}
+								<td bgcolor="#F2F2F2"> 
+									<table class="intermedia" border:"0">
+											<tr>
+												<td align="center"><font size="2" color = "#F2F2F2"><b>{{h}}</b></font></td></tr>
+											<tr style="border: 0px solid #F2F2F2;"><td align="center"><font color = "#F2F2F2"><b>Horas hechas / Duracion:</b></font>
+											<br/>
+											<br/></td></tr>
+									</table>
+								</td>
+								<td> 
+									<table class="intermedia" border:"0">
+										<tr>
+											<td align="center"><font size="2" color = "white"><b>{{h}}</b></font></td></tr>
+										<tr style="border: 0px solid white;"><td align="center"><font color = "white"><b>Horas hechas / Duracion:</b></font>
+										<br/>
+										<br/></td></tr>
+									</table>
+								</td>
+								<td bgcolor="#EFFBFB">
+									<table class="intermedia" border:"0">
+										<tr>
+											<td align="center"><font size="2" color = "#EFFBFB"><b>{{h}}</b></font></td></tr>
+										<tr style="border: 0px solid #EFFBFB;"><td align="center"><font color = "#EFFBFB"><b>Horas hechas / Duracion:</b></font>
+										<br/>
+										<br/></td></tr>
+									</table>
+								</td>
 							{%endif%}
 						{%else%}
 							<td bgcolor="#F2F2F2"> 
 								<table class="intermedia" border:"0">
 										<tr>
 											<td align="center"><font size="2" color = "#F2F2F2"><b>{{h}}</b></font></td></tr>
-										<tr style="border: 0px solid #120A2A;"><td align="center"><font color = "#F2F2F2"><b>Horas hechas / Duracion:</b></font>
+										<tr style="border: 0px solid #F2F2F2;"><td align="center"><font color = "#F2F2F2"><b>Horas hechas / Duracion:</b></font>
 										<br/>
 										<br/></td></tr>
 									</table>
@@ -209,7 +249,7 @@ table.intermedia tbody {
 								<table class="intermedia" border:"0">
 										<tr>
 											<td align="center"><font size="2" color = "white"><b>{{h}}</b></font></td></tr>
-										<tr style="border: 0px solid #120A2A;"><td align="center"><font color = "white"><b>Horas hechas / Duracion:</b></font>
+										<tr style="border: 0px solid white;"><td align="center"><font color = "white"><b>Horas hechas / Duracion:</b></font>
 										<br/>
 										<br/></td></tr>
 									</table>
@@ -218,14 +258,33 @@ table.intermedia tbody {
 								<table class="intermedia" border:"0">
 										<tr>
 											<td align="center"><font size="2" color = "#EFFBFB"><b>{{h}}</b></font></td></tr>
-										<tr style="border: 0px solid #120A2A;"><td align="center"><font color = "#EFFBFB"><b>Horas hechas / Duracion:</b></font>
+										<tr style="border: 0px solid #EFFBFB;"><td align="center"><font color = "#EFFBFB"><b>Horas hechas / Duracion:</b></font>
 										<br/>
 										<br/></td></tr>
 									</table>
 							</td>
 						{%endif%}
 					{%endfor%}
-					</tr>
+					{%if h.estado_en_actividad == 'APR'%}
+						<td bgcolor="#BEF781"> 
+							<table class="intermedia" style="border: 3px solid #120A2A;">
+								<tr style="border: 2px solid black;">
+									<td align="center"><font size="2" color = "#120A2A"><b>{{h}}</b></font>	</td></tr>
+								<tr style="border: 2px solid black;"><td align="center"><b>Horas hechas / Duracion:</b>
+									<br/>{{h.acumulador_horas}} / {{h.duracion}} 
+									<br/><a href="/visualizarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{h.id}}/1/" class="changelink">Ver historial de tareas</a></td></tr>
+							</table></td>
+					{%else%}
+						<td bgcolor="#BEF781"> 
+							<table class="intermedia" border:"0">
+								<tr>
+									<td align="center"><font size="2" color = "#BEF781"><b>nada</b></font></td></tr>
+									<tr style="border: 0px solid #BEF781;"><td align="center"><font color = "#BEF781"><b>Horas hechas / Duracion:</b></font>
+									<br/>
+									<br/></td></tr>
+							</table>
+						</td>
+					{%endif%}
 				{%endif%}
 			{%endfor%}
 		{%endfor%}

@@ -108,3 +108,4 @@ EMAIL_USE_TLS = True
 
 STATIC_URL = '/static/'
 
+

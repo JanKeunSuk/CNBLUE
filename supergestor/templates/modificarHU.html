@@ -155,7 +155,10 @@ return (false);
     </div>
     
 	<button id="assign" name="boton" onclick="agregar()" value="Finalizar">Finalizar y avanzar de actividad</button>
-							
+<!-- Cada vez que cambia una HU se guarda una version automaticamente....ver eso en guardarHU
+se guardara con la misma descripcion, mismos datos pero con un id diferente asi sigo apuntando a una hu diferente
+pero con los mismo datos, las hu utilizadas anteriormente seran canceladas y no deben mostrarse en la lista de hus del owner
+todavia nose como restringir eso -->>							
 <input type="submit" name="_save" value="Guardar" tabindex="2"/>
 <p><a href="/adminAdjunto/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{HU.id}}/">Administrar archivos adjuntos</a></p>
 </form> 

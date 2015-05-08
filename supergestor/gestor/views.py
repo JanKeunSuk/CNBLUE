@@ -8,7 +8,7 @@ from django.http.response import HttpResponseRedirect
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from gestor.models import MyUser, asignacion, proyecto, rol, Flujo, Actividades, HU, Sprint, delegacion, HU_descripcion, archivoadjunto, asignaHU_actividad_flujo, historial_notificacion
+from gestor.models import MyUser, asignacion, proyecto, rol, Flujo, Actividades, HU, Sprint, delegacion, HU_descripcion, archivoadjunto, asignaHU_actividad_flujo, historial_notificacion, HU_version
 from django import forms
 from django.core.mail.message import EmailMessage
 from django.template.context import RequestContext
@@ -16,6 +16,7 @@ from django.contrib.auth.decorators import login_required
 from django.forms.widgets import CheckboxSelectMultiple
 from django.contrib.auth.models import Permission
 from datetime import datetime 
+import math
 import json
 from django.utils import timezone
 
@@ -170,7 +171,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         HUs = HU.objects.filter(proyecto=proyectox).filter(valido=True)
         HUsm = HU.objects.filter(proyecto=proyectox).filter(valido=True)
         for h in HUsm:
-            if h.estado_en_actividad != "FIN" and h.duracion == h.acumulador_horas and h.acumulador_horas !=0:
+            if h.estado_en_actividad != "FIN" and h.estado_en_actividad !='APR' and h.duracion == h.acumulador_horas and h.acumulador_horas !=0:
                 HUsm_horas_agotadas.append(h)
         hus_desarrollandose=[]
         for s in Sprint.objects.all():
@@ -214,12 +215,11 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
                     HUs_add_horas.append(d.hu)
         #HU ordenada por prioridad
         HUs_add_horas=sorted(HUs_add_horas,key=lambda x: x.prioridad, reverse=True)
-        
+        enlaceHU_agregar.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar horas'))
         i=0
         for p in HUs_add_horas:
             if p.acumulador_horas != p.duracion and p.estado_en_actividad != 'FIN':
                 agregar_horas=HUs_add_horas[i]             
-                enlaceHU_agregar.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar horas'))
                 break
             i=i+1
         is_Scrum=2
@@ -433,7 +433,22 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
                 if HU.objects.get(id=h).duracion > max:
                     max=HU.objects.get(id=h).duracion
         return render(request, 'crearSprint.html',{'nombre':request.POST['descripcion'],'duracion':int(max/8),'flujos':flujos,'HUs':HUs,'HUs_seleccionadas':hus_seleccionadas,'HUs_no_seleccionadas':HUs_no_seleccionadas,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
-            
+      
+
+def elegirVersionHU(request,hv_id,hu_id):
+    """Esta vista responde al boton elegir al elegir una version anterior de hu, ya que si vuelvo a hacer un simple modificar
+    pordria volver a crear una version que ya existe, por lo tanto esta vista modifica con datos preexistenes sin
+    crear una nueva version"""
+    """primero obtengo la huversion saco los datos los meto en la hu que tambien tengo que obtener y le doy hu.save()"""
+    huv=HU_version.objects.get(id=hv_id)
+    hu=HU.objects.get(id=hu_id)
+    
+    hu.descripcion=huv.descripcion
+    hu.valor_negocio=huv.valor_negocio
+    hu.version=huv.version
+    hu.save()
+    return HttpResponse('Se ha cambiado de version correctamente')
+       
 def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
     """Vista de guardado de la modificacion de una HU existente modificada por el Product Owner
     que se utiliza en la interfaz devuelta por /modificarHU/ 
@@ -444,13 +459,40 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
     h=HU.objects.get(id=HU_id_rec)
     if request.method == 'POST':
         if is_Scrum == '0':
+            hvs=HU_version.objects.filter(hu__id=HU_id_rec)
+            lastx=len(hvs.all())
+            if lastx>0:
+                x=hvs.last().version
+            else:
+                x=1.0
+            
+            
+            if(not h.descripcion==request.POST['descripcion'] and not h.valor_negocio==request.POST['valor_negocio']):
+                x=math.ceil(x)
+                x+=1.0
+            else:
+                x+=0.1
+            
             valor_negocio=request.POST['valor_negocio']
             descripcion=request.POST['descripcion']
             estado=request.POST['estado']
             h.valor_negocio=valor_negocio
             h.descripcion=descripcion
             h.estado=estado
+            h.version=x
             h.save() #Guardamos el modelo de manera Editada
+                        
+            
+            """aca tengo que crear una HU version con los datos anteriores (esta es la parte que se hace para el owner)  """
+            hv=HU_version.objects.create(descripcion=h.descripcion,valor_negocio=h.valor_negocio,hu=h,version=x)
+            hv.save()
+            """esto guarda una version nomas pero no el valor flotante correcto de la version"""
+            """para cargar el valor version primero tengo que saber si es una version o una subversion"""
+            """        para saber esto necesito ver los campos cargados ahora con los de la hu actual y ver cuantos cambiaron"""
+            """luego tengo que saber cual fue la ultima version o subversion cargada y aumentarle 1 o 0,1"""
+            """        para saber esto tengo que obtener la ultima hu_version creada de esta hu, si no hay se empieza con 1"""
+            
+
             evento_e="Se ha modificado '"+request.POST['descripcion']+"' con valor de negocio '"+request.POST['valor_negocio']+"' y estado '"+request.POST['estado']+" con fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=h.descripcion, evento=evento_e)
@@ -1167,7 +1209,6 @@ def crearActividadAdminView(request):
             form.nombre=nombre
             form.descripcion=descripcion
             form.save()
-
             return HttpResponse('Ha sido guardado exitosamente')  
         
 def seleccionarFlujoModificarAdmin(request):
@@ -1265,7 +1306,6 @@ def asignarRol(request,usuario_id, proyectoid,rolid, rol_id_rec):
             if x == 0:
                 asignacion_a_crear = asignacion.objects.create(usuario=u,rol=rolx, proyecto=proyectox)
                 asignacion_a_crear.save()
-            
             return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')
         except ObjectDoesNotExist:
             print "Either the entry or blog doesn't exist." 
@@ -1317,7 +1357,7 @@ def delegarHU(request,usuario_id,proyectoid,rolid,hu_id,reasignar):
                 mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
                 mail.send()
 
-                return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')
+                return HttpResponse('La asignacion se realizo correctamente')
             except ObjectDoesNotExist:
                 return HttpResponseRedirect('/crearFlujo/') #redirijir a rol flujo para scrum despues
         else:
@@ -1434,7 +1474,7 @@ def adminAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec):
         filex=archivoadjunto.objects.create(archivo=archivox,hU_id=HU_id_rec)
         filex.save()
         #archivox.save()
-        return HttpResponseRedirect('/adminAdjunto/'+HU_id_rec+'/')
+return HttpResponseRedirect('/adminAdjunto/'+usuario_id+'/'+proyectoid+'/'+rolid+'/'+HU_id_rec+'/')
     
 def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     """
@@ -1521,8 +1561,15 @@ def asignarHU_Usuario_FLujo(request,usuario_id,proyectoid,rolid,sprintid):
                     HU_asignada[HUa]=d.usuario
             if x == 0:
                 HU_no_asignada.append(HUa)
-
-    return render(request,"asignarHU_Usuario_Flujo.html",{'hu_en_flujo':hu_en_flujo,'flujos':Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)),'HU_no_asignada':HU_no_asignada,'HU_asignada':HU_asignada,'hus':hus,'sprint':sprintx,'proyecto':proyectox,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    flujos_aprobados=[]
+    for f in Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)):
+        x=0
+        for h in hu_en_flujo[f]:
+            if h.estado_en_actividad != 'APR':
+                x=1
+        if x == 0:
+            flujos_aprobados.append(f)
+    return render(request,"asignarHU_Usuario_Flujo.html",{'flujos_aprobados':flujos_aprobados,'hu_en_flujo':hu_en_flujo,'flujos':Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)),'HU_no_asignada':HU_no_asignada,'HU_asignada':HU_asignada,'hus':hus,'sprint':sprintx,'proyecto':proyectox,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
 
 def asignarHU_a_FLujo(request,usuario_id,proyectoid,rolid,sprintid,flujo_id):
     """Vista donde se asignan las HU a un flujo dentro del spring y a un usuario del proyecto"""
@@ -1573,5 +1620,64 @@ def verKanban(request,usuario_id,proyectoid,rolid,sprintid):
         for o in orden:
             actividades.append(Actividades.objects.get(id=o))
         flujos_actividades[f]=actividades
-            
-    return render(request,"verKanban.html",{'sprint':sprintx, 'flujos_hu':flujos_hu,'flujos_actividades':flujos_actividades,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    flujos_aprobados=[]
+    for f in Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)):
+        x=0
+        for h in flujos_hu[f]:
+            if h.estado_en_actividad != 'APR':
+                x=1
+        if x == 0:
+            flujos_aprobados.append(f)
+                   
+    return render(request,"verKanban.html",{'flujos_aprobados':flujos_aprobados,'sprint':sprintx, 'flujos_hu':flujos_hu,'flujos_actividades':flujos_actividades,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+def aprobarHU(request, usuario_id, proyectoid, rolid, sprintid, HU_id_rec):
+    """
+    Vista que permite al Scrum aprobar una HU o volver a un estado anterior del flujo.
+    """
+    HU_tratada=HU.objects.get(id=HU_id_rec)
+    usuario_asignado=HU_tratada.saber_usuario()
+    if request.method == 'GET':
+        f=HU_tratada.flujo()
+        estados=['PEN','PRO']
+        jsonDec = json.decoder.JSONDecoder()
+        orden=jsonDec.decode(f.orden_actividades)
+        actividades=[]
+        for o in orden:
+            actividades.append(Actividades.objects.get(id=o))
+        return render(request,"aprobar_finalizacion_Flujo.html",{'usuario_asignado':usuario_asignado,'HU':HU_tratada,'flujo':f,'estados':estados,'actividades':actividades,'sprintid':sprintid,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    else:
+        guardar=0
+        for g in request.POST.getlist('_save'):
+            if g == 'Aprobar':
+                guardar=1
+        if guardar == 1:
+            HU_tratada.estado_en_actividad='APR'
+            HU_tratada.save()
+            hd=HU_descripcion.objects.create(horas_trabajadas=0,descripcion_horas_trabajadas='HU aprobada por SCRUM',fecha=datetime.now(), actividad=str(HU_tratada.actividad), estado=str(HU_tratada.estado_en_actividad))
+            HU_tratada.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
+            hd.save()
+            return HttpResponseRedirect('/verKanban/'+usuario_id+'/'+proyectoid+'/'+rolid+'/'+sprintid+'/')
+        else:
+            actividad=Actividades.objects.get(id=request.POST['actividad'])
+            estado=request.POST['estado']
+            duracion=float(request.POST['duracion'])
+            if duracion >= HU_tratada.duracion:
+                HU_tratada.actividad=actividad
+                HU_tratada.estado_en_actividad=estado
+                HU_tratada.duracion=duracion
+                HU_tratada.save()
+                descripcion=request.POST['descripcion']
+                hd=HU_descripcion.objects.create(horas_trabajadas=0,descripcion_horas_trabajadas=descripcion,fecha=datetime.now(), actividad=str(HU_tratada.actividad), estado=str(HU_tratada.estado_en_actividad))
+                HU_tratada.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
+                hd.save()
+                return HttpResponseRedirect('/verKanban/'+usuario_id+'/'+proyectoid+'/'+rolid+'/'+sprintid+'/')
+            else:
+                return HttpResponse('La duracion no puede ser menor a las horas ya acumuladas, que son: '+str(HU_tratada.acumulador_horas))
+
+
+def cambiarVersionHU(request,usuario_id, proyectoid,rolid,hu_id):
+    #obtener primero todas las HUversion que no sean la actual y enviarlas al template para que el user pueda elegirlas
+    hu_now=HU.objects.get(id=hu_id)
+    huv=HU_version.objects.filter(hu__id=hu_id) 
+    huv=huv.exclude(version=hu_now.version)#tengo que excluir la version actual de la lista
+    return render(request,"listarVersionesHU.html",{'huv':huv,'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid,'huid':hu_id})
