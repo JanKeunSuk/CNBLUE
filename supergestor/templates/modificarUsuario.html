@@ -44,7 +44,7 @@
 
                         <label class="required" for="id_user_name">Nombre:</label>
                         
-                            <input class="vTextField" id="id_user_name" maxlength="255" value="{{usuario.user_name}}" name="user_name" type="text" />
+                            <input class="vTextField" id="id_user_name" maxlength="255" value="{{usuario.user_name}}" name="user_name" type="text" pattern="[a-z]" required="required" autofocus="autofocus"/>
 
                 </div>
             
@@ -56,7 +56,7 @@
 
                         <label class="required" for="id_last_name">Apellido:</label>
                         
-                            <input class="vTextField" id="id_last_name" maxlength="255" value="{{usuario.last_name}}" name="last_name" type="text" />
+                            <input class="vTextField" id="id_last_name" maxlength="255" value="{{usuario.last_name}}" name="last_name" type="text" pattern="[a-z]" required="required" autofocus="autofocus"/>
 
                 </div>
             
@@ -68,7 +68,7 @@
 
                         <label class="required" for="id_direccion">Direccion:</label>
                         
-                            <input class="vTextField" id="id_direccion" maxlength="255" value="{{usuario.direccion}}"name="direccion" type="text" />
+                            <input class="vTextField" id="id_direccion" maxlength="255" value="{{usuario.direccion}}"name="direccion" type="text" required="required" autofocus="autofocus"/>
 
                 </div>
             

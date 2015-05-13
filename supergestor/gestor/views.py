@@ -96,6 +96,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     enlaceSprintm=[]
     is_Scrum=0
     HUsa=0
+    kanban=0
     class enlacex:
         """
         La clase  permite enviar al html solo las url que se corresponden con los permisos contenidos
@@ -264,7 +265,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     if rolx.tiene_permiso('Can add sprint') or rolx.tiene_permiso('Can change sprint'):
         enlaceSprintv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
           
-    return render(request,'rol-flujo-para-scrum.html',{'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'existe':existe,'sprintsvk':sprintsvk,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HU_asignada':HU_asignada, 'HU_no_asignada':HU_no_asignada,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas})
+    return render(request,'rol-flujo-para-scrum.html',{'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'existe':existe,'sprintsvk':sprintsvk,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HU_asignada':HU_asignada, 'HU_no_asignada':HU_no_asignada,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas, 'kanban':kanban})
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
 def registrarUsuarioView(request):
@@ -322,7 +323,7 @@ def guardarRolView(request,usuario_id):
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=rol_a_crear.nombre_rol_id,  evento=evento_e)
         mail = EmailMessage('Notificacion', evento_e, to=[email_e])
         mail.send()
-        #return HttpResponseRedirect('/crearRol/')
+        #return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')
         return HttpResponse('El rol se ha creado')
       
     except ObjectDoesNotExist:
@@ -995,11 +996,12 @@ class FormularioHU(forms.ModelForm):
         model= HU
         fields=['valor_tecnico','prioridad','duracion']
         
-def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
+def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum, kanban):
     """
     Vista que utiliza el formulario HU para desplegar los datos almacenados
     en la HU que se quiere visualizar.
     """
+    
     HU_disponible= HU.objects.get(id=HU_id_rec)
     usuario_asignado = HU_disponible.saber_usuario() 
     flujo_al_que_pertenece=HU_disponible.flujo()
@@ -1009,7 +1011,7 @@ def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
                                                      'descripcion': HU_disponible.descripcion,
                                                      'valor_negocio': HU_disponible.valor_negocio,
                                                      })      
-    return render_to_response('visualizarHU.html',{'formulario':formulario,'usuario_asignado':usuario_asignado,'HU':HU_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'adjuntos':adjuntos,'is_Scrum':is_Scrum, 'sprint':sprint_al_que_pertenece, 'flujo':flujo_al_que_pertenece},
+    return render_to_response('visualizarHU.html',{'formulario':formulario,'usuario_asignado':usuario_asignado,'HU':HU_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'adjuntos':adjuntos,'is_Scrum':is_Scrum, 'sprint':sprint_al_que_pertenece, 'flujo':flujo_al_que_pertenece, 'kanban':kanban},
                                   context_instance=RequestContext(request))
 
 def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
@@ -1623,6 +1625,7 @@ def verKanban(request,usuario_id,proyectoid,rolid,sprintid):
     sprintx=Sprint.objects.get(id=sprintid)
     flujos_hu={}
     flujos_actividades={}
+    kanban=1
     for f in Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)):
         for a in asignaHU_actividad_flujo.objects.all():
             if a.flujo_al_que_pertenece == f:
@@ -1643,7 +1646,7 @@ def verKanban(request,usuario_id,proyectoid,rolid,sprintid):
         if x == 0:
             flujos_aprobados.append(f)
                    
-    return render(request,"verKanban.html",{'flujos_aprobados':flujos_aprobados,'sprint':sprintx, 'flujos_hu':flujos_hu,'flujos_actividades':flujos_actividades,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    return render(request,"verKanban.html",{'flujos_aprobados':flujos_aprobados,'sprint':sprintx, 'flujos_hu':flujos_hu,'flujos_actividades':flujos_actividades,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'kanban':kanban})
 def aprobarHU(request, usuario_id, proyectoid, rolid, sprintid, HU_id_rec):
     """
     Vista que permite al Scrum aprobar una HU o volver a un estado anterior del flujo.

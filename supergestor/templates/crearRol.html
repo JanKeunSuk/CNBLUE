@@ -58,7 +58,8 @@
         <h1>Agregar rol</h1>
         <div id="content-main">
 
-<form enctype="multipart/form-data" action="/guardarRol/{{usuarioid}}/" method="post" id="rol_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
+<form enctype="multipart/form-data" action="/guardarRol/{{usuarioid}}/" method="post" id="rol_form">
+
 {% csrf_token %}
 <div>
 
@@ -68,11 +69,11 @@
 
                 <div>
 
-                        <label class="required" for="id_permisos">Permisos:</label>
+                        <label class="required" for="id_permisos" >Permisos:</label>
                         
-                            <select multiple="multiple" id="id_permisos" name="permisos">
+                            <select multiple="multiple" id="id_permisos" name="permisos" required>
                             	{%for permission in permissions %}
-									<option value="{{permission.id}}">{{permission.codename}}</option>
+									<option value="{{permission.id}}" >{{permission.codename}}</option>
 								{%endfor%}
 							</select>
 
@@ -88,7 +89,7 @@
 
                         <label class="required" for="id_nombre_rol_id">Nombre rol id:</label>
                         
-                            <input class="vTextField" id="id_nombre_rol_id" maxlength="200" name="nombre_rol_id" type="text" />
+                            <input class="vTextField" id="id_nombre_rol_id" maxlength="200" name="nombre_rol_id" type="text" required="required" autofocus="autofocus"/>
  
                 </div>
             
@@ -100,7 +101,7 @@
                     
                         <label class="required" for="id_descripcion">Descripcion:</label>
                         
-                            <input class="vTextField" id="id_descripcion" maxlength="200" name="descripcion" type="text" />
+                            <input class="vTextField" id="id_descripcion" maxlength="200" name="descripcion" type="text" required="required" autofocus="autofocus"/>
 
                 </div>
             
@@ -109,7 +110,8 @@
 </fieldset>
 
 <div class="submit-row">
-<input type="submit" onclick="enviar();" value="Guardar" />
+<input type="submit"  value="Guardar" />
+<!-- onclick="enviar();" -->
 <script type="text/javascript">
 function enviar()
 {
