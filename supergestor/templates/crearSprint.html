@@ -60,7 +60,8 @@
 
 
 
-<form enctype="multipart/form-data" action="/guardarSprint/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="post" id="rol_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
+<form enctype="multipart/form-data" action="/guardarSprint/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="post" id="rol_form" novalidate>
+<input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
 {% csrf_token %}
 <div>
 
@@ -72,7 +73,7 @@
 
                         <label class="required" for="id_descripcion">Descripcion:</label>
                         
-                            <input class="vTextField" id="id_descripcion" maxlength="500" name="descripcion" type="text" value="{{nombre}}"/>
+                            <input class="vTextField" id="id_descripcion" maxlength="500" name="descripcion" type="text" required="required" autofocus="autofocus" value="{{nombre}}"/>
 
                 </div>
             
@@ -84,7 +85,7 @@
 
                         <label class="required" for="id_fecha_inicio">Fecha de inicio:</label>
                         
-                            <input class="vTextField" id="id_descripcion" maxlength="500" name="fecha_inicio" type="text" value={{fecha_ahora}}/>
+                            <input class="vTextField" id="id_descripcion" maxlength="500" name="fecha_inicio" type="text" required="required" autofocus="autofocus" value={{fecha_ahora}}/>
 
                 </div>
             
@@ -96,7 +97,7 @@
 
                         <label class="required" for="id_usuarios">HUs:</label>
                         
-                            <select multiple = "multiple" id="id_usuarios" name="HUs">
+                            <select multiple = "multiple" id="id_usuarios" name="HUs" required>
                             {%for HU in HUs %}
                             	{%for h in HUs_seleccionadas%}
                             		{%if HU == h%}
@@ -123,7 +124,7 @@
 
                         <label class="required" for="id_duracion">Duracion:</label>
                         
-                            <input class="vTextField" id="id_duracion" maxlength="500" name="duracion" value="{{duracion}}" type="text" />
+                            <input class="vTextField" id="id_duracion" maxlength="500" name="duracion" value="{{duracion}}" type="text" pattern="[0-9]" required="required" autofocus="autofocus"/>
 
                 </div>
 
@@ -135,7 +136,7 @@
 
                         <label class="required" for="id_usuarios">Flujos:</label>
                         
-                            <select multiple = "multiple" id="id_usuarios" name="Flujos">
+                            <select multiple = "multiple" id="id_usuarios" name="Flujos" required>
                             {%for flujo in flujos %}
 								<option value="{{flujo.id}}"> {{flujo}}</option>
 							{%endfor%}

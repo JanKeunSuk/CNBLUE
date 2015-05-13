@@ -145,7 +145,7 @@
   							<td> {{HU.descripcion}} </td>
 			     		{%endif%}    
   						{%for enlace in enlaceHUv%}
-                			<td></td><td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/0/" class="addlink">Visualizar</a></td>
+                			<td></td><td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/{{kanban}}/" class="addlink">Visualizar</a></td>
              			{% endfor %}
             			{% if HUsm|length > 0%}
             				{%for enlace in enlaceHUm%}
@@ -182,7 +182,7 @@
 			    	{%if HU.descripcion|length > 0%}
   						<td> {{HU.descripcion}} </td>
   						{%for enlace in enlaceHUv%}
-                			<td></td><td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/0/" class="addlink">Visualizar</a></td>
+                			<td></td><td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/0/{{kanban}}" class="addlink">Visualizar</a></td>
              			{% endfor %}
              		{%endif%}
              		</tr>
@@ -211,7 +211,7 @@
 
   						{%for enlace in enlaceHUv%}
   						{%if HU.estado == 'ACT'%}
-                			<td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/1/" class="addlink">Visualizar</a></td>
+                			<td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/1/{{kanban}}/" class="addlink">Visualizar</a></td>
                 		{%endif%}  	
              			{% endfor %}
              			{% if HUsm|length > 0%}
@@ -220,6 +220,7 @@
 						           		{%for h in HUsm_horas_agotadas%}
   											{%if h == HU%}
   												<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Modificar</a></td>
+  												<td><a href="/reasignarhuFlujo/{{proyecto.id}}/{{HU.sprint.id}}/{{HU.id}}" class="changelink">Reasignar a flujo</a></td>
   											{%endif%}
   										{%endfor%}
   										{%for h in HUsm_no_desarrolladas%}
@@ -249,7 +250,7 @@
   						<td> <B>{{HU.acumulador_horas}} / {{HU.duracion}}</B> </td>
   						<td> <B>{{HU.prioridad}}</B> </td>
   						{%for enlace in enlaceHU_agregar%}
-  								<td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Ver historial de tareas</a></td>
+  								<td><a href="/visualizarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/{{kanban}}/" class="changelink">Ver historial de tareas</a></td>
   								{%if HU.acumulador_horas != HU.duracion%}
   									{%if HU.estado_en_actividad != 'FIN' and HU.estado_en_actividad != 'APR'%}
   										{%if HU == HU_cargar%}

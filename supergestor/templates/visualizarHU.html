@@ -22,9 +22,11 @@
     <!-- Header -->
     <div id="header">
         <div id="branding">
-        
-<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Visualizar HU Version Final {{version}}</a></h1>
-
+			{%if kanban == "0"%}        
+				<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Visualizar HU {{HU.descripcion}}</a></h1>
+			{%else%}
+				<h1 id="site-name"><a href="/verKanban/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprint.id}}/">Visualizar HU {{HU.descripcion}}</a></h1>
+			{%endif%}
         </div>      
         
     </div>

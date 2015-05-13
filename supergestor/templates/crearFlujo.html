@@ -70,7 +70,7 @@
                 <div>
                         <label class="required" for="id_nombre">Nombre:</label>
                         
-                            <input class="vTextField" id="id_nombre" maxlength="200" name="nombre" value="{{nombre_flujo}}" type="text" />
+                            <input class="vTextField" id="id_nombre" maxlength="200" name="nombre" value="{{nombre_flujo}}" type="text" pattern="[a-z]" required="required" autofocus="autofocus"/>
                 </div>
             
         </div>
@@ -81,7 +81,7 @@
 
                         <label class="required" for="id_permisos">Actividades:</label>
                         
-								<select multiple="multiple" id="can_be_selected" name="actividades_disponibles">
+								<select multiple="multiple" id="can_be_selected" name="actividades_disponibles" required>
                             		{%for actividad in actividades %}
 										<option value="{{actividad.id}}">{{actividad.nombre}}</option>
 									{%endfor%}

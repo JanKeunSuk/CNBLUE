@@ -32,7 +32,7 @@
     <div id="header">
         <div id="branding">
         
-<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Modificación de Sprint</a></h1>
+<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Reasignacion de hu a un nuevo flujo</a></h1>
 
         </div>
         
@@ -49,7 +49,7 @@
     <!-- END Header -->
     
 <div class="breadcrumbs">
-<a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}/">Pagina Principal</a>
+<a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Pagina Principal</a>
 <!-- 
 &rsaquo; <a href="/admin/gestor/">Gestor</a>
 &rsaquo; <a href="/admin/gestor/proyecto/">Proyectos</a>
@@ -57,11 +57,18 @@
  -->
 </div>
 
+    
+
+    
+        
+    
+
     <!-- Content -->
     <div id="content" class="colM">
         
-        <h1>Modificar Sprint</h1>
+        <h1>Reasignar HU no terminada o otro Flujo</h1>
         <div id="content-main">
+
 
   <ul class="object-tools">
     <!-- 
@@ -73,68 +80,49 @@
     
   </ul>
 
-<form enctype="multipart/form-data" method="post" id="sprint_form" novalidate>
+
+<form enctype="multipart/form-data" method="post" id="proyecto_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='lIrpccfDE0jXqIrun25AwLRBdIxGUDco' />
 {% csrf_token %}
 
-<div>
-
-<FORM ACTION="/modificarSprint/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{Sprint.id}}/" METHOD= GET >
-
-	<b><label class="required" for="id_fecha_inicio">Descripcion:</label></b>
-	<input type="text" size="15" maxlength="30" value="{{Sprint.descripcion}}" name="descripcion" required="required" autofocus="autofocus">
-	
-	<p><b><label class="required" for="id_fecha_inicio">Fecha de inicio:</label></b>
-	<input type="text" size="15" maxlength="30" value="{{fecha}}" name="fecha_inicio" required="required" autofocus="autofocus">
-	
-	<p><b><label class="required" for="id_fecha_inicio">Duracion:</label></b>
-	<input type="text" size="15" maxlength="30" value="{{Sprint.duracion}}" name="duracion" required="required" autofocus="autofocus">
-	
-	<p><b><label class="required" for="id_fecha_inicio">Estado:</label></b>
-	<select name="estado">
-		{%for e in estados%}
-			{%if Sprint.estado == e%}
-    			<option selected="selected" value="{{Sprint.estado}}">{{Sprint.estado}}</option>
-    		{%else%}
-    			<option value="{{e}}">{{e}}</option>
-    		{%endif%}
-    	{%endfor%}
-	</select>
-
-	<p><b><label class="required" for="id_fecha_inicio">Lista de HUs del Sprint:</label></b>
-	<label>Multiple Selection </label>&nbsp;</td>
-    <select name="hu" multiple="multiple" size=10>
-    	{%for h in Sprint.hu.all%}
-    			<option selected="selected" value="{{h.id}}">{{h.descripcion}}</option>
-        {%endfor%}
-        
-        {%for h in lista_HU_sin_asignar%}
-    			<option value="{{h.id}}">{{h.descripcion}}</option>
-        {%endfor%}
-    </select>
-    
-    <div class="form-row field-Flujos">
-
+    <div class="form-row field-permisos">
+            
+            
                 <div>
-
-                        <label class="required" for="id_usuarios">Flujos: Multiple seleccion</label>
-                        
-                            <select multiple = "multiple" id="id_usuarios" name="flujo">
-                            	{%for flujo in flujos %}
-									<option value="{{flujo.id}}"{%if flujo in Sprint.flujo.all%}selected="selected"{%endif%}> {{flujo}}</option>
-								{%endfor%}
-							</select>
-							<a href="/crearFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}">Agregar nuevo</a>
-                        <p class="help"> Presiona "Control" para seleccionar mas de una opcion.</p>
-                        
                     
+                    
+                        <label class="required" for="id_usuarios">Usuarios:</label>
+                        
+                            <select id="id_flujos" name="flujos">
+                            {%for flujo in flujos %}
+									<option value="{{flujo.id}}">{{flujo}}</option>
+							{%endfor%}
+						</select>
+                        <p class="help"> Presiona "Control" para seleccionar mas de una opcion.</p>
+                    
+                    
+                  <div></div>  <label class="required" for="id_duracion">Aumento de duracion:</label>
+                        
+                            <input class="vTextField" id="id_duracion" maxlength="500" name="duracionmas" type="text" /></div>
                 </div>
             
         </div>
+
+
+<div class="submit-row">
+<input type="submit" value="Guardar" class="modificarProyecto" name="_save" />
+<!-- 
     
-    <input type="submit" name="Submit" value="Guardar" tabindex="2" />
-</FORM> 
-            
+    <p class="deletelink-box"><a href="/admin/gestor/proyecto/2/delete/" class="deletelink">Eliminar</a></p>
+
+
+<input type="submit" value="Guardar y agregar otro" name="_addanother" />
+<input type="submit" value="Guardar y continuar editando" name="_continue" />
 </div>
+ -->
+
+
+
+
 
 <script type="text/javascript">
 (function($) {

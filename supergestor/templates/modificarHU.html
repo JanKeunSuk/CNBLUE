@@ -93,16 +93,16 @@ return (false);
 <div class="submit-row">
 <input type="submit" value="Guardar" class="modificarProyecto" name="_save" />
 {%elif is_Scrum == "0"%}
-<form action="/guardarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{HU.id}}/{{is_Scrum}}/" method="post"  required="required" autofocus="autofocus">
+<form action="/guardarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{HU.id}}/{{is_Scrum}}/" method="post">
 	{% csrf_token %}
 	<div>
      	<label class="required" for="id_nombre">Descripcion:</label>
-     	<input class="vTextField" id="id_nombre" maxlength="500" name="descripcion" value={{HU.descripcion}} type="text" />
+     	<input class="vTextField" id="id_nombre" maxlength="500" name="descripcion" value={{HU.descripcion}} type="text" required="required" autofocus="autofocus"/>
     </div>
     
     <div>
         <label class="required" for="id_permisos">Valor de Negocio:</label>
-        <select id="id_actividades" name="valor_negocio">
+        <select id="id_actividades" name="valor_negocio" required>
            {%for valor in valores %}
           		{%ifequal valor HU.valor_negocio%}
           			<option value="{{valor}}" selected="selected">{{valor}}</option>
@@ -143,7 +143,7 @@ return (false);
     
     <div>
         <br/><label class="required" for="id_horas_trabajadas">Agregar horas trabajadas:</label>
-        <input class="vTextField" id="id_nombre" maxlength="500" name="horas_agregar" type="text" required="required" autofocus="autofocus"/><br><br>
+        <input class="vTextField" id="id_nombre" maxlength="500" name="horas_agregar" type="text" pattern="[0-9]" required="required" autofocus="autofocus"/><br><br>
         <label class="required" for="id_descripcion">Descripcion:</label>
         <textarea name="descripcion_horas" rows="10" cols="40" required="required" autofocus="autofocus"></textarea>
          

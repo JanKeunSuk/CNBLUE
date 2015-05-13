@@ -59,7 +59,8 @@
         <h1>Agregar HU</h1>
         <div id="content-main">
 
-<form enctype="multipart/form-data" action="/guardarHU/{{proyectoid}}/" method="post" id="rol_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
+<form enctype="multipart/form-data" action="/guardarHU/{{proyectoid}}/" method="post" id="rol_form" novalidate>
+<input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
 {% csrf_token %}
 <div>
 
@@ -71,7 +72,7 @@
 
                         <label class="required" for="id_nombre">Descripcion:</label>
                         
-                            <input class="vTextField" id="id_nombre" maxlength="500" name="descripcion" type="text" />
+                            <input class="vTextField" id="id_nombre" maxlength="500" name="descripcion" type="text" required="required" autofocus="autofocus"/>
 
                 </div>
             
@@ -83,7 +84,7 @@
 
                         <label class="required" for="id_permisos">Valor de Negocio:</label>
                         
-                            <select id="id_actividades" name="valor_negocio">
+                            <select id="id_actividades" name="valor_negocio" required>
                             	{%for valor in valores %}
 									<option value="{{valor}}">{{valor}}</option>
 								{%endfor%}

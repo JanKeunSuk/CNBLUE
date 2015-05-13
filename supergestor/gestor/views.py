@@ -96,6 +96,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     enlaceSprintm=[]
     is_Scrum=0
     HUsa=0
+    kanban=0
     class enlacex:
         """
         La clase  permite enviar al html solo las url que se corresponden con los permisos contenidos
@@ -264,7 +265,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     if rolx.tiene_permiso('Can add sprint') or rolx.tiene_permiso('Can change sprint'):
         enlaceSprintv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
           
-    return render(request,'rol-flujo-para-scrum.html',{'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'existe':existe,'sprintsvk':sprintsvk,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HU_asignada':HU_asignada, 'HU_no_asignada':HU_no_asignada,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas})
+    return render(request,'rol-flujo-para-scrum.html',{'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'existe':existe,'sprintsvk':sprintsvk,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HU_asignada':HU_asignada, 'HU_no_asignada':HU_no_asignada,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas, 'kanban':kanban})
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
 def registrarUsuarioView(request):
@@ -995,7 +996,7 @@ class FormularioHU(forms.ModelForm):
         model= HU
         fields=['valor_tecnico','prioridad','duracion']
         
-def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
+def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum, kanban):
     """
     Vista que utiliza el formulario HU para desplegar los datos almacenados
     en la HU que se quiere visualizar.
@@ -1010,7 +1011,7 @@ def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
                                                      'descripcion': HU_disponible.descripcion,
                                                      'valor_negocio': HU_disponible.valor_negocio,
                                                      })      
-    return render_to_response('visualizarHU.html',{'formulario':formulario,'version':x,'usuario_asignado':usuario_asignado,'HU':HU_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'adjuntos':adjuntos,'is_Scrum':is_Scrum, 'sprint':sprint_al_que_pertenece, 'flujo':flujo_al_que_pertenece},
+    return render_to_response('visualizarHU.html',{'formulario':formulario,'version':x,'usuario_asignado':usuario_asignado,'HU':HU_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'adjuntos':adjuntos,'is_Scrum':is_Scrum, 'sprint':sprint_al_que_pertenece, 'flujo':flujo_al_que_pertenece, 'kanban':kanban},
                                   context_instance=RequestContext(request))
 
 def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
@@ -1625,6 +1626,7 @@ def verKanban(request,usuario_id,proyectoid,rolid,sprintid):
     sprintx=Sprint.objects.get(id=sprintid)
     flujos_hu={}
     flujos_actividades={}
+    kanban=1
     for f in Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)):
         for a in asignaHU_actividad_flujo.objects.all():
             if a.flujo_al_que_pertenece == f:
@@ -1645,7 +1647,7 @@ def verKanban(request,usuario_id,proyectoid,rolid,sprintid):
         if x == 0:
             flujos_aprobados.append(f)
                    
-    return render(request,"verKanban.html",{'flujos_aprobados':flujos_aprobados,'sprint':sprintx, 'flujos_hu':flujos_hu,'flujos_actividades':flujos_actividades,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    return render(request,"verKanban.html",{'flujos_aprobados':flujos_aprobados,'sprint':sprintx, 'flujos_hu':flujos_hu,'flujos_actividades':flujos_actividades,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'kanban':kanban})
 def aprobarHU(request, usuario_id, proyectoid, rolid, sprintid, HU_id_rec):
     """
     Vista que permite al Scrum aprobar una HU o volver a un estado anterior del flujo.
@@ -1697,3 +1699,51 @@ def cambiarVersionHU(request,usuario_id, proyectoid,rolid,hu_id):
     huv=HU_version.objects.filter(hu__id=hu_id) 
     huv=huv.exclude(version=hu_now.version)#tengo que excluir la version actual de la lista
     return render(request,"listarVersionesHU.html",{'huv':huv,'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid,'huid':hu_id})
+
+def reasignarhuFlujo(request,proyectoid,sprintid,huid):
+    """Vista que permita reasignar una hu con tiempo agotado a otro flujo y agregar horas a su duracion prevismente establecida para
+    porder continuar desarrollandola el tiempo que sea requerido"""
+    """En el template el usuario podra elegir de una lista de flujos, parecido a delegarHU la que prefiera para continuar la hu, ademas tendra un campo para aumentar
+    el numero de horas de duracion de la hu, ya que necesitaba mas, la misma empezara en la actividad de orden 1 del flujo nuevo"""
+    
+    
+    #Primero obtener la hu  y el sprint
+    hu_now=HU.objects.get(id=huid)
+    sprint_now=Sprint.objects.get(id=sprintid)
+    #y tambien el proyecto por las dudas
+    proyecto_now=proyecto.objects.get(id=proyectoid)
+    #y todos los flujos de este proyecto
+    if request.method=='GET' :
+    
+        
+        flujos=sprint_now.flujo.all().exclude(id=hu_now.flujo().id)
+        #Necesito mandarle tambien la duracion de la hu, pero eso puede ser accedido desde hu_now
+        return render(request,'reasignarhuflujo.html',{'hu':hu_now,'sprint':sprint_now,'proyecto':proyecto_now,'flujos':flujos})
+    else:
+        """Cuando sea post se tienen que hacer ciertos cambios con los datos"""
+        for a in request.POST.getlist('flujos'):
+        #uno solo es lo que hay en a
+            flujox=Flujo.objects.get(id=a)
+            jsonDec = json.decoder.JSONDecoder()
+            orden=jsonDec.decode(flujox.orden_actividades)
+            hu_now.actividad=Actividades.objects.get(id=orden[0])
+            hu_now.save()
+            
+            
+            
+            
+            """asig=asignaHU_actividad_flujo.objects.filter(flujo_al_que_pertenece=flujo)
+            if asig:
+                for f in asig:
+                    if f.lista_de_HU.filter(proyecto=proyectox):
+                        f.lista_de_HU.add(HU.objects.get(id=a))
+                        f.save()
+            else:
+                asignar=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=Flujo.objects.get(id=flujo_id))
+                asignar.lista_de_HU.add(HU.objects.get(id=a))
+                asignar.save()"""
+                
+        hu_now.duracion+= request.POST['duracionmas']
+        hu_now.save()
+        
+        return HttpResponse('Se ha cambiado de flujo correctamente')
