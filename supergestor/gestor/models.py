@@ -260,9 +260,13 @@ class HU(models.Model):
                 return d.usuario
         return None
     
-    
-    
-    
+    def ultima_Version(self):
+        hvs=HU_version.objects.filter(hu=self)
+        lastx=len(hvs.all())
+        if lastx>0:
+            return hvs.last().version
+        else:
+            return None
     
 class HU_version(models.Model):
     """En este modelo se van a guardar los datos correspondientes a las versiones de HU que va cambiando el owner 
@@ -274,13 +278,10 @@ class HU_version(models.Model):
     descripcion=models.CharField(max_length=200)
     valor_negocio = models.IntegerField(choices = VALORES10_CHOICES)
     
-    
-    
     def __unicode__(self):
         """Representacion unicode del objeto HU version que se mostrara para elegir la version conveninete"""
         return 'descripcion:'+self.descripcion + 'valor negocio: '+self.valor_negocio
-    
-    
+        
 class archivoadjunto(models.Model):
     nombre=models.CharField(max_length = 200)
     content=models.CharField(max_length = 200)
