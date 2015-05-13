@@ -59,4 +59,5 @@ urlpatterns = patterns('',
     url(r'^aprobarHU/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<sprintid>\d+)/(?P<HU_id_rec>\d+)/$', views.aprobarHU, name='aprobar'),
     url(r'^cambiarVersionHU/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<hu_id>\d+)/$', views.cambiarVersionHU, name='Cambiar version hu'),
     url(r'^elegirVersionHU/(?P<hv_id>\d+)/(?P<hu_id>\d+)/$',views.elegirVersionHU,name='elegir version hu'),
+    url(r'^reasignarhuFlujo/(?P<proyectoid>\d+)/(?P<sprintid>\d+)/(?P<huid>\d+)/$',views.reasignarhuFlujo, name='reasignar hu flujo'),
 )

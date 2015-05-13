@@ -1695,3 +1695,53 @@ def cambiarVersionHU(request,usuario_id, proyectoid,rolid,hu_id):
     huv=HU_version.objects.filter(hu__id=hu_id) 
     huv=huv.exclude(version=hu_now.version)#tengo que excluir la version actual de la lista
     return render(request,"listarVersionesHU.html",{'huv':huv,'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid,'huid':hu_id})
+
+
+
+def reasignarhuFlujo(request,proyectoid,sprintid,huid):
+    """Vista que permita reasignar una hu con tiempo agotado a otro flujo y agregar horas a su duracion prevismente establecida para
+    porder continuar desarrollandola el tiempo que sea requerido"""
+    """En el template el usuario podra elegir de una lista de flujos, parecido a delegarHU la que prefiera para continuar la hu, ademas tendra un campo para aumentar
+    el numero de horas de duracion de la hu, ya que necesitaba mas, la misma empezara en la actividad de orden 1 del flujo nuevo"""
+    
+    
+    #Primero obtener la hu  y el sprint
+    hu_now=HU.objects.get(id=huid)
+    sprint_now=Sprint.objects.get(id=sprintid)
+    #y tambien el proyecto por las dudas
+    proyecto_now=proyecto.objects.get(id=proyectoid)
+    #y todos los flujos de este proyecto
+    if request.method=='GET' :
+    
+        
+        flujos=sprint_now.flujo.all().exclude(id=hu_now.flujo().id)
+        #Necesito mandarle tambien la duracion de la hu, pero eso puede ser accedido desde hu_now
+        return render(request,'reasignarhuflujo.html',{'hu':hu_now,'sprint':sprint_now,'proyecto':proyecto_now,'flujos':flujos})
+    else:
+        """Cuando sea post se tienen que hacer ciertos cambios con los datos"""
+        for a in request.POST.getlist('flujos'):
+        #uno solo es lo que hay en a
+            flujox=Flujo.objects.get(id=a)
+            jsonDec = json.decoder.JSONDecoder()
+            orden=jsonDec.decode(flujox.orden_actividades)
+            hu_now.actividad=Actividades.objects.get(id=orden[0])
+            hu_now.save()
+            
+            
+            
+            
+            """asig=asignaHU_actividad_flujo.objects.filter(flujo_al_que_pertenece=flujo)
+            if asig:
+                for f in asig:
+                    if f.lista_de_HU.filter(proyecto=proyectox):
+                        f.lista_de_HU.add(HU.objects.get(id=a))
+                        f.save()
+            else:
+                asignar=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=Flujo.objects.get(id=flujo_id))
+                asignar.lista_de_HU.add(HU.objects.get(id=a))
+                asignar.save()"""
+                
+        hu_now.duracion+= request.POST['duracionmas']
+        hu_now.save()
+        
+        return HttpResponse('Se ha cambiado de flujo correctamente')

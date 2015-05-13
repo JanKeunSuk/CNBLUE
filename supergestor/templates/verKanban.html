@@ -201,6 +201,8 @@ table.encabezado tbody {
 											<td align="center"><font size="2" color = "#120A2A"><b>{{h}}</b></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 											<a href="/aprobarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprint.id}}/{{h.id}}/" class="addlink">Aprobar?</a>
 											</td></tr>
+										<tr style="border: 2px solid black;">	
+											<td><a href="/reasignarhuFlujo/{{proyectoid}}/{{sprint.id}}/{{h.id}}" class="changelink" >Resasignar a flujo</a></td></tr>
 										<tr style="border: 2px solid black;"><td align="center"><b>Horas hechas / Duracion:</b>
 										<br/>{{h.acumulador_horas}} / {{h.duracion}} 
 										<br/><a href="/visualizarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{h.id}}/1/" class="changelink">Ver historial de tareas</a></td></tr>
