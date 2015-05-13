@@ -23,7 +23,7 @@
     <div id="header">
         <div id="branding">
         
-<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Visualizar HU {{HU.descripcion}}</a></h1>
+<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Visualizar HU Version Final {{version}}</a></h1>
 
         </div>      
         
@@ -35,7 +35,7 @@
         
         <form id="formulario" action="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="GET">
         {% csrf_token %}
-        {%if is_Scrum == "1"%}
+        {%if is_Scrum == "1" or is_Scrum == "0"%}
         	<b>Descripcion: </b> {{HU.descripcion}}<br/><br/>
         	<b>Valor de negocio: </b> {{HU.valor_negocio}}<br/><br/>
         	<b>Valor Tecnico: </b> {{HU.valor_tecnico}}<br/><br/>

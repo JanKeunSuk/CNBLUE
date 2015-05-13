@@ -469,7 +469,7 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
             
             
             if(not h.descripcion==request.POST['descripcion'] and not h.valor_negocio==request.POST['valor_negocio']):
-                x=math.ceil(x)
+                x=math.floor(x)
                 x+=1.0
             else:
                 x+=0.1
@@ -1005,11 +1005,12 @@ def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
     flujo_al_que_pertenece=HU_disponible.flujo()
     sprint_al_que_pertenece=HU_disponible.sprint()
     adjuntos=archivoadjunto.objects.filter(hU=HU_disponible)
+    x=HU_disponible.ultima_Version()
     formulario =  FormularioHU(initial={
                                                      'descripcion': HU_disponible.descripcion,
                                                      'valor_negocio': HU_disponible.valor_negocio,
                                                      })      
-    return render_to_response('visualizarHU.html',{'formulario':formulario,'usuario_asignado':usuario_asignado,'HU':HU_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'adjuntos':adjuntos,'is_Scrum':is_Scrum, 'sprint':sprint_al_que_pertenece, 'flujo':flujo_al_que_pertenece},
+    return render_to_response('visualizarHU.html',{'formulario':formulario,'version':x,'usuario_asignado':usuario_asignado,'HU':HU_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'adjuntos':adjuntos,'is_Scrum':is_Scrum, 'sprint':sprint_al_que_pertenece, 'flujo':flujo_al_que_pertenece},
                                   context_instance=RequestContext(request))
 
 def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
@@ -1021,6 +1022,7 @@ def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
     estados=['ACT','CAN']
     VALORES10_CHOICES = range(1,10)
     h=HU.objects.get(id=HU_id_rec)
+    x=h.ultima_Version()
     if (is_Scrum == '1'):
         if request.method == 'POST':
             form = FormularioHU(request.POST)
@@ -1051,10 +1053,10 @@ def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
                                         'duracion':h.duracion,
                                         #'estado':h.estado
                                          })
-            ctx = {'valores':VALORES10_CHOICES,'form':form, 'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum}
+            ctx = {'version':x,'valores':VALORES10_CHOICES,'form':form, 'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum}
             return render_to_response('modificarHU.html', ctx ,context_instance=RequestContext(request))
     else:
-        return render(request,'modificarHU.html', {'estados':estados, 'valores':VALORES10_CHOICES,'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum})
+        return render(request,'modificarHU.html', {'version':x,'estados':estados, 'valores':VALORES10_CHOICES,'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum})
 
 def crearRol(request,usuario_id,proyectoid,rolid):
     """
