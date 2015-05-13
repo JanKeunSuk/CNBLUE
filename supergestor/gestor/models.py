@@ -331,7 +331,6 @@ class Sprint(models.Model):
     flujo=models.ManyToManyField(Flujo)
     
     def __unicode__(self):
-        """Representacion unicode del objeto sprint"""
         return self.descripcion
     
     def termino_Sprint(self):
