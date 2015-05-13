@@ -218,6 +218,7 @@
 						           		{%for h in HUsm_horas_agotadas%}
   											{%if h == HU%}
   												<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Modificar</a></td>
+  												<td><a href="/reasignarhuFlujo/{{proyecto.id}}/{{HU sprint xxxxxxx}}/{{HU.id}}" class="changelink">Reasignar a flujo</a></td>
   											{%endif%}
   										{%endfor%}
   										{%for h in HUsm_no_desarrolladas%}
