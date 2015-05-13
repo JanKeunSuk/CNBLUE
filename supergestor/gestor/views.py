@@ -536,7 +536,8 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                                 if s.estado == 'ACT' and acumulador_horas >0:
                                     s.estado='CON'
                                     s.save()
-                            evento_e="Se ha agregado '"+str(request.POST['horas_agregar'])+"' horas a la '"+str(h.descripcion)+"' con una descripcion '"+request.POST['descripcion_horas']+"' estando en la actividad '"+ str(h.actividad)+ "' con el estado '"+str(h.estado_en_actividad)+"' con fecha y hora: "+str(timezone.now())
+                            #evento_e="Se ha agregado "+str(request.POST['horas_agregar'])+" horas a la "+str(h.descripcion)+" con una descripcion "+request.POST['descripcion_horas']+" estando en la actividad "+ str(h.actividad)+ " con el estado "+str(h.estado_en_actividad)+" con fecha y hora: "+str(timezone.now())
+                            evento_e="Se ha agregado "+str(request.POST['horas_agregar'])+" horas a la "+str(h.descripcion)+" con una descripcion "+request.POST['descripcion_horas']+" estando en la actividad "+ str(h.actividad)+ " con el estado "+str(h.estado_en_actividad)+ "con fecha y hora: "+str(timezone.now())
                             usuario_e=MyUser.objects.get(id=usuario_id)
                             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=h.descripcion, evento=evento_e)
                             mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
