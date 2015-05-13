@@ -76,9 +76,9 @@
 
 <FORM ACTION="/modificarRol/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" METHOD= GET >
 <b><label class="required" for="id_fecha_inicio">Nombre del rol:</label></b>
-<input type="text" size="15" maxlength="30" value="{{rol.nombre_rol_id}}" name="nombre_rol_id"><br/>
+<input type="text" size="15" maxlength="30" value="{{rol.nombre_rol_id}}" name="nombre_rol_id" required="required" autofocus="autofocus"><br/>
 <b><label class="required" for="id_fecha_inicio">Descripcion:</label></b>
-<input type="text" size="15" maxlength="30" value="{{rol.descripcion}}" name="descripcion"><br/>
+<input type="text" size="15" maxlength="30" value="{{rol.descripcion}}" name="descripcion" required="required" autofocus="autofocus"><br/>
 <b><label class="required" for="id_fecha_inicio">Estado:</label></b>
 <select name="estado">
 		{%for e in estados%}

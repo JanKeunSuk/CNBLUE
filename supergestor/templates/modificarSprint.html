@@ -81,13 +81,13 @@
 <FORM ACTION="/modificarSprint/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{Sprint.id}}/" METHOD= GET >
 
 	<b><label class="required" for="id_fecha_inicio">Descripcion:</label></b>
-	<input type="text" size="15" maxlength="30" value="{{Sprint.descripcion}}" name="descripcion">
+	<input type="text" size="15" maxlength="30" value="{{Sprint.descripcion}}" name="descripcion" required="required" autofocus="autofocus">
 	
 	<p><b><label class="required" for="id_fecha_inicio">Fecha de inicio:</label></b>
-	<input type="text" size="15" maxlength="30" value="{{fecha}}" name="fecha_inicio">
+	<input type="text" size="15" maxlength="30" value="{{fecha}}" name="fecha_inicio" required="required" autofocus="autofocus">
 	
 	<p><b><label class="required" for="id_fecha_inicio">Duracion:</label></b>
-	<input type="text" size="15" maxlength="30" value="{{Sprint.duracion}}" name="duracion">
+	<input type="text" size="15" maxlength="30" value="{{Sprint.duracion}}" name="duracion" required="required" autofocus="autofocus">
 	
 	<p><b><label class="required" for="id_fecha_inicio">Estado:</label></b>
 	<select name="estado">
