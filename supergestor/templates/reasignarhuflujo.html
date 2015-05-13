@@ -31,8 +31,11 @@
     <!-- Header -->
     <div id="header">
         <div id="branding">
-        
-<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Reasignacion de hu a un nuevo flujo</a></h1>
+        	{%if kanban == "0"%}        
+				<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Reasignacion de hu a un nuevo flujo</a></h1>
+			{%else%}
+				<h1 id="site-name"><a href="/verKanban/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprint.id}}/">Reasignacion de hu a un nuevo flujo</a></h1>
+			{%endif%}
 
         </div>
         
