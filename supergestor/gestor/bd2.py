@@ -278,7 +278,7 @@ asignacion.objects.create(usuario=delsy,rol=rol_equipo,proyecto=p3)
 
 """Creacion de actividades para el flujo 1"""
 act1=Actividades.objects.create(nombre='Analisis',descripcion='analisis')
-act2=Actividades.objects.create(nombre='Diseño',descripcion='diseño')
+act2=Actividades.objects.create(nombre='Disenho',descripcion='diseño')
 act3=Actividades.objects.create(nombre='Despliegue',descripcion='Despliegue')
 act4=Actividades.objects.create(nombre='Desarrollo',descripcion='desarrollo')
 act5=Actividades.objects.create(nombre='Prueba',descripcion='prueba')
