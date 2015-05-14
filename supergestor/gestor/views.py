@@ -1495,7 +1495,7 @@ def descargar(request, usuario_id, proyectoid, rolid, HU_id_rec,archivo_id):
     buffer.close()
     response.write(file)
     return response
-    
+
 def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     """
     El sprint backlog es una lista de las tareas identificadas por el equipo de Scrum
@@ -1524,27 +1524,30 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
         lista.append(dias)
 
     lista_hu_horas={}
-    lista_horas=[]
-    cont2=0        
-        
+    lista_horas=[]   
+    global fecha_x
+    fecha_x=0    
     for hu in hux:
         cont2=0
         lista_horas=[]
         
         for h in hu.hu_descripcion.all():
-            x=str(h.fecha)
-            if h.id == 1:
-                fecha_x=x[:10]
+                x=str(h.fecha)
+                if h.estado == 'APR':
+                    fecha_x=x[:10]
+                
+                if h.id == 1:
+                    fecha_x=x[:10]
+                    cont2=cont2+h.horas_trabajadas
+                elif x[:10] == fecha_x:
+                    cont2=cont2+h.horas_trabajadas
+                else:
+                    fecha_x=x[:10]
+                    if cont2 != 0:
+                        lista_horas.append(cont2)
+                    cont2=0
                 cont2=cont2+h.horas_trabajadas
-            elif x[:10] == fecha_x:
-                cont2=cont2+h.horas_trabajadas
-            else:
-                fecha_x=x[:10]
-                if cont2 != 0:
-                    lista_horas.append(cont2)
-                cont2=0
-                cont2=cont2+h.horas_trabajadas
-            
+                
         if cont2 != 0:
             lista_horas.append(cont2)
         lista_hu_horas[hu]=lista_horas
