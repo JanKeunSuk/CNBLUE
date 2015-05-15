@@ -478,11 +478,10 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
       
 
 def elegirVersionHU(request,hv_id,hu_id):
-    """
-    Esta vista responde al boton elegir al elegir una version anterior de hu, ya que si vuelvo a hacer un simple modificar
+    """Esta vista responde al boton elegir al elegir una version anterior de hu, ya que si vuelvo a hacer un simple modificar
     pordria volver a crear una version que ya existe, por lo tanto esta vista modifica con datos preexistenes sin
-    crear una nueva version
-    Primero obtengo la huversion saco los datos los meto en la hu que tambien tengo que obtener y le doy hu.save()
+    crear una nueva version"""
+    """primero obtengo la huversion saco los datos los meto en la hu que tambien tengo que obtener y le doy hu.save()
         :param func: request
         :param args: hv_id, hu_id 
         :returns: 'Se ha cambiado de version correctamente'
@@ -1649,8 +1648,7 @@ def adminAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec):
         return HttpResponseRedirect('/adminAdjunto/'+usuario_id+'/'+proyectoid+'/'+rolid+'/'+HU_id_rec+'/')
     
 def descargar(request, usuario_id, proyectoid, rolid, HU_id_rec,archivo_id):
-    """
-     Descarga el archivo adjunto seleccionado 
+    """ Descarga el archivo adjunto seleccionado 
         :param func: request
         :param args: usuario_id, proyectoid, rolid, HU_id_rec,archivo_id
         :returns: response = HttpResponse(content_type=archivox.content)
@@ -1664,65 +1662,6 @@ def descargar(request, usuario_id, proyectoid, rolid, HU_id_rec,archivo_id):
     buffer.close()
     response.write(file)
     return response
-
-
-def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
-    """Genera los datos para mostrar en el BurndownChart que son las horas restantes del spint que quedan por hacer luego del progreso 
-    total que se haya obtenido en un dia dado"""
-    sprint= Sprint.objects.get(estado='CON')#esto es un quiryset....que sea un elemento nomas!!!!!!!!
-    #sprint ahora tiene el Sprint que se va mostrar en el burndown de este proyecto...el actual nose si hay que mostrar de todos?
-    hus=HU.objects.all().filter(proyecto__id=proyectoid)
-    #tengo todas las hu de este proyecto ahora, necesito solo las de este sprint
-    hux=[]
-    for u in hus:
-        if u.sprint()==sprint:
-            hux.append(u)
-            
-    #ahora ya tengo todas las hu del sprint en hux
-    #tengo que sumar sus duraciones para saber el maximo del backlog
-    sumx=0
-    for ux in hux:
-        sumx+=ux.duracion
-    #ahora tengo que trabajar con el acumulador de horas diario que seria una lista por dia de todas las hu del dia
-    #parecido al de abajo pero en vez de lista_hu_horas seria lista fecha horas
-    #supongo que antes deberia saber cuantas fechas tener en cuenta...no estoy seguro  
-
-        
-    #supongo que conviene mas tener un diccionario de fechas con valores de total de horas de hus del dia asiciados a esas fechas
-    #una hu aporta horas a varios dias
-    #luego generar otro diccionario pero de horas restantes a partir del diccionario de horas progresadas
-    
-    
-    lista_fechas_horas={}
-    lista_fechas_horas[str(sprint.fecha_inicio)[:10]]=0 #sum va a ser para el segundo diccionario, el primer diccionario
-                                                        #solo acumula horas, el segundo es el que se manda al template
-    #el primer elemento del diccionario va a ser la duracion total de todas las hu osea la primera barra del burndown
-    for hu in hux:
-        for d in hu.hu_descripcion.all():
-            f=str(d.fecha)[:10]
-            if f in lista_fechas_horas:
-                lista_fechas_horas[f]+=d.horas_trabajadas
-            else:
-                lista_fechas_horas[f]=d.horas_trabajadas
-                pass
-    
-    # Un diccionario puede tener elementos repetidos(keys), pero la programacion anterior va a impedirlo 
-    #bueno ahora ya tengo el diccionario con el total de horas por dia cargadas me convendria disponer de la longitud del diccionario
-    cant_dias=len(lista_fechas_horas)
-    # ahora voy a crear y cargar el diccionario que se va mandar al template
-    remaining_dic={}
-    
-    tot_restante=sumx
-    #tot_restante es la que va disminuir, sum quiero mantener por las dudas
-    
-    for k, v in lista_fechas_horas.iteritems():
-        remaining_dic[k]=tot_restante-v
-        tot_restante-=v
-    #remaining_dic ahora tiene las horas restante por fecha basado en los datos de las horas progresadaspor fecha, sum deberia disminuir
-    
-    #ahora si puedo mandar remaining_dic y todo lo que me parezca necesario por ahora
-    
-    return render(request,'burndown.html',{'sprint':sprint,'restantes':remaining_dic,'suma_hu':sumx,'cant_dias':cant_dias,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
 
 def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     """
@@ -1790,8 +1729,7 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     return render(request,'visualizarSprintBacklog.html',{'len':longitud_para_tabla,'sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'HUx':hux, 'dias':lista, 'lista':lista_hu_horas})
 
 def asignarHU_Usuario_FLujo(request,usuario_id,proyectoid,rolid,sprintid):
-    """ 
-    Vista de asignacion de una HU a un usuario y en un flujo
+    """ Vista de asignacion de una HU a un usuario y en un flujo
         :param func: request
         :param args: usuario_id,proyectoid,rolid,sprintid
         :returns: asignarHU_Usuario_Flujo.html 
@@ -1828,8 +1766,7 @@ def asignarHU_Usuario_FLujo(request,usuario_id,proyectoid,rolid,sprintid):
     return render(request,"asignarHU_Usuario_Flujo.html",{'flujos_aprobados':flujos_aprobados,'hu_en_flujo':hu_en_flujo,'flujos':Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)),'HU_no_asignada':HU_no_asignada,'HU_asignada':HU_asignada,'hus':hus,'sprint':sprintx,'proyecto':proyectox,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
 
 def asignarHU_a_FLujo(request,usuario_id,proyectoid,rolid,sprintid,flujo_id):
-    """
-    Vista donde se asignan las HU a un flujo dentro del spring y a un usuario del proyecto
+    """Vista donde se asignan las HU a un flujo dentro del spring y a un usuario del proyecto
         :param func: request
         :param args: usuario_id,proyectoid,rolid,sprintid,flujo_id
         :returns: asignarHUFlujo.html
@@ -1866,8 +1803,7 @@ def asignarHU_a_FLujo(request,usuario_id,proyectoid,rolid,sprintid,flujo_id):
         return render(request,"asignarHUFlujo.html",{'flujo':flujo,'hus':hus,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'sprintid':sprintid,'flujo_id':flujo_id})
 
 def verKanban(request,usuario_id,proyectoid,rolid,sprintid):
-    """
-    Vista que permite acceder al template de visualizacion de un flujo graficamente en el kanban
+    """Vista que permite acceder al template de visualizacion de un flujo graficamente en el kanban
         :param func: request
         :param args: usuario_id,proyectoid,rolid,sprintid
         :returns: verKanban.html
@@ -1960,8 +1896,7 @@ def cambiarVersionHU(request,usuario_id, proyectoid,rolid,hu_id):
     return render(request,"listarVersionesHU.html",{'huv':huv,'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid,'huid':hu_id})
 
 def reasignarhuFlujo(request,usuario_id, proyectoid,rolid,sprintid,huid,kanban):
-    """
-    Vista que permita reasignar una hu con tiempo agotado a otro flujo y agregar horas a su duracion prevismente establecida para
+    """Vista que permita reasignar una hu con tiempo agotado a otro flujo y agregar horas a su duracion prevismente establecida para
     porder continuar desarrollandola el tiempo que sea requerido
     En el template el usuario podra elegir de una lista de flujos, parecido a delegarHU la que prefiera para continuar la hu, ademas tendra un campo para aumentar
     el numero de horas de duracion de la hu, ya que necesitaba mas, la misma empezara en la actividad de orden 1 del flujo nuevo
