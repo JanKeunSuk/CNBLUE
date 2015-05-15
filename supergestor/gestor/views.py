@@ -26,7 +26,10 @@ from io import BytesIO
 def holaView(request):
     """Vista que redirige a la pagina principal de administracion tanto a usuarios como a
     superusuarios, los superusuarios son redirigidos a la aplicacion admin mientras que los 
-    usuarios obtienen una respuesta con el template hola.html"""
+    usuarios obtienen una respuesta con el template hola.html
+        :param func: request
+        :returns: 'hola.html'
+    """
     if request.user.is_staff:
         return HttpResponseRedirect(reverse('admin:index'))
     else:
@@ -73,6 +76,9 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     """
     Vista especial para el usuario scrum en la que le listan los proyectos y los enlaces para la creacion de roles y flujos
     Vista para los usuario comunes, en la que solo se listan los proyectos sin enlaces, ya que no tiene permiso para ello.
+        :param func: request
+        :param args: usuario_id,proyectoid,rol_id
+        :returns: 'rol-flujo-para-scrum.html'
     """
     proyectox=proyecto.objects.get(id=proyectoid)
     usuario=MyUser.objects.get(id=usuario_id)
@@ -271,13 +277,19 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
 def registrarUsuarioView(request):
     """Vista que se obtiene del regex /registrar solicitado al precionar el boton
     registrar en el login, devuelve un formulario html para crear un nuevo usuario
-    con un correo existente"""
+    con un correo existente
+        :param func: request
+        :returns: 'crearusuario.html'
+    """
     if request.method == 'GET':
         return render(request, 'crearusuario.html')
 
 def guardarUsuarioView(request):
     """Vista de guardado de nuevo usuario relacionado con un correo autorizado en la tabla Permitidos
-    que se utiliza en la interfaz devuelta por /registrar """
+    que se utiliza en la interfaz devuelta por /registrar 
+        :param func: request
+        :returns: '/login/'
+    """
     try:
     
         usuario = MyUser.objects.create_user(username=request.POST['username'], password=request.POST['password1'],email=request.POST['email'])
@@ -297,6 +309,11 @@ def modificarCuenta(request, usuario_id):
     Vista que permite a los usuarios activos modificar sus datos personales como
     el su nombre, apellido y direccion.
     El correo y su nombre identificador del usuario solo lo podra modificar el admin.
+        :param func: request
+        :param args: usuario_id 
+        :returns: 'modificarUsuario.html'
+        :rtype: user_name, last_name, direccion
+    
     """
     usuario = MyUser.objects.get(id=usuario_id)
     if request.method == 'POST':
@@ -311,7 +328,12 @@ def modificarCuenta(request, usuario_id):
     
 def guardarRolView(request,usuario_id):
     """Vista de guardado de un nuevo rol en la base de datos
-    que se utiliza en la interfaz devuelta por /crearRol/ """
+    que se utiliza en la interfaz devuelta por /crearRol/ 
+        :param func: request
+        :param args: usuario_id 
+        :returns: 'El rol se ha creado'
+        :rtype: nombre_rol_id, descripcion, usuario_creador, estado
+    """
     try:
         usuario_e=MyUser.objects.get(id=usuario_id)
         rol_a_crear = rol.objects.create(nombre_rol_id=request.POST['nombre_rol_id'], descripcion=request.POST['descripcion'],usuario_creador=usuario_e, estado='ACT')
@@ -332,7 +354,12 @@ def guardarRolView(request,usuario_id):
     
 def guardarFlujoView(request, usuario_id, proyectoid, rolid):
     """Vista de guardado de un nuevo flujo en la base de datos
-    que se utiliza en la interfaz devuelta por /crearFlujo/ """
+    que se utiliza en la interfaz devuelta por /crearFlujo/ 
+        :param func: request
+        :param args: usuario_id, proyectoid, rolid 
+        :returns: 'crearFlujo.html'
+        :rtype: nombre, estado
+    """
     actividades_disponibles=Actividades.objects.all()
     actividades_asignadas=[]
     guardar=0
@@ -375,7 +402,12 @@ def guardarFlujoView(request, usuario_id, proyectoid, rolid):
     
 def guardarHUView(request,proyectoid):
     """Vista de guardado de una nueva HU en la base de datos creada por el Product Owner
-    que se utiliza en la interfaz devuelta por /crearHU/"""
+    que se utiliza en la interfaz devuelta por /crearHU/
+        :param func: request
+        :param args: proyectoid 
+        :returns: 'La HU se ha creado y relacionado con el proyecto'
+        :rtype: descripcion, valor_negocio
+    """
     try:
         proyectox = proyecto.objects.get(id=proyectoid)
         HU_a_crear = HU.objects.create(descripcion=request.POST['descripcion'],estado="ACT",valor_negocio=request.POST['valor_negocio'], valor_tecnico=0, prioridad=0, duracion=0, acumulador_horas=0, estado_en_actividad='PEN',proyecto=proyectox,valido=False,version=1.0)
@@ -398,7 +430,13 @@ def guardarHUView(request,proyectoid):
 
 def guardarSprintView(request, usuario_id, proyectoid, rolid):
     """Vista de guardado de un nuevo Sprint en la Base de datos
-    que se utiliza en la interfaz devuelta por /crearSprint/"""
+    que se utiliza en la interfaz devuelta por /crearSprint/
+        :param func: request
+        :param args: usuario_id, proyectoid, rolid 
+        :returns: 'El Sprint se ha creado'
+        :rtype: descripcion, fecha_inicio, duracion
+    
+    """
     guardar=0
     for g in request.POST.getlist('_save'):
         if g == 'Guardar':
@@ -440,10 +478,15 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
       
 
 def elegirVersionHU(request,hv_id,hu_id):
-    """Esta vista responde al boton elegir al elegir una version anterior de hu, ya que si vuelvo a hacer un simple modificar
+    """
+    Esta vista responde al boton elegir al elegir una version anterior de hu, ya que si vuelvo a hacer un simple modificar
     pordria volver a crear una version que ya existe, por lo tanto esta vista modifica con datos preexistenes sin
-    crear una nueva version"""
-    """primero obtengo la huversion saco los datos los meto en la hu que tambien tengo que obtener y le doy hu.save()"""
+    crear una nueva version
+    Primero obtengo la huversion saco los datos los meto en la hu que tambien tengo que obtener y le doy hu.save()
+        :param func: request
+        :param args: hv_id, hu_id 
+        :returns: 'Se ha cambiado de version correctamente'
+    """
     huv=HU_version.objects.get(id=hv_id)
     hu=HU.objects.get(id=hu_id)
     
@@ -457,8 +500,19 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
     """Vista de guardado de la modificacion de una HU existente modificada por el Product Owner
     que se utiliza en la interfaz devuelta por /modificarHU/ 
     0 corresponde a la modificaci[on realizada por el Product Owner
+        :param func: request
+        :param args: usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum 
+        :returns: 'La descripcion y valor de negocio de la HU a sido modificado exitosamente'
+        :rtype: descripcion, valor_negocio, estado 
     1 coresponde a la modificaci[on realizada por el Scrum
-    2 corresponde a la modificaci[on realizada por el Equipo"""
+        :param func: request
+        :param args: usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum 
+    2 corresponde a la modificaci[on realizada por el Equipo
+        :param func: request
+        :param args: usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum 
+        :returns: 'modificarHU.html'
+        :rtype: agregar_horas, descripcion_horas    
+    """
           
     h=HU.objects.get(id=HU_id_rec)
     if request.method == 'POST':
@@ -639,6 +693,9 @@ def contactomail(request):
     Vista que obtiene los datos del usuario como su nombre identificador de usuario y correo,
     comprueba que el correo le pertenezca y envia la direccion correspondiente al seteo de su contrasenha
     a su correo. En caso de que su correo no coincida con el que le corresponda, notifica al usuario.
+        :param func: request 
+        :returns: '/login/'
+        :rtype: usuario, correo    
     """
     if request.method == 'POST':
         formulario = FormularioContacto(request.POST)
@@ -665,6 +722,10 @@ def seteoPassword(request, usuario_id):
     Vista que se despliega al estar en el direccionamiento de configuracion de contrasenha,
     comprueba que ambas contrasenhas intruducidas por el usuario coincidan, en caso de que coincidan
     se almacena la nueva contrasenha en la Base de Datos y en caso de que no coincidan se le notifica al usuario.
+        :param func: request
+        :param args: usuario_id
+        :returns: 'seteoPassword.html'
+        :rtype: password_nueva1, password_nueva2
     """
     if request.method == 'POST':
         formulario = FormularioSeteoContrasenha(request.POST)
@@ -698,7 +759,10 @@ class FormularioRolProyecto(forms.ModelForm):
 def visualizarRolProyectoView(request,usuario_id,proyectoid, rolid, rol_id_rec):
     """
     Vista que utiliza el formulario RolProyecto para desplegar los datos almacenados
-    en el Rol que se quiere visualizar.
+    en el Rol que se quiere visualizar
+        :param func: request
+        :param args: usuario_id,proyectoid, rolid, rol_id_rec
+        :returns: 'visualizarRol.html'
     """
     rolproyecto= rol.objects.get(id=rol_id_rec)
     formulario =  FormularioRolProyecto(initial={
@@ -714,6 +778,10 @@ def modificarRol(request, usuario_id, proyectoid, rolid, rol_id_rec):
     """
     Vista que utiliza el formulario RolProyecto para desplegar los datos editables
     del Rol que se quiere modificar.
+        :param func: request
+        :param args: usuario_id, proyectoid, rolid, rol_id_rec
+        :returns: modificarRol.html
+        :rtype: nombre_rol_id, descripcion, permisos, estado
     """
     f=rol.objects.get(id=rol_id_rec)
     u=MyUser.objects.get(id=usuario_id)
@@ -791,6 +859,9 @@ def visualizarFlujoProyectoView(request,usuario_id, proyectoid, rolid, flujo_id_
     """
     Vista que utiliza el formulario FlujoProyecto para desplegar los datos almacenados
     en el Flujo que se quiere visualizar.
+        :param func: request
+        :param args: usuario_id, proyectoid, rolid, flujo_id_rec 
+        :returns: visualizarFlujo.html
     """
     flujo_disponible= Flujo.objects.get(id=flujo_id_rec)
     jsonDec = json.decoder.JSONDecoder()
@@ -807,6 +878,10 @@ def modificarFlujo(request, usuario_id, proyectoid, rolid, flujo_id_rec):
     """
     Vista que utiliza el formulario FlujoProyecto para desplegar los datos editables
     del Flujo que se quiere modificar.
+        :param func: request
+        :param args: usuario_id, proyectoid, rolid, flujo_id_rec
+        :returns: modificarFlujo.html
+        :rtype: nombre, estado
     """
     actividades_disponibles=Actividades.objects.all()
     actividades_asignadas=[]
@@ -916,6 +991,10 @@ def visualizarSprintProyectoView(request,usuario_id, proyectoid, rolid, Sprint_i
     """
     Vista que utiliza el formulario SprintProyecto para desplegar los datos almacenados
     en el Sprint que se quiere visualizar.
+        :param func: request
+        :param args: usuario_id, proyectoid, rolid, Sprint_id_rec
+        :returns: visualizarSprint.html
+    
     """
     Sprint_disponible= Sprint.objects.get(id=Sprint_id_rec)
     formulario =  FormularioSprintProyecto(initial={
@@ -933,6 +1012,11 @@ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
     del Sprint que se quiere modificar.
     La lista de HU asignables se dividen en dos sublistas: las ya asignadas a algun sprint y las que aun
     no han sido asignadas.
+        :param func: request
+        :param args: usuario_id, proyectoid, rolid, Sprint_id_rec
+        :returns: 'modificarSprint.html'
+        :rtype: descripcion, estado, fecha_inicio, duracion, hu, flujo
+
     """
     estados=['ACT','CAN','CON']
     s=Sprint.objects.get(id=Sprint_id_rec)
@@ -1003,6 +1087,9 @@ def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum, 
     """
     Vista que utiliza el formulario HU para desplegar los datos almacenados
     en la HU que se quiere visualizar.
+        :param func: request
+        :param args: usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum, kanban
+        :returns: 'visualizarHU.html'
     """
     HU_disponible= HU.objects.get(id=HU_id_rec)
     usuario_asignado = HU_disponible.saber_usuario() 
@@ -1022,6 +1109,11 @@ def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
     Vista que utiliza el formulario HU para desplegar los datos editables
     de la HU en tres niveles de modificacion.
     Esta vista corresponde a la modificacion del nivel 1, es decir, a nivell Scrum Master
+    
+        :param func: request
+        :param args: usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum
+        :returns: modificarHU.html
+        :rtype: valor_tecnico, prioridad, duracion
     """
     estados=['ACT','CAN']
     VALORES10_CHOICES = range(1,10)
@@ -1066,6 +1158,9 @@ def crearRol(request,usuario_id,proyectoid,rolid):
     """
     Vista que realiza la creacion de roles de proyecto desde la vista del Scrum, excluyendo aquellos permisos que no corresponde
     ser vistos por el usuario Scrum.
+        :param func: request
+        :param args: usuario_id,proyectoid,rolid
+        :returns: crearRol.html
     """
     if request.method == 'GET':
         permisos=Permission.objects.all().exclude(name='Can add group').exclude(name='Can change group') 
@@ -1087,6 +1182,9 @@ def crearRol(request,usuario_id,proyectoid,rolid):
 def crearFlujo(request,usuario_id,proyectoid,rolid):
     """
     Vista que realiza la creacion de flujos de proyecto desde la vista del Scrum.
+        :param func: request
+        :param args: usuario_id,proyectoid,rolid
+        :returns: crearFlujo.html
     """
     actividades_asignadas=[]
     actividades_disponibles=Actividades.objects.all()
@@ -1096,6 +1194,9 @@ def crearFlujo(request,usuario_id,proyectoid,rolid):
 def crearSprint(request,usuario_id,proyectoid,rolid):
     """
     Vista que realiza la creacion de flujos de proyecto desde la vista del Scrum.
+        :param func: request
+        :param args: usuario_id,proyectoid,rolid
+        :returns: crearSprint.html
     """
     proyectox = proyecto.objects.get(id=proyectoid)
     HUs = HU.objects.filter(proyecto=proyectox)
@@ -1110,6 +1211,10 @@ def crearSprint(request,usuario_id,proyectoid,rolid):
 def crearHU(request,usuario_id,proyectoid,rolid):
     """
     Vista que realiza la creacion de flujos de proyecto desde la vista del Scrum.
+        :param func: request
+        :param args: usuario_id,proyectoid,rolid
+        :returns: crearHU.html
+    
     """
     VALORES10_CHOICES = range(1,10)
     if request.method == 'GET':
@@ -1127,6 +1232,10 @@ def modificarProyecto(request, usuario_id, proyecto_id_rec):
     """
     Vista que utiliza el formulario proyectoFrom para desplegar los datos editables
     del Proyecto que se quiere modificar.
+        :param func: request
+        :param args: usuario_id, proyecto_id_rec
+        :returns: modificarProyecto.html
+        :rtype: nombre_corto, nombre_largo, descripcion, estado, fecha_inicio, fecha_fin
     """
     p=proyecto.objects.get(id=proyecto_id_rec)
     if request.method == 'POST':
@@ -1170,6 +1279,9 @@ def visualizarProyectoView(request,usuario_id, proyecto_id_rec):
     """
     Vista que utiliza el formulario proyectoFrom para desplegar los datos almacenados
     en el Flujo que se quiere visualizar.
+        :param func: request
+        :param args: usuario_id, proyecto_id_rec
+        :returns: visualizarProyecto.html
     """
     proyecto_enc= proyecto.objects.get(id=proyecto_id_rec)
     return render_to_response('visualizarProyecto.html',{'proyecto':proyecto_enc,'usuarioid':usuario_id},
@@ -1179,6 +1291,10 @@ def crearActividadView(request,usuario_id,proyectoid):
     """
     Vista que se obtiene del regex al presionar el boton Crear Actividad dentro del formulario
     de creacion o modificacion de Flujos, devolviendo un formulario html para crear una nueva actividad
+        :param func: request
+        :param args: usuario_id,proyectoid
+        :returns: crearActividad.html 
+        :rtype: nombre, descripcion
     """  
     if request.method == 'GET':
         form = formularioActividad()
@@ -1203,6 +1319,9 @@ def crearActividadAdminView(request):
     """
     Vista que se obtiene del regex al presionar el boton Crear Actividad dentro del formulario
     de creacion o modificacion de Flujos del admin, devolviendo un formulario html para crear una nueva actividad
+        :param func: request
+        :returns: crearActividadAdmin.html
+        :rtype: nombre, descripcion
     """  
     if request.method == 'GET':
         form = formularioActividad()
@@ -1222,6 +1341,8 @@ def seleccionarFlujoModificarAdmin(request):
     """
     Al presionar el boton Modificar Actividad en el admin, esta vista despliega una lista de todas las actividades 
     seleccionables por el usuario para su modificacion.
+        :param func: request
+        :returns: seleccionarActividadAdmin.html
     """
     return render(request,'seleccionarActividadAdmin.html',{'actividades':Actividades.objects.all(),})
 
@@ -1229,6 +1350,10 @@ def modificarActividadAdmin(request,actividad_id_rec):
     """
     Vista que utiliza el formulario formularioActividad para desplegar los datos editables en el admin
     de la Actividad que se quiere modificar.
+        :param func: request
+        :param args: actividad_id_rec
+        :returns: modificarActividadAdmin.html
+        :rtype: nombre, descripcion, 
     """
     p=Actividades.objects.get(id=actividad_id_rec)
     if request.method == 'POST':
@@ -1261,6 +1386,8 @@ def seleccionarFlujoModificar(request,usuario_id,proyectoid):
     """
     Al presionar el boton Modificar Actividad, esta vista despliega una lista de todas las actividades seleccionables por el usuario
     para su modificacion.
+        :param func: request 
+        :returns: seleccionarActividad.html
     """
     return render(request,'seleccionarActividad.html',{'actividades':Actividades.objects.all(),'usuarioid':usuario_id,'proyectoid':proyectoid})
 
@@ -1268,6 +1395,10 @@ def modificarActividad(request,usuario_id,proyectoid,actividad_id_rec):
     """
     Vista que utiliza el formulario formularioActividad para desplegar los datos editables
     de la Actividad que se quiere modificar.
+        :param func: request
+        :param args: usuario_id,proyectoid,actividad_id_rec
+        :returns: modificarActividad.html
+        :rtype: nombre, descripcion
     """
     p=Actividades.objects.get(id=actividad_id_rec)
     if request.method == 'POST':
@@ -1299,6 +1430,10 @@ def asignarRol(request,usuario_id, proyectoid,rolid, rol_id_rec):
     """
     Vista que permite asignar un rol a un usuario dentro de la vista del Scrum, valiendose de la URL para obtener
     los id's del rol , proyecto y el usuario creador.
+        :param func: request
+        :param args: usuario_id, proyectoid,rolid, rol_id_rec
+        :returns: asignaRolProyecto.html
+        :rtype: usuarios
     """
     proyectox=proyecto.objects.get(id=proyectoid)
     rolx = rol.objects.get(id=rol_id_rec)
@@ -1338,7 +1473,12 @@ def asignarRol(request,usuario_id, proyectoid,rolid, rol_id_rec):
     
 def listarEquipo(request,proyecto_id_rec,usuario_id):
     """Esta vista debe obtener los datos de los usuarios que han sido asignados a un rol en el proyecto,el parametro
-    usuario_id se necesita simplemente para el render para poder retornar a rol-flujo-para-scrum"""
+    usuario_id se necesita simplemente para el render para poder retornar a rol-flujo-para-scrum
+        :param func: request
+        :param args: proyecto_id_rec,usuario_id
+        :returns: formarEquipo.html 
+    """
+    
     lista={}
     proyectox=proyecto.objects.get(id=proyecto_id_rec)
     for a in asignacion.objects.all():
@@ -1350,7 +1490,12 @@ def listarEquipo(request,proyecto_id_rec,usuario_id):
 
 def delegarHU(request,usuario_id,proyectoid,rolid,hu_id,reasignar):
     """Delega o asigna una HU a un usuario miembro del proyecto, y en caso de ser necesario, reasignar la HU
-    a otro usuario evitando duplicaciones en la Base de Datos"""
+    a otro usuario evitando duplicaciones en la Base de Datos
+        :param func: request
+        :param args: 
+        :returns: asignaHU.html
+        :rtype: usuarios
+    """
     proyectox=proyecto.objects.get(id=proyectoid)
     hu=HU.objects.get(id=hu_id)
     if request.method=='POST' :
@@ -1394,7 +1539,12 @@ def delegarHU(request,usuario_id,proyectoid,rolid,hu_id,reasignar):
         return render(request,'asignaHU.html',{'usuario_asignado':usuario_asignado, 'proyecto':proyectox,'usuarios':users,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
     
 def validarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
-    """Controla la validacion de una HU creada por el product owner"""
+    """
+    Controla la validacion de una HU creada por el product owner
+        :param func: request
+        :param args: usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum
+        :returns: validarHU.html
+    """
     hu_x=HU.objects.get(id=HU_id_rec)
     if request.method == 'GET':       
         return render(request,'validarHU.html',{'hu':HU_id_rec, 'HU':hu_x.valido, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum})
@@ -1414,6 +1564,9 @@ def visualizarBacklog(request, usuario_id, proyectoid, rolid):
     Esta vista contiene la lista de HU pendientes pero ACTIVAS y VALIDADAS ordenadas segun su prioridad
     en orden descendente para la correspondiente asignacion que realizara el Scrum Master.
     A medida que las HU se realizan, estas desapareceran del Product Backlog.
+        :param func: request
+        :param args: usuario_id, proyectoid, rolid
+        :returns: visualizarBacklog.html
     """
     proyectox=proyecto.objects.get(id=proyectoid)
     huss=HU.objects.all().filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True).filter(sprint__hu__isnull=True)
@@ -1426,6 +1579,9 @@ def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
     para su correspondiente uso o modificacion, ya que los objetos cancelados
     solo estan disponibles para su visualizacion, no para su asignacion o modificacion.
     Recibe un tipo en la url que le permite distinguir de que tipo de objeto se trata.
+        :param func: request
+        :param args: usuario_id, proyectoid, rolid, tipo, id_tipo
+        :returns: '/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/'
     """
     usuario_e=MyUser.objects.get(id=usuario_id)
     if tipo == '1': #se trata de un flujo
@@ -1467,7 +1623,13 @@ def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
 
 
 def adminAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec):
-    """Vista que gestiona el guardado de archivos adjuntos a HUs"""
+    """
+    Vista que gestiona el guardado de archivos adjuntos a HUs
+        
+        :param func: request
+        :param args: usuario_id, proyectoid, rolid, HU_id_rec
+        :returns: adjuntos.html
+    """
     if request.method=='GET':
         hux=HU.objects.get(id=HU_id_rec)
         adjuntos=[]
@@ -1487,6 +1649,13 @@ def adminAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec):
         return HttpResponseRedirect('/adminAdjunto/'+usuario_id+'/'+proyectoid+'/'+rolid+'/'+HU_id_rec+'/')
     
 def descargar(request, usuario_id, proyectoid, rolid, HU_id_rec,archivo_id):
+    """
+     Descarga el archivo adjunto seleccionado 
+        :param func: request
+        :param args: usuario_id, proyectoid, rolid, HU_id_rec,archivo_id
+        :returns: response = HttpResponse(content_type=archivox.content)
+
+    """
     archivox=archivoadjunto.objects.get(id=archivo_id)
     response = HttpResponse(content_type=archivox.content)
     response['Content-Disposition'] = 'attachment; filename="%s"' % archivox.nombre
@@ -1558,7 +1727,10 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
 def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     """
     El sprint backlog es una lista de las tareas identificadas por el equipo de Scrum
-    Los equipos estiman el numero de horas para cada tarea que se corresponde a alguien del equipo para completar. 
+    Los equipos estiman el numero de horas para cada tarea que se corresponde a alguien del equipo para completar.
+        :param func: request
+        :param args: usuario_id, proyectoid, rolid
+        :returns: visualizarSprintBacklog.html
     """
     class acumuladorx:
         def __init__(self,hu_s,acu):
@@ -1617,11 +1789,13 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     
     return render(request,'visualizarSprintBacklog.html',{'len':longitud_para_tabla,'sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'HUx':hux, 'dias':lista, 'lista':lista_hu_horas})
 
-
-
-
 def asignarHU_Usuario_FLujo(request,usuario_id,proyectoid,rolid,sprintid):
-    """ Vista de asignacion de una HU a un usuario y en un flujo"""
+    """ 
+    Vista de asignacion de una HU a un usuario y en un flujo
+        :param func: request
+        :param args: usuario_id,proyectoid,rolid,sprintid
+        :returns: asignarHU_Usuario_Flujo.html 
+    """
     proyectox=proyecto.objects.get(id=proyectoid)
     sprintx=Sprint.objects.get(id=sprintid)
     hus=HU.objects.filter(proyecto=proyectox,estado='ACT',valido=True).filter(sprint=sprintx)
@@ -1654,7 +1828,12 @@ def asignarHU_Usuario_FLujo(request,usuario_id,proyectoid,rolid,sprintid):
     return render(request,"asignarHU_Usuario_Flujo.html",{'flujos_aprobados':flujos_aprobados,'hu_en_flujo':hu_en_flujo,'flujos':Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)),'HU_no_asignada':HU_no_asignada,'HU_asignada':HU_asignada,'hus':hus,'sprint':sprintx,'proyecto':proyectox,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
 
 def asignarHU_a_FLujo(request,usuario_id,proyectoid,rolid,sprintid,flujo_id):
-    """Vista donde se asignan las HU a un flujo dentro del spring y a un usuario del proyecto"""
+    """
+    Vista donde se asignan las HU a un flujo dentro del spring y a un usuario del proyecto
+        :param func: request
+        :param args: usuario_id,proyectoid,rolid,sprintid,flujo_id
+        :returns: asignarHUFlujo.html
+    """
     sprintx=Sprint.objects.get(id=sprintid)
     proyectox=proyecto.objects.get(id=proyectoid)
     flujo=Flujo.objects.get(id=flujo_id)
@@ -1687,7 +1866,12 @@ def asignarHU_a_FLujo(request,usuario_id,proyectoid,rolid,sprintid,flujo_id):
         return render(request,"asignarHUFlujo.html",{'flujo':flujo,'hus':hus,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'sprintid':sprintid,'flujo_id':flujo_id})
 
 def verKanban(request,usuario_id,proyectoid,rolid,sprintid):
-    """Vista que permite acceder al template de visualizacion de un flujo graficamente en el kanban"""
+    """
+    Vista que permite acceder al template de visualizacion de un flujo graficamente en el kanban
+        :param func: request
+        :param args: usuario_id,proyectoid,rolid,sprintid
+        :returns: verKanban.html
+    """
     sprintx=Sprint.objects.get(id=sprintid)
     flujos_hu={}
     flujos_actividades={}
@@ -1716,6 +1900,10 @@ def verKanban(request,usuario_id,proyectoid,rolid,sprintid):
 def aprobarHU(request, usuario_id, proyectoid, rolid, sprintid, HU_id_rec):
     """
     Vista que permite al Scrum aprobar una HU o volver a un estado anterior del flujo.
+        :param func: request
+        :param args: usuario_id, proyectoid, rolid, sprintid, HU_id_rec
+        :returns: aprobar_finalizacion_Flujo.html
+        :rtype: actividad, estado, duracion, descripcion
     """
     HU_tratada=HU.objects.get(id=HU_id_rec)
     usuario_asignado=HU_tratada.saber_usuario()
@@ -1760,18 +1948,28 @@ def aprobarHU(request, usuario_id, proyectoid, rolid, sprintid, HU_id_rec):
 
 def cambiarVersionHU(request,usuario_id, proyectoid,rolid,hu_id):
     #obtener primero todas las HUversion que no sean la actual y enviarlas al template para que el user pueda elegirlas
+    """ Obtener primero todas las HUversion que no sean la actual y enviarlas al template para que el user pueda elegirlas 
+    y cambiar por la version deseada 
+        :param func: request
+        :param args: usuario_id, proyectoid,rolid,hu_id
+        :returns: listarVersionesHU.html
+    """
     hu_now=HU.objects.get(id=hu_id)
     huv=HU_version.objects.filter(hu__id=hu_id) 
     huv=huv.exclude(version=hu_now.version)#tengo que excluir la version actual de la lista
     return render(request,"listarVersionesHU.html",{'huv':huv,'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid,'huid':hu_id})
 
 def reasignarhuFlujo(request,usuario_id, proyectoid,rolid,sprintid,huid,kanban):
-    """Vista que permita reasignar una hu con tiempo agotado a otro flujo y agregar horas a su duracion prevismente establecida para
-    porder continuar desarrollandola el tiempo que sea requerido"""
-    """En el template el usuario podra elegir de una lista de flujos, parecido a delegarHU la que prefiera para continuar la hu, ademas tendra un campo para aumentar
-    el numero de horas de duracion de la hu, ya que necesitaba mas, la misma empezara en la actividad de orden 1 del flujo nuevo"""
-    
-    
+    """
+    Vista que permita reasignar una hu con tiempo agotado a otro flujo y agregar horas a su duracion prevismente establecida para
+    porder continuar desarrollandola el tiempo que sea requerido
+    En el template el usuario podra elegir de una lista de flujos, parecido a delegarHU la que prefiera para continuar la hu, ademas tendra un campo para aumentar
+    el numero de horas de duracion de la hu, ya que necesitaba mas, la misma empezara en la actividad de orden 1 del flujo nuevo
+        :param func: request
+        :param args: usuario_id, proyectoid,rolid,sprintid,huid,kanban
+        :returns: reasignarhuflujo.html
+        :rtype: duracionmas
+    """
     #Primero obtener la hu  y el sprint
     hu_now=HU.objects.get(id=huid)
     sprint_now=Sprint.objects.get(id=sprintid)
