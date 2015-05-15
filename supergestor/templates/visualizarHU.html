@@ -23,9 +23,9 @@
     <div id="header">
         <div id="branding">
 			{%if kanban == "0"%}        
-				<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Visualizar HU {{HU.descripcion}}</a></h1>
+				<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Visualizar {{HU.descripcion}} Version: {{version}}</a></h1>
 			{%else%}
-				<h1 id="site-name"><a href="/verKanban/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprint.id}}/">Visualizar HU {{HU.descripcion}}</a></h1>
+				<h1 id="site-name"><a href="/verKanban/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprint.id}}/">Visualizar {{HU.descripcion}} Version: {{version}}</a></h1>
 			{%endif%}
         </div>      
         
@@ -38,17 +38,15 @@
         <form id="formulario" action="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="GET">
         {% csrf_token %}
         {%if is_Scrum == "1" or is_Scrum == "0"%}
-        	<b>Descripcion: </b> {{HU.descripcion}}<br/><br/>
-        	<b>Valor de negocio: </b> {{HU.valor_negocio}}<br/><br/>
-        	<b>Valor Tecnico: </b> {{HU.valor_tecnico}}<br/><br/>
-        	<b>Prioridad: </b> {{HU.prioridad}}<br/><br/>
-        	<b>Duracion en horas: </b> {{HU.duracion}}<br/><br/>
-        	<b>Horas realizadas: </b> {{HU.acumulador_horas}}<br/><br/>
-        	<b>Estado de la HU: </b> {{HU.estado}}<br/><br/>
-        	<b>Valido: </b> {{HU.valido}}<br/><br/>
-        	<b>Usuario asignado: </b> {{usuario_asignado}}<br/><br/>
-        	<b>Sprint al que pertenece: </b> {{sprint}}<br/><br/>
-        	<b>Flujo al que pertenece: </b> {{flujo}}<br/><br/>
+        	<table width="1000px">
+        	<tr><td><b>Descripcion: </b> {{HU.descripcion}}</td><td> <b>Estado de la HU: </b> {{HU.estado}}<br/><br/></td>
+        	<td><b>Valor de negocio: </b> {{HU.valor_negocio}}</td><td><b>Valido: </b> {{HU.valido}}<br/><br/></td>
+        	<td><b>Valor Tecnico: </b> {{HU.valor_tecnico}}</td></tr>
+        	<tr><td><b>Usuario asignado: </b> {{usuario_asignado}}<br/><br/></td>
+        	<td><b>Prioridad: </b> {{HU.prioridad}}</td><td><b>Sprint al que pertenece: </b> {{sprint}}<br/><br/></td>
+        	<td><b>Duracion en horas: </b> {{HU.duracion}}</td><td><b>Flujo al que pertenece: </b> {{flujo}}<br/><br/></td></tr>
+        	<tr><td><b>Horas realizadas: </b> {{HU.acumulador_horas}}</td><br/><br/></tr>
+			</table>
         {%endif%}
         	<br/>
         	<div style="width:900px; height:250px; border:#000 2px solid; overflow:auto">
@@ -64,14 +62,29 @@
         		
         			</tr>
         		{% endfor %}
+                </table> 
         	</div>
-        	{%for adjunto in adjuntos%}
-        	<tr><td><a a href="{{adjunto.archivo.url}}">{{adjunto.archivo.name}}</a></td></tr>
-        	{%endfor%}
-        	</table>    	
+   		<br/><p><b><font size="3" color="#8904B1">Archivos adjuntos</font></b></p>
+         <div style="width:900px; height:150px; border:#000 2px solid; overflow:auto">
+        	<table width="900" bordercolor = #8904B1 border="8" align="center">
+                           	<tr>
+                           	<td align="center" bgcolor="#E0F8F1"><font size="2" color="black"><b>Nombre de archivo</b></font></td>
+                            <td align="center" bgcolor="#E0F8F1"><font size="2" color="black"><b>Tipo</b></font></td>
+                            <td align="center" bgcolor="#E0F8F1"><font size="2" color="black"><b>Tamanho</b></font></td>
+                            <td align="center" bgcolor="#E0F8F1"><font size="2" color="black"><b>Descargar?</b></font></td>
+                            </tr>
+                            {%for adjunto in adjuntos %}
+                            	<tr>
+                            		<td align="center">{{adjunto.nombre}}</td>
+                            		<td align="center">{{adjunto.content}}</td>
+                            		<td align="center">{{adjunto.tamanho}}</td>
+                            		<td align="center"><a a href="/descargar/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{HU.id}}/{{adjunto.id}}/">Descargar</a></td>
+                            	</tr>
+							{%endfor%}
+			</table>	
+		</div>
         </form>
         
-     </div>
      <div class="footer">
      <!-- end.footer --></div>
 

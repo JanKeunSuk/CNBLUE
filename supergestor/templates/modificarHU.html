@@ -67,7 +67,7 @@ return (false);
     <!-- Content -->
     <div id="content" class="colM">
         
-        <h1>Ultima Version de Product Owner: {{version}}</h1>
+        <h1>Version de Product Owner: {{version}}</h1>
         <div id="content-main">
 
 
@@ -97,7 +97,8 @@ return (false);
 	{% csrf_token %}
 	<div>
      	<label class="required" for="id_nombre">Descripcion:</label>
-     	<input class="vTextField" id="id_nombre" maxlength="500" name="descripcion" value={{HU.descripcion}} type="text" required="required" autofocus="autofocus"/>
+     	<textarea name="descripcion" rows="2" cols="90">{{HU.descripcion}}</textarea>
+     	<!--  <input class="vTextField" id="id_nombre" maxlength="500" name="descripcion" value={{HU.descripcion}} type="text" required="required" autofocus="autofocus"/>-->
     </div>
     
     <div>

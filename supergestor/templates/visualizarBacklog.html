@@ -52,13 +52,19 @@
 
             <caption>Gestor</caption>
 			<th>Historias de usuario del Backlog</th>
-        
+        	
             <tr class="model-proyecto">
             	{% csrf_token %}
             	<tr>
 						<td><b>Descripcion</b></td>
 						<td><b>Prioridad</b></td>
 					</tr>
+				{%for hu in HUs_pendientes%}
+					<tr>
+						<td><font color="red"><b>{{hu}} - Pendiente</b></font></td>
+						<td>{{hu.prioridad}}</td>
+					</tr>
+				{%endfor%}
 				{%for hu in huss%}
 					<tr>
 						<td>{{hu}}</td>

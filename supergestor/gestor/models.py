@@ -189,7 +189,7 @@ class HU_descripcion(models.Model):
     Modelo representa la descripcion de cada hora de trabajo agregada mostrando de la fecha de la misma
     """
     horas_trabajadas=models.FloatField()  
-    descripcion_horas_trabajadas=models.CharField(max_length = 200)
+    descripcion_horas_trabajadas=models.CharField(max_length = 500)
     fecha=models.DateTimeField()
     
     actividad=models.CharField(max_length = 200)
@@ -243,11 +243,15 @@ class HU(models.Model):
     
     def sprint(self):
         """ Funcion que retorna el sprint de una hu """
+        id=0
+        sprint=None
         for a in Sprint.objects.all():
             for h in a.hu.all():
                 if self.id == h.id:
-                    return a
-        return None
+                    if a.id > id:
+                        sprint=a
+                        id=a.id
+        return sprint
     
     def flujo(self):
         """ Funcion que retorna el flujo de una hu """
@@ -289,11 +293,17 @@ class HU_version(models.Model):
         
 class archivoadjunto(models.Model):
     """ Representacion de una archivo adjunto """
+    ESTADO_CHOICES = (
+        ('CAN', 'Cancelado'),
+        ('ACT', 'Activo'),
+    )
+    
     nombre=models.CharField(max_length = 200)
     content=models.CharField(max_length = 200)
     archivo=models.BinaryField()
     tamanho=models.IntegerField()
     hU=models.ForeignKey(HU)
+    estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
     
     def __unicode__(self):
         """Representacion unicode del objeto archivoadjunto"""

@@ -326,7 +326,7 @@ def modificarCuenta(request, usuario_id):
         return render_to_response('modificarUsuario.html', {'usuario': usuario},
                               context_instance=RequestContext(request))
     
-def guardarRolView(request,usuario_id):
+def guardarRolView(request,usuario_id, proyectoid, rolid):
     """Vista de guardado de un nuevo rol en la base de datos
     que se utiliza en la interfaz devuelta por /crearRol/ 
         :param func: request
@@ -340,7 +340,7 @@ def guardarRolView(request,usuario_id):
         for p in request.POST.getlist('permisos'):
             rol_a_crear.permisos.add(Permission.objects.get(id=p))
         rol_a_crear.save()
-        evento_e="Se ha creado un nuevo rol de nombre: '"+rol_a_crear.nombre_rol_id+"' con una descripcion '"+request.POST['descripcion']+"' con los permisos '"+str([t.codename for t in rol_a_crear.permisos.all()])+"' con fecha y hora: "+str(timezone.now())
+        evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"ROL+"+"C+"+"Se ha creado un nuevo rol de nombre: '"+rol_a_crear.nombre_rol_id+"' con una descripcion '"+request.POST['descripcion']+"' con los permisos '"+str([t.codename for t in rol_a_crear.permisos.all()])+"' con fecha y hora: "+str(timezone.now())
         email_e=str(usuario_e.email)
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=rol_a_crear.nombre_rol_id,  evento=evento_e)
         mail = EmailMessage('Notificacion', evento_e, to=[email_e])
@@ -374,7 +374,7 @@ def guardarFlujoView(request, usuario_id, proyectoid, rolid):
             flujo_a_crear.actividades.add(Actividades.objects.get(id=p))
         flujo_a_crear.orden_actividades=json.dumps(orden)
         flujo_a_crear.save()
-        evento_e="Se ha creado un nuevo flujo de nombre: '"+request.POST['nombre']+"' con fecha y hora: "+str(timezone.now())
+        evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"FLUJO+"+"C+"+"Se ha creado un nuevo flujo de nombre: '"+request.POST['nombre']+"' con fecha y hora: "+str(timezone.now())
         usuario_e=MyUser.objects.get(id=usuario_id)
         email_e=str(usuario_e.email)
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=flujo_a_crear.nombre, evento=evento_e)
@@ -400,7 +400,7 @@ def guardarFlujoView(request, usuario_id, proyectoid, rolid):
             return render(request, 'crearFlujo.html',{'nombre_flujo':request.POST['nombre'],'proyectoid':proyectoid,'usuarioid':usuario_id,'rolid':rolid ,'actividades_asignadas':actividades_asignadas,'actividades':actividades_disponibles})     
 
     
-def guardarHUView(request,proyectoid):
+def guardarHUView(request,usuario_id, proyectoid, rolid):
     """Vista de guardado de una nueva HU en la base de datos creada por el Product Owner
     que se utiliza en la interfaz devuelta por /crearHU/
         :param func: request
@@ -414,12 +414,9 @@ def guardarHUView(request,proyectoid):
         huv1=HU_version.objects.create(descripcion=HU_a_crear.descripcion,valor_negocio=HU_a_crear.valor_negocio,hu=HU_a_crear,version=HU_a_crear.version)
         HU_a_crear.save()
         huv1.save()
-        for d in delegacion.objects.all():
-            for H in HU.objects.all():
-                if H.id == d.hu.id:
-                    usuario_e=d.usuario
-                    correo_e=usuario_e.email
-        evento_e="Se ha creado un nuevo HU de nombre: '"+request.POST['descripcion']+"' con valor de negocio '"+request.POST['valor_negocio']+"' con fecha y hora: "+str(timezone.now())
+        usuario_e=MyUser.objects.get(id=usuario_id)
+        correo_e=usuario_e.email
+        evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"C+"+"Se ha creado un nuevo HU de nombre: '"+request.POST['descripcion']+"' con valor de negocio '"+request.POST['valor_negocio']+"' con fecha y hora: "+str(timezone.now())
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=HU_a_crear.descripcion, evento=evento_e)
         mail = EmailMessage('Notificacion', evento_e, to=[str(correo_e)])
         mail.send()
@@ -449,7 +446,7 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
             for f in request.POST.getlist('Flujos'):
                 Sprint_a_crear.flujo.add(Flujo.objects.get(id=f))
             Sprint_a_crear.save()
-            evento_e="Se ha creado un nuevo Sprint de nombre: '"+request.POST['descripcion']+"' con una fecha de inicio '"+str(request.POST['fecha_inicio'])+"' ,duracion '"+str(request.POST['duracion'])+ "' en la fecha y hora: "+str(timezone.now())
+            evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"SPRINT+"+"C+"+"Se ha creado un nuevo Sprint de nombre: '"+request.POST['descripcion']+"' con una fecha de inicio '"+str(request.POST['fecha_inicio'])+"' ,duracion '"+str(request.POST['duracion'])+ "' en la fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=Sprint_a_crear.descripcion, evento=evento_e)
             mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
@@ -474,14 +471,15 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
                 HUs_no_seleccionadas=HUs_no_seleccionadas.exclude(id=h)
                 if HU.objects.get(id=h).duracion > max:
                     max=HU.objects.get(id=h).duracion
-        return render(request, 'crearSprint.html',{'nombre':request.POST['descripcion'],'duracion':int(max/8),'flujos':flujos,'HUs':HUs,'HUs_seleccionadas':hus_seleccionadas,'HUs_no_seleccionadas':HUs_no_seleccionadas,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
+        return render(request, 'crearSprint.html',{'nombre':request.POST['descripcion'],'duracion':math.ceil(max/8),'flujos':flujos,'HUs':HUs,'HUs_seleccionadas':hus_seleccionadas,'HUs_no_seleccionadas':HUs_no_seleccionadas,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
       
 
 def elegirVersionHU(request,hv_id,hu_id):
-    """Esta vista responde al boton elegir al elegir una version anterior de hu, ya que si vuelvo a hacer un simple modificar
+    """
+    Esta vista responde al boton elegir al elegir una version anterior de hu, ya que si vuelvo a hacer un simple modificar
     pordria volver a crear una version que ya existe, por lo tanto esta vista modifica con datos preexistenes sin
-    crear una nueva version"""
-    """primero obtengo la huversion saco los datos los meto en la hu que tambien tengo que obtener y le doy hu.save()
+    crear una nueva version
+    Primero obtengo la huversion saco los datos los meto en la hu que tambien tengo que obtener y le doy hu.save()
         :param func: request
         :param args: hv_id, hu_id 
         :returns: 'Se ha cambiado de version correctamente'
@@ -550,7 +548,7 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
             """        para saber esto tengo que obtener la ultima hu_version creada de esta hu, si no hay se empieza con 1"""
             
 
-            evento_e="Se ha modificado '"+request.POST['descripcion']+"' con valor de negocio '"+request.POST['valor_negocio']+"' y estado '"+request.POST['estado']+" con fecha y hora: "+str(timezone.now())
+            evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"M+"+"Se ha modificado '"+request.POST['descripcion']+"' con valor de negocio '"+request.POST['valor_negocio']+"' y estado '"+request.POST['estado']+" con fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=h.descripcion, evento=evento_e)
             mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
@@ -591,8 +589,7 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                                 if s.estado == 'ACT' and acumulador_horas >0:
                                     s.estado='CON'
                                     s.save()
-                            #evento_e="Se ha agregado "+str(request.POST['horas_agregar'])+" horas a la "+str(h.descripcion)+" con una descripcion "+request.POST['descripcion_horas']+" estando en la actividad "+ str(h.actividad)+ " con el estado "+str(h.estado_en_actividad)+" con fecha y hora: "+str(timezone.now())
-                            evento_e="Se ha agregado "+str(request.POST['horas_agregar'])+" horas a la "+str(h.descripcion)+" con una descripcion "+request.POST['descripcion_horas']+" estando en la actividad "+ str(h.actividad)+ " con el estado "+str(h.estado_en_actividad)+ "con fecha y hora: "+str(timezone.now())
+                            evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"A+"+"Se ha agregado '"+str(request.POST['horas_agregar'])+"' horas a la '"+str(h.descripcion)+"' con una descripcion '"+request.POST['descripcion_horas']+"' estando en la actividad '"+ str(h.actividad)+ "' con el estado '"+str(h.estado_en_actividad)+"' con fecha y hora: "+str(timezone.now())
                             usuario_e=MyUser.objects.get(id=usuario_id)
                             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=h.descripcion, evento=evento_e)
                             mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
@@ -637,7 +634,7 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                             hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas, fecha=fecha, actividad=str(h.actividad), estado=str(h.estado_en_actividad))
                             h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
                             hd.save()
-                            evento_e="Se ha agregado '"+request.POST['horas_agregar']+"' horas a la '"+HU.descripcion+"' con una descripcion '"+request.POST['descripcion_horas']+"' quedando asi finalizadas las actividades con fecha y hora: "+str(timezone.now())
+                            evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"A+"+"Se ha agregado '"+request.POST['horas_agregar']+"' horas a la '"+HU.descripcion+"' con una descripcion '"+request.POST['descripcion_horas']+"' quedando asi finalizadas las actividades con fecha y hora: "+str(timezone.now())
                             usuario_e=MyUser.objects.get(id=usuario_id)
                             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=h.descripcion, evento=evento_e)
                             mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
@@ -650,7 +647,7 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                             hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas, fecha=fecha, actividad=str(h.actividad), estado=estadoP)
                             h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
                             hd.save()
-                            evento_e="Se ha agregado '"+request.POST['horas_agregar']+"' horas a la '"+HU.descripcion+"' con una descripcion '"+request.POST['descripcion_horas']+"' ,completando la duracion sin terminar todas las actividades con fecha y hora: "+str(timezone.now())
+                            evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"A+"+"Se ha agregado '"+request.POST['horas_agregar']+"' horas a la '"+HU.descripcion+"' con una descripcion '"+request.POST['descripcion_horas']+"' ,completando la duracion sin terminar todas las actividades con fecha y hora: "+str(timezone.now())
                             usuario_e=MyUser.objects.get(id=usuario_id)
                             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=h.descripcion, evento=evento_e)
                             mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
@@ -664,7 +661,7 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                             hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas, fecha=fecha, actividad=str(h.actividad), estado=estadoP)
                             h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
                             hd.save()
-                            evento_e="Se ha agregado '"+str(request.POST['horas_agregar'])+"' horas a la '"+str(h.descripcion)+"' con una descripcion '"+str(request.POST['descripcion_horas'])+"' estando en la actividad '"+ str(h.actividad)+ "' con el estado '"+str(h.estado_en_actividad)+"' con fecha y hora: "+str(timezone.now())
+                            evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"A+"+"Se ha agregado '"+str(request.POST['horas_agregar'])+"' horas a la '"+str(h.descripcion)+"' con una descripcion '"+str(request.POST['descripcion_horas'])+"' estando en la actividad '"+ str(h.actividad)+ "' con el estado '"+str(h.estado_en_actividad)+"' con fecha y hora: "+str(timezone.now())
                             usuario_e=MyUser.objects.get(id=usuario_id)
                             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=h.descripcion, evento=evento_e)
                             mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
@@ -797,7 +794,7 @@ def modificarRol(request, usuario_id, proyectoid, rolid, rol_id_rec):
             f.usuario_creador=u
             f.estado=estado
             f.save() #Guardamos el modelo de manera Editada
-            evento_e="El rol '"+f.descripcion+"' con descripcion '"+form.cleaned_data['descripcion']+"' con los permisos '"+str([t.codename for t in f.permisos.all()])+"' en el estado '"+form.cleaned_data['estado']+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
+            evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"ROL+"+"M+"+"El rol '"+f.descripcion+"' con descripcion '"+form.cleaned_data['descripcion']+"' con los permisos '"+str([t.codename for t in f.permisos.all()])+"' en el estado '"+form.cleaned_data['estado']+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=f.nombre_rol_id, evento=evento_e)
             mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
@@ -924,7 +921,7 @@ def modificarFlujo(request, usuario_id, proyectoid, rolid, flujo_id_rec):
                     flujo_a_crear.actividades.add(Actividades.objects.get(id=p))
                 flujo_a_crear.orden_actividades=json.dumps(orden)
                 flujo_a_crear.save()
-                evento_e="El flujo '"+request.POST['nombre']+"' con estado '"+request.POST['estado']+"' ha sido creado exitosamente en la fecha y hora: "+str(timezone.now())
+                evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"FLUJO+"+"C+"+"El flujo '"+request.POST['nombre']+"' con estado '"+request.POST['estado']+"' ha sido creado exitosamente en la fecha y hora: "+str(timezone.now())
                 usuario_e=MyUser.objects.get(id=usuario_id)
                 historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=flujo_a_crear.nombre,evento=evento_e)
                 mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
@@ -932,7 +929,7 @@ def modificarFlujo(request, usuario_id, proyectoid, rolid, flujo_id_rec):
                 return HttpResponse('El flujo nuevo se ha creado')  
             except ObjectDoesNotExist:
                 print "No se ha podido crear el nuevo flujo"
-            evento_e="El flujo '"+request.POST['nombre']+"' ha sido creado exitosamente en la fecha y hora: "+str(timezone.now())
+            evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"FLUJO+"+"C+"+"El flujo '"+request.POST['nombre']+"' ha sido creado exitosamente en la fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=flujo_a_crear.nombre,evento=evento_e)
             mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
@@ -951,7 +948,7 @@ def modificarFlujo(request, usuario_id, proyectoid, rolid, flujo_id_rec):
                 f.actividades.add(Actividades.objects.get(id=p))
             f.orden_actividades=json.dumps(orden)
             f.save() #Guardamos el modelo de manera Editada
-            evento_e="El flujo '"+request.POST['nombre']+"' con estado '"+request.POST['estado']+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
+            evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"FLUJO+"+"M+"+"El flujo '"+request.POST['nombre']+"' con estado '"+request.POST['estado']+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=f.nombre, evento=evento_e)
             mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
@@ -1035,7 +1032,7 @@ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
             s.hu=hu
             s.flujo=flujo
             s.save() #Guardamos el modelo de manera Editada
-            evento_e="El Sprint '"+form.cleaned_data['descripcion']+"' con estado '"+form.cleaned_data['estado']+"' con una fecha de inicio '"+str(form.cleaned_data['fecha_inicio'])+"' ,duracion '"+str(form.cleaned_data['duracion'])+"' ,hu '"+str([t.descripcion for t in s.hu.all()])+"' y flujo '"+str([t.nombre for t in s.flujo.all()])+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
+            evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"SPRINT+"+"M+"+"El Sprint '"+form.cleaned_data['descripcion']+"' con estado '"+form.cleaned_data['estado']+"' con una fecha de inicio '"+str(form.cleaned_data['fecha_inicio'])+"' ,duracion '"+str(form.cleaned_data['duracion'])+"' ,hu '"+str([t.descripcion for t in s.hu.all()])+"' y flujo '"+str([t.nombre for t in s.flujo.all()])+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=s.descripcion,evento=evento_e)
             mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
@@ -1054,11 +1051,20 @@ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
    
                                          })
         proyectox=proyecto.objects.get(id=proyectoid)
-        HUs = HU.objects.filter(proyecto=proyectox)
+        HUs = HU.objects.filter(proyecto=proyectox).filter(valido=True)
         flujos=Flujo.objects.all()
+        HUs_pendientes=[]
         for x in Sprint.objects.all():
-            for h in x.hu.all():
-                HUs=HUs.exclude(id=h.id)
+            if x.estado != 'FIN':
+                for h in x.hu.all():
+                    HUs=HUs.exclude(id=h.id)
+            else:
+                for h in x.hu.all():
+                    if h.estado_en_actividad != 'FIN':
+                        HUs_pendientes.append(h)
+                        HUs=HUs.exclude(id=h.id)
+                    else:
+                        HUs=HUs.exclude(id=h.id)
                 
         lista_restante=[]
         for permitido in HUs:
@@ -1068,9 +1074,12 @@ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
                     x=1
             if x==0:
                 lista_restante.append(permitido)
+        for h in s.hu.all():
+            HUs_pendientes.remove(h)
+                    
         fecha = str(s.fecha_inicio)
         
-        ctx = {'flujos':flujos,'estados':estados, 'fecha':fecha[:-6],'form':form,'HUs':HUs,'lista_HU_sin_asignar':lista_restante,'Sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
+        ctx = {'HUs_pendientes':HUs_pendientes,'flujos':flujos,'estados':estados, 'fecha':fecha[:-6],'form':form,'HUs':HUs,'lista_HU_sin_asignar':lista_restante,'Sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
         return render_to_response('modificarSprint.html', ctx ,context_instance=RequestContext(request))
     
 class FormularioHU(forms.ModelForm):
@@ -1095,12 +1104,11 @@ def visualizarHUView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum, 
     flujo_al_que_pertenece=HU_disponible.flujo()
     sprint_al_que_pertenece=HU_disponible.sprint()
     adjuntos=archivoadjunto.objects.filter(hU=HU_disponible)
-    x=HU_disponible.ultima_Version()
     formulario =  FormularioHU(initial={
                                                      'descripcion': HU_disponible.descripcion,
                                                      'valor_negocio': HU_disponible.valor_negocio,
                                                      })      
-    return render_to_response('visualizarHU.html',{'formulario':formulario,'version':x,'usuario_asignado':usuario_asignado,'HU':HU_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'adjuntos':adjuntos,'is_Scrum':is_Scrum, 'sprint':sprint_al_que_pertenece, 'flujo':flujo_al_que_pertenece, 'kanban':kanban},
+    return render_to_response('visualizarHU.html',{'formulario':formulario,'version':HU_disponible.version,'usuario_asignado':usuario_asignado,'HU':HU_disponible, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'adjuntos':adjuntos,'is_Scrum':is_Scrum, 'sprint':sprint_al_que_pertenece, 'flujo':flujo_al_que_pertenece, 'kanban':kanban},
                                   context_instance=RequestContext(request))
 
 def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
@@ -1117,7 +1125,6 @@ def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
     estados=['ACT','CAN']
     VALORES10_CHOICES = range(1,10)
     h=HU.objects.get(id=HU_id_rec)
-    x=h.ultima_Version()
     if (is_Scrum == '1'):
         if request.method == 'POST':
             form = FormularioHU(request.POST)
@@ -1131,7 +1138,7 @@ def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
                 h.duracion=duracion
                 #h.estado=estado
                 h.save() #Guardamos el modelo de manera Editada
-                evento_e="La HU '"+str(h.descripcion)+"' valor de negocio  '"+str(form.cleaned_data['valor_tecnico'])+"'  prioridad '"+str(form.cleaned_data['prioridad'])+"' y duracion  '"+str(form.cleaned_data['duracion'])+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
+                evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"M+"+"La HU '"+str(h.descripcion)+"' valor de negocio  '"+str(form.cleaned_data['valor_tecnico'])+"'  prioridad '"+str(form.cleaned_data['prioridad'])+"' y duracion  '"+str(form.cleaned_data['duracion'])+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
                 usuario_e=MyUser.objects.get(id=usuario_id)
                 historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=h.descripcion,evento=evento_e)
                 mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
@@ -1148,10 +1155,10 @@ def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
                                         'duracion':h.duracion,
                                         #'estado':h.estado
                                          })
-            ctx = {'version':x,'valores':VALORES10_CHOICES,'form':form, 'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum}
+            ctx = {'version':h.version,'valores':VALORES10_CHOICES,'form':form, 'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum}
             return render_to_response('modificarHU.html', ctx ,context_instance=RequestContext(request))
     else:
-        return render(request,'modificarHU.html', {'version':x,'estados':estados, 'valores':VALORES10_CHOICES,'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum})
+        return render(request,'modificarHU.html', {'version':h.version,'estados':estados, 'valores':VALORES10_CHOICES,'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':is_Scrum})
 
 def crearRol(request,usuario_id,proyectoid,rolid):
     """
@@ -1198,14 +1205,30 @@ def crearSprint(request,usuario_id,proyectoid,rolid):
         :returns: crearSprint.html
     """
     proyectox = proyecto.objects.get(id=proyectoid)
-    HUs = HU.objects.filter(proyecto=proyectox)
+    HUs = HU.objects.filter(proyecto=proyectox).filter(valido=True)
     flujos=Flujo.objects.all()#le mando todos los flujos para que elija los que quiere
+    flujos_pen=[]
+    HUs_pendientes=[]
     for x in Sprint.objects.all():
-        for h in x.hu.all():
-            HUs=HUs.exclude(id=h.id)
+        if x.estado == 'FIN':
+            for h in x.hu.all():
+                if h.estado_en_actividad != 'FIN':
+                    HUs_pendientes.append(h)
+                    HUs=HUs.exclude(id=h.id)
+                    flujos_pen.append(h.flujo())
+                    flujos.exclude(id=h.flujo().id)
+                else:
+                    HUs=HUs.exclude(id=h.id)
+    for x in Sprint.objects.all():
+        if x.estado != 'FIN':
+            for h in x.hu.all():
+                HUs=HUs.exclude(id=h.id)
+                HUs_pendientes.remove(h)  
+                flujos_pen.remove(h.flujo())
+    flujos_pen=set(flujos_pen)
     HUs=sorted(HUs,key=lambda x: x.prioridad, reverse=True)
     if request.method == 'GET':
-        return render(request, 'crearSprint.html',{'HUs_no_seleccionadas':HUs,'flujos':flujos,'HUs':HUs,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
+        return render(request, 'crearSprint.html',{'flujos_pen':flujos_pen,'HUs_pendientes':HUs_pendientes,'HUs_no_seleccionadas':HUs,'flujos':flujos,'HUs':HUs,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
 
 def crearHU(request,usuario_id,proyectoid,rolid):
     """
@@ -1253,7 +1276,7 @@ def modificarProyecto(request, usuario_id, proyecto_id_rec):
             p.fecha_inicio=fecha_inicio
             p.fecha_fin=fecha_fin
             p.save() #Guardamos el modelo de manera Editada
-            evento_e="El proyecto '"+form.cleaned_data['nombre_corto']+"' con nombre largo '"+form.cleaned_data['nombre_largo']+"' descripcion  '"+form.cleaned_data['descripcion']+"' estado '"+form.cleaned_data['estado']+"' fecha de inicio '"+str(form.cleaned_data['fecha_inicio'])+"'  fecha fin '"+str(form.cleaned_data['fecha_fin'])+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
+            evento_e=usuario_id+"+"+proyecto_id_rec+"+SCRUM"+"+PROYECTO+"+"M+"+"El proyecto '"+form.cleaned_data['nombre_corto']+"' con nombre largo '"+form.cleaned_data['nombre_largo']+"' descripcion  '"+form.cleaned_data['descripcion']+"' estado '"+form.cleaned_data['estado']+"' fecha de inicio '"+str(form.cleaned_data['fecha_inicio'])+"'  fecha fin '"+str(form.cleaned_data['fecha_fin'])+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=p.nombre_corto, evento=evento_e)
             mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
@@ -1294,7 +1317,7 @@ def crearActividadView(request,usuario_id,proyectoid):
         :param args: usuario_id,proyectoid
         :returns: crearActividad.html 
         :rtype: nombre, descripcion
-    """  
+    """   
     if request.method == 'GET':
         form = formularioActividad()
         return render_to_response("crearActividad.html",{"form":form,'usuarioid':usuario_id,'proyectoid':proyectoid}, context_instance = RequestContext(request))
@@ -1307,7 +1330,7 @@ def crearActividadView(request,usuario_id,proyectoid):
             form.nombre=nombre
             form.descripcion=descripcion
             form.save()
-            evento_e="La Actividad '"+form.cleaned_data['nombre']+"' con descripcion '"+form.cleaned_data['descripcion']+"' se ha creado exitosamente en la fecha y hora: "+str(timezone.now())
+            evento_e=usuario_id+"+"+proyectoid+"+SCRUM"+"+ACTIVIDAD+"+"C+"+"La Actividad '"+form.cleaned_data['nombre']+"' con descripcion '"+form.cleaned_data['descripcion']+"' se ha creado exitosamente en la fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(),  objeto=form.nombre,evento=evento_e)
             mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
@@ -1321,7 +1344,7 @@ def crearActividadAdminView(request):
         :param func: request
         :returns: crearActividadAdmin.html
         :rtype: nombre, descripcion
-    """  
+    """    
     if request.method == 'GET':
         form = formularioActividad()
         return render_to_response("crearActividadAdmin.html",{"form":form,}, context_instance = RequestContext(request))
@@ -1338,10 +1361,10 @@ def crearActividadAdminView(request):
         
 def seleccionarFlujoModificarAdmin(request):
     """
-    Al presionar el boton Modificar Actividad en el admin, esta vista despliega una lista de todas las actividades 
-    seleccionables por el usuario para su modificacion.
-        :param func: request
-        :returns: seleccionarActividadAdmin.html
+    Al presionar el boton Modificar Actividad, esta vista despliega una lista de todas las actividades seleccionables por el usuario
+    para su modificacion.
+        :param func: request 
+        :returns: seleccionarActividad.html
     """
     return render(request,'seleccionarActividadAdmin.html',{'actividades':Actividades.objects.all(),})
 
@@ -1385,8 +1408,6 @@ def seleccionarFlujoModificar(request,usuario_id,proyectoid):
     """
     Al presionar el boton Modificar Actividad, esta vista despliega una lista de todas las actividades seleccionables por el usuario
     para su modificacion.
-        :param func: request 
-        :returns: seleccionarActividad.html
     """
     return render(request,'seleccionarActividad.html',{'actividades':Actividades.objects.all(),'usuarioid':usuario_id,'proyectoid':proyectoid})
 
@@ -1408,7 +1429,7 @@ def modificarActividad(request,usuario_id,proyectoid,actividad_id_rec):
             p.nombre=nombre
             p.descripcion=descripcion
             p.save() #Guardamos el modelo de manera Editada
-            evento_e="La actividad '"+form.cleaned_data['nombre']+"' con descripcion '"+form.cleaned_data['descripcion']+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
+            evento_e=usuario_id+"+"+proyectoid+"+SCRUM"+"+ACTIVIDAD+"+"M+"+"La actividad '"+form.cleaned_data['nombre']+"' con descripcion '"+form.cleaned_data['descripcion']+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=p.nombre, evento=evento_e)
             mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
@@ -1477,7 +1498,6 @@ def listarEquipo(request,proyecto_id_rec,usuario_id):
         :param args: proyecto_id_rec,usuario_id
         :returns: formarEquipo.html 
     """
-    
     lista={}
     proyectox=proyecto.objects.get(id=proyecto_id_rec)
     for a in asignacion.objects.all():
@@ -1502,7 +1522,7 @@ def delegarHU(request,usuario_id,proyectoid,rolid,hu_id,reasignar):
             try:
                 delegacionx= delegacion.objects.create(usuario=MyUser.objects.get(id=request.POST['usuario']),hu=hu)
                 delegacionx.save()
-                evento_e="Se ha asignado una HU '"+hu.descripcion+"' al usuario '"+str(delegacionx.usuario)+"' en la fecha y hora: "+str(timezone.now())
+                evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"AS+"+"Se ha asignado una HU '"+hu.descripcion+"' al usuario '"+str(delegacionx.usuario)+"' en la fecha y hora: "+str(timezone.now())
                 usuario_e=MyUser.objects.get(id=usuario_id)
                 historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=hu.descripcion, evento=evento_e)
                 mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
@@ -1517,7 +1537,7 @@ def delegarHU(request,usuario_id,proyectoid,rolid,hu_id,reasignar):
                     d.usuario=MyUser.objects.get(id=request.POST['usuario'])
                     d.save()
                     usuario_e=MyUser.objects.get(id=usuario_id)
-                    evento_e="Se ha asignado una HU '"+hu.descripcion+"' al usuario '"+str(d.usuario)+"' en la fecha y hora: "+str(timezone.now())
+                    evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"AS+"+"Se ha asignado una HU '"+hu.descripcion+"' al usuario '"+str(d.usuario)+"' en la fecha y hora: "+str(timezone.now())
                     historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=hu.descripcion, evento=evento_e)
                     mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
                     mail.send()
@@ -1569,8 +1589,18 @@ def visualizarBacklog(request, usuario_id, proyectoid, rolid):
     """
     proyectox=proyecto.objects.get(id=proyectoid)
     huss=HU.objects.all().filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True).filter(sprint__hu__isnull=True)
-    h=sorted(huss,key=lambda x: x.prioridad, reverse=True)
-    return render(request,'visualizarBacklog.html',{'huss':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    hu=sorted(huss,key=lambda x: x.prioridad, reverse=True)
+    HUs_pendientes=[]
+    for x in Sprint.objects.all():
+        if x.estado == 'FIN':
+            for h in x.hu.all():
+                if h.estado_en_actividad != 'FIN':
+                    HUs_pendientes.append(h)
+    for x in Sprint.objects.all():
+        if x.estado != 'FIN':
+            for h in x.hu.all():
+                HUs_pendientes.remove(h)  
+    return render(request,'visualizarBacklog.html',{'HUs_pendientes':HUs_pendientes,'huss':hu, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
 
 def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
     """
@@ -1587,7 +1617,7 @@ def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
         f=Flujo.objects.get(id=id_tipo)
         f.estado='ACT'
         f.save()
-        evento_e="El flujo '"+f.nombre+"' se ha reactivado exitosamente en la fecha y hora: "+str(timezone.now())
+        evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"FLUJO+"+"R+"+"El flujo '"+f.nombre+"' se ha reactivado exitosamente en la fecha y hora: "+str(timezone.now())
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=f.nombre,evento=evento_e)
         mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
         mail.send()
@@ -1595,7 +1625,7 @@ def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
         h=HU.objects.get(id=id_tipo)
         h.estado='ACT'
         h.save()
-        evento_e="La HU '"+h.descripcion+"' se ha reactivado exitosamente en la fecha y hora: "+str(timezone.now())
+        evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"R+"+"La HU '"+h.descripcion+"' se ha reactivado exitosamente en la fecha y hora: "+str(timezone.now())
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=h.descripcion, evento=evento_e)
         mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
         mail.send()
@@ -1604,7 +1634,7 @@ def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
         s=Sprint.objects.get(id=id_tipo)
         s.estado='ACT'
         s.save()
-        evento_e="El sprint '"+s.descripcion+"' se ha reactivado exitosamente en la fecha y hora: "+str(timezone.now())
+        evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"SPRINT+"+"R+"+"El sprint '"+s.descripcion+"' se ha reactivado exitosamente en la fecha y hora: "+str(timezone.now())
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=s.descripcion,evento=evento_e)
         mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
         mail.send()
@@ -1613,7 +1643,7 @@ def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
         s=rol.objects.get(id=id_tipo)
         s.estado='ACT'
         s.save()
-        evento_e="El rol '"+s.nombre_corto+"' se ha reactivado exitosamente en la fecha y hora: "+str(timezone.now())
+        evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"ROL+"+"R+"+"El rol '"+s.nombre_corto+"' se ha reactivado exitosamente en la fecha y hora: "+str(timezone.now())
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=s.nombre_corto,evento=evento_e)
         mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
         mail.send()
@@ -1633,7 +1663,7 @@ def adminAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec):
         hux=HU.objects.get(id=HU_id_rec)
         adjuntos=[]
         try: 
-            adjuntos=archivoadjunto.objects.filter(hU=hux)
+            adjuntos=archivoadjunto.objects.filter(hU=hux).filter(estado='ACT')
         except ObjectDoesNotExist:
             adjuntos = []
         return render(request,'adjuntos.html',{'HU':hux,'adjuntos':adjuntos,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
@@ -1642,13 +1672,21 @@ def adminAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec):
         file=bytearray()
         for d in archivox.chunks():
             file.extend(d)
-        filex=archivoadjunto.objects.create(nombre=archivox.name,content=archivox.content_type,tamanho=archivox.size,archivo=file,hU_id=HU_id_rec)
+        n=0
+        cambiar=archivox.name
+        while archivoadjunto.objects.filter(nombre=cambiar).filter(estado='ACT'):
+            n=n+1
+            split=archivox.name.split('.')
+            cambiar=split[0]+"("+str(n)+")."+split[1]
+            
+        filex=archivoadjunto.objects.create(nombre=cambiar,content=archivox.content_type,tamanho=archivox.size,archivo=file,hU_id=HU_id_rec,estado='ACT')
         filex.save()
         #archivox.save()
         return HttpResponseRedirect('/adminAdjunto/'+usuario_id+'/'+proyectoid+'/'+rolid+'/'+HU_id_rec+'/')
     
 def descargar(request, usuario_id, proyectoid, rolid, HU_id_rec,archivo_id):
-    """ Descarga el archivo adjunto seleccionado 
+    """
+     Descarga el archivo adjunto seleccionado 
         :param func: request
         :param args: usuario_id, proyectoid, rolid, HU_id_rec,archivo_id
         :returns: response = HttpResponse(content_type=archivox.content)
@@ -1663,6 +1701,12 @@ def descargar(request, usuario_id, proyectoid, rolid, HU_id_rec,archivo_id):
     response.write(file)
     return response
 
+def eliminar_adjunto(request, usuario_id, proyectoid, rolid, HU_id_rec,archivo_id):
+    archivox=archivoadjunto.objects.get(id=archivo_id)
+    archivox.estado='CAN'
+    archivox.save()
+    return HttpResponseRedirect('/adminAdjunto/'+usuario_id+'/'+proyectoid+'/'+rolid+'/'+HU_id_rec+'/')
+    
 def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     """
     El sprint backlog es una lista de las tareas identificadas por el equipo de Scrum
@@ -1679,8 +1723,8 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
    
     lista=[]
     dias=0
-    hux=HU.objects.all()
-    sprint=Sprint.objects.all()
+    hux=HU.objects.filter(proyecto=proyecto.objects.get(id=proyectoid))
+    sprint=Sprint.objects.filter(proyecto=proyecto.objects.get(id=proyectoid))
     s=sorted(sprint,key=lambda x: x.estado, reverse=True)
     cont=0
     #duracion maxima
@@ -1694,30 +1738,27 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
         lista.append(dias)
 
     lista_hu_horas={}
-    lista_horas=[]   
-    global fecha_x
-    fecha_x=0    
+    lista_horas=[]
+    cont2=0        
+    fecha_x=[]
     for hu in hux:
         cont2=0
         lista_horas=[]
         
         for h in hu.hu_descripcion.all():
-                x=str(h.fecha)
-                if h.estado == 'APR':
-                    fecha_x=x[:10]
-                
-                if h.id == 1:
-                    fecha_x=x[:10]
-                    cont2=cont2+h.horas_trabajadas
-                elif x[:10] == fecha_x:
-                    cont2=cont2+h.horas_trabajadas
-                else:
-                    fecha_x=x[:10]
-                    if cont2 != 0:
-                        lista_horas.append(cont2)
-                    cont2=0
+            x=str(h.fecha)
+            if h.id == 1:
+                fecha_x=x[:10]
                 cont2=cont2+h.horas_trabajadas
-                
+            elif x[:10] == fecha_x:
+                cont2=cont2+h.horas_trabajadas
+            else:
+                fecha_x=x[:10]
+                if cont2 != 0:
+                    lista_horas.append(cont2)
+                cont2=0
+                cont2=cont2+h.horas_trabajadas
+            
         if cont2 != 0:
             lista_horas.append(cont2)
         lista_hu_horas[hu]=lista_horas
@@ -1729,7 +1770,8 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     return render(request,'visualizarSprintBacklog.html',{'len':longitud_para_tabla,'sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'HUx':hux, 'dias':lista, 'lista':lista_hu_horas})
 
 def asignarHU_Usuario_FLujo(request,usuario_id,proyectoid,rolid,sprintid):
-    """ Vista de asignacion de una HU a un usuario y en un flujo
+    """ 
+    Vista de asignacion de una HU a un usuario y en un flujo
         :param func: request
         :param args: usuario_id,proyectoid,rolid,sprintid
         :returns: asignarHU_Usuario_Flujo.html 
@@ -1766,7 +1808,8 @@ def asignarHU_Usuario_FLujo(request,usuario_id,proyectoid,rolid,sprintid):
     return render(request,"asignarHU_Usuario_Flujo.html",{'flujos_aprobados':flujos_aprobados,'hu_en_flujo':hu_en_flujo,'flujos':Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)),'HU_no_asignada':HU_no_asignada,'HU_asignada':HU_asignada,'hus':hus,'sprint':sprintx,'proyecto':proyectox,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
 
 def asignarHU_a_FLujo(request,usuario_id,proyectoid,rolid,sprintid,flujo_id):
-    """Vista donde se asignan las HU a un flujo dentro del spring y a un usuario del proyecto
+    """
+    Vista donde se asignan las HU a un flujo dentro del spring y a un usuario del proyecto
         :param func: request
         :param args: usuario_id,proyectoid,rolid,sprintid,flujo_id
         :returns: asignarHUFlujo.html
@@ -1803,7 +1846,8 @@ def asignarHU_a_FLujo(request,usuario_id,proyectoid,rolid,sprintid,flujo_id):
         return render(request,"asignarHUFlujo.html",{'flujo':flujo,'hus':hus,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'sprintid':sprintid,'flujo_id':flujo_id})
 
 def verKanban(request,usuario_id,proyectoid,rolid,sprintid):
-    """Vista que permite acceder al template de visualizacion de un flujo graficamente en el kanban
+    """
+    Vista que permite acceder al template de visualizacion de un flujo graficamente en el kanban
         :param func: request
         :param args: usuario_id,proyectoid,rolid,sprintid
         :returns: verKanban.html
@@ -1812,10 +1856,15 @@ def verKanban(request,usuario_id,proyectoid,rolid,sprintid):
     flujos_hu={}
     flujos_actividades={}
     kanban=1
+    lista_hu=[]
     for f in Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)):
         for a in asignaHU_actividad_flujo.objects.all():
             if a.flujo_al_que_pertenece == f:
-                flujos_hu[f]=a.lista_de_HU.all()
+                lista_hu=[]
+                for h in a.lista_de_HU.all():
+                    if h.sprint() == sprintx:
+                        lista_hu.append(h)
+                flujos_hu[f]=lista_hu
     for f in Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)):
         jsonDec = json.decoder.JSONDecoder()
         orden=jsonDec.decode(f.orden_actividades)
@@ -1883,20 +1932,21 @@ def aprobarHU(request, usuario_id, proyectoid, rolid, sprintid, HU_id_rec):
 
 
 def cambiarVersionHU(request,usuario_id, proyectoid,rolid,hu_id):
-    #obtener primero todas las HUversion que no sean la actual y enviarlas al template para que el user pueda elegirlas
     """ Obtener primero todas las HUversion que no sean la actual y enviarlas al template para que el user pueda elegirlas 
     y cambiar por la version deseada 
         :param func: request
         :param args: usuario_id, proyectoid,rolid,hu_id
         :returns: listarVersionesHU.html
     """
+    #obtener primero todas las HUversion que no sean la actual y enviarlas al template para que el user pueda elegirlas
     hu_now=HU.objects.get(id=hu_id)
     huv=HU_version.objects.filter(hu__id=hu_id) 
     huv=huv.exclude(version=hu_now.version)#tengo que excluir la version actual de la lista
     return render(request,"listarVersionesHU.html",{'huv':huv,'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid,'huid':hu_id})
 
 def reasignarhuFlujo(request,usuario_id, proyectoid,rolid,sprintid,huid,kanban):
-    """Vista que permita reasignar una hu con tiempo agotado a otro flujo y agregar horas a su duracion prevismente establecida para
+    """
+    Vista que permita reasignar una hu con tiempo agotado a otro flujo y agregar horas a su duracion prevismente establecida para
     porder continuar desarrollandola el tiempo que sea requerido
     En el template el usuario podra elegir de una lista de flujos, parecido a delegarHU la que prefiera para continuar la hu, ademas tendra un campo para aumentar
     el numero de horas de duracion de la hu, ya que necesitaba mas, la misma empezara en la actividad de orden 1 del flujo nuevo
@@ -1916,7 +1966,7 @@ def reasignarhuFlujo(request,usuario_id, proyectoid,rolid,sprintid,huid,kanban):
         
         flujos=sprint_now.flujo.all().exclude(id=hu_now.flujo().id)
         #Necesito mandarle tambien la duracion de la hu, pero eso puede ser accedido desde hu_now
-        return render(request,'reasignarhuflujo.html',{'kanban':kanban,'hu':hu_now,'sprint':sprint_now,'proyecto':proyecto_now,'flujos':flujos,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+        return render(request,'reasignarhuflujo.html',{'flujo_actual':hu_now.flujo(),'kanban':kanban,'hu':hu_now,'sprint':sprint_now,'proyecto':proyecto_now,'flujos':flujos,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
     else:
         """Cuando sea post se tienen que hacer ciertos cambios con los datos"""
         for a in request.POST.getlist('flujos'):
@@ -1948,3 +1998,152 @@ def reasignarhuFlujo(request,usuario_id, proyectoid,rolid,sprintid,huid,kanban):
         hu_now.save()
         
         return HttpResponse('Se ha cambiado de flujo correctamente a'+hu_now.flujo().nombre)
+
+def desplegar_historial(request,usuario_id,proyectoid,rolid):
+    sprint_c=[]
+    sprint_m=[]
+    sprint_r=[]
+    sprint=0
+    flujo_c=[]
+    flujo_m=[]
+    flujo_r=[]
+    flujo=0
+    rol_c=[]
+    rol_m=[]
+    rol_r=[]
+    rol=0
+    actividad_c=[]
+    actividad_m=[]
+    actividad=0
+    hu_c=[]
+    hu_m=[]
+    hu_a=[]
+    hu_as=[]
+    hu_r=[]
+    hu=0
+    proyecto_m=[]
+    proyecto=0
+    usuario_rec=MyUser.objects.get(id=usuario_id)
+    if rolid == str(1):
+        h=historial_notificacion.objects.all()
+    else:
+        h=historial_notificacion.objects.filter(usuario=usuario_rec.username)
+    for n in h:
+        obtenerStrings=n.evento.split('+')
+        proyecto=obtenerStrings[1]
+        rol=obtenerStrings[2]
+        if proyecto == proyectoid and (rol == rolid or rolid == str(1)):
+            objeto=obtenerStrings[3]
+            tipo_evento=obtenerStrings[4]
+            evento=obtenerStrings[5]
+            if objeto == 'ROL':
+                rol=1
+                if tipo_evento == 'C':
+                    rol_c.append(evento)
+                elif tipo_evento == 'M':
+                    rol_m.append(evento)
+                elif tipo_evento == 'R':
+                    rol_r.append(evento)
+            elif objeto == 'FLUJO':
+                flujo=1
+                if tipo_evento == 'C':
+                    flujo_c.append(evento)
+                elif tipo_evento == 'M':
+                    flujo_m.append(evento)
+                elif tipo_evento == 'R':
+                    flujo_r.append(evento)
+            elif objeto == 'SPRINT':
+                sprint=1
+                if tipo_evento == 'C':
+                    sprint_c.append(evento)
+                elif tipo_evento == 'M':
+                    sprint_m.append(evento)
+                elif tipo_evento == 'R':
+                    sprint_r.append(evento)
+            elif objeto == 'HU':
+                hu=1
+                if tipo_evento == 'C':
+                    if rolid == str(1): hu_c.append("Usuario: "+n.usuario+"- Evento: "+evento)
+                    else: hu_c.append(evento)
+                elif tipo_evento == 'M':
+                    if rolid == str(1): hu_m.append("Usuario: "+n.usuario+"- Evento: "+evento)
+                    else: hu_m.append(evento)
+                elif tipo_evento == 'A':
+                    if rolid == str(1): hu_a.append("Usuario: "+n.usuario+"- Evento: "+evento)
+                    else: hu_a.append(evento)
+                elif tipo_evento == 'AS':
+                    hu_as.append(evento)
+                elif tipo_evento == 'R':
+                    if rolid == str(1): hu_r.append("Usuario: "+n.usuario+"- Evento: "+evento)
+                    else: hu_r.append(evento)
+        elif proyecto == proyectoid and rol == 'SCRUM':   
+            if objeto == 'ACTIVIDAD':
+                actividad=1
+                if tipo_evento == 'C':
+                    actividad_c.append(evento)
+                elif tipo_evento == 'M':
+                    actividad_m.append(evento)
+            if objeto == 'PROYECTO':
+                proyecto=1
+                proyecto_m.append(evento)
+    return render(request,'historial.html',{'sprint':sprint,'flujo':flujo,'actividad':actividad,'hu':hu,'proyecto':proyecto,'rol':rol,'proyecto_m':proyecto_m,'sprint_c':sprint_c,'sprint_m':sprint_m,'sprint_r':sprint_r,'flujo_c':flujo_c,'flujo_m':flujo_m,'flujo_r':flujo_r,'rol_c':rol_c,'rol_m':rol_m,'rol_r':rol_r,'actividad_c':actividad_c,'actividad_m':actividad_m,'hu_c':hu_c,'hu_m':hu_m,'hu_a':hu_a,'hu_as':hu_as,'hu_r':hu_r,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+
+
+
+def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
+    """Genera los datos para mostrar en el BurndownChart que son las horas restantes del spint que quedan por hacer luego del progreso 
+    total que se haya obtenido en un dia dado"""
+    sprint= Sprint.objects.get(estado='CON')#esto es un quiryset....que sea un elemento nomas!!!!!!!!
+    #sprint ahora tiene el Sprint que se va mostrar en el burndown de este proyecto...el actual nose si hay que mostrar de todos?
+    hus=HU.objects.all().filter(proyecto__id=proyectoid)
+    #tengo todas las hu de este proyecto ahora, necesito solo las de este sprint
+    hux=[]
+    for u in hus:
+        if u.sprint()==sprint:
+            hux.append(u)
+            
+    #ahora ya tengo todas las hu del sprint en hux
+    #tengo que sumar sus duraciones para saber el maximo del backlog
+    sumx=0
+    for ux in hux:
+        sumx+=ux.duracion
+    #ahora tengo que trabajar con el acumulador de horas diario que seria una lista por dia de todas las hu del dia
+    #parecido al de abajo pero en vez de lista_hu_horas seria lista fecha horas
+    #supongo que antes deberia saber cuantas fechas tener en cuenta...no estoy seguro  
+
+        
+    #supongo que conviene mas tener un diccionario de fechas con valores de total de horas de hus del dia asiciados a esas fechas
+    #una hu aporta horas a varios dias
+    #luego generar otro diccionario pero de horas restantes a partir del diccionario de horas progresadas
+    
+    
+    lista_fechas_horas={}
+    lista_fechas_horas[str(sprint.fecha_inicio)[:10]]=0 #sum va a ser para el segundo diccionario, el primer diccionario
+                                                        #solo acumula horas, el segundo es el que se manda al template
+    #el primer elemento del diccionario va a ser la duracion total de todas las hu osea la primera barra del burndown
+    for hu in hux:
+        for d in hu.hu_descripcion.all():
+            f=str(d.fecha)[:10]
+            if f in lista_fechas_horas:
+                lista_fechas_horas[f]+=d.horas_trabajadas
+            else:
+                lista_fechas_horas[f]=d.horas_trabajadas
+                pass
+    
+    # Un diccionario puede tener elementos repetidos(keys), pero la programacion anterior va a impedirlo 
+    #bueno ahora ya tengo el diccionario con el total de horas por dia cargadas me convendria disponer de la longitud del diccionario
+    cant_dias=len(lista_fechas_horas)
+    # ahora voy a crear y cargar el diccionario que se va mandar al template
+    remaining_dic={}
+    
+    tot_restante=sumx
+    #tot_restante es la que va disminuir, sum quiero mantener por las dudas
+    
+    for k, v in lista_fechas_horas.iteritems():
+        remaining_dic[k]=tot_restante-v
+        tot_restante-=v
+    #remaining_dic ahora tiene las horas restante por fecha basado en los datos de las horas progresadaspor fecha, sum deberia disminuir
+    
+    #ahora si puedo mandar remaining_dic y todo lo que me parezca necesario por ahora
+    
+    return render(request,'burndown.html',{'sprint':sprint,'restantes':remaining_dic,'suma_hu':sumx,'cant_dias':cant_dias,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})

@@ -4,7 +4,7 @@ django.setup()
 import datetime
 import psycopg2
 #from django.db import models
-from gestor.models import Permitido, MyUser, HU, proyecto,rol_sistema, rol, asigna_sistema,asignacion, Actividades,Flujo,delegacion,Sprint, HU_descripcion, asignaHU_actividad_flujo, HU_version
+from gestor.models import Permitido, MyUser, HU, proyecto,rol_sistema, rol, asigna_sistema,asignacion, Actividades,Flujo,delegacion,Sprint, HU_descripcion, asignaHU_actividad_flujo, HU_version, historial_notificacion
 
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
@@ -178,7 +178,10 @@ rol_scrum=rol.objects.create(nombre_rol_id='Scrum Master',descripcion='Permisos 
 rol_owner=rol.objects.create(nombre_rol_id='Product Owner',descripcion='Permisos adquiridos por el Product Owner',usuario_creador=admin,estado='ACT')
 rol_equipo=rol.objects.create(nombre_rol_id='Equipo',descripcion='Permisos adquiridos por el Equipo',usuario_creador=admin,estado='ACT')
 rol_cliente=rol.objects.create(nombre_rol_id='Cliente',descripcion='Permisos adquiridos por el Cliente',usuario_creador=admin,estado='ACT')
+
 rol_deScrum=rol.objects.create(nombre_rol_id='Rol creado por Scrum',descripcion='Permisos designados por el Scrum',usuario_creador=delsy,estado='ACT')
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+ROL+"+"C+"+"Se ha creado un nuevo rol de nombre: '"+rol_deScrum.nombre_rol_id+"' con una descripcion '"+rol_deScrum.descripcion+"' con los permisos '"+str([t.codename for t in rol_deScrum.permisos.all()])+"' con fecha y hora: "+str(datetime.date.today())
+h=historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=rol_deScrum.nombre_rol_id,  evento=evento_e)
 #en uno de los proyectos delsy(scrum1) va a ser usuario creador y ella podra ver este rol como suyo(modificable)
 
 """Ahora se cargaran permisos a cada uno de esos roles predefinidos"""
@@ -278,22 +281,44 @@ asignacion.objects.create(usuario=delsy,rol=rol_equipo,proyecto=p3)
 
 """Creacion de actividades para el flujo 1"""
 act1=Actividades.objects.create(nombre='Analisis',descripcion='analisis')
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+SCRUM"+"+ACTIVIDAD+"+"C+"+"La Actividad '"+act1.nombre+"' con descripcion '"+act1.descripcion+"' se ha creado exitosamente en la fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()),  objeto=act1.nombre,evento=evento_e)
 act2=Actividades.objects.create(nombre='Disenho',descripcion='diseño')
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+SCRUM"+"+ACTIVIDAD+"+"C+"+"La Actividad '"+act2.nombre+"' con descripcion '"+act2.descripcion+"' se ha creado exitosamente en la fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()),  objeto=act2.nombre,evento=evento_e)
 act3=Actividades.objects.create(nombre='Despliegue',descripcion='Despliegue')
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+SCRUM"+"+ACTIVIDAD+"+"C+"+"La Actividad '"+act3.nombre+"' con descripcion '"+act3.descripcion+"' se ha creado exitosamente en la fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()),  objeto=act3.nombre,evento=evento_e)
 act4=Actividades.objects.create(nombre='Desarrollo',descripcion='desarrollo')
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+SCRUM"+"+ACTIVIDAD+"+"C+"+"La Actividad '"+act4.nombre+"' con descripcion '"+act4.descripcion+"' se ha creado exitosamente en la fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()),  objeto=act4.nombre,evento=evento_e)
 act5=Actividades.objects.create(nombre='Prueba',descripcion='prueba')
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+SCRUM"+"+ACTIVIDAD+"+"C+"+"La Actividad '"+act5.nombre+"' con descripcion '"+act5.descripcion+"' se ha creado exitosamente en la fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()),  objeto=act5.nombre,evento=evento_e)
 
 """Creacion de actividades para el flujo 2"""
 act6=Actividades.objects.create(nombre='Relevamiento',descripcion='relevamiento')
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+SCRUM"+"+ACTIVIDAD+"+"C+"+"La Actividad '"+act6.nombre+"' con descripcion '"+act6.descripcion+"' se ha creado exitosamente en la fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()),  objeto=act6.nombre,evento=evento_e)
 act7=Actividades.objects.create(nombre='Implementacion',descripcion='implementacion')
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+SCRUM"+"+ACTIVIDAD+"+"C+"+"La Actividad '"+act7.nombre+"' con descripcion '"+act7.descripcion+"' se ha creado exitosamente en la fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()),  objeto=act7.nombre,evento=evento_e)
 act8=Actividades.objects.create(nombre='Control',descripcion='control de tareas')
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+SCRUM"+"+ACTIVIDAD+"+"C+"+"La Actividad '"+act8.nombre+"' con descripcion '"+act8.descripcion+"' se ha creado exitosamente en la fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()),  objeto=act8.nombre,evento=evento_e)
 
 
 """Cargar los primeros flujos"""
 f1=Flujo.objects.create(nombre='Flujo1',estado='ACT',orden_actividades='[1,2,3,4,5]')
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"FLUJO+"+"C+"+"Se ha creado un nuevo flujo de nombre: '"+f1.nombre+"' con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=f1.nombre, evento=evento_e)
 f2=Flujo.objects.create(nombre='Flujo2',estado='ACT',orden_actividades='[6,7,8]')
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"FLUJO+"+"C+"+"Se ha creado un nuevo flujo de nombre: '"+f2.nombre+"' con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=f2.nombre, evento=evento_e)
 #Flujo 3, una combinacion de los flujos anteriores
 f3=Flujo.objects.create(nombre='Flujo3',estado='ACT',orden_actividades='[6,2,4,8]')
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"FLUJO+"+"C+"+"Se ha creado un nuevo flujo de nombre: '"+f3.nombre+"' con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=f3.nombre, evento=evento_e)
 
 
 """Cargar las actividades del flujo1"""
@@ -310,33 +335,98 @@ f3.actividades.add(act6,act2,act4,act8)
 """Creacion de HU"""
 hu1=HU.objects.create(descripcion='HU1',valor_negocio=3,valor_tecnico=5,prioridad=95,duracion=15,acumulador_horas=0,estado='ACT',estado_en_actividad='PEN',valido=True,proyecto=p1,version=1.0)
 huv1=HU_version.objects.create(descripcion=hu1.descripcion,valor_negocio=hu1.valor_negocio,hu=hu1,version=hu1.version)
+evento_e=str(kathe.id)+"+"+str(p1.id)+"+"+str(rol_owner.id)+"+"+"HU+"+"C+"+"Se ha creado un nuevo HU de nombre: "+hu1.descripcion+" con valor de negocio "+str(hu1.valor_negocio)+" con fecha y hora: "+str(datetime.date.today())
+h=historial_notificacion.objects.create(usuario=kathe, fecha_hora=str(datetime.date.today()), objeto=hu1.descripcion, evento=evento_e)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"M+"+"Se ha modificado '"+hu1.descripcion+"' con valor tecnico '"+str(hu1.valor_tecnico)+"' con prioridad '"+str(hu1.prioridad)+" duracion "+str(hu1.duracion)+' y estado '+hu1.estado+" con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu1.descripcion, evento=evento_e)
+
 hu2=HU.objects.create(descripcion='HU2',valor_negocio=5,valor_tecnico=7,prioridad=90,duracion=5,acumulador_horas=0,estado='ACT',estado_en_actividad='PEN',valido=True,proyecto=p1,version=1.0)
 huv2=HU_version.objects.create(descripcion=hu2.descripcion,valor_negocio=hu2.valor_negocio,hu=hu2,version=hu2.version)
+evento_e=str(kathe.id)+"+"+str(p1.id)+"+"+str(rol_owner.id)+"+"+"HU+"+"C+"+"Se ha creado un nuevo HU de nombre: "+hu2.descripcion+" con valor de negocio "+str(hu2.valor_negocio)+" con fecha y hora: "+str(datetime.date.today())
+h=historial_notificacion.objects.create(usuario=kathe, fecha_hora=str(datetime.date.today()), objeto=hu2.descripcion, evento=evento_e)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"M+"+"Se ha modificado '"+hu2.descripcion+"' con valor tecnico '"+str(hu2.valor_tecnico)+"' con prioridad '"+str(hu2.prioridad)+" duracion "+str(hu2.duracion)+' y estado '+hu2.estado+" con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu2.descripcion, evento=evento_e)
+
 hu3=HU.objects.create(descripcion='HU3',valor_negocio=8,valor_tecnico=6,prioridad=85,duracion=20,acumulador_horas=0,estado='ACT',estado_en_actividad='PEN',valido=True,proyecto=p1,version=1.0)
 huv3=HU_version.objects.create(descripcion=hu3.descripcion,valor_negocio=hu3.valor_negocio,hu=hu3,version=hu3.version)
+evento_e=str(kathe.id)+"+"+str(p1.id)+"+"+str(rol_owner.id)+"+"+"HU+"+"C+"+"Se ha creado un nuevo HU de nombre: "+hu3.descripcion+" con valor de negocio "+str(hu1.valor_negocio)+" con fecha y hora: "+str(datetime.date.today())
+h=historial_notificacion.objects.create(usuario=kathe, fecha_hora=str(datetime.date.today()), objeto=hu3.descripcion, evento=evento_e)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"M+"+"Se ha modificado '"+hu3.descripcion+"' con valor tecnico '"+str(hu3.valor_tecnico)+"' con prioridad '"+str(hu3.prioridad)+" duracion "+str(hu3.duracion)+' y estado '+hu3.estado+" con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu3.descripcion, evento=evento_e)
+
 hu4=HU.objects.create(descripcion='HU4',valor_negocio=2,valor_tecnico=5,prioridad=80,duracion=8,acumulador_horas=0,estado='ACT',estado_en_actividad='PEN',valido=True,proyecto=p1,version=1.0)
 huv4=HU_version.objects.create(descripcion=hu4.descripcion,valor_negocio=hu4.valor_negocio,hu=hu4,version=hu4.version)
+evento_e=str(kathe.id)+"+"+str(p1.id)+"+"+str(rol_owner.id)+"+"+"HU+"+"C+"+"Se ha creado un nuevo HU de nombre: "+hu4.descripcion+" con valor de negocio "+str(hu1.valor_negocio)+" con fecha y hora: "+str(datetime.date.today())
+h=historial_notificacion.objects.create(usuario=kathe, fecha_hora=str(datetime.date.today()), objeto=hu4.descripcion, evento=evento_e)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"M+"+"Se ha modificado '"+hu4.descripcion+"' con valor tecnico '"+str(hu4.valor_tecnico)+"' con prioridad '"+str(hu4.prioridad)+" duracion "+str(hu4.duracion)+' y estado '+hu4.estado+" con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu4.descripcion, evento=evento_e)
+
 hu5=HU.objects.create(descripcion='HU5',valor_negocio=9,valor_tecnico=7,prioridad=75,duracion=5,acumulador_horas=0,estado='ACT',estado_en_actividad='PEN',valido=True,proyecto=p1,version=1.0)
 huv5=HU_version.objects.create(descripcion=hu5.descripcion,valor_negocio=hu5.valor_negocio,hu=hu5,version=hu5.version)
+evento_e=str(kathe.id)+"+"+str(p1.id)+"+"+str(rol_owner.id)+"+"+"HU+"+"C+"+"Se ha creado un nuevo HU de nombre: "+hu5.descripcion+" con valor de negocio "+str(hu5.valor_negocio)+" con fecha y hora: "+str(datetime.date.today())
+h=historial_notificacion.objects.create(usuario=kathe, fecha_hora=str(datetime.date.today()), objeto=hu5.descripcion, evento=evento_e)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"M+"+"Se ha modificado '"+hu5.descripcion+"' con valor tecnico '"+str(hu5.valor_tecnico)+"' con prioridad '"+str(hu5.prioridad)+" duracion "+str(hu5.duracion)+' y estado '+hu5.estado+" con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu5.descripcion, evento=evento_e)
+
 hu6=HU.objects.create(descripcion='HU6',valor_negocio=8,valor_tecnico=6,prioridad=70,duracion=20,acumulador_horas=0,estado='ACT',estado_en_actividad='PEN',valido=True,proyecto=p1,version=1.0)
-huv6=HU_version.objects.create(descripcion=hu6.descripcion,valor_negocio=hu6.valor_negocio,hu=hu6,version=hu1.version)
+huv6=HU_version.objects.create(descripcion=hu6.descripcion,valor_negocio=hu6.valor_negocio,hu=hu6,version=hu6.version)
+evento_e=str(kathe.id)+"+"+str(p1.id)+"+"+str(rol_owner.id)+"+"+"HU+"+"C+"+"Se ha creado un nuevo HU de nombre: "+hu6.descripcion+" con valor de negocio "+str(hu6.valor_negocio)+" con fecha y hora: "+str(datetime.date.today())
+h=historial_notificacion.objects.create(usuario=kathe, fecha_hora=str(datetime.date.today()), objeto=hu6.descripcion, evento=evento_e)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"M+"+"Se ha modificado '"+hu6.descripcion+"' con valor tecnico '"+str(hu6.valor_tecnico)+"' con prioridad '"+str(hu6.prioridad)+" duracion "+str(hu6.duracion)+' y estado '+hu6.estado+" con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu6.descripcion, evento=evento_e)
+
 hu7=HU.objects.create(descripcion='HU7',valor_negocio=10,valor_tecnico=4,prioridad=68,duracion=30,acumulador_horas=0,estado='ACT',estado_en_actividad='PEN',valido=True,proyecto=p1,version=1.0)
 huv7=HU_version.objects.create(descripcion=hu7.descripcion,valor_negocio=hu7.valor_negocio,hu=hu7,version=hu7.version)
+evento_e=str(kathe.id)+"+"+str(p1.id)+"+"+str(rol_owner.id)+"+"+"HU+"+"C+"+"Se ha creado un nuevo HU de nombre: "+hu7.descripcion+" con valor de negocio "+str(hu7.valor_negocio)+" con fecha y hora: "+str(datetime.date.today())
+h=historial_notificacion.objects.create(usuario=kathe, fecha_hora=str(datetime.date.today()), objeto=hu7.descripcion, evento=evento_e)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"M+"+"Se ha modificado '"+hu7.descripcion+"' con valor tecnico '"+str(hu7.valor_tecnico)+"' con prioridad '"+str(hu7.prioridad)+" duracion "+str(hu7.duracion)+' y estado '+hu7.estado+" con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu7.descripcion, evento=evento_e)
+
 hu8=HU.objects.create(descripcion='HU8',valor_negocio=5,valor_tecnico=7,prioridad=60,duracion=5,acumulador_horas=0,estado='ACT',estado_en_actividad='PEN',valido=True,proyecto=p1,version=1.0)
 huv8=HU_version.objects.create(descripcion=hu8.descripcion,valor_negocio=hu8.valor_negocio,hu=hu8,version=hu8.version)
+evento_e=str(kathe.id)+"+"+str(p1.id)+"+"+str(rol_owner.id)+"+"+"HU+"+"C+"+"Se ha creado un nuevo HU de nombre: "+hu8.descripcion+" con valor de negocio "+str(hu8.valor_negocio)+" con fecha y hora: "+str(datetime.date.today())
+h=historial_notificacion.objects.create(usuario=kathe, fecha_hora=str(datetime.date.today()), objeto=hu8.descripcion, evento=evento_e)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"M+"+"Se ha modificado '"+hu8.descripcion+"' con valor tecnico '"+str(hu8.valor_tecnico)+"' con prioridad '"+str(hu8.prioridad)+" duracion "+str(hu8.duracion)+' y estado '+hu8.estado+" con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu8.descripcion, evento=evento_e)
+
 hu9=HU.objects.create(descripcion='HU9',valor_negocio=8,valor_tecnico=6,prioridad=45,duracion=20,acumulador_horas=0,estado='ACT',estado_en_actividad='PEN',valido=True,proyecto=p1,version=1.0)
 huv9=HU_version.objects.create(descripcion=hu9.descripcion,valor_negocio=hu9.valor_negocio,hu=hu9,version=hu9.version)
+evento_e=str(kathe.id)+"+"+str(p1.id)+"+"+str(rol_owner.id)+"+"+"HU+"+"C+"+"Se ha creado un nuevo HU de nombre: "+hu9.descripcion+" con valor de negocio "+str(hu9.valor_negocio)+" con fecha y hora: "+str(datetime.date.today())
+h=historial_notificacion.objects.create(usuario=kathe, fecha_hora=str(datetime.date.today()), objeto=hu9.descripcion, evento=evento_e)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"M+"+"Se ha modificado '"+hu9.descripcion+"' con valor tecnico '"+str(hu9.valor_tecnico)+"' con prioridad '"+str(hu9.prioridad)+" duracion "+str(hu9.duracion)+' y estado '+hu9.estado+" con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu9.descripcion, evento=evento_e)
+
 hu10=HU.objects.create(descripcion='HU10',valor_negocio=2,valor_tecnico=5,prioridad=40,duracion=8,acumulador_horas=0,estado='ACT',estado_en_actividad='PEN',valido=True,proyecto=p1,version=1.0)
 huv10=HU_version.objects.create(descripcion=hu10.descripcion,valor_negocio=hu10.valor_negocio,hu=hu10,version=hu10.version)
+evento_e=str(kathe.id)+"+"+str(p1.id)+"+"+str(rol_owner.id)+"+"+"HU+"+"C+"+"Se ha creado un nuevo HU de nombre: "+hu10.descripcion+" con valor de negocio "+str(hu10.valor_negocio)+" con fecha y hora: "+str(datetime.date.today())
+h=historial_notificacion.objects.create(usuario=kathe, fecha_hora=str(datetime.date.today()), objeto=hu10.descripcion, evento=evento_e)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"M+"+"Se ha modificado '"+hu10.descripcion+"' con valor tecnico '"+str(hu10.valor_tecnico)+"' con prioridad '"+str(hu10.prioridad)+" duracion "+str(hu10.duracion)+' y estado '+hu10.estado+" con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu10.descripcion, evento=evento_e)
+
 hu11=HU.objects.create(descripcion='HU11',valor_negocio=9,valor_tecnico=7,prioridad=35,duracion=5,acumulador_horas=0,estado='ACT',estado_en_actividad='PEN',valido=True,proyecto=p1,version=1.0)
 huv11=HU_version.objects.create(descripcion=hu11.descripcion,valor_negocio=hu11.valor_negocio,hu=hu11,version=hu11.version)
+evento_e=str(kathe.id)+"+"+str(p1.id)+"+"+str(rol_owner.id)+"+"+"HU+"+"C+"+"Se ha creado un nuevo HU de nombre: "+hu11.descripcion+" con valor de negocio "+str(hu11.valor_negocio)+" con fecha y hora: "+str(datetime.date.today())
+h=historial_notificacion.objects.create(usuario=kathe, fecha_hora=str(datetime.date.today()), objeto=hu11.descripcion, evento=evento_e)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"M+"+"Se ha modificado '"+hu11.descripcion+"' con valor tecnico '"+str(hu11.valor_tecnico)+"' con prioridad '"+str(hu11.prioridad)+" duracion "+str(hu11.duracion)+' y estado '+hu11.estado+" con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu11.descripcion, evento=evento_e)
+
 hu12=HU.objects.create(descripcion='HU12',valor_negocio=10,valor_tecnico=0,prioridad=0,duracion=0,acumulador_horas=0,estado='ACT',estado_en_actividad='PEN',valido=False,proyecto=p1,version=1.0)
 huv12=HU_version.objects.create(descripcion=hu12.descripcion,valor_negocio=hu12.valor_negocio,hu=hu12,version=hu12.version)
+evento_e=str(kathe.id)+"+"+str(p1.id)+"+"+str(rol_owner.id)+"+"+"HU+"+"C+"+"Se ha creado un nuevo HU de nombre: "+hu12.descripcion+" con valor de negocio "+str(hu12.valor_negocio)+" con fecha y hora: "+str(datetime.date.today())
+h=historial_notificacion.objects.create(usuario=kathe, fecha_hora=str(datetime.date.today()), objeto=hu12.descripcion, evento=evento_e)
 
 """Creacion de un Sprint"""
 sp1=Sprint.objects.create(descripcion='sprint1',fecha_inicio=str(datetime.date.today()),duracion=10,estado='ACT',proyecto=p1)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"SPRINT+"+"C+"+"Se ha creado un nuevo Sprint de nombre: '"+sp1.descripcion+"' con una fecha de inicio '"+str(sp1.fecha_inicio)+"' ,duracion '"+str(sp1.duracion)+ "' en la fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=sp1.descripcion, evento=evento_e)
+
 sp2=Sprint.objects.create(descripcion='sprint2',fecha_inicio=str(datetime.date.today()),duracion=0,estado='ACT',proyecto=p1)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"SPRINT+"+"C+"+"Se ha creado un nuevo Sprint de nombre: '"+sp2.descripcion+"' con una fecha de inicio '"+str(sp2.fecha_inicio)+"' ,duracion '"+str(sp2.duracion)+ "' en la fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=sp2.descripcion, evento=evento_e)
+
 sp3=Sprint.objects.create(descripcion='sprint3',fecha_inicio=str(datetime.date.today()),duracion=0,estado='ACT',proyecto=p1)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"SPRINT+"+"C+"+"Se ha creado un nuevo Sprint de nombre: '"+sp3.descripcion+"' con una fecha de inicio '"+str(sp3.fecha_inicio)+"' ,duracion '"+str(sp3.duracion)+ "' en la fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=sp3.descripcion, evento=evento_e)
 
 """Agregar hus a los sprint creados"""
 sp1.hu.add(hu1,hu2,hu3,hu4,hu5,hu6,hu7,hu8)
@@ -381,24 +471,59 @@ hu8.save()
 
 """Delegacion de HU a un usuario"""
 delegacion.objects.create(usuario=sebas,hu=hu1)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"AS+"+"Se ha asignado una HU '"+hu1.descripcion+"' al usuario '"+str(sebas)+"' en la fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu1.descripcion, evento=evento_e)
+
 delegacion.objects.create(usuario=sebas,hu=hu2)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"AS+"+"Se ha asignado una HU '"+hu2.descripcion+"' al usuario '"+str(sebas)+"' en la fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu2.descripcion, evento=evento_e)
+
 delegacion.objects.create(usuario=sebas,hu=hu3)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"AS+"+"Se ha asignado una HU '"+hu3.descripcion+"' al usuario '"+str(sebas)+"' en la fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu3.descripcion, evento=evento_e)
+
 delegacion.objects.create(usuario=sebas,hu=hu4)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"AS+"+"Se ha asignado una HU '"+hu4.descripcion+"' al usuario '"+str(sebas)+"' en la fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu4.descripcion, evento=evento_e)
+
 delegacion.objects.create(usuario=sebas,hu=hu5)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"AS+"+"Se ha asignado una HU '"+hu5.descripcion+"' al usuario '"+str(sebas)+"' en la fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu5.descripcion, evento=evento_e)
 
 delegacion.objects.create(usuario=gabriela,hu=hu6)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"AS+"+"Se ha asignado una HU '"+hu6.descripcion+"' al usuario '"+str(gabriela)+"' en la fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu6.descripcion, evento=evento_e)
+
 delegacion.objects.create(usuario=gabriela,hu=hu7)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"AS+"+"Se ha asignado una HU '"+hu7.descripcion+"' al usuario '"+str(gabriela)+"' en la fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu7.descripcion, evento=evento_e)
+
 delegacion.objects.create(usuario=gabriela,hu=hu8)
+evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"AS+"+"Se ha asignado una HU '"+hu8.descripcion+"' al usuario '"+str(gabriela)+"' en la fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu8.descripcion, evento=evento_e)
 
 """Creacion de descripciones para la HU1 Mensaje Finalizada a Tiempo"""
 dhu1=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Analisis",estado='PRO')
+evento_e=str(sebas.id)+"+"+str(p1.id)+"+"+str(rol_equipo.id)+"+"+"HU+"+"A+"+"Se ha agregado '"+str(dhu1.horas_trabajadas)+"' horas a la '"+str(hu1.descripcion)+"' con una descripcion '"+dhu1.descripcion_horas_trabajadas+"' estando en la actividad '"+ dhu1.actividad+ "' con el estado '"+dhu1.estado+"' con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=sebas, fecha_hora=str(datetime.date.today()), objeto=hu1.descripcion, evento=evento_e)
 dhu2=HU_descripcion.objects.create(horas_trabajadas=2,descripcion_horas_trabajadas='Tarea2',fecha=str(datetime.date.today()),actividad="Analisis",estado='FIN')
+evento_e=str(sebas.id)+"+"+str(p1.id)+"+"+str(rol_equipo.id)+"+"+"HU+"+"A+"+"Se ha agregado '"+str(dhu2.horas_trabajadas)+"' horas a la '"+str(hu1.descripcion)+"' con una descripcion '"+dhu2.descripcion_horas_trabajadas+"' estando en la actividad '"+ dhu2.actividad+ "' con el estado '"+dhu2.estado+"' con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=sebas, fecha_hora=str(datetime.date.today()), objeto=hu1.descripcion, evento=evento_e)
 dhu3=HU_descripcion.objects.create(horas_trabajadas=4,descripcion_horas_trabajadas='Tarea3',fecha=str(datetime.date.today() + datetime.timedelta(1)),actividad="Diseño",estado='PRO')
+evento_e=str(sebas.id)+"+"+str(p1.id)+"+"+str(rol_equipo.id)+"+"+"HU+"+"A+"+"Se ha agregado '"+str(dhu3.horas_trabajadas)+"' horas a la '"+str(hu1.descripcion)+"' con una descripcion '"+dhu3.descripcion_horas_trabajadas+"' estando en la actividad '"+ dhu3.actividad+ "' con el estado '"+dhu3.estado+"' con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=sebas, fecha_hora=str(datetime.date.today()), objeto=hu1.descripcion, evento=evento_e)
 dhu4=HU_descripcion.objects.create(horas_trabajadas=2,descripcion_horas_trabajadas='Tarea4',fecha=str(datetime.date.today() + datetime.timedelta(2)),actividad="Diseño",estado='FIN')
+evento_e=str(sebas.id)+"+"+str(p1.id)+"+"+str(rol_equipo.id)+"+"+"HU+"+"A+"+"Se ha agregado '"+str(dhu4.horas_trabajadas)+"' horas a la '"+str(hu1.descripcion)+"' con una descripcion '"+dhu4.descripcion_horas_trabajadas+"' estando en la actividad '"+ dhu4.actividad+ "' con el estado '"+dhu4.estado+"' con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=sebas, fecha_hora=str(datetime.date.today()), objeto=hu1.descripcion, evento=evento_e)
 dhu5=HU_descripcion.objects.create(horas_trabajadas=0.2,descripcion_horas_trabajadas='Tarea5',fecha=str(datetime.date.today() + datetime.timedelta(3)),actividad="Despliegue",estado='FIN')
+evento_e=str(sebas.id)+"+"+str(p1.id)+"+"+str(rol_equipo.id)+"+"+"HU+"+"A+"+"Se ha agregado '"+str(dhu5.horas_trabajadas)+"' horas a la '"+str(hu1.descripcion)+"' con una descripcion '"+dhu5.descripcion_horas_trabajadas+"' estando en la actividad '"+ dhu5.actividad+ "' con el estado '"+dhu5.estado+"' con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=sebas, fecha_hora=str(datetime.date.today()), objeto=hu1.descripcion, evento=evento_e)
 dhu6=HU_descripcion.objects.create(horas_trabajadas=1.8,descripcion_horas_trabajadas='Tarea6',fecha=str(datetime.date.today() + datetime.timedelta(4)),actividad="Desarrollo",estado='FIN')
+evento_e=str(sebas.id)+"+"+str(p1.id)+"+"+str(rol_equipo.id)+"+"+"HU+"+"A+"+"Se ha agregado '"+str(dhu6.horas_trabajadas)+"' horas a la '"+str(hu1.descripcion)+"' con una descripcion '"+dhu6.descripcion_horas_trabajadas+"' estando en la actividad '"+ dhu6.actividad+ "' con el estado '"+dhu6.estado+"' con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=sebas, fecha_hora=str(datetime.date.today()), objeto=hu1.descripcion, evento=evento_e)
 dhu7=HU_descripcion.objects.create(horas_trabajadas=1,descripcion_horas_trabajadas='Tarea7',fecha=str(datetime.date.today() + datetime.timedelta(5)),actividad="Prueba",estado='FIN')
-
+evento_e=str(sebas.id)+"+"+str(p1.id)+"+"+str(rol_equipo.id)+"+"+"HU+"+"A+"+"Se ha agregado '"+str(dhu7.horas_trabajadas)+"' horas a la '"+str(hu1.descripcion)+"' con una descripcion '"+dhu7.descripcion_horas_trabajadas+"' estando en la actividad '"+ dhu7.actividad+ "' con el estado '"+dhu7.estado+"' con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=sebas, fecha_hora=str(datetime.date.today()), objeto=hu1.descripcion, evento=evento_e)
 """Asociar la hu con una descripcion para HU1"""
 hu1.hu_descripcion.add(dhu1)
 hu1.hu_descripcion.add(dhu2)
@@ -416,8 +541,14 @@ hu1.save()
 
 """Creacion de descripciones para la HU2 Mensaje No finalizo. Contactar con Scrum"""
 dhu1=HU_descripcion.objects.create(horas_trabajadas=2,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Analisis",estado='PRO')
+evento_e=str(sebas.id)+"+"+str(p1.id)+"+"+str(rol_equipo.id)+"+"+"HU+"+"A+"+"Se ha agregado '"+str(dhu1.horas_trabajadas)+"' horas a la '"+str(hu1.descripcion)+"' con una descripcion '"+dhu1.descripcion_horas_trabajadas+"' estando en la actividad '"+ dhu1.actividad+ "' con el estado '"+dhu1.estado+"' con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=sebas, fecha_hora=str(datetime.date.today()), objeto=hu1.descripcion, evento=evento_e)
 dhu2=HU_descripcion.objects.create(horas_trabajadas=2,descripcion_horas_trabajadas='Tarea2',fecha=str(datetime.date.today() + datetime.timedelta(2)),actividad="Analisis",estado='FIN')
+evento_e=str(sebas.id)+"+"+str(p1.id)+"+"+str(rol_equipo.id)+"+"+"HU+"+"A+"+"Se ha agregado '"+str(dhu2.horas_trabajadas)+"' horas a la '"+str(hu1.descripcion)+"' con una descripcion '"+dhu2.descripcion_horas_trabajadas+"' estando en la actividad '"+ dhu2.actividad+ "' con el estado '"+dhu2.estado+"' con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=sebas, fecha_hora=str(datetime.date.today()), objeto=hu1.descripcion, evento=evento_e)
 dhu3=HU_descripcion.objects.create(horas_trabajadas=1,descripcion_horas_trabajadas='Tarea3',fecha=str(datetime.date.today() + datetime.timedelta(3)),actividad="Diseño",estado='PRO')
+evento_e=str(sebas.id)+"+"+str(p1.id)+"+"+str(rol_equipo.id)+"+"+"HU+"+"A+"+"Se ha agregado '"+str(dhu3.horas_trabajadas)+"' horas a la '"+str(hu1.descripcion)+"' con una descripcion '"+dhu3.descripcion_horas_trabajadas+"' estando en la actividad '"+ dhu3.actividad+ "' con el estado '"+dhu3.estado+"' con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=sebas, fecha_hora=str(datetime.date.today()), objeto=hu1.descripcion, evento=evento_e)
 
 """Asociar la hu con una descripcion para HU2, mismo que el anterior, estan en el mismo Flujo"""
 hu2.hu_descripcion.add(dhu1)
@@ -431,10 +562,20 @@ hu2.save()
 
 """Creacion de descripciones para la HU3 Mensaje Finalizado antes de tiempo"""
 dhu1=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Analisis",estado='FIN')
+evento_e=str(sebas.id)+"+"+str(p1.id)+"+"+str(rol_equipo.id)+"+"+"HU+"+"A+"+"Se ha agregado '"+str(dhu1.horas_trabajadas)+"' horas a la '"+str(hu1.descripcion)+"' con una descripcion '"+dhu1.descripcion_horas_trabajadas+"' estando en la actividad '"+ dhu1.actividad+ "' con el estado '"+dhu1.estado+"' con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=sebas, fecha_hora=str(datetime.date.today()), objeto=hu1.descripcion, evento=evento_e)
 dhu2=HU_descripcion.objects.create(horas_trabajadas=2,descripcion_horas_trabajadas='Tarea2',fecha=str(datetime.date.today()),actividad="Diseño",estado='FIN')
+evento_e=str(sebas.id)+"+"+str(p1.id)+"+"+str(rol_equipo.id)+"+"+"HU+"+"A+"+"Se ha agregado '"+str(dhu2.horas_trabajadas)+"' horas a la '"+str(hu1.descripcion)+"' con una descripcion '"+dhu2.descripcion_horas_trabajadas+"' estando en la actividad '"+ dhu2.actividad+ "' con el estado '"+dhu2.estado+"' con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=sebas, fecha_hora=str(datetime.date.today()), objeto=hu1.descripcion, evento=evento_e)
 dhu3=HU_descripcion.objects.create(horas_trabajadas=4,descripcion_horas_trabajadas='Tarea3',fecha=str(datetime.date.today() + datetime.timedelta(1)),actividad="Despliegue",estado='FIN')
+evento_e=str(sebas.id)+"+"+str(p1.id)+"+"+str(rol_equipo.id)+"+"+"HU+"+"A+"+"Se ha agregado '"+str(dhu3.horas_trabajadas)+"' horas a la '"+str(hu1.descripcion)+"' con una descripcion '"+dhu3.descripcion_horas_trabajadas+"' estando en la actividad '"+ dhu3.actividad+ "' con el estado '"+dhu3.estado+"' con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=sebas, fecha_hora=str(datetime.date.today()), objeto=hu1.descripcion, evento=evento_e)
 dhu4=HU_descripcion.objects.create(horas_trabajadas=2,descripcion_horas_trabajadas='Tarea4',fecha=str(datetime.date.today() + datetime.timedelta(1)),actividad="Desarrollo",estado='FIN')
+evento_e=str(sebas.id)+"+"+str(p1.id)+"+"+str(rol_equipo.id)+"+"+"HU+"+"A+"+"Se ha agregado '"+str(dhu4.horas_trabajadas)+"' horas a la '"+str(hu1.descripcion)+"' con una descripcion '"+dhu4.descripcion_horas_trabajadas+"' estando en la actividad '"+ dhu4.actividad+ "' con el estado '"+dhu4.estado+"' con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=sebas, fecha_hora=str(datetime.date.today()), objeto=hu1.descripcion, evento=evento_e)
 dhu5=HU_descripcion.objects.create(horas_trabajadas=0.2,descripcion_horas_trabajadas='Tarea5',fecha=str(datetime.date.today() + datetime.timedelta(2)),actividad="Prueba",estado='FIN')
+evento_e=str(sebas.id)+"+"+str(p1.id)+"+"+str(rol_equipo.id)+"+"+"HU+"+"A+"+"Se ha agregado '"+str(dhu5.horas_trabajadas)+"' horas a la '"+str(hu1.descripcion)+"' con una descripcion '"+dhu5.descripcion_horas_trabajadas+"' estando en la actividad '"+ dhu5.actividad+ "' con el estado '"+dhu5.estado+"' con fecha y hora: "+str(datetime.date.today())
+historial_notificacion.objects.create(usuario=sebas, fecha_hora=str(datetime.date.today()), objeto=hu1.descripcion, evento=evento_e)
 
 """Asociar la hu con una descripcion para HU2, mismo que el anterior, estan en el mismo Flujo"""
 hu3.hu_descripcion.add(dhu1)

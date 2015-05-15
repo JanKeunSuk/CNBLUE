@@ -66,6 +66,7 @@
 	  							<td><a href="/modificarProyecto/{{usuario.id}}/{{proyecto.id}}/" class="changelink">Modificar</a>
 	  							<td><a href="/equipoProyecto/{{proyecto.id}}/{{usuario.id}}" class="addlink">Visualizar Equipo</a></td>
 	                			<td><a href="/visualizarProyecto/{{usuario.id}}/{{proyecto.id}}/" class="addlink">Visualizar</a></td>
+	                			<td><a href="/notificaciones/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}/" >Notificaciones</a></td>
 	              			</tr>
 	              			{%endfor%}
 	              		{%endif%}
@@ -77,6 +78,7 @@
             	  				<tr>
             						<th><a href="/scrum/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}" >{{rol}}</a></th>
             						<td><a href="/visualizarProyecto/{{usuario.id}}/{{proyecto.id}}/" class="addlink">Visualizar</a></td>
+            						<td><a href="/notificaciones/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}/" >Notificaciones</a></td>
             						{%if proyecto_cliente|length > 0%}
             							{%for c in proyecto_cliente%}
             								{%if c == proyecto.id%}

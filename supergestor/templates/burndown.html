@@ -35,7 +35,7 @@ $(function () {
             text: 'BurnDown Chart Sprint: {{sprint.descripcion}}'
         },
         subtitle: {
-            text: 'Horas progresadas por en el sprint por fecha trabajada'
+            text: 'Horas restantes del sprint por fecha trabajada'
         },
         plotOptions: {
             column: {
@@ -48,6 +48,9 @@ $(function () {
             			{%endfor%}],
             labels: {
                 rotation: -45,
+            },
+            title: {
+            	text: 'Fechas'
             }
                 
         },

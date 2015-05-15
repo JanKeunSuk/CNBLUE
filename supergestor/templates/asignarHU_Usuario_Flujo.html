@@ -126,7 +126,11 @@
                     						<p>
                     						<li>{{h}} ya asignada a <b>{{u}}</b> con prioridad <b>{{hu.prioridad}}</b>
                     						{%if h.estado_en_actividad != 'FIN' and h.estado_en_actividad != 'APR' %}
-                    							<a href="/delegarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{h.id}}/1/"> &nbsp; &nbsp; &nbsp; &nbsp; Reasignar a Usuario</a>
+                    							{%if sprint.estado != 'FIN'%}
+                    								<a href="/delegarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{h.id}}/1/"> &nbsp; &nbsp; &nbsp; &nbsp; Reasignar a Usuario</a>
+                    							{%else%}
+                    								&nbsp; &nbsp; &nbsp; &nbsp; <font color='red'><b>No Finalizada</b></font>
+                    							{%endif%}
                     						{%elif h.estado_en_actividad == 'FIN' %}
                     							&nbsp; &nbsp; &nbsp; &nbsp; <font color='green'><b>Finalizada</b></font>
                     						{%else %}
