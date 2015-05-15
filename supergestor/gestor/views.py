@@ -1223,7 +1223,6 @@ def crearSprint(request,usuario_id,proyectoid,rolid):
                     HUs_pendientes.append(h)
                     HUs=HUs.exclude(id=h.id)
                     flujos_pen.append(h.flujo())
-                    flujos.exclude(id=h.flujo().id)
                 else:
                     HUs=HUs.exclude(id=h.id)
     for x in Sprint.objects.all():
@@ -1233,6 +1232,8 @@ def crearSprint(request,usuario_id,proyectoid,rolid):
                 HUs_pendientes.remove(h)  
                 flujos_pen.remove(h.flujo())
     flujos_pen=set(flujos_pen)
+    for f in flujos_pen:
+        flujos=flujos.exclude(id=f.id)
     HUs=sorted(HUs,key=lambda x: x.prioridad, reverse=True)
     if request.method == 'GET':
         return render(request, 'crearSprint.html',{'flujos_pen':flujos_pen,'HUs_pendientes':HUs_pendientes,'HUs_no_seleccionadas':HUs,'flujos':flujos,'HUs':HUs,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
