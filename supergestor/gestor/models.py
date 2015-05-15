@@ -218,7 +218,6 @@ class HU(models.Model):
     ) 
     
     descripcion = models.CharField(max_length = 200)
-    #descripcion_extensa=models.CharField(max_length = 500)
     valor_negocio = models.IntegerField(choices = VALORES10_CHOICES)
     valor_tecnico = models.IntegerField(choices = VALORES10_CHOICES)
     prioridad = models.IntegerField(choices = VALORES100_CHOICES)
@@ -239,9 +238,11 @@ class HU(models.Model):
     
     
     def get_gersion(self):
+        """ Retorna la version """
         return self.version
     
     def sprint(self):
+        """ Funcion que retorna el sprint de una hu """
         id=0
         sprint=None
         for a in Sprint.objects.all():
@@ -253,6 +254,7 @@ class HU(models.Model):
         return sprint
     
     def flujo(self):
+        """ Funcion que retorna el flujo de una hu """
         for a in asignaHU_actividad_flujo.objects.all():
             for h in a.lista_de_HU.all():
                 if self.id == h.id:
@@ -260,12 +262,14 @@ class HU(models.Model):
         return None
     
     def saber_usuario(self): 
+        """ Funcion que retorna el usuario de una hu """
         for d in delegacion.objects.all():
             if self.id == d.hu.id:
                 return d.usuario
         return None
     
     def ultima_Version(self):
+        """ Funcion que retorna la ultima version de una hu """
         hvs=HU_version.objects.filter(hu=self)
         lastx=len(hvs.all())
         if lastx>0:
@@ -288,7 +292,7 @@ class HU_version(models.Model):
         return 'descripcion:'+self.descripcion + 'valor negocio: '+self.valor_negocio
         
 class archivoadjunto(models.Model):
-    
+    """ Representacion de una archivo adjunto """
     ESTADO_CHOICES = (
         ('CAN', 'Cancelado'),
         ('ACT', 'Activo'),
@@ -302,7 +306,7 @@ class archivoadjunto(models.Model):
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
     
     def __unicode__(self):
-        """Representacion unicode del objeto HU"""
+        """Representacion unicode del objeto archivoadjunto"""
         return self.archivo.nombre
     
     
@@ -344,9 +348,11 @@ class Sprint(models.Model):
     flujo=models.ManyToManyField(Flujo)
     
     def __unicode__(self):
+        """Representacion unicode del objeto Sprint"""
         return self.descripcion
     
     def termino_Sprint(self):
+        """Funcion que representa el termino de un sprint retornando True o False"""
         suma=0
         terminaron=True
         for h in self.hu.all():
