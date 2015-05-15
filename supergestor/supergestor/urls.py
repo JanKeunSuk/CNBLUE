@@ -60,4 +60,5 @@ urlpatterns = patterns('',
     url(r'^cambiarVersionHU/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<hu_id>\d+)/$', views.cambiarVersionHU, name='Cambiar version hu'),
     url(r'^elegirVersionHU/(?P<hv_id>\d+)/(?P<hu_id>\d+)/$',views.elegirVersionHU,name='elegir version hu'),
     url(r'^reasignarhuFlujo/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/(?P<sprintid>\d+)/(?P<huid>\d+)/(?P<kanban>\d+)/$',views.reasignarhuFlujo, name='reasignar hu flujo'),
+    url(r'^visualizarChart/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$',views.visualizarBurnDownChart,name='verBurnDOwnCHart')
 )

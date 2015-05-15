@@ -1496,6 +1496,65 @@ def descargar(request, usuario_id, proyectoid, rolid, HU_id_rec,archivo_id):
     response.write(file)
     return response
 
+
+def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
+    """Genera los datos para mostrar en el BurndownChart que son las horas restantes del spint que quedan por hacer luego del progreso 
+    total que se haya obtenido en un dia dado"""
+    sprint= Sprint.objects.get(estado='CON')#esto es un quiryset....que sea un elemento nomas!!!!!!!!
+    #sprint ahora tiene el Sprint que se va mostrar en el burndown de este proyecto...el actual nose si hay que mostrar de todos?
+    hus=HU.objects.all().filter(proyecto__id=proyectoid)
+    #tengo todas las hu de este proyecto ahora, necesito solo las de este sprint
+    hux=[]
+    for u in hus:
+        if u.sprint()==sprint:
+            hux.append(u)
+            
+    #ahora ya tengo todas las hu del sprint en hux
+    #tengo que sumar sus duraciones para saber el maximo del backlog
+    sumx=0
+    for ux in hux:
+        sumx+=ux.duracion
+    #ahora tengo que trabajar con el acumulador de horas diario que seria una lista por dia de todas las hu del dia
+    #parecido al de abajo pero en vez de lista_hu_horas seria lista fecha horas
+    #supongo que antes deberia saber cuantas fechas tener en cuenta...no estoy seguro  
+
+        
+    #supongo que conviene mas tener un diccionario de fechas con valores de total de horas de hus del dia asiciados a esas fechas
+    #una hu aporta horas a varios dias
+    #luego generar otro diccionario pero de horas restantes a partir del diccionario de horas progresadas
+    
+    
+    lista_fechas_horas={}
+    lista_fechas_horas[str(sprint.fecha_inicio)[:10]]=0 #sum va a ser para el segundo diccionario, el primer diccionario
+                                                        #solo acumula horas, el segundo es el que se manda al template
+    #el primer elemento del diccionario va a ser la duracion total de todas las hu osea la primera barra del burndown
+    for hu in hux:
+        for d in hu.hu_descripcion.all():
+            f=str(d.fecha)[:10]
+            if f in lista_fechas_horas:
+                lista_fechas_horas[f]+=d.horas_trabajadas
+            else:
+                lista_fechas_horas[f]=d.horas_trabajadas
+                pass
+    
+    # Un diccionario puede tener elementos repetidos(keys), pero la programacion anterior va a impedirlo 
+    #bueno ahora ya tengo el diccionario con el total de horas por dia cargadas me convendria disponer de la longitud del diccionario
+    cant_dias=len(lista_fechas_horas)
+    # ahora voy a crear y cargar el diccionario que se va mandar al template
+    remaining_dic={}
+    
+    tot_restante=sumx
+    #tot_restante es la que va disminuir, sum quiero mantener por las dudas
+    
+    for k, v in lista_fechas_horas.iteritems():
+        remaining_dic[k]=tot_restante-v
+        tot_restante-=v
+    #remaining_dic ahora tiene las horas restante por fecha basado en los datos de las horas progresadaspor fecha, sum deberia disminuir
+    
+    #ahora si puedo mandar remaining_dic y todo lo que me parezca necesario por ahora
+    
+    return render(request,'burndown.html',{'sprint':sprint,'restantes':remaining_dic,'suma_hu':sumx,'cant_dias':cant_dias,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+
 def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     """
     El sprint backlog es una lista de las tareas identificadas por el equipo de Scrum
