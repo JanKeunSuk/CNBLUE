@@ -1492,7 +1492,7 @@ def asignarRol(request,usuario_id, proyectoid,rolid, rol_id_rec):
     
     
 def listarEquipo(request,proyecto_id_rec,usuario_id):
-   """Esta vista debe obtener los datos de los usuarios que han sido asignados a un rol en el proyecto,el parametro
+    """Esta vista debe obtener los datos de los usuarios que han sido asignados a un rol en el proyecto,el parametro
     usuario_id se necesita simplemente para el render para poder retornar a rol-flujo-para-scrum
         :param func: request
         :param args: proyecto_id_rec,usuario_id
