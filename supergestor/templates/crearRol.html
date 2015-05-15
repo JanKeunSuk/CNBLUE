@@ -49,7 +49,7 @@
     <!-- END Header -->
     
 <div class="breadcrumbs">
-<a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}">Pagina Principal</a>
+<a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Pagina Principal</a>
 </div>
 
     <!-- Content -->
@@ -58,7 +58,7 @@
         <h1>Agregar rol</h1>
         <div id="content-main">
 
-<form enctype="multipart/form-data" action="/guardarRol/{{usuarioid}}/" method="post" id="rol_form">
+<form enctype="multipart/form-data" action="/guardarRol/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="post" id="rol_form">
 
 {% csrf_token %}
 <div>

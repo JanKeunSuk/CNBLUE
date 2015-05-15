@@ -106,7 +106,9 @@
     	{%for h in Sprint.hu.all%}
     			<option selected="selected" value="{{h.id}}">{{h.descripcion}}</option>
         {%endfor%}
-        
+        {%for h in HUs_pendientes%}
+                <option value="{{h.id}}">{{h.descripcion}} - PEN</option>
+        {%endfor%}
         {%for h in lista_HU_sin_asignar%}
     			<option value="{{h.id}}">{{h.descripcion}}</option>
         {%endfor%}

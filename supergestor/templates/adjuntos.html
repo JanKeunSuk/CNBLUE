@@ -73,11 +73,24 @@
                     
                     <!--Voy a listar nomas aca los archivos y despues tiene un formulario para subiruno mas
                     todavia no tiene opcion de borrar-->
-                       
+                       	<table width="900" bordercolor = #8904B1 border="8" align="center">
+                           	<tr>
+                           	<td align="center" bgcolor="#E0F8F1"><font size="2" color="black"><b>Nombre de archivo</b></font></td>
+                            <td align="center" bgcolor="#E0F8F1"><font size="2" color="black"><b>Tipo</b></font></td>
+                            <td align="center" bgcolor="#E0F8F1"><font size="2" color="black"><b>Tamanho</b></font></td>
+                            <td align="center" bgcolor="#E0F8F1"><font size="2" color="black"><b>Descargar?</b></font></td>
+                            </tr>
                             {%for adjunto in adjuntos %}
-                            	<p><a a href="/descargar/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{HU.id}}/{{adjunto.id}}/">{{adjunto.nombre}}</a></p>
+                            	<tr>
+                            		<td align="center">{{adjunto.nombre}}</td>
+                            		<td align="center">{{adjunto.content}}</td>
+                            		<td align="center">{{adjunto.tamanho}}</td>
+                            		<td align="center"><a a href="/descargar/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{HU.id}}/{{adjunto.id}}/">Descargar</a>
+                            		&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+                            		<a a href="/eliminar/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{HU.id}}/{{adjunto.id}}/" class="deletelink"> Eliminar</a></td>
+                            	</tr>
 							{%endfor%}
-							
+						</table>
 					<form enctype="multipart/form-data" method="post" id="adjunto_form">
 					{% csrf_token %}
 						<input type="file" name="archivo" >

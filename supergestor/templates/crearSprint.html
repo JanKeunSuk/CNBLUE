@@ -97,7 +97,10 @@
 
                         <label class="required" for="id_usuarios">HUs:</label>
                         
-                            <select multiple = "multiple" id="id_usuarios" name="HUs" required>
+                            <select multiple = "multiple" id="id_usuarios" name="HUs" size=10 required>
+                            {%for h in HUs_pendientes%}
+                            	<option value="{{h.id}}" selected>{{h.descripcion}} - PEN</option>
+                            {%endfor%}
                             {%for HU in HUs %}
                             	{%for h in HUs_seleccionadas%}
                             		{%if HU == h%}
@@ -122,7 +125,7 @@
 
                 <div>
 
-                        <label class="required" for="id_duracion">Duracion:</label>
+                        <label class="required" for="id_duracion">Duracion en dias:</label>
                         
                             <input class="vTextField" id="id_duracion" maxlength="500" name="duracion" value="{{duracion}}" type="text" pattern="[0-9]" required="required" autofocus="autofocus"/>
 
@@ -137,6 +140,9 @@
                         <label class="required" for="id_usuarios">Flujos:</label>
                         
                             <select multiple = "multiple" id="id_usuarios" name="Flujos" required>
+                            {%for flujo in flujos_pen %}
+								<option value="{{flujo.id}}" selected> {{flujo}}</option>
+							{%endfor%}
                             {%for flujo in flujos %}
 								<option value="{{flujo.id}}"> {{flujo}}</option>
 							{%endfor%}

@@ -65,11 +65,8 @@
         {% csrf_token %}
 		<div>
 			<font size="5" color="#3B0B24"><b>HU aun no ha finalizado correctamente</b></font>
-			<br/>
-			<b>Modificar Actividad, estado, duracion o flujo</b>
-			<br/>
-			<br/>
-			<b>Usuario asignado: </b> {{usuario_asignado}}
+			<br/><br/><font size="3" color="#3B0B24"><b> -> Retroceder actividad en flujo:</b></font>
+			<br/><br/><b>Usuario asignado: </b> {{usuario_asignado}}
 			<a href="/delegarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{HU.id}}/1/"> &nbsp; &nbsp; &nbsp; &nbsp; Reasignar a Usuario</a>
 			<br/>
 			<br/>
@@ -100,7 +97,6 @@
 			<b>Duracion:</b>
 			<input type="text" size="15" maxlength="30" value="{{HU.duracion}}" name="duracion"><br/>
 			<br/>
-			<br/>
 			<b>Descripcion del motivo de retroceso:</b>
 			<textarea name="descripcion" rows="10" cols="40">HU NO FINALIZADA CORRECTAMENTE, retroceso hecho por el Scrum!
 			- Usuario fue cambiado?
@@ -109,10 +105,12 @@
 			- Estado de actividad?
 			- Motivo: </textarea>
 			<br/>
-			<br/>
+			<button id="assign" name="boton" value="HU_no_finalizada">Aceptar</button>
 			<br/><br/>
-			<button id="assign" name="boton" value="HU_no_finalizada">Retroceder HU, no finalizada correctamente</button>
-			<br/><br/><br/>
+			<br/><font size="3" color="#3B0B24"><b> -> Cambiar de flujo: </b></font>
+			<a href="/reasignarhuFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprintid}}/{{HU.id}}/1/" class="changelink" >Resasignar a flujo</a>
+			<br/>
+			<br/>
 			<font size="5" color="#3B0B24"><b>HU Finalizada correctamente</b></font>
 			<br/><br/>
 			<input type="submit" value="Aprobar"  class="boton" name="_save" />

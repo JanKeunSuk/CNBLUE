@@ -59,7 +59,7 @@
         <h1>Agregar HU</h1>
         <div id="content-main">
 
-<form enctype="multipart/form-data" action="/guardarHU/{{proyectoid}}/" method="post" id="rol_form" novalidate>
+<form enctype="multipart/form-data" action="/guardarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="post" id="rol_form" novalidate>
 <input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
 {% csrf_token %}
 <div>
