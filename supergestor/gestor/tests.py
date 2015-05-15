@@ -938,7 +938,7 @@ class loginCase(LiveServerTestCase):
     def tearDown(self):
         self.browser.quit()
         
-class AgregarhorasCase(LiveServerTestCase):
+class VisualizarEquipoCase(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -961,14 +961,6 @@ class AgregarhorasCase(LiveServerTestCase):
         user_link[0].click()
         title = self.browser.find_element_by_tag_name('body')
         self.assertIn('Pagina Principal', title.text)
-        user_link2 =self.browser.find_elements_by_link_text('Agregar horas trabajadas')
-        user_link2[0].click()
-        self.browser.find_element_by_name('horas_agregar').send_keys("0.1")
-        self.browser.find_element_by_name('descripcion_horas').send_keys("Tarea")
-        time.sleep(2)
-        self.browser.find_element_by_css_selector("input[value='Guardar']").click()
-        user_link = self.browser.find_elements_by_link_text('Modificación de HU')
-        user_link[0].click()
         time.sleep(3)
         
     #cierra el browser   
