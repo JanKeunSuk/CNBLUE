@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en-us" >
+<head>
+<title>Sistema para Consultora de Desarrollo</title>
+<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/static/admin/css/dashboard.css" />
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/static/admin/css/ie.css" /><![endif]-->
+
+<script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
+<script type="text/javascript">window.__admin_utc_offset__ = "0";</script>
+
+<meta name="robots" content="NONE,NOARCHIVE" />
+</head>
+
+
+<body class=" dashboard">
+
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+			<h1><a href="/hola/">Notificaciones enviadas:</a></h1>
+        </div>      
+        
+    </div>
+    <!-- END Header -->
+    
+    <!-- Content -->
+    <div class="content">
+        
+         	<div style="width:900px; height:580px; border:#000 2px solid; overflow:auto">
+         		{%if rol == 1%}
+        			<font size="3"><b>Rol:</b></font> <br/> <br/>
+        			<font size="2"><b>Creacion:</b></font> <br/> <br/>
+        			<ul>
+        			{%for a in rol_c%}
+        				<li><p>{{a}}</p></li>
+        			{%endfor%}
+        			</ul>
+        			<font size="2"><b>Modificacion:</b></font> <br/> <br/>
+        			<ul>
+        			{%for a in rol_m%}
+        				<li><p>{{a}}</p></li>
+        			{%endfor%}
+        			</ul>
+        			<font size="2"><b>Reactivaciones:</b></font> <br/> <br/>
+        			<ul>
+        			{%for a in rol_r%}
+        				<li><p>{{a}}</p></li>
+        			{%endfor%}
+        			</ul>
+        		{%endif%}
+        		
+        		{%if sprint == 1%}
+        			<font size="3"><b>Sprint:</b></font> <br/> <br/>
+        			<font size="2"><b>Creacion:</b></font> <br/> <br/>
+        			<ul>
+        			{%for a in sprint_c%}
+        				<li><p>{{a}}</p></li>
+        			{%endfor%}
+        			</ul>
+        			<font size="2"><b>Modificacion:</b></font> <br/> <br/>
+        			<ul>
+        			{%for a in sprint_m%}
+        				<li><p>{{a}}</p></li>
+        			{%endfor%}
+        			</ul>
+        			<font size="2"><b>Reactivaciones:</b></font> <br/> <br/>
+        			<ul>
+        			{%for a in sprint_r%}
+        				<li><p>{{a}}</p></li>
+        			{%endfor%}
+        			</ul>
+        		{%endif%}
+        		
+        		{%if flujo == 1%}
+        			<font size="3"><b>Flujo:</b></font> <br/> <br/>
+        			<font size="2"><b>Creacion:</b></font> <br/> <br/>
+        			<ul>
+        			{%for a in flujo_c%}
+        				<li><p>{{a}}</p></li>
+        			{%endfor%}
+        			</ul>
+        			<font size="2"><b>Modificacion:</b></font> <br/> <br/>
+        			<ul>
+        			{%for a in flujo_m%}
+        				<li><p>{{a}}</p></li>
+        			{%endfor%}
+        			</ul>
+        			<font size="2"><b>Reactivaciones:</b></font> <br/> <br/>
+        			<ul>
+        			{%for a in flujo_r%}
+        				<li><p>{{a}}</p></li>
+        			{%endfor%}
+        			</ul>
+        		{%endif%}
+        		
+        		{%if actividad == 1%}
+        			<font size="3"><b>Actividad:</b></font> <br/> <br/>
+        			<font size="2"><b>Creacion:</b></font> <br/> <br/>
+        			<ul>
+        			{%for a in actividad_c%}
+        				<li><p>{{a}}</p></li>
+        			{%endfor%}
+        			</ul>
+        			<font size="2"><b>Modificacion:</b></font> <br/> <br/>
+        			<ul>
+        			{%for a in actividad_m%}
+        				<li><p>{{a}}</p></li>
+        			{%endfor%}
+        			</ul>
+        		{%endif%}
+        		
+        		{%if hu == 1%}
+        			<font size="3"><b>HU:</b></font> <br/> <br/>
+        			<font size="2"><b>Creacion:</b></font> <br/> <br/>
+        			<ul>
+        			{%for a in hu_c%}
+        				<li><p>{{a}}</p></li>
+        			{%endfor%}
+        			</ul>
+        			<font size="2"><b>Modificacion:</b></font> <br/> <br/>
+        			<ul>
+        			{%for a in hu_m%}
+        				<li><p>{{a}}</p></li>
+        			{%endfor%}
+        			</ul>
+        			<font size="2"><b>Agregacion de horas:</b></font> <br/> <br/>
+        			<ul>
+        			{%for a in hu_a%}
+        				<li><p>{{a}}</p></li>
+        			{%endfor%}
+        			</ul>
+        			<font size="2"><b>Asignaciones:</b></font> <br/> <br/>
+        			<ul>
+        			{%for a in hu_as%}
+        				<li><p>{{a}}</p></li>
+        			{%endfor%}
+        			</ul>
+        			<font size="2"><b>Reactivaciones:</b></font> <br/> <br/>
+        			<ul>
+        			{%for a in hu_r%}
+        				<li><p>{{a}}</p></li>
+        			{%endfor%}
+        			</ul>
+        		{%endif%}
+        		
+        		{%if proyecto == 1%}
+        			<font size="3"><b>Proyecto:</b></font> <br/> <br/>
+        			<ul>
+        			{%for a in proyecto_m%}
+        				<li><p>{{a}}</p></li>
+        			{%endfor%}
+        			</ul>
+        		{%endif%}
+        	</div>  	
+        
+     </div>
+     <div class="footer">
+     <!-- end.footer --></div>
+
+</body>
+</html>
