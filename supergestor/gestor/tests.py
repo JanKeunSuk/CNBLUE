@@ -153,6 +153,7 @@ class RolTest(TestCase):
         return rol.objects.create( nombre_rol_id="nuevoRol", descripcion="nuevo_rol", usuario_creador= MyUser.objects.create_user('delsy', Permitido.objects.create(email='delsy@gmail.com'), '1234'))
     
     def test_rol_creation(self):
+        """Test que prueba la creacion de rol"""
         w=self.create_rol()
         self.assertTrue(isinstance(w, rol))
         self.assertEqual(w.__unicode__(), w.nombre_rol_id)
@@ -162,16 +163,19 @@ class RolTest(TestCase):
         self.rol=rol.objects.create(nombre_rol_id="nuevoRol", descripcion="nuevo_rol", usuario_creador=MyUser.objects.create_user('kathe', Permitido.objects.create(email='kathe@gmail.com'), '1234'))
         
     def test_rol_view(self):
+        """Test que prueba la vista de un rol"""
         response=self.client.get('/crearRol/2/1/1/')
         self.assertEqual(response.status_code, 200)
     
     def test_modificarRol(self):
+        """Test que prueba la modificacion de rol en uno de sus parametros"""
         w=self.create_rol()
         w.descripcion='rol_cambiado'
         w.save()
         self.assertEqual(w.descripcion, 'rol_cambiado')
     
     def test_dato_invalido(self):
+        """Test que prueba el ingreso invalido de uno de los datos del rol"""
         w=self.create_rol()
         w.descripcion='rol_cambiado'
         w.save()
@@ -183,11 +187,13 @@ class Rol_sistemaTest(TestCase):
         return rol_sistema.objects.create( nombre_rol_id="nuevoRol", descripcion="nuevo_rol")
     
     def test_rol_sistema_creation(self):
+        """Test que prueba la creacion de rol de sistema"""
         w=self.create_rol_sistema()
         self.assertTrue(isinstance(w, rol_sistema))
         self.assertEqual(w.__unicode__(), w.nombre_rol_id)
         
     def test_modificarRol_sistema(self):
+        """Test que prueba la modificaacion de rol de sistema"""
         w=self.create_rol_sistema()
         w.nombre_rol_id='rol_prueba'
         w.save()
@@ -198,27 +204,32 @@ class ActividadesTest(TestCase):
         return Actividades.objects.create(nombre=nombre, descripcion=descripcion)
     
     def test_Actividad_creation(self):
+        """Test que prueba la creacion de una acividad"""
         w=self.create_Actividades()
         self.assertTrue(isinstance(w, Actividades))
         self.assertEqual(w.__unicode__(), str(w.id)  + " - " + w.nombre)
         
     def test_valid_formularioActividad(self):
+        """Test que prueba el formulario de una acividad"""
         w = Actividades.objects.create(nombre="nuevaActividad", descripcion='nueva Actividad' )
         data = {'nombre':w.nombre, 'descripcion':w.descripcion,}
         form = formularioActividad(data=data)
         self.assertTrue(form.is_valid())
         
     def test_invalid_formularioActividad(self):
+        """Test que prueba que el formulario de una acividad es invalido"""
         w = Actividades.objects.create(nombre="nuevaActividad", descripcion='nueva Actividad' )
         data = {'nombre':w.nombre,}
         form = formularioActividad(data=data)
         self.assertFalse(form.is_valid())
         
     def test_crear_actividad_views_get(self):
+        """Test que prueba la vista de crearActividad de una acividad GET"""
         response=self.client.get('/crearActividad/2/1/')
         self.assertEqual(response.status_code, 200)
         
     def test_crear_actividad_views_pos(self):
+        """Test que prueba la vista de crearActividad de una acividad POS"""
         w = Actividades.objects.create(nombre="nuevaActividad", descripcion='nueva Actividad' )
         w.save()
         
@@ -230,6 +241,7 @@ class ActividadesTest(TestCase):
     
      
     def test_modificar_actividad_views(self):
+        """Test que prueba la vista de modificarActividad de una acividad"""
         w=self.create_proyecto()    
         u= MyUser.objects.create_user('anonimo', Permitido.objects.create(email='anonimo2@hotmail.com'), '1234')
         y= self.create_Actividades()
@@ -239,6 +251,7 @@ class ActividadesTest(TestCase):
         self.client.post(Actividad_url, data=post_data)
     
     def test_modificarActividad(self):
+        """Test que prueba la modificacion de una acividad"""
         w=self.create_Actividades()
         w.nombre='actividad_prueba'
         w.save()
@@ -249,15 +262,17 @@ class FlujoTest(TestCase):
         return Flujo.objects.create(nombre=nombre, estado=estado)
     
     def test_Flujo_creation(self):
+        """Test que prueba la creacion de un flujo"""
         w=self.create_Flujo()
         self.assertTrue(isinstance(w, Flujo))
-        #self.assertEqual(w.__unicode__(), str(w.id) + w.nombre)
     
     def test_crear_flujo_views(self):
+        """Test que prueba la vista de un flujo"""
         response=self.client.get('/crearFlujo/2/1/1/')
         self.assertEqual(response.status_code, 200)
     
     def test_flujo_modificar_estado(self):
+        """Test que prueba la modificacion del estado de un flujo"""
         w=self.create_Flujo()
         w.estado='CAN'
         w.save()
@@ -269,41 +284,41 @@ class proyectoTest(TestCase):
         return proyecto(nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio=timezone.now(), fecha_fin=datetime.timedelta(days=1), estado="PEN")
     
     def test_proyecto_creation(self):
+        """Test que prueba la creacion de un proyecto"""
         w=self.create_proyecto()
         self.assertTrue(isinstance(w, proyecto))
         self.assertEqual(w.__unicode__(), w.nombre_corto)
-    """ 
-    def test_valid_proyectoFrom(self):
-        w = proyecto(nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio=timezone.now(), fecha_fin=datetime.timedelta(days=1), estado="PEN")
-        #w.flujos.create(nombre="nuevoFlujo", estado="ACT")
-        form = proyectoFrom({'nombre_corto':w.nombre_corto, 'nombre_largo':w.nombre_largo, 'descripcion':w.descripcion, 'fecha_inicio':w.fecha_inicio, 'fecha_fin': w.fecha_fin, 'estado':w.estado})
-        self.assertTrue(form.is_valid())
-    """
+    
     def test_invalid_proyectoFrom(self):
+        """Test que prueba el formulario de un proyecto invalido"""
         w = proyecto.objects.create(nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio="2015-03-31 00:00:00-04", fecha_fin="2015-03-31 00:00:00-04" ,estado="PEN" )
         data = {'nombre_corto':w.nombre_corto, 'nombre_largo':w.nombre_largo, 'descripcion':w.descripcion, 'fecha_inicio':w.fecha_inicio, 'fecha_fin': w.fecha_fin, }
         form = proyectoFrom(data=data)
         self.assertFalse(form.is_valid())
         
     def test_valid_FormularioRolProyecto(self):
+        """Test que prueba el formulario de un rol-proyecto valido"""
         w = rol.objects.create(nombre_rol_id="nuevoRol", descripcion="nuevoRol", usuario_creador=MyUser.objects.create_user('kathe', Permitido.objects.create(email='kathe@gmail.com'), '1234'), estado="ACT")
         w.permisos.add(Permission.objects.get(id=34))
         form = FormularioRolProyecto({'nombre_rol_id':w.nombre_rol_id, 'descripcion':w.descripcion,'permisos':[t.id for t in w.permisos.all()],'estado':w.estado ,})
         self.assertTrue(form.is_valid())
 
     def test_invalid_FormularioRolProyecto(self):
+        """Test que prueba el formulario de un rol-proyecto invalido"""
         w = proyecto(nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio=timezone.now(), fecha_fin=datetime.timedelta(days=1) ,estado="PEN" )
         data = {'nombre_corto':w.nombre_corto, 'nombre_largo':w.nombre_largo, 'descripcion':w.descripcion, 'fecha_inicio':w.fecha_inicio, 'fecha_fin': w.fecha_fin, 'estado':w.estado ,}
         form = FormularioRolProyecto(data=data)
         self.assertFalse(form.is_valid())
       
     def test_valid_FormularioFlujoProyecto(self):
+        """Test que prueba formulario de un flujo-proyecto valido"""
         w = Flujo.objects.create(nombre='nuevoFlujo', estado='ACT')
         w.actividades.create(nombre='Actividad1', descripcion='actividad')
         form = FormularioFlujoProyecto({'nombre':w.nombre, 'estado':w.estado, 'actividades': [t.id for t in w.actividades.all()],})
         self.assertTrue(form.is_valid())
         
     def test_invalid_FormularioFlujoProyecto(self):
+        """Test que prueba el formulario de un flujo-proyecto invalido"""
         w = Flujo.objects.create(nombre='nuevoFlujo', estado='ACT')
         data = {'nombre':w.nombre, 'estado':w.estado, }
         form = FormularioFlujoProyecto(data=data)
@@ -324,6 +339,7 @@ class asignacionTest(TestCase):
         return asignacion.objects.create(usuario=usuario, rol=rol, proyecto=proyecto)
     
     def test_asignacion_creation(self):
+        """Test que prueba la asignacion de usuario"""
         w=self.create_asignacion()
         self.assertEqual(w.usuario.username, 'anonimo')
         
@@ -331,6 +347,7 @@ class asignacionTest(TestCase):
         return proyecto.objects.create(nombre_corto="P", nombre_largo="proyecto", descripcion="proyecto", fecha_inicio="2015-03-31 00:00:00-04", fecha_fin="2015-03-31 00:00:00-04" ,estado="PEN" )
         
     def test_asignacion_modificar(self):
+        """Test que prueba la modificacion del proyecto de una asignacion"""
         w=self.create_asignacion()
         w.proyecto=self.create_proyecto2()
         w.save()
@@ -352,10 +369,12 @@ class asigna_sistemacionTest(TestCase):
         return asigna_sistema.objects.create(usuario=usuario, rol=rol) 
      
     def test_asigna_sistema_creation(self):
+        """Test que prueba la creacion de la asignacion del sistema"""
         w=self.create_asigna_sistema()
         self.assertEqual(w.usuario.username, 'anonimo')
     
     def test_asignarRol_POST(self):
+        """Test que prueba la vista asignar Rol POST"""
         w=self.create_proyecto()
         x=self.create_rol()
         post_data={'proyecto':w.id,'rol':x.id, 'usuario':x.usuario_creador}
@@ -435,6 +454,7 @@ class huTest(TestCase):
         self.assertEqual(hu.valido, True)
     
     def test_cambiar_version(self):
+        """Comprueba cambiar la version de una hu"""
         hu=self.create_hu()
         hu.version=2
         hu.save()
@@ -445,6 +465,7 @@ class huTest(TestCase):
         return HU_version.objects.create(hu=hu, version="1", descripcion="nuevo", valor_negocio="1")
     
     def test_crear_version(self):
+        """Comprueba la correcta creacion de una version"""
         w=self.create_version()
         self.assertTrue(isinstance(w, HU_version))
         self.assertEqual(w.__unicode__(), 'descripcion:'+w.descripcion + 'valor negocio: '+w.valor_negocio)
@@ -513,6 +534,7 @@ class SprintTest(TestCase):
         return HU_descripcion.objects.create(horas_trabajadas=horas_trabajadas, descripcion_horas_trabajadas=descripcion_horas_trabajadas, fecha=fecha, actividad=actividad, estado=estado)
 
     def test_hu_descripcion(self):
+        """Verifica la correcta creacion de una hu_descripcion"""
         w=self.create_hu_descripcion()
         self.assertTrue(isinstance(w, HU_descripcion))
         self.assertEqual(w.__unicode__(), str(w.id))
@@ -695,6 +717,7 @@ class TestholaScrumView(TestCase):
         return Sprint.objects.create( descripcion='sprintTest', fecha_inicio=timezone.now(), duracion='3', estado='ACT', proyecto_id='1')
   
     def test_permiso(self):
+        """Test que comprueba la funcion tiene_permiso, creando un rol y otorgando un permiso"""
         w=self.create_rol()
         w.permisos.add(Permission.objects.get(id=22))
         w.save()
@@ -702,6 +725,7 @@ class TestholaScrumView(TestCase):
             self.assertEqual(w.nombre_rol_id, 'nuevoRol')
     
     def test_permiso_invalido(self):
+        """Verifica el correcto funcionamiento de tiene_permiso, otorgando otro permiso que no compara con el solicitado por la funcion"""
         w=self.create_rol()
         w.permisos.add(Permission.objects.get(id=22))
         w.save()
@@ -711,6 +735,8 @@ class TestholaScrumView(TestCase):
             self.assertEqual(w.nombre_rol_id, 'nuevoRol')
 
     def test_scrum_agota_tiempo(self):
+        """Verifica el correcto funcionamiento cuando el rol tiene el permiso 'Can change hu nivel Scrum' se filtran 
+        cuando se agota el tiempo de una hu"""
         HUsm_horas_agotadas=[]
         rol=self.create_rol()
         rol.nombre_rol_id="Scrum"
@@ -734,6 +760,7 @@ class TestholaScrumView(TestCase):
         self.assertEqual(HUsm_horas_agotadas, [hu])
               
     def test_delegacion(self):
+        """Verifica el corrector funcionamiento de permiso 'agregar delegacion' al otorgarle este permiso """
         HU_no_asignada=[]
         HU_asignada=[]
         rolx=self.create_rol()
@@ -763,6 +790,7 @@ class TestholaScrumView(TestCase):
         self.assertEqual(HU_asignada, [d.hu])
                 
     def test_Agregar_horas(self):
+        """Verifica el corrector funcionamiento de permiso 'Agregar horas trabajadas' al otorgarle este permiso """
         rolx=self.create_rol()
         rolx.nombre_rol_id="Scrum"
         rolx.permisos.add(Permission.objects.create(name='Agregar horas trabajadas', content_type_id=16, codename='Agregar horas trabajadas'))
@@ -785,6 +813,7 @@ class TestholaScrumView(TestCase):
         self.assertEqual(HUs_add_horas, [d.hu])
             
     def test_modificar_hu(self):
+        """Verifica el corrector funcionamiento de permiso 'modificar hu' al otorgarle este permiso """
         HU_no_asignada_owner=[]
         HU_asignada_owner=[]
         rolx=self.create_rol()
@@ -810,7 +839,7 @@ class TestholaScrumView(TestCase):
 
             
     def test_flujo_modificar(self):
-        """Tiene permiso de modificar flujo, obtengo todos los flujos para enviar al rol-flujo-para-scrum.html"""
+        """Verifica el corrector funcionamiento de permiso 'Can change flujo' al otorgarle este permiso """
         rolx=self.create_rol()
         rolx.nombre_rol_id="Scrum"
         rolx.permisos.add(Permission.objects.get(id=47))
