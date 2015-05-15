@@ -189,7 +189,7 @@ class HU_descripcion(models.Model):
     Modelo representa la descripcion de cada hora de trabajo agregada mostrando de la fecha de la misma
     """
     horas_trabajadas=models.FloatField()  
-    descripcion_horas_trabajadas=models.CharField(max_length = 200)
+    descripcion_horas_trabajadas=models.CharField(max_length = 500)
     fecha=models.DateTimeField()
     
     actividad=models.CharField(max_length = 200)
@@ -218,6 +218,7 @@ class HU(models.Model):
     ) 
     
     descripcion = models.CharField(max_length = 200)
+    #descripcion_extensa=models.CharField(max_length = 500)
     valor_negocio = models.IntegerField(choices = VALORES10_CHOICES)
     valor_tecnico = models.IntegerField(choices = VALORES10_CHOICES)
     prioridad = models.IntegerField(choices = VALORES100_CHOICES)
@@ -241,11 +242,15 @@ class HU(models.Model):
         return self.version
     
     def sprint(self):
+        id=0
+        sprint=None
         for a in Sprint.objects.all():
             for h in a.hu.all():
                 if self.id == h.id:
-                    return a
-        return None
+                    if a.id > id:
+                        sprint=a
+                        id=a.id
+        return sprint
     
     def flujo(self):
         for a in asignaHU_actividad_flujo.objects.all():
@@ -283,11 +288,18 @@ class HU_version(models.Model):
         return 'descripcion:'+self.descripcion + 'valor negocio: '+self.valor_negocio
         
 class archivoadjunto(models.Model):
+    
+    ESTADO_CHOICES = (
+        ('CAN', 'Cancelado'),
+        ('ACT', 'Activo'),
+    )
+    
     nombre=models.CharField(max_length = 200)
     content=models.CharField(max_length = 200)
     archivo=models.BinaryField()
     tamanho=models.IntegerField()
     hU=models.ForeignKey(HU)
+    estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
     
     def __unicode__(self):
         """Representacion unicode del objeto HU"""

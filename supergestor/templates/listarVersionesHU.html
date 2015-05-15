@@ -71,10 +71,18 @@
      -->
     
   </ul>
-<table>
+<table width="900" bordercolor = #8904B1 border="8" align="center">
+	<tr>
+         <td align="center" bgcolor="#F7F2E0"><font size="2" color="black"><b>Version de HU</b></font></td>
+         <td align="center" bgcolor="#F7F2E0"><font size="2" color="black"><b>Descripcion</b></font></td>
+         <td align="center" bgcolor="#F7F2E0"><font size="2" color="black"><b>Valor de Negocio</b></font></td>
+         <td align="center" bgcolor="#F7F2E0"><font size="2" color="black"><b>Elegir?</b></font></td>
+    </tr>
 {%for hv in huv%}
-	<tr><td>desc: {{hv.version}} {{hv.descripcion}}  valor negocio: {{hv.valor_negocio}}</td>
-	<td><a href="/elegirVersionHU/{{hv.id}}/{{huid}}">Elegir</a></td>
+	<tr><td align="center">{{hv.version}} </td>
+	<td align="center">{{hv.descripcion}}  </td>
+	<td align="center">{{hv.valor_negocio}}</td>
+	<td align="center"><a href="/elegirVersionHU/{{hv.id}}/{{huid}}">Elegir</a></td>
 	</tr>
 {%endfor%}	
 </table>
