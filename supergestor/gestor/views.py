@@ -1612,7 +1612,9 @@ def visualizarBacklog(request, usuario_id, proyectoid, rolid):
     for x in Sprint.objects.all():
         if x.estado != 'FIN':
             for h in x.hu.all():
-                HUs_pendientes.remove(h)  
+                for hp in HUs_pendientes:
+                    if h == hp:
+                        HUs_pendientes.remove(h)  
     return render(request,'visualizarBacklog.html',{'HUs_pendientes':HUs_pendientes,'huss':hu, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
 
 def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
