@@ -467,6 +467,7 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
             proyectox = proyecto.objects.get(id=proyectoid)
             HUs = HU.objects.filter(proyecto=proyectox).filter(valido=True)
             flujos=Flujo.objects.all()#le mando todos los flujos para que elija los que quiere
+            HUs_pendientes=[]
             for x in Sprint.objects.all():
                 if x.estado != 'FIN':
                     for h in x.hu.all():
@@ -475,16 +476,29 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
                     for h in x.hu.all():
                         if h.estado_en_actividad == 'FIN' or h.estado_en_actividad == 'APR':
                             HUs=HUs.exclude(id=h.id)
+                        else:
+                            HUs_pendientes.append(h)
+                            HUs=HUs.exclude(id=h.id)
             max=0
             hus_seleccionadas=[]
             HUs_no_seleccionadas=HUs
+            HUs_pendientes_no_seleccionadas=HUs_pendientes
+            HUs_pendientes=[]
             for h in request.POST.getlist('HUs'):
-                hus_seleccionadas.append(HU.objects.get(id=h))
-                HUs_no_seleccionadas=HUs_no_seleccionadas.exclude(id=h)
+                x=0
+                for hp in HUs_pendientes_no_seleccionadas:
+                    if hp == HU.objects.get(id=h):
+                        x=1
+                if x == 1:
+                    HUs_pendientes_no_seleccionadas.remove(HU.objects.get(id=h))
+                    HUs_pendientes.append(HU.objects.get(id=h))
+                else:
+                    hus_seleccionadas.append(HU.objects.get(id=h))
+                    HUs_no_seleccionadas=HUs_no_seleccionadas.exclude(id=h)
                 if HU.objects.get(id=h).duracion > max:
                     max=HU.objects.get(id=h).duracion
 
-        return render(request, 'crearSprint.html',{'nombre':request.POST['descripcion'],'duracion':math.ceil(max/8),'flujos':flujos,'HUs':HUs,'HUs_seleccionadas':hus_seleccionadas,'HUs_no_seleccionadas':HUs_no_seleccionadas,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
+        return render(request, 'crearSprint.html',{'HUs_pendientes_no_seleccionadas':HUs_pendientes_no_seleccionadas,'HUs_pendientes':HUs_pendientes,'nombre':request.POST['descripcion'],'duracion':math.ceil(max/8),'flujos':flujos,'HUs':HUs,'HUs_seleccionadas':hus_seleccionadas,'HUs_no_seleccionadas':HUs_no_seleccionadas,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
       
 
 def elegirVersionHU(request,hv_id,hu_id):

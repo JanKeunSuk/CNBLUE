@@ -101,6 +101,9 @@
                             {%for h in HUs_pendientes%}
                             	<option value="{{h.id}}" selected>{{h.descripcion}} - PEN</option>
                             {%endfor%}
+                            {%for h in HUs_pendientes_no_seleccionadas%}
+                            	<option value="{{h.id}}" >{{h.descripcion}} - PEN</option>
+                            {%endfor%}
                             {%for HU in HUs %}
                             	{%for h in HUs_seleccionadas%}
                             		{%if HU == h%}
