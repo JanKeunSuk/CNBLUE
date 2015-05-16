@@ -484,6 +484,7 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
             HUs_no_seleccionadas=HUs
             HUs_pendientes_no_seleccionadas=HUs_pendientes
             HUs_pendientes=[]
+            flujos_pen=[]
             for h in request.POST.getlist('HUs'):
                 x=0
                 for hp in HUs_pendientes_no_seleccionadas:
@@ -492,13 +493,16 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
                 if x == 1:
                     HUs_pendientes_no_seleccionadas.remove(HU.objects.get(id=h))
                     HUs_pendientes.append(HU.objects.get(id=h))
+                    flujos_pen.append((HU.objects.get(id=h)).flujo())
                 else:
                     hus_seleccionadas.append(HU.objects.get(id=h))
                     HUs_no_seleccionadas=HUs_no_seleccionadas.exclude(id=h)
                 if HU.objects.get(id=h).duracion > max:
                     max=HU.objects.get(id=h).duracion
-
-        return render(request, 'crearSprint.html',{'HUs_pendientes_no_seleccionadas':HUs_pendientes_no_seleccionadas,'HUs_pendientes':HUs_pendientes,'nombre':request.POST['descripcion'],'duracion':math.ceil(max/8),'flujos':flujos,'HUs':HUs,'HUs_seleccionadas':hus_seleccionadas,'HUs_no_seleccionadas':HUs_no_seleccionadas,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
+            flujos_pen=set(flujos_pen)
+            for f in flujos_pen:
+                flujos=flujos.exclude(id=f.id)
+        return render(request, 'crearSprint.html',{'flujos_pen':flujos_pen,'HUs_pendientes_no_seleccionadas':HUs_pendientes_no_seleccionadas,'HUs_pendientes':HUs_pendientes,'nombre':request.POST['descripcion'],'duracion':math.ceil(max/8),'flujos':flujos,'HUs':HUs,'HUs_seleccionadas':hus_seleccionadas,'HUs_no_seleccionadas':HUs_no_seleccionadas,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
       
 
 def elegirVersionHU(request,hv_id,hu_id):
