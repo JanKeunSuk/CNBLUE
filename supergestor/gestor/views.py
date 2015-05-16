@@ -465,11 +465,16 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
     else:
         if request.POST['boton'] == 'Calcular':
             proyectox = proyecto.objects.get(id=proyectoid)
-            HUs = HU.objects.filter(proyecto=proyectox)
+            HUs = HU.objects.filter(proyecto=proyectox).filter(valido=True)
             flujos=Flujo.objects.all()#le mando todos los flujos para que elija los que quiere
             for x in Sprint.objects.all():
-                for h in x.hu.all():
-                    HUs=HUs.exclude(id=h.id)
+                if x.estado != 'FIN':
+                    for h in x.hu.all():
+                        HUs=HUs.exclude(id=h.id)
+                else:
+                    for h in x.hu.all():
+                        if h.estado_en_actividad == 'FIN' or h.estado_en_actividad == 'APR':
+                            HUs=HUs.exclude(id=h.id)
             max=0
             hus_seleccionadas=[]
             HUs_no_seleccionadas=HUs
@@ -478,6 +483,7 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
                 HUs_no_seleccionadas=HUs_no_seleccionadas.exclude(id=h)
                 if HU.objects.get(id=h).duracion > max:
                     max=HU.objects.get(id=h).duracion
+
         return render(request, 'crearSprint.html',{'nombre':request.POST['descripcion'],'duracion':math.ceil(max/8),'flujos':flujos,'HUs':HUs,'HUs_seleccionadas':hus_seleccionadas,'HUs_no_seleccionadas':HUs_no_seleccionadas,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
       
 
@@ -1554,7 +1560,7 @@ def delegarHU(request,usuario_id,proyectoid,rolid,hu_id,reasignar):
                     historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=hu.descripcion, evento=evento_e)
                     mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
                     mail.send()
-                    return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')
+                    return HttpResponse('Se ha reasignado la HU exitosamente')
     else:
         users=[]
         asignaciones= asignacion.objects.filter(proyecto=proyectox)#obtuve todas las asignaciones para este proyecto
