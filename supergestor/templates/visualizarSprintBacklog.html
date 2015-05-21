@@ -46,7 +46,6 @@
     <!-- Content -->
   		
   		<div>
-    
         <div align="center">
         	<br/>
         	<font size="5" color="#088A85" align="center"><b><i>Sprint Backlog</i></b><font size="2" color="#088A85">
@@ -57,31 +56,130 @@
             <tr>
             	{% csrf_token %}
             	<tr>
-					<td align="center" bgcolor="#81F7F3"><font size="2" color="black"><b>Descripcion</b></font></td>
-					<td WIDTH=200 BGCOLOR="#A9F5F2" align="center"><font size="2" color="black"><b>Historias de Usuario</b></font></td>
-					{% for d in dias %}
-						<td WIDTH=100 BGCOLOR="#CEF6F5" align="center"><font size="2" color="black"><b> DIA {{d}} </b></font></td>
-					{%endfor%}
+					<td align="center" bgcolor="#81F7F3"><font size="2" color="black"><b>SPRINT</b></font></td>
+					<td WIDTH=200 BGCOLOR="#A9F5F2" align="center"><font size="2" color="black"><b>HU</b></font></td>
+					<td WIDTH=200 BGCOLOR="#A9F5F2" align="center"><font size="2" color="black"><b>USUARIO</b></font></td>
+					<td WIDTH=200 BGCOLOR="#A9F5F2" align="center"><font size="2" color="black"><b>ESTADO</b></font></td>
+					<td WIDTH=200 BGCOLOR="#A9F5F2" align="center"><font size="2" color="black"><b>DESCRIPCION</b></font></td>
+					<td WIDTH=200 BGCOLOR="#A9F5F2" align="center"><font size="2" color="black"><b>DURACION DE LA HU – HORAS/DIAS</b></font></td>
+					<!--{% for d in dias %}
+					  	<td WIDTH=100 BGCOLOR="#CEF6F5" align="center"><font size="2" color="black"><b> DIA {{d}} </b></font></td>
+					{%endfor%}-->
+						{% for f in fechas %}
+						
+							<td WIDTH=100 BGCOLOR="#CEF6F5" align="center"><font size="2" color="black"><b> {{f}} </b></font></td>
+						{%endfor%}
 					</tr>
 					{% for Sprint in sprint %}
 					<tr>
 						{%for s,l in len.items%}
 							{%if s == Sprint%}
-								<td rowspan="{{l}}" align="center"><font size="3" color="#088A85"><b>{{Sprint}}</b></font></td>
+								{%if s.estado == 'CON'%}
+									{%for sp, f_a in lista_sprint.items%}
+										{%if Sprint == s%}
+											{%for sd, d in dura_sprint.items%}
+												{%if sd == Sprint%}
+													<td rowspan="{{l}}" align="center"><font size="3" color="#088A85"><b>{{Sprint}}<br/><font size="1" color="blue">Duracion en Dias:{{s.duracion}}<br/>Duracion en Horas:{{d}}<br/>Fecha Inicio:{{f_a.fecha_i}}<br/>Fecha Fin:{{f_a.fecha_f}}<br/>Estado:{{s.estado}}</b></font></td>
+												{%endif%}
+											{%endfor%}	
+										{%endif%}
+									{%endfor%}
+								{%elif s.estado == 'FIN'%}
+									{%for sp, f_a in lista_sprint.items%}
+										{%if sp == s%}
+											{%for sd, d in dura_sprint.items%}
+												{%if sd == Sprint%}
+													<td rowspan="{{l}}" align="center"><font size="3" color="#088A85"><b>{{Sprint}}<br/><font size="1" color="red">FINALIZADO</font></td>									
+												
+												{%endif%}
+											{%endfor%}	
+										{%endif%}
+									{%endfor%}
+								{%else%}
+									<td rowspan="{{l}}" align="center"><font size="3" color="#088A85"><b>{{Sprint}}</b></font></td>
+								{%endif%}
+								
 								{% for hu in Sprint.hu.all %}
 									<tr>
+									{%if Sprint.estado == 'CON'%}
 										<td align="center">{{hu.descripcion}}</td>
+										<!-- {%for hu_u, u in usuario_hu.items%}
+											{%if hu_u == hu%}
+												<td align="center">{{u.usuario}}</td>
+												{%if u.estado == 'FIN'%}
+													<td BGCOLOR="#00FF00" align="center"><font size="0.5" color="#100101">{{u.estado}}</font></td>
+												{%elif u.estado == 'PRO'%}
+													<td BGCOLOR="#FFFF66" align="center"><font size="0.5" color="#100101">{{u.estado}}</font></td>
+												{%else%}
+													{%if Sprint.estado == 'FIN'%}
+														<td BGCOLOR="#FF3333" align="center"><font size="0.5" color="#100101">{{u.estado}}</font></td>
+													{%else%}
+														<td align="center"><font size="0.5" color="#100101">{{u.estado}}</font></td>
+													{%endif%}
+												{%endif%}
+											{%endif%}
+										{%endfor%} -->
+										{%for hu_u, u in usuario_hu.items%}
+											{%if hu_u == hu%}
+											<td align="center">{{u.usuario}}</td>
+												{%if u.estado == 'FIN'%}
+													{%for h, d in descripcionHU.items%}
+														{%if hu_u == h%}
+															<td BGCOLOR="#00FF00" align="center"><font size="0.5" color="#100101">{{u.estado}}</font></td>
+															<td BGCOLOR="#00FF00" align="center" ><font size="0.5" color="#100101">La HU ha terminado correctamente</font></td>
+														{%endif%}
+													{%endfor%}
+												{%elif u.estado == 'PRO' %}
+													{%for h, d in descripcionHU.items%}
+														{%if hu_u == h%}
+														{%if d.p == 1%}
+															<td BGCOLOR="#FF3333" align="center"><font size="0.5" color="#100101">{{u.estado}}</font></td>
+															<td BGCOLOR="#FF3333" align="center"><font size="0.5" color="#100101">La HU ha agotado sus horas y no ha terminado</font></td>
+														{%else%}
+															<td BGCOLOR="#FFFF66" align="center"><font size="0.5" color="#100101">{{u.estado}}</font></td>
+															<td BGCOLOR="#FFFF66" align="center"><font size="0.5" color="#100101">La HU esta en proceso</font></td>
+														{%endif%}
+														{%endif%}
+													{%endfor%}
+												{%elif u.estado == 'PEN'%}
+													{%for h, d in descripcionHU.items%}
+														{%if hu_u == h %}
+															{%if d.duracionhu == d.pendiente%}
+																<td BGCOLOR="#FFFF66" align="center"><font size="0.5" color="#100101">{{u.estado}}</font></td>
+																<td BGCOLOR="#FFFF66" align="center"><font size="0.5" color="#100101">La HU no ha iniciado</font></td>
+															{%else%}
+																<td BGCOLOR="#FFFF66" align="center"><font size="0.5" color="#100101">{{u.estado}}</font></td>
+																<td BGCOLOR="#FFFF66" align="center"><font size="0.5" color="#100101">La HU ha iniciado</font></td>
+															{%endif%}
+														{%endif%}
+													{%endfor%}
+												{%else%}
+													{%if Sprint.estado == 'FIN'%}
+														<td BGCOLOR="#FF3333" align="center"><font size="0.5" color="#100101">Se ha agotado el tiempo del Sprint</font></td>
+													{%else%}
+														<td align="center"><font size="0.5" color="#100101">{{u.estado}}</font></td>
+														<td align="center"><font size="0.5" color="#100101">La HU no ha comenzado</font></td>
+													{%endif%}
+												{%endif%}
+											{%endif%}
+										{%endfor%}
+										
+										{%for h, d in descripcionHU.items%}
+											{%if hu == h%}
+												<td align="left">Duracion:{{d.duracionhu}}<br/>Pendiente:{{d.pendiente}}<br/>Fecha_inicio:{{d.f_inicio}}<br/>Fecha_fin:{{d.f_fin}}</td>
+											{%endif%}
+										{%endfor%}
 										{%for h, acu in lista.items%}
 											{%if hu == h%}
 												{%for a in acu%}
-													<td align="center">{{a}}</td>
+														<td align="center">{{a}}</td>
 												{%endfor%}
 											{%endif%}
 										{%endfor%}
-										<td></td>	
+										<td></td>
+									{%endif%}	
 									</tr>
 								{%endfor%}
-								</tr>
 							{%endif%}
 						{%endfor%}
 					{%endfor%}

@@ -277,6 +277,12 @@ class HU(models.Model):
         else:
             return None
     
+    def dias_hu(self, duracion):
+        #num=duracion/8
+        round_up = lambda num: int(num + 1) if int(num) != num else int(num)
+        dias=round_up(duracion/8)-1
+        return dias    
+     
 class HU_version(models.Model):
     """En este modelo se van a guardar los datos correspondientes a las versiones de HU que va cambiando el owner 
     cada vez que hace modificaciones, cuando se cambie a una version anterior, se van a copiar los datos de un objeto de
