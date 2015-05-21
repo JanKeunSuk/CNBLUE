@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>BurnDown Chart</title>
+		<title>Highcharts Example</title>
 
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 		<style type="text/css">
@@ -15,85 +15,82 @@ $(function () {
             zoomType: 'xy'
         },
         title: {
-            text: 'Burndown Chart Sprint : {{sprint}}'
+            text: 'Average Monthly Temperature and Rainfall in Tokyo'
         },
         subtitle: {
-            text: 'Total de horas restantes en el sprint'
+            text: 'Source: WorldClimate.com'
         },
         xAxis: [{
-            categories: [{%for x in duracion %}
-                         'dia: {{x}}',
-                         {%endfor%}],
-            crosshair: true,
-            minPadding: 0.05,
-            maxPadding: 0.05
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            crosshair: true
         }],
-       yAxis: [
-              //eje 0
-               {  
+        yAxis: [{ // Primary yAxis
             labels: {
-                //style: {
-                    //color: Highcharts.getOptions().colors[2]
-                //}
-            }
-
-        }, 
-        // eje 1
-        {
-            //gridLineWidth: 0,
+                format: '{value}°C',
+                style: {
+                    color: Highcharts.getOptions().colors[1]
+                }
+            },
             title: {
-                text: 'Horas restantes',
+                text: 'Temperature',
+                style: {
+                    color: Highcharts.getOptions().colors[1]
+                }
+            }
+        }, { // Secondary yAxis
+            title: {
+                text: 'Rainfall',
                 style: {
                     color: Highcharts.getOptions().colors[0]
                 }
             },
             labels: {
-                format: '{value} hs',
+                format: '{value} mm',
                 style: {
                     color: Highcharts.getOptions().colors[0]
                 }
-            }
-
-        }
-        ],
-        series: [{
-            name: 'Horas restantes',
-            type: 'column',
-            yAxis: 1,
-            data: {{restantes}},
-            tooltip: {
-                valueSuffix: ' hs'
-            }
-
-        }, {
-            name: 'Horas predichas',
-            type: 'spline',
-            yAxis: 1,
-            data: {{restantes}},//Este es el que tengo que calcular antes de dibujar y puede ser simplemente ej js
-            marker: {
-                enabled: false
             },
-            
-           
+            opposite: true
+        }],
+        tooltip: {
+            shared: true
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'left',
+            x: 120,
+            verticalAlign: 'top',
+            y: 100,
+            floating: true,
+            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+        },
+        series: [{
+            name: 'Rainfall',
+            type: 'column',
+            //yAxis: 1,
+            data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+            tooltip: {
+                valueSuffix: ' mm'
+            }
 
         }, {
-            name: 'Nueva estimacion',//Este muestra linea en zigzag y estimacion final
+            name: 'Temperature',
             type: 'spline',
-            yAxis: 1,
-            data: [100.0, 95.9, 90.5, 80.5, 17.2, 56.5,90],
-           
+            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
+            tooltip: {
+                valueSuffix: '°C'
+            }
         }]
     });
 });
-
-
 		</script>
 	</head>
 	<body>
 <script src="/static/js/highcharts.js"></script>
 <script src="/static/js/modules/exporting.js"></script>
 
-<div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
 	</body>
 </html>
