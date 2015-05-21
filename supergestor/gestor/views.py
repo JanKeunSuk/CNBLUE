@@ -15,7 +15,7 @@ from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.forms.widgets import CheckboxSelectMultiple
 from django.contrib.auth.models import Permission
-from datetime import datetime 
+from datetime import datetime, timedelta
 import math
 import json
 from django.utils import timezone
@@ -2150,6 +2150,7 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
     """
     sprint= Sprint.objects.get(estado='CON')#esto es un quiryset....que sea un elemento nomas!!!!!!!!
     #sprint ahora tiene el Sprint que se va mostrar en el burndown de este proyecto...el actual nose si hay que mostrar de todos?
+    duracionsp=range(int(sprint.duracion))
     hus=HU.objects.all().filter(proyecto__id=proyectoid)
     #tengo todas las hu de este proyecto ahora, necesito solo las de este sprint
     hux=[]
@@ -2164,41 +2165,50 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
         sumx+=ux.duracion
     #ahora tengo que trabajar con el acumulador de horas diario que seria una lista por dia de todas las hu del dia
     #parecido al de abajo pero en vez de lista_hu_horas seria lista fecha horas
-    #supongo que antes deberia saber cuantas fechas tener en cuenta...no estoy seguro  
-
-        
-    #supongo que conviene mas tener un diccionario de fechas con valores de total de horas de hus del dia asiciados a esas fechas
-    #una hu aporta horas a varios dias
-    #luego generar otro diccionario pero de horas restantes a partir del diccionario de horas progresadas
-    
-    
-    lista_fechas_horas={}
-    lista_fechas_horas[str(sprint.fecha_inicio)[:10]]=0 #sum va a ser para el segundo diccionario, el primer diccionario
-                                                        #solo acumula horas, el segundo es el que se manda al template
+    #supongo que antes deberia saber cuantas fechas tener en cuenta...no estoy seguro                                                         
+    lista_fechas=[]
+    lista_horas=[]
+    lista_fechas.append(str((sprint.fecha_inicio+timedelta(days=-1)).strftime('%Y-%m-%d'))[:10])
+    lista_horas.append(0)
     #el primer elemento del diccionario va a ser la duracion total de todas las hu osea la primera barra del burndown
     for hu in hux:
-        for d in hu.hu_descripcion.all():
-            f=str(d.fecha)[:10]
-            if f in lista_fechas_horas:
-                lista_fechas_horas[f]+=d.horas_trabajadas
+        for d in hu.hu_descripcion.all().order_by('fecha'):
+            f=str((d.fecha+timedelta(days=-1)).strftime('%Y-%m-%d'))[:10] 
+            if f in lista_fechas:
+                lista_horas[lista_fechas.index(f)]=lista_horas[lista_fechas.index(f)]+d.horas_trabajadas
             else:
-                lista_fechas_horas[f]=d.horas_trabajadas
-                pass
+                lista_fechas.append(f)
+                lista_horas.insert(lista_fechas.index(f),d.horas_trabajadas)
+                
+        
+    #tengo la lista correcta pero con fechas mal colocadas 
+            
     
     # Un diccionario puede tener elementos repetidos(keys), pero la programacion anterior va a impedirlo 
     #bueno ahora ya tengo el diccionario con el total de horas por dia cargadas me convendria disponer de la longitud del diccionario
-    cant_dias=len(lista_fechas_horas)
+    cant_days=len(lista_fechas)
     # ahora voy a crear y cargar el diccionario que se va mandar al template
-    remaining_dic={}
     
     tot_restante=sumx
+    horas_restantes=[]
     #tot_restante es la que va disminuir, sum quiero mantener por las dudas
     
-    for k, v in lista_fechas_horas.iteritems():
-        remaining_dic[k]=tot_restante-v
-        tot_restante-=v
-    #remaining_dic ahora tiene las horas restante por fecha basado en los datos de las horas progresadaspor fecha, sum deberia disminuir
     
-    #ahora si puedo mandar remaining_dic y todo lo que me parezca necesario por ahora
+    for i in lista_fechas:
+        horas_restantes.insert(lista_fechas.index(i),tot_restante-lista_horas[lista_fechas.index(i)])
+        tot_restante=tot_restante-lista_horas[lista_fechas.index(i)]
     
-    return render(request,'burndown.html',{'sprint':sprint,'restantes':remaining_dic,'suma_hu':sumx,'cant_dias':cant_dias,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    
+    
+    pordia=sumx/sprint.duracion
+    estimacion=[]
+    tot_again=sumx
+    for x in duracionsp:
+        estimacion.insert(duracionsp.index(x),tot_again-pordia)
+        tot_again=tot_again-pordia
+        
+        
+
+    #AHora utilizando la lista lista_horas deberia calcular el resto del grafo, osea lista_horas debe ser mas largo o al menos 
+    #tener otra lista igual a lista horas que dibuje la linea negra en el burndown
+    return render(request,'burndown2.html',{'suma':sumx,'estima':estimacion,'duracion':duracionsp,'horas':lista_horas,'fechas':lista_fechas,'restantes':horas_restantes,'cat_dias':cant_days,'sprint':sprint,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})

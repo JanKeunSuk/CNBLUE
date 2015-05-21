@@ -15,32 +15,33 @@ $(function () {
             zoomType: 'xy'
         },
         title: {
-            text: 'Average Monthly Temperature and Rainfall in Tokyo'
+            text: 'Burndown Chart Sprint: {{sprint}} '
         },
         subtitle: {
-            text: 'Source: WorldClimate.com'
+            text: 'Horas restantes de trabajo en el sprint'
         },
         xAxis: [{
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            categories: [{%for x in duracion%}
+            				'Dia {{x}}',
+            			 {%endfor%}],
             crosshair: true
         }],
         yAxis: [{ // Primary yAxis
             labels: {
-                format: '{value}°C',
+                format: '{value} hs',
                 style: {
                     color: Highcharts.getOptions().colors[1]
                 }
             },
             title: {
-                text: 'Temperature',
+                text: 'Estimacion',
                 style: {
                     color: Highcharts.getOptions().colors[1]
                 }
             }
         }, { // Secondary yAxis
             title: {
-                text: 'Rainfall',
+                text: 'Horas restantes',
                 style: {
                     color: Highcharts.getOptions().colors[0]
                 }
@@ -59,31 +60,43 @@ $(function () {
         legend: {
             layout: 'vertical',
             align: 'left',
-            x: 120,
+            x: 1000,
             verticalAlign: 'top',
             y: 100,
             floating: true,
             backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
         },
         series: [{
-            name: 'Rainfall',
+            name: 'Dia',
             type: 'column',
             //yAxis: 1,
-            data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+            data: {{restantes}},
             tooltip: {
-                valueSuffix: ' mm'
+                valueSuffix: ' hs',
+                pointFormat: 'Horas frestantes: <b>{point.y:.1f}</b>'
             }
 
         }, {
-            name: 'Temperature',
+            name: 'Estimacion nueva',
             type: 'spline',
-            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
+            data: {{restantes}}, //este a partir de cierto punto no puede ser solo restantes
             tooltip: {
-                valueSuffix: '°C'
+                valueSuffix: ' hs',
+                pointFormat: 'Horas restantes: <b>{point.y:.1f}</b>'
             }
+        },
+        {
+        	name: 'Previsto',
+        	type: 'spline',
+        	data: {{estima}},
+        	tooltip: {
+            valueSuffix: ' hs',
+            pointFormat: 'Horas rest. prev.: <b>{point.y:.1f}</b>'
+        }
         }]
     });
 });
+
 		</script>
 	</head>
 	<body>
