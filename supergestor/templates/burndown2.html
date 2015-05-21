@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>BurnDown Chart</title>
+
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		<style type="text/css">
+${demo.css}
+		</style>
+		<script type="text/javascript">
+$(function () {
+    $('#container').highcharts({
+        chart: {
+            zoomType: 'xy'
+        },
+        title: {
+            text: 'Burndown Chart Sprint : {{sprint}}'
+        },
+        subtitle: {
+            text: 'Total de horas restantes en el sprint'
+        },
+        xAxis: [{
+            categories: [{%for x in duracion %}
+                         'dia: {{x}}',
+                         {%endfor%}],
+            crosshair: true,
+            minPadding: 0.05,
+            maxPadding: 0.05
+        }],
+       yAxis: [
+              //eje 0
+               {  
+            labels: {
+                //style: {
+                    //color: Highcharts.getOptions().colors[2]
+                //}
+            }
+
+        }, 
+        // eje 1
+        {
+            //gridLineWidth: 0,
+            title: {
+                text: 'Horas restantes',
+                style: {
+                    color: Highcharts.getOptions().colors[0]
+                }
+            },
+            labels: {
+                format: '{value} hs',
+                style: {
+                    color: Highcharts.getOptions().colors[0]
+                }
+            }
+
+        }
+        ],
+        series: [{
+            name: 'Horas restantes',
+            type: 'column',
+            yAxis: 1,
+            data: {{restantes}},
+            tooltip: {
+                valueSuffix: ' hs'
+            }
+
+        }, {
+            name: 'Horas predichas',
+            type: 'spline',
+            yAxis: 1,
+            data: {{restantes}},//Este es el que tengo que calcular antes de dibujar y puede ser simplemente ej js
+            marker: {
+                enabled: false
+            },
+            
+           
+
+        }, {
+            name: 'Nueva estimacion',//Este muestra linea en zigzag y estimacion final
+            type: 'spline',
+            yAxis: 1,
+            data: [100.0, 95.9, 90.5, 80.5, 17.2, 56.5,90],
+           
+        }]
+    });
+});
+
+
+		</script>
+	</head>
+	<body>
+<script src="/static/js/highcharts.js"></script>
+<script src="/static/js/modules/exporting.js"></script>
+
+<div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+
+	</body>
+</html>
