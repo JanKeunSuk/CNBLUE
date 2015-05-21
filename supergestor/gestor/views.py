@@ -2211,4 +2211,26 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
 
     #AHora utilizando la lista lista_horas deberia calcular el resto del grafo, osea lista_horas debe ser mas largo o al menos 
     #tener otra lista igual a lista horas que dibuje la linea negra en el burndown
-    return render(request,'burndown2.html',{'suma':sumx,'estima':estimacion,'duracion':duracionsp,'horas':lista_horas,'fechas':lista_fechas,'restantes':horas_restantes,'cat_dias':cant_days,'sprint':sprint,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    
+    #estimacion nueva deberia tener una lista propia con lista_horas como primeros elementos mas nuevos elementos
+    #correspondientes a la estimacion actual calculada
+    
+    nueva_estimacion=list(horas_restantes)
+    #calcular aqui el promedio de horas por dia en lista_horas
+    suma_cargadas=0
+    for x in lista_horas: 
+        suma_cargadas=suma_cargadas+x
+        pass
+    prome=suma_cargadas/len(lista_horas)
+    
+    remain=tot_restante#continua con las horas que quedaron sin hacerse
+    #prome es lo que se supone que debe avanzar en los dias restantes...meter eso en nueva_estimacion
+    while(remain>0):
+        if(remain-prome>0):
+            nueva_estimacion.append(remain-prome)
+        remain=remain-prome
+        pass
+
+    
+    
+    return render(request,'burndown2.html',{'nuevaestima':nueva_estimacion,'suma':sumx,'estima':estimacion,'duracion':duracionsp,'horas':lista_horas,'fechas':lista_fechas,'restantes':horas_restantes,'cat_dias':cant_days,'sprint':sprint,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
