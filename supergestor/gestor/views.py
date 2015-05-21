@@ -16,7 +16,7 @@ from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.forms.widgets import CheckboxSelectMultiple
 from django.contrib.auth.models import Permission
-from datetime import datetime 
+from datetime import datetime, timedelta, time
 import math
 import json
 from django.utils import timezone
@@ -1836,10 +1836,25 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
         :param args: usuario_id, proyectoid, rolid
         :returns: visualizarSprintBacklog.html
     """
-    class acumuladorx:
-        def __init__(self,hu_s,acu):
-            self.hu_s=hu_s
-            self.acu=acu
+    class descripcionHU:
+        """Obtiene toda la informacion de una hu"""
+        def __init__(self,f_inicio, f_fin, duracionhu, pendiente, p):
+            self.f_inicio=f_inicio
+            self.f_fin=f_fin
+            self.duracionhu=duracionhu
+            self.pendiente=pendiente
+            self.p=p
+    
+    class usu_estado:
+        """Guarda el usuario y el estado en actividad de una HU dentro de un Sprint"""
+        def __init__(self,usuario, estado):
+            self.usuario=usuario
+            self.estado=estado
+    class sprint_acu_fecha:
+        """Guarda el fecha fin e Inicio y el acumulado de todas las HU dentro de un Sprint"""
+        def __init__(self,fecha_f, fecha_i):
+            self.fecha_f=fecha_f
+            self.fecha_i=fecha_i
             
    
     lista=[]
@@ -1847,48 +1862,146 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     hux=HU.objects.filter(proyecto=proyecto.objects.get(id=proyectoid))
     sprint=Sprint.objects.filter(proyecto=proyecto.objects.get(id=proyectoid))
     s=sorted(sprint,key=lambda x: x.estado, reverse=True)
+
+    #obtengo las fechas
+    lista_fecha=[]
+    for sp in sprint:
+        if sp.estado == 'CON':
+            dias=sp.duracion-2
+            contador=-2
+            while dias > contador:
+                lista_fecha.append(((sp.fecha_inicio)+timedelta(days=contador)).strftime('%Y-%m-%d'))
+                contador += 1
+
+        
+    """
     cont=0
+    #Obtengo la cantidad de dias
     #duracion maxima
     for sp in sprint:
         if sp.duracion>cont:
             cont=sp.duracion
     #cantidad de dias segun la duracion
-
     while(dias!=cont):
         dias=dias+1
         lista.append(dias)
-
+"""
     lista_hu_horas={}
+    descripcion_hu={}
     lista_horas=[]
     cont2=0        
     fecha_x=[]
+    pendiente=0
+    fecha_i=[]
+    fecha_f=[]
+    dura=0
+    acumulador=0
+    for hu in hux:
+        lista_horas=[]
+        acumulador=0
+        for fecha_x in lista_fecha:
+            cont2=0
+            for h in hu.hu_descripcion.all():
+                x=str((h.fecha+timedelta(days=-2)).strftime('%Y-%m-%d'))
+                if str(fecha_x) == x[:10]:
+                    cont2=cont2+h.horas_trabajadas
+                                
+            lista_horas.append(cont2)
+            acumulador=acumulador+cont2#el acumulado optiene el total de horas que realizo en varios dias de trabajo
+            
+            lista_hu_horas[hu]=lista_horas
+            pendiente=hu.duracion
+            pendiente=pendiente-acumulador#Lo que le resta de la duracion para terminar la HU
+            for sp in sprint:
+                for h in sp.hu.all():
+                    if h == hu:
+                        dias=hu.dias_hu(hu.duracion)-2 #retorna la cantidad de dias de la HU
+                        fecha_f=(sp.fecha_inicio+timedelta(days=dias)).strftime('%Y-%m-%d')#retorna la fecha fin de la HU
+                        
+                        dura=hu.duracion
+                        x=str((sp.fecha_inicio+timedelta(days=-2)).strftime('%Y-%m-%d'))
+                        fecha_i=x[:10]
+            if pendiente==0:
+                p=1
+            else:
+                p=0                
+            descripcion_hu[hu]=descripcionHU(fecha_i, fecha_f, dura, pendiente, p)
+
+    """
+        
     for hu in hux:
         cont2=0
-        lista_horas=[]
-        
+        acumulador=0
+        lista_horas=[]    
         for h in hu.hu_descripcion.all():
             x=str(h.fecha)
             if h.id == 1:
                 fecha_x=x[:10]
+                #lista_fecha.append(fecha_x)
                 cont2=cont2+h.horas_trabajadas
             elif x[:10] == fecha_x:
-                cont2=cont2+h.horas_trabajadas
+                cont2=cont2+h.horas_trabajadas                
             else:
                 fecha_x=x[:10]
+                #lista_fecha.append(fecha_x)
                 if cont2 != 0:
                     lista_horas.append(cont2)
+                    acumulador=acumulador+cont2 
                 cont2=0
                 cont2=cont2+h.horas_trabajadas
-            
+                   
         if cont2 != 0:
             lista_horas.append(cont2)
+            acumulador=acumulador+cont2#el acumulado optiene el total de horas que realizo en varios dias de trabajo
+            
         lista_hu_horas[hu]=lista_horas
-       
+        pendiente=hu.duracion
+        pendiente=pendiente-acumulador#Lo que le resta de la duracion para terminar la HU
+        for sp in sprint:
+            for h in sp.hu.all():
+                if h == hu:
+                    dias=hu.dias_hu(hu.duracion) #retorna la cantidad de dias de la HU
+                    fecha_f=hu.fecha_fin(sp.fecha_inicio, dias)#retorna la fecha fin de la HU
+                    dura=hu.duracion
+                    x=str(sp.fecha_inicio)
+                    fecha_i=x[:10]
+                
+        descripcion_hu[hu]=descripcionHU(fecha_i, fecha_f, dura, pendiente)
+    """
     longitud_para_tabla={}
     for i in sprint:
         longitud_para_tabla[i]=len(i.hu.all())+1
+        
+    usuario_hu={}
+    for h in hux:
+        for d in delegacion.objects.all():
+            if h.id == d.hu.id:
+                usuario=d.usuario
+                estado=h.estado_en_actividad
+                usuario_hu[h]=usu_estado(usuario, estado)
     
-    return render(request,'visualizarSprintBacklog.html',{'len':longitud_para_tabla,'sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'HUx':hux, 'dias':lista, 'lista':lista_hu_horas})
+    fecha_fin_sprint=0
+    fecha_inicio=0
+    lista_sprint={}
+    for hu in hux:
+        for sp in sprint:
+                    for h in sp.hu.all():
+                        if h == hu:
+                            if sp.estado == 'CON':    
+                                fecha_fin_sprint=(sp.fecha_inicio+timedelta(days=(sp.duracion-3))).strftime('%Y-%m-%d')
+                                fecha_inicio=(sp.fecha_inicio+timedelta(days=-2)).strftime('%Y-%m-%d')
+        lista_sprint[sp]=sprint_acu_fecha(fecha_fin_sprint,fecha_inicio )
+    #La duracion en horas de un Sprint
+    sprint_acu_fecha=0
+    lista_sprint_acu_fecha={}
+    for sp in sprint:
+        for hu in hux:
+                for h in sp.hu.all():
+                    if h == hu:
+                        sprint_acu_fecha=sprint_acu_fecha+hu.duracion     
+        lista_sprint_acu_fecha[sp]=sprint_acu_fecha
+            
+    return render(request,'visualizarSprintBacklog.html',{'len':longitud_para_tabla,'sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'HUx':hux, 'dias':lista, 'lista':lista_hu_horas, 'usuario_hu':usuario_hu, 'descripcionHU':descripcion_hu, 'fecha_fin_s':fecha_fin_sprint, 'lista_sprint':lista_sprint, 'fechas':lista_fecha, 'dura_sprint':lista_sprint_acu_fecha, 'p':p})
 
 def asignarHU_Usuario_FLujo(request,usuario_id,proyectoid,rolid,sprintid):
     """ 
@@ -2230,6 +2343,7 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
     """
     sprint= Sprint.objects.get(estado='CON')#esto es un quiryset....que sea un elemento nomas!!!!!!!!
     #sprint ahora tiene el Sprint que se va mostrar en el burndown de este proyecto...el actual nose si hay que mostrar de todos?
+    duracionsp=range(int(sprint.duracion))
     hus=HU.objects.all().filter(proyecto__id=proyectoid)
     #tengo todas las hu de este proyecto ahora, necesito solo las de este sprint
     hux=[]
@@ -2244,41 +2358,72 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
         sumx+=ux.duracion
     #ahora tengo que trabajar con el acumulador de horas diario que seria una lista por dia de todas las hu del dia
     #parecido al de abajo pero en vez de lista_hu_horas seria lista fecha horas
-    #supongo que antes deberia saber cuantas fechas tener en cuenta...no estoy seguro  
-
-        
-    #supongo que conviene mas tener un diccionario de fechas con valores de total de horas de hus del dia asiciados a esas fechas
-    #una hu aporta horas a varios dias
-    #luego generar otro diccionario pero de horas restantes a partir del diccionario de horas progresadas
-    
-    
-    lista_fechas_horas={}
-    lista_fechas_horas[str(sprint.fecha_inicio)[:10]]=0 #sum va a ser para el segundo diccionario, el primer diccionario
-                                                        #solo acumula horas, el segundo es el que se manda al template
+    #supongo que antes deberia saber cuantas fechas tener en cuenta...no estoy seguro                                                         
+    lista_fechas=[]
+    lista_horas=[]
+    lista_fechas.append(str((sprint.fecha_inicio+timedelta(days=-1)).strftime('%Y-%m-%d'))[:10])
+    lista_horas.append(0)
     #el primer elemento del diccionario va a ser la duracion total de todas las hu osea la primera barra del burndown
     for hu in hux:
-        for d in hu.hu_descripcion.all():
-            f=str(d.fecha)[:10]
-            if f in lista_fechas_horas:
-                lista_fechas_horas[f]+=d.horas_trabajadas
+        for d in hu.hu_descripcion.all().order_by('fecha'):
+            f=str((d.fecha+timedelta(days=-1)).strftime('%Y-%m-%d'))[:10] 
+            if f in lista_fechas:
+                lista_horas[lista_fechas.index(f)]=lista_horas[lista_fechas.index(f)]+d.horas_trabajadas
             else:
-                lista_fechas_horas[f]=d.horas_trabajadas
-                pass
+                lista_fechas.append(f)
+                lista_horas.insert(lista_fechas.index(f),d.horas_trabajadas)
+                
+        
+    #tengo la lista correcta pero con fechas mal colocadas 
+            
     
     # Un diccionario puede tener elementos repetidos(keys), pero la programacion anterior va a impedirlo 
     #bueno ahora ya tengo el diccionario con el total de horas por dia cargadas me convendria disponer de la longitud del diccionario
-    cant_dias=len(lista_fechas_horas)
+    cant_days=len(lista_fechas)
     # ahora voy a crear y cargar el diccionario que se va mandar al template
-    remaining_dic={}
     
     tot_restante=sumx
+    horas_restantes=[]
     #tot_restante es la que va disminuir, sum quiero mantener por las dudas
     
-    for k, v in lista_fechas_horas.iteritems():
-        remaining_dic[k]=tot_restante-v
-        tot_restante-=v
-    #remaining_dic ahora tiene las horas restante por fecha basado en los datos de las horas progresadaspor fecha, sum deberia disminuir
     
-    #ahora si puedo mandar remaining_dic y todo lo que me parezca necesario por ahora
+    for i in lista_fechas:
+        horas_restantes.insert(lista_fechas.index(i),tot_restante-lista_horas[lista_fechas.index(i)])
+        tot_restante=tot_restante-lista_horas[lista_fechas.index(i)]
     
-    return render(request,'burndown.html',{'sprint':sprint,'restantes':remaining_dic,'suma_hu':sumx,'cant_dias':cant_dias,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    
+    
+    pordia=sumx/sprint.duracion
+    estimacion=[]
+    tot_again=sumx
+    for x in duracionsp:
+        estimacion.insert(duracionsp.index(x),tot_again-pordia)
+        tot_again=tot_again-pordia
+        
+        
+
+    #AHora utilizando la lista lista_horas deberia calcular el resto del grafo, osea lista_horas debe ser mas largo o al menos 
+    #tener otra lista igual a lista horas que dibuje la linea negra en el burndown
+    
+    #estimacion nueva deberia tener una lista propia con lista_horas como primeros elementos mas nuevos elementos
+    #correspondientes a la estimacion actual calculada
+    
+    nueva_estimacion=list(horas_restantes)
+    #calcular aqui el promedio de horas por dia en lista_horas
+    suma_cargadas=0
+    for x in lista_horas: 
+        suma_cargadas=suma_cargadas+x
+        pass
+    prome=suma_cargadas/len(lista_horas)
+    
+    remain=tot_restante#continua con las horas que quedaron sin hacerse
+    #prome es lo que se supone que debe avanzar en los dias restantes...meter eso en nueva_estimacion
+    while(remain>0):
+        if(remain-prome>0):
+            nueva_estimacion.append(remain-prome)
+        remain=remain-prome
+        pass
+
+    
+    
+    return render(request,'burndown2.html',{'nuevaestima':nueva_estimacion,'suma':sumx,'estima':estimacion,'duracion':duracionsp,'horas':lista_horas,'fechas':lista_fechas,'restantes':horas_restantes,'cat_dias':cant_days,'sprint':sprint,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})

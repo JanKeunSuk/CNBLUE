@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Burndown Chart</title>
+
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		<style type="text/css">
+${demo.css}
+		</style>
+		<script type="text/javascript">
+$(function () {
+    $('#container').highcharts({
+        chart: {
+            zoomType: 'xy'
+        },
+        title: {
+            text: 'Burndown Chart Sprint: {{restantes}} '
+        },
+        subtitle: {
+            text: 'Horas restantes de trabajo en el sprint'
+        },
+        xAxis: [{
+            categories: [{%for x in duracion%}
+            				'Dia {{x}}',
+            			 {%endfor%}],
+            crosshair: true
+        }],
+        yAxis: [{ // Primary yAxis
+            labels: {
+                format: '{value} hs',
+                style: {
+                    color: Highcharts.getOptions().colors[1]
+                }
+            },
+            title: {
+                text: 'Estimacion',
+                style: {
+                    color: Highcharts.getOptions().colors[1]
+                }
+            }
+        }, { // Secondary yAxis
+            title: {
+                text: 'Horas restantes',
+                style: {
+                    color: Highcharts.getOptions().colors[0]
+                }
+            },
+            labels: {
+                format: '{value} mm',
+                style: {
+                    color: Highcharts.getOptions().colors[0]
+                }
+            },
+            opposite: true
+        }],
+        tooltip: {
+            shared: true
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'left',
+            x: 1000,
+            verticalAlign: 'top',
+            y: 100,
+            floating: true,
+            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+        },
+        series: [{
+            name: 'Dia',
+            type: 'column',
+            //yAxis: 1,
+            data: {{restantes}},
+            tooltip: {
+                valueSuffix: ' hs',
+                pointFormat: 'Horas frestantes: <b>{point.y:.1f}</b>'
+            }
+
+        }, {
+            name: 'Estimacion nueva',
+            type: 'spline',
+            data: {{nuevaestima}}, //este a partir de cierto punto no puede ser solo restantes
+            tooltip: {
+                valueSuffix: ' hs',
+                pointFormat: 'Horas restantes: <b>{point.y:.1f}</b>'
+            }
+        },
+        {
+        	name: 'Previsto',
+        	type: 'spline',
+        	data: {{estima}},
+        	tooltip: {
+            valueSuffix: ' hs',
+            pointFormat: 'Horas rest. prev.: <b>{point.y:.1f}</b>'
+        }
+        }]
+    });
+});
+
+		</script>
+	</head>
+	<body>
+<script src="/static/js/highcharts.js"></script>
+<script src="/static/js/modules/exporting.js"></script>
+
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+	</body>
+</html>
