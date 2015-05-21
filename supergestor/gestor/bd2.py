@@ -434,6 +434,9 @@ sp1.hu.add(hu1,hu2,hu3,hu4,hu5,hu6,hu7,hu8)
 """Agregar hus a los sprint creados"""
 sp1.flujo.add(f1,f2)
 
+"""Agregar el quipo a los sprint creados"""
+sp1.equipo.add(gabriela,sebas)
+
 """Clasificar esas hus seleccionadas en flujos"""
 #hu1 y hu2 estan en el flujo 1
 hu1Flujo1=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=f1)

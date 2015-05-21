@@ -117,6 +117,23 @@
     <div class="form-row field-Flujos">
 
                 <div>
+					<label class="required" for="id_usuarios">Usuarios para el equipo de desarrollo:</label>
+                        
+                        <select multiple = "multiple" id="id_usuarios" name="equipo" required>
+                            {%for u in equipo %}
+								<option value="{{u.id}}"{%if u in Sprint.equipo.all%}selected="selected"{%endif%}> {{u}}</option>
+							{%endfor%}
+						</select>
+
+                        <p class="help"> Presiona "Control" para seleccionar mas de una opcion.</p>
+
+                </div>
+        
+        </div>
+    
+    <div class="form-row field-Flujos">
+
+                <div>
 
                         <label class="required" for="id_usuarios">Flujos: Multiple seleccion</label>
                         

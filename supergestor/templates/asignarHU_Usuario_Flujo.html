@@ -31,9 +31,13 @@
     <!-- Header -->
     <div id="header">
         <div id="branding">
-        
-<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Asignacion de HU a usuario {{rol.nombre_rol_id}}</a></h1>
-
+        {%if sprint.estado == 'ACT'%}
+			<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Asignacion de HU a usuario</a></h1>
+		{%elif sprint.estado == 'CON'%}
+			<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Control de HU a usuario</a></h1>
+        {%else%}
+        	<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Release de {{sprint}}</a></h1>
+        {%endif%}
         </div>
         
          <div id="user-tools">    
@@ -66,7 +70,7 @@
     <!-- Content -->
     <div id="content" class="colM">
         
-        <h1>Asignar HU a usuario y a Flujos</h1>
+        <h1>Flujos y Hu's del sprint:</h1>
         <div id="content-main">
 
 
@@ -88,7 +92,6 @@
             
             
                 <div>
-                    <label class="required" for="id_usuarios">Flujos:</label>
                     {%for f in flujos%}
                     <br/><br/>
                     	<p>
@@ -98,11 +101,15 @@
                     				{%if fa == f%}
                     					&nbsp; &nbsp; &nbsp; &nbsp; <font color='#0B3B0B'><b>Aprobada por Scrum</b></font>
                     				{%else%}
-                    					<a href="/delegarHUFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprint.id}}/{{f.id}}/"> &nbsp; &nbsp; &nbsp; &nbsp;Asignar hu a flujo</a></td>
+                    					{%if sprint.estado == 'ACT'%}
+                    						<a href="/delegarHUFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprint.id}}/{{f.id}}/"> &nbsp; &nbsp; &nbsp; &nbsp;Asignar hu a flujo</a></td>
+                    					{%endif%}
                     				{%endif%}
                     			{%endfor%}
                     		{%else%}
-                    			<a href="/delegarHUFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprint.id}}/{{f.id}}/"> &nbsp; &nbsp; &nbsp; &nbsp;Asignar hu a flujo</a></td>
+                    			{%if sprint.estado == 'ACT'%}
+                    				<a href="/delegarHUFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprint.id}}/{{f.id}}/"> &nbsp; &nbsp; &nbsp; &nbsp;Asignar hu a flujo</a></td>
+                    			{%endif%}
                     		{%endif%}
                     	</p>
                     	{%for flujo,hus in hu_en_flujo.items%}
@@ -113,7 +120,7 @@
                     						<ul>
                     						<p>
                     						<li>{{h}}
-                    						<a href="/delegarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{h.id}}/0/"> &nbsp; &nbsp; &nbsp; &nbsp;Asignar a Usuario</a>
+                    							<a href="/delegarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{h.id}}/0/"> &nbsp; &nbsp; &nbsp; &nbsp;Asignar a Usuario</a>
                     						</p>
                     						</ul>
                     					{%endif%}
@@ -124,12 +131,12 @@
                     					{%if h == hu%}
                     						<ul>
                     						<p>
-                    						<li>{{h}} ya asignada a <b>{{u}}</b> con prioridad <b>{{hu.prioridad}}</b>
+                    						<li>{{h}} ya asignada a <b>{{u}}</b> con prioridad <b>{{hu.prioridad}}</b> con <b>{{hu.acumulador_horas}}</b> horas realizadas de <b>{{hu.duracion}}</b>
                     						{%if h.estado_en_actividad != 'FIN' and h.estado_en_actividad != 'APR' %}
                     							{%if sprint.estado != 'FIN'%}
                     								<a href="/delegarHU/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{h.id}}/1/"> &nbsp; &nbsp; &nbsp; &nbsp; Reasignar a Usuario</a>
                     							{%else%}
-                    								&nbsp; &nbsp; &nbsp; &nbsp; <font color='red'><b>No Finalizada</b></font>
+                    								&nbsp; &nbsp; &nbsp; &nbsp; <font color='red'><b>No Finalizada. Planificacion incorrecta</b></font>
                     							{%endif%}
                     						{%elif h.estado_en_actividad == 'FIN' %}
                     							&nbsp; &nbsp; &nbsp; &nbsp; <font color='green'><b>Finalizada</b></font>

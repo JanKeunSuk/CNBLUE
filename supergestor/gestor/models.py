@@ -191,7 +191,6 @@ class HU_descripcion(models.Model):
     horas_trabajadas=models.FloatField()  
     descripcion_horas_trabajadas=models.CharField(max_length = 500)
     fecha=models.DateTimeField()
-    
     actividad=models.CharField(max_length = 200)
     estado=models.CharField(max_length = 200)
 
@@ -304,12 +303,32 @@ class archivoadjunto(models.Model):
     tamanho=models.IntegerField()
     hU=models.ForeignKey(HU)
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
+    version=models.FloatField()
     
     def __unicode__(self):
         """Representacion unicode del objeto archivoadjunto"""
         return self.archivo.nombre
     
+class adjuntoVersion(models.Model):
+    """En este modelo se van a guardar los datos correspondientes a las versiones del archivo adjunto que va cambiando el equipo 
+    cada vez que hace modificaciones en el archivo, cuando se cambie a una version anterior, se van a copiar los datos de un objeto de
+    este modelo y se van a poner en el objeto hu del modelo archivoadjunto cuya version se esta cambiando"""
+    ESTADO_CHOICES = (
+        ('CAN', 'Cancelado'),
+        ('ACT', 'Activo'),
+    )
+    archivo_original=models.ForeignKey(archivoadjunto)
+    version = models.FloatField()
+    nombre=models.CharField(max_length = 200)
+    content=models.CharField(max_length = 200)
+    archivo=models.BinaryField()
+    tamanho=models.IntegerField()
+    estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
+    descripcion=models.CharField(max_length = 200)
     
+    def __unicode__(self):
+        """Representacion unicode del objeto HU version que se mostrara para elegir la version conveninete"""
+        return 'descripcion:'+self.nombre + 'valor negocio: '+str(self.version)
     
 class Flujo(models.Model):
     """Representacion de un flujo de proyecto relacionado a su respectivo proyecto
@@ -346,6 +365,7 @@ class Sprint(models.Model):
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
     proyecto=models.ForeignKey(proyecto)
     flujo=models.ManyToManyField(Flujo)
+    equipo=models.ManyToManyField(MyUser)
     
     def __unicode__(self):
         """Representacion unicode del objeto Sprint"""

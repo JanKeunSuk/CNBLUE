@@ -44,7 +44,7 @@
     
     <!-- Content -->
   		
-<div style="width:1500x; height:565px; border:#000 2px solid; overflow:auto">
+<div style="width:1500x; height:590px; border:#000 2px solid; overflow:auto">
     
 	<div class="app-gestor module">
       
@@ -192,21 +192,21 @@
 			{% if HUs|length > 0%}
             	<table>
             	<th>Lista de HU's del proyecto </th>
-        
-            	<tr class="model-proyecto">
-            
+            	
+            	{%for h in HUsm_horas_agotadas%}
+            		<tr><td> {{h.descripcion}}
+  					&nbsp;&nbsp;&nbsp;<font color="red"><b>Tiempo agotado, se necesita agregar horas!</b></font></td>
+  					<td><a href="/visualizarHU/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/{{h.id}}/1/{{kanban}}/" class="addlink">Visualizar</a></td>
+  					<td><a href="/modificarHU/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/{{h.id}}/{{is_Scrum}}/" class="changelink">Modificar</a></td>
+  					<td><a href="/reasignarhuFlujo/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/{{h.sprint.id}}/{{h.id}}/0/" class="changelink">Reasignar a flujo</a></td></tr>
+  				{%endfor%}
+  				<tr>
 				{% for HU in HUs %}
 				
 			    	{%if HU.descripcion|length > 0%}
 			    	
 			    		{%if HU.estado == 'ACT'%}
-  							<td> {{HU.descripcion}}
-  							{%for h in HUsm_horas_agotadas%}
-  								{%if h == HU%}
-  									&nbsp;&nbsp;&nbsp;<font color="red"><b>Tiempo agotado, se necesita agregar horas!</b></font>
-  								{%endif%}
-  							{%endfor%}
-  							</td>
+  							<td> {{HU.descripcion}}</td>
 			     		{%endif%}    
 
   						{%for enlace in enlaceHUv%}
@@ -217,12 +217,6 @@
              			{% if HUsm|length > 0%}
             				{%for enlace in enlaceHUm%}
 						           {%if HU.estado == 'ACT'%}
-						           		{%for h in HUsm_horas_agotadas%}
-  											{%if h == HU%}
-  												<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Modificar</a></td>
-  												<td><a href="/reasignarhuFlujo/{{enlace.url}}/{{HU.sprint.id}}/{{HU.id}}/0/" class="changelink">Reasignar a flujo</a></td>
-  											{%endif%}
-  										{%endfor%}
   										{%for h in HUsm_no_desarrolladas%}
   											{%if h == HU%}
   												<td><a href="/modificarHU/{{enlace.url}}/{{HU.id}}/{{is_Scrum}}/" class="changelink">Modificar</a></td>
@@ -316,12 +310,12 @@
 
   					{%for enlace in enlaceSprintv%}
                 		<td><a href="/visualizarSprint/{{enlace.url}}/{{sprint.id}}/" class="addlink">Visualizar</a></td>
-                		{%for s in sprintsvk%}
-                			{%if s == sprint%}
-                				<td><a href="/asignarHUFlujo/{{enlace.url}}/{{sprint.id}}/" class="changelink">Ver HU en flujos</a></td>
+						{%if sprint.estado == 'CON'%}
+                				<td><a href="/asignarHUFlujo/{{enlace.url}}/{{sprint.id}}/" class="changelink">Controlar HU en flujos</a></td>
                 				<td><a href="/verKanban/{{enlace.url}}/{{sprint.id}}/" class="changelink">Ver Kanban</a></td>
-                			{%endif%}
-                		{%endfor%}
+                		{%elif sprint.estado == 'FIN'%}
+                				<td><a href="/asignarHUFlujo/{{enlace.url}}/{{sprint.id}}/" class="changelink">Ver release</a></td>
+                		{%endif%}
              		{% endfor %}
 
             		{% if sprintsm|length > 0%}

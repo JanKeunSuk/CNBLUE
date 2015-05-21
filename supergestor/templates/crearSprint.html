@@ -63,7 +63,7 @@
 <form enctype="multipart/form-data" action="/guardarSprint/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="post" id="rol_form" novalidate>
 <input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
 {% csrf_token %}
-<div>
+<div style="width:1500x; height:530px; border:#000 2px solid; overflow:auto">
 
   <fieldset class="module aligned ">
 
@@ -119,8 +119,26 @@
 						</select>
 
                         <p class="help"> Presiona "Control" para seleccionar mas de una opcion.</p>
-                    
+        
+        <div class="form-row field-Flujos">
+
+                <div>
+					<label class="required" for="id_usuarios">Usuarios para el equipo de desarrollo:</label>
+                        
+                        <select multiple = "multiple" id="id_usuarios" name="usuarios" required>
+                            {%for u in equipo_pen %}
+								<option value="{{u.id}}" selected> {{u}}</option>
+							{%endfor%}
+                            {%for u in equipo %}
+								<option value="{{u.id}}"> {{u}}</option>
+							{%endfor%}
+						</select>
+
+                        <p class="help"> Presiona "Control" para seleccionar mas de una opcion.</p>
+
                 </div>
+        
+        </div>
             	<button id="assign" name="boton" onclick="agregar()" value="Calcular">Estimar duracion</button>
         </div>
         
