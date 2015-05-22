@@ -22,9 +22,11 @@ $(function () {
             text: 'Horas restantes de trabajo en el sprint'
         },
         xAxis: [{
-        	categories: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24],
+        	//categories: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24],
+        	categories: [],
             labels: {
                 formatter: function () {
+                	//categories[categories.length]=i;
                     return "Dia "+ i++;
                 },
             	style: {
@@ -32,9 +34,9 @@ $(function () {
                 },
             	
                 rotation: -45
-            }
+            },
         
-            //crosshair: true
+            crosshair: true
         }],
         yAxis: [{ // Primary yAxis
             labels: {
@@ -65,8 +67,8 @@ $(function () {
             opposite: true
         }],
         tooltip: {
-            shared: true
-        },
+            shared: true,
+            },
         legend: {
             layout: 'vertical',
             align: 'left',
@@ -74,7 +76,8 @@ $(function () {
             verticalAlign: 'top',
             y: 100,
             floating: true,
-            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+            //enabled: false
         },
         series: [{
             name: 'Dia',
