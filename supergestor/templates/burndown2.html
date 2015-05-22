@@ -25,12 +25,15 @@ $(function () {
         	categories: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24],
             labels: {
                 formatter: function () {
-                	i++;
-                    return "Dia "+i;
-                    
+                    return "Dia "+ i++;
                 },
+            	style: {
+                        color: 'green'
+                },
+            	
                 rotation: -45
             }
+        
             //crosshair: true
         }],
         yAxis: [{ // Primary yAxis
@@ -79,8 +82,7 @@ $(function () {
             //yAxis: 1,
             data: {{restantes}},
             tooltip: {
-                valueSuffix: ' hs',
-                pointFormat: 'Horas frestantes: <b>{point.y:.1f}hs</b>'
+                pointFormat: 'Horas restantes:<b>{point.y:.1f}</b><br/>'
 
             }
 
@@ -89,8 +91,7 @@ $(function () {
             type: 'spline',
             data: {{nuevaestima}}, //este a partir de cierto punto no puede ser solo restantes
             tooltip: {
-                valueSuffix: ' hs',
-                pointFormat: 'Horas restantes: <b>{point.y:.1f}</b>'
+                pointFormat: 'Horas Estimadas en base a progreso: <b>{point.y:.1f}</b><br/>'
             }
         },
         {
@@ -98,8 +99,7 @@ $(function () {
         	type: 'spline',
         	data: {{estima}},
         	tooltip: {
-            valueSuffix: ' hs',
-            pointFormat: 'Horas rest. prev.: <b>{point.y:.1f}</b>'
+            pointFormat: 'Horas Previstas.: <b>{point.y:.1f}</b><br/>'
         }
         }]
     });
