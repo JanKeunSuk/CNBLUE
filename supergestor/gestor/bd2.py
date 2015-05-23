@@ -156,8 +156,8 @@ permission3 = Permission.objects.create(codename='Visualizar proyecto',
 permission4 = Permission.objects.create(codename='Visualizar equipo',
                                        name='Visualizar equipo',
                                        content_type=content_type2)
-permission5 = Permission.objects.create(codename='Visualizar HU',
-                                       name='Visualizar HU',
+permission5 = Permission.objects.create(codename='Generar Reporte',
+                                       name='Generar Reporte',
                                        content_type=content_type)
 
 
@@ -254,7 +254,7 @@ rol_equipo.permisos.add(permission1) # se cargo y se obtuvo en la linea 24
 
 
 """Carga para el Cliente"""
-"""Se le asigna visualizar proyecto, visualizar equipo y visualiazr hu que ya se obtuvieron en lineas 31,34,37"""
+"""Se le asigna visualizar proyecto, visualizar equipo y generar reporte que ya se obtuvieron en lineas 31,34,37"""
 rol_cliente.permisos.add(permission3,permission4,permission5)
 
 
@@ -368,7 +368,7 @@ h=historial_notificacion.objects.create(usuario=kathe, fecha_hora=str(datetime.d
 evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"M+"+"Se ha modificado '"+hu5.descripcion+"' con valor tecnico '"+str(hu5.valor_tecnico)+"' con prioridad '"+str(hu5.prioridad)+" duracion "+str(hu5.duracion)+' y estado '+hu5.estado+" con fecha y hora: "+str(datetime.date.today())
 historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu5.descripcion, evento=evento_e)
 
-hu6=HU.objects.create(descripcion='HU6',valor_negocio=8,valor_tecnico=6,prioridad=70,duracion=20,acumulador_horas=0,estado='ACT',estado_en_actividad='PEN',valido=True,proyecto=p1,version=1.0)
+hu6=HU.objects.create(descripcion='HU6',valor_negocio=8,valor_tecnico=6,prioridad=80,duracion=20,acumulador_horas=0,estado='ACT',estado_en_actividad='PEN',valido=True,proyecto=p1,version=1.0)
 huv6=HU_version.objects.create(descripcion=hu6.descripcion,valor_negocio=hu6.valor_negocio,hu=hu6,version=hu6.version)
 evento_e=str(kathe.id)+"+"+str(p1.id)+"+"+str(rol_owner.id)+"+"+"HU+"+"C+"+"Se ha creado un nuevo HU de nombre: "+hu6.descripcion+" con valor de negocio "+str(hu6.valor_negocio)+" con fecha y hora: "+str(datetime.date.today())
 h=historial_notificacion.objects.create(usuario=kathe, fecha_hora=str(datetime.date.today()), objeto=hu6.descripcion, evento=evento_e)

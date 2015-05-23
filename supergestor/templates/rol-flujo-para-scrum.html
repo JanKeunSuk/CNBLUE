@@ -11,7 +11,11 @@
 
 <meta name="robots" content="NONE,NOARCHIVE" />
 </head>
-
+<style type="text/css">
+.tablaDias { table-layout:fixed; }
+td { padding: 2px 2px 2px 2px; text-align-center; }
+.columnaDia { width: 15px; }
+</style>
 <body class=" dashboard">
 
 <!-- Container -->
@@ -345,20 +349,34 @@
             
             
 <!-- Cliente, visualizacion de HU con usuario asignado -->
-            {%if HUv|length > 0%}
-            	<p><font size = 5><b>Reporte para el cliente</b></font>(parcial)</p>
-            	<p>-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*--*-*-*-*-*-*-*-*-*-*-</p>
-            	<p><b><font size = 3>HU's</font></b></p>
-            	{%for h,u in HUc.items%}
-            		{%if u == None %}
-            			<p><b>{{h}} </b>aun no se asignado a ningun usuario </p> 
-            		{%else%}
-            			<p><b>{{h}} </b>asignado a <b>{{u}}</b></p> 
-            		{%endif%} 
+		{%if reporte == 1%}
+            <p><font size = 5><b>Reporte para el cliente</b></font>(parcial)</p>
+            	{%for s in sprintReporte%}
+            	<br/><br/>
+            	<p><font size="3" color="black"> Nombre: <b>{{s}}</b> | Estado: <b>{{s.estado}}</b> | Duracion <b>{{s.duracion}}</b> dias | Fecha de inicio: <b>{{s.fecha_inicio}}</b></p>
+            	<table class="tablaDias" width="1000" bordercolor = #8904B1 border="8" align="center">
+					<tr><td WIDTH=150  bgcolor="#ECE0F8" align="center"><font size="2" color="black"><b>HU</b></font></td>
+					<td WIDTH=150  bgcolor="#ECE0F8" align="center"><font size="2" color="black"><b>USUARIO</b></font></td>
+					<td WIDTH=150  bgcolor="#ECE0F8" align="center"><font size="2" color="black"><b>FLUJO</b></font></td>
+					<td WIDTH=150  bgcolor="#ECE0F8" align="center"><font size="2" color="black"><b>ACTIVIDAD</b></font></td>
+					<td WIDTH=150  bgcolor="#ECE0F8" align="center"><font size="2" color="black"><b>ESTADO EN ACTIVIDAD</b></font></td>
+					<td WIDTH=150  bgcolor="#ECE0F8" align="center"><font size="2" color="black"><b>DURACION TOTAL</b></font></td>
+            		<td WIDTH=150  bgcolor="#ECE0F8" align="center"><font size="2" color="black"><b>HORAS REALIZADAS</b></font></td></tr>
+            		{%for h in s.hu.all%}
+            			<tr><td WIDTH=150  align="center"><font size="2" >{{h}}</font></td>
+						<td WIDTH=150  align="center"><font size="2" color="black">{{h.saber_usuario}}</font></td>
+						<td WIDTH=150  align="center"><font size="2" color="black">{{h.flujo}}</font></td>
+						<td WIDTH=150  align="center"><font size="2" color="black">{{h.actividad}}</font></td>
+						<td WIDTH=150  align="center"><font size="2" color="black"> {{h.estado_en_actividad}}</font></td>
+						<td WIDTH=150  align="center"><font size="2" color="black">{{h.duracion}} horas/ {{h.dias_hu}} dias</font></td>
+            			<td WIDTH=150  align="center"><font size="2" color="black">{{h.acumulador_horas}}</font></td></tr>
+            		{%endfor%}
+            		</table>
             	{%endfor%}
-            	<p>-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*--*-*-*-*-*-*-*-*-*-*-</p>
-            {%endif%}
-        </table>   <!--
+            <a href="/exportarPDF/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/">Exportar en PDF</a>
+        {%endif%}
+        </table> 
+        <!--
         <form method="get" action="/crearFlujo/{{usuario.id}}/{{proyecto.id}}/">
 
 			<input type="submit" value="Crear Flujo" />

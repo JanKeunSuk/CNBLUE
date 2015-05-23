@@ -21,6 +21,13 @@ import math
 import json
 from django.utils import timezone
 from io import BytesIO
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4, cm
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Paragraph, Table, TableStyle
+from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER
+from reportlab.lib import colors
+from reportlab.lib.colors import black, blue
 
 # Create your views and forms here.
 @login_required
@@ -220,18 +227,14 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
                 break
             i=i+1
         is_Scrum=2
-    HUc={}
     HUv=[]
-    if rolx.tiene_permiso('Visualizar HU'):
+    reporte=0
+    if rolx.tiene_permiso('Generar Reporte'):
         HUv=HU.objects.filter(proyecto=proyectox).filter(estado='ACT')
-        for h in HUv:
-            hay=0
-            for d in delegacion.objects.all():
-                if d.hu == h:
-                    HUc[h]=d.usuario
-                    hay=1
-            if hay == 0:
-                HUc[h]=None
+        reporte=1
+        sprintReporte=Sprint.objects.filter(proyecto=proyectox)
+    else:
+        sprintReporte=[]
                 
     if rolx.tiene_permiso('Can add sprint'):
         enlaceSprint.append(enlacex('/crearSprint/'+usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar Sprint'))
@@ -251,7 +254,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     if rolx.tiene_permiso('Can add sprint') or rolx.tiene_permiso('Can change sprint'):
         enlaceSprintv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
           
-    return render(request,'rol-flujo-para-scrum.html',{'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas, 'kanban':kanban})
+    return render(request,'rol-flujo-para-scrum.html',{'sprintReporte':sprintReporte,'proyecto':proyectox,'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HUv':HUv,'reporte':reporte,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas, 'kanban':kanban})
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
 def registrarUsuarioView(request):
@@ -1738,14 +1741,11 @@ def adminAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec):
         while archivoadjunto.objects.filter(nombre=cambiar).filter(estado='ACT'):
             n=n+1
             split=archivox.name.split('.')
-            if len(split) > 1:
-                cambiar=split[0]+"("+str(n)+")."+split[1]
-            else:
-                cambiar=split[0]+"("+str(n)+")"
+            cambiar=split[0]+"("+str(n)+")"
             
         filex=archivoadjunto.objects.create(nombre=cambiar,content=archivox.content_type,tamanho=archivox.size,archivo=file,hU_id=HU_id_rec,estado='ACT',version=1.0)
         filex.save()
-        version=adjuntoVersion.objects.create(archivo_original=filex,version=1.0,nombre=archivox.name,content=archivox.content_type,tamanho=archivox.size,archivo=file,estado='ACT',descripcion='Primera version')
+        version=adjuntoVersion.objects.create(archivo_original=filex,version=1.0,nombre=cambiar,content=archivox.content_type,tamanho=archivox.size,archivo=file,estado='ACT',descripcion='Primera version')
         version.save()
         #archivox.save()
         return HttpResponseRedirect('/adminAdjunto/'+usuario_id+'/'+proyectoid+'/'+rolid+'/'+HU_id_rec+'/')
@@ -1793,7 +1793,8 @@ def cambiarVersionAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec,arch
         archivox = request.FILES['archivo']
         desc = request.POST['descripcion']
         name = request.POST['name']
-        if name == adjunto.nombre:
+
+        if name == adjunto.nombre and archivox.content_type == adjunto.content:
             x=x+0.1
         else:
             x=math.floor(x)+1.0
@@ -1838,9 +1839,8 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     """
     class descripcionHU:
         """Obtiene toda la informacion de una hu"""
-        def __init__(self,f_inicio, f_fin, duracionhu, pendiente, p):
-            self.f_inicio=f_inicio
-            self.f_fin=f_fin
+        def __init__(self,dias, duracionhu, pendiente, p):
+            self.dias=dias
             self.duracionhu=duracionhu
             self.pendiente=pendiente
             self.p=p
@@ -1855,153 +1855,140 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
         def __init__(self,fecha_f, fecha_i):
             self.fecha_f=fecha_f
             self.fecha_i=fecha_i
+    class acu_color:
+        """Guarda el acumulado y el color"""
+        def __init__(self, acum, color):
+            self.acum=acum
+            self.color=color        
             
    
-    lista=[]
+
     dias=0
     hux=HU.objects.filter(proyecto=proyecto.objects.get(id=proyectoid))
     sprint=Sprint.objects.filter(proyecto=proyecto.objects.get(id=proyectoid))
     s=sorted(sprint,key=lambda x: x.estado, reverse=True)
-
+    
     #obtengo las fechas
     lista_fecha=[]
     for sp in sprint:
         if sp.estado == 'CON':
-            dias=sp.duracion-2
-            contador=-2
+            dias=sp.duracion-1
+            contador=-1
             while dias > contador:
                 lista_fecha.append(((sp.fecha_inicio)+timedelta(days=contador)).strftime('%Y-%m-%d'))
                 contador += 1
-
-        
-    """
-    cont=0
-    #Obtengo la cantidad de dias
-    #duracion maxima
+    #obtengo las dias
+    lista_dias=[]
     for sp in sprint:
-        if sp.duracion>cont:
-            cont=sp.duracion
-    #cantidad de dias segun la duracion
-    while(dias!=cont):
-        dias=dias+1
-        lista.append(dias)
-"""
+        if sp.estado == 'CON':
+            dias=sp.duracion
+            contador=1
+            while dias >= contador:
+                lista_dias.append(contador)
+                contador += 1
+                
+    hu_x=sorted(hux,key=lambda x: x.prioridad, reverse=True)   
+
+    longitud_para_tabla={}
+    for i in sprint:
+        longitud_para_tabla[i]=len(i.hu.all())+1
+        
+    usuario_hu={}
+    for h in hu_x:
+        for d in delegacion.objects.all():
+            if h.id == d.hu.id:
+                usuario=d.usuario
+                estado=h.estado_en_actividad
+                usuario_hu[h]=usu_estado(usuario, estado)#hu-usuario-estado
+    
+    longitud_equipo=[]
+    usu=""
+    for i, u in usuario_hu.items():
+            if usu=="":
+                usu=u.usuario
+                #longitud_equipo[i]=usu
+                longitud_equipo.append(usu)
+            elif usu != u.usuario:
+                usu=u.usuario
+                #longitud_equipo[i]=usu
+                longitud_equipo.append(usu)#los usuarios
+        
+    fecha_fin_sprint=0
+    fecha_inicio=0
+    lista_sprint={}
+    for hu in hu_x:
+        for sp in sprint:
+                    for h in sp.hu.all():
+                        if h == hu:
+                            if sp.estado == 'CON':    
+                                fecha_fin_sprint=(sp.fecha_inicio+timedelta(days=(sp.duracion-1))).strftime('%Y-%m-%d')
+                                fecha_inicio=(sp.fecha_inicio+timedelta(days=0)).strftime('%Y-%m-%d')
+        lista_sprint[sp]=sprint_acu_fecha(fecha_fin_sprint,fecha_inicio )
+    #La duracion en horas de un Sprint
+    sprint_acu_fecha=0
+    lista_sprint_acu_fecha={}
+    for sp in sprint:
+        for hu in hu_x:
+                for h in sp.hu.all():
+                    if h == hu:
+                        sprint_acu_fecha=sprint_acu_fecha+hu.duracion     
+        lista_sprint_acu_fecha[sp]=sprint_acu_fecha
+        
     lista_hu_horas={}
     descripcion_hu={}
     lista_horas=[]
     cont2=0        
     fecha_x=[]
     pendiente=0
-    fecha_i=[]
-    fecha_f=[]
     dura=0
-    acumulador=0
-    for hu in hux:
+    aux=1
+    hasta=1
+    desde=0
+    nuevo_usu=""
+    #for hu in hu_x:
+    for hu, u in usuario_hu.items():
         lista_horas=[]
         acumulador=0
+        
+        hasta+=hu.dias_hu(hu.duracion)#cantidad de dias
+        aux=1
+        usu=u.usuario
+        
         for fecha_x in lista_fecha:
             cont2=0
             for h in hu.hu_descripcion.all():
-                x=str((h.fecha+timedelta(days=-2)).strftime('%Y-%m-%d'))
+                x=str((h.fecha+timedelta(days=-1)).strftime('%Y-%m-%d'))
                 if str(fecha_x) == x[:10]:
                     cont2=cont2+h.horas_trabajadas
-                                
-            lista_horas.append(cont2)
+                    
+            if nuevo_usu != usu:
+                nuevo_usu=usu
+                desde=1
+                hasta=hu.dias_hu(hu.duracion)#cantidad de dias
+                
+            if aux>=desde and aux<=hasta:
+                    lista_horas.append(acu_color(cont2, 1))
+            else:
+                lista_horas.append(acu_color(cont2, 0))
+            aux+=1
+                        
             acumulador=acumulador+cont2#el acumulado optiene el total de horas que realizo en varios dias de trabajo
             
             lista_hu_horas[hu]=lista_horas
+            
             pendiente=hu.duracion
             pendiente=pendiente-acumulador#Lo que le resta de la duracion para terminar la HU
-            for sp in sprint:
-                for h in sp.hu.all():
-                    if h == hu:
-                        dias=hu.dias_hu(hu.duracion)-2 #retorna la cantidad de dias de la HU
-                        fecha_f=(sp.fecha_inicio+timedelta(days=dias)).strftime('%Y-%m-%d')#retorna la fecha fin de la HU
-                        
-                        dura=hu.duracion
-                        x=str((sp.fecha_inicio+timedelta(days=-2)).strftime('%Y-%m-%d'))
-                        fecha_i=x[:10]
-            if pendiente==0:
-                p=1
-            else:
-                p=0                
-            descripcion_hu[hu]=descripcionHU(fecha_i, fecha_f, dura, pendiente, p)
 
-    """
-        
-    for hu in hux:
-        cont2=0
-        acumulador=0
-        lista_horas=[]    
-        for h in hu.hu_descripcion.all():
-            x=str(h.fecha)
-            if h.id == 1:
-                fecha_x=x[:10]
-                #lista_fecha.append(fecha_x)
-                cont2=cont2+h.horas_trabajadas
-            elif x[:10] == fecha_x:
-                cont2=cont2+h.horas_trabajadas                
-            else:
-                fecha_x=x[:10]
-                #lista_fecha.append(fecha_x)
-                if cont2 != 0:
-                    lista_horas.append(cont2)
-                    acumulador=acumulador+cont2 
-                cont2=0
-                cont2=cont2+h.horas_trabajadas
-                   
-        if cont2 != 0:
-            lista_horas.append(cont2)
-            acumulador=acumulador+cont2#el acumulado optiene el total de horas que realizo en varios dias de trabajo
+        dias=hu.dias_hu(hu.duracion) #retorna la cantidad de dias de la HU
+        desde=hasta+1
+        dura=hu.duracion#cuantas horas dura
+        if pendiente==0:
+            p=1
+        else:
+            p=0                
+        descripcion_hu[hu]=descripcionHU(dias, dura, pendiente, p)
             
-        lista_hu_horas[hu]=lista_horas
-        pendiente=hu.duracion
-        pendiente=pendiente-acumulador#Lo que le resta de la duracion para terminar la HU
-        for sp in sprint:
-            for h in sp.hu.all():
-                if h == hu:
-                    dias=hu.dias_hu(hu.duracion) #retorna la cantidad de dias de la HU
-                    fecha_f=hu.fecha_fin(sp.fecha_inicio, dias)#retorna la fecha fin de la HU
-                    dura=hu.duracion
-                    x=str(sp.fecha_inicio)
-                    fecha_i=x[:10]
-                
-        descripcion_hu[hu]=descripcionHU(fecha_i, fecha_f, dura, pendiente)
-    """
-    longitud_para_tabla={}
-    for i in sprint:
-        longitud_para_tabla[i]=len(i.hu.all())+1
-        
-    usuario_hu={}
-    for h in hux:
-        for d in delegacion.objects.all():
-            if h.id == d.hu.id:
-                usuario=d.usuario
-                estado=h.estado_en_actividad
-                usuario_hu[h]=usu_estado(usuario, estado)
-    
-    fecha_fin_sprint=0
-    fecha_inicio=0
-    lista_sprint={}
-    for hu in hux:
-        for sp in sprint:
-                    for h in sp.hu.all():
-                        if h == hu:
-                            if sp.estado == 'CON':    
-                                fecha_fin_sprint=(sp.fecha_inicio+timedelta(days=(sp.duracion-3))).strftime('%Y-%m-%d')
-                                fecha_inicio=(sp.fecha_inicio+timedelta(days=-2)).strftime('%Y-%m-%d')
-        lista_sprint[sp]=sprint_acu_fecha(fecha_fin_sprint,fecha_inicio )
-    #La duracion en horas de un Sprint
-    sprint_acu_fecha=0
-    lista_sprint_acu_fecha={}
-    for sp in sprint:
-        for hu in hux:
-                for h in sp.hu.all():
-                    if h == hu:
-                        sprint_acu_fecha=sprint_acu_fecha+hu.duracion     
-        lista_sprint_acu_fecha[sp]=sprint_acu_fecha
-            
-    return render(request,'visualizarSprintBacklog.html',{'len':longitud_para_tabla,'sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'HUx':hux, 'dias':lista, 'lista':lista_hu_horas, 'usuario_hu':usuario_hu, 'descripcionHU':descripcion_hu, 'fecha_fin_s':fecha_fin_sprint, 'lista_sprint':lista_sprint, 'fechas':lista_fecha, 'dura_sprint':lista_sprint_acu_fecha, 'p':p})
+    return render(request,'visualizarSprintBacklog.html',{'len':longitud_para_tabla,'sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'HUx':hu_x, 'lista':lista_hu_horas, 'usuario_hu':usuario_hu, 'descripcionHU':descripcion_hu, 'fecha_fin_s':fecha_fin_sprint, 'lista_sprint':lista_sprint, 'fechas':lista_fecha, 'dura_sprint':lista_sprint_acu_fecha, 'dias':lista_dias, 'hu_x':hu_x, 'lep':usuario_hu})
 
 def asignarHU_Usuario_FLujo(request,usuario_id,proyectoid,rolid,sprintid):
     """ 
@@ -2427,3 +2414,68 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
     
     
     return render(request,'burndown2.html',{'nuevaestima':nueva_estimacion,'suma':sumx,'estima':estimacion,'duracion':duracionsp,'horas':lista_horas,'fechas':lista_fechas,'restantes':horas_restantes,'cat_dias':cant_days,'sprint':sprint,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+
+def exportarPDF(request,usuario_id,proyectoid,rolid):
+    # Create the HttpResponse object with the appropriate PDF headers.
+    proyectox=proyecto.objects.get(id=proyectoid)
+    nombrePDF="reporte_"+proyectox.nombre_corto+".pdf"
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename='+nombrePDF
+    
+    width, height = A4
+    styles = getSampleStyleSheet()
+    styleN = styles["BodyText"]
+    styleN.alignment = TA_LEFT
+    styleBH = styles["Normal"]
+    styleBH.alignment = TA_CENTER
+
+    def coord(x, y, unit=1):
+        x, y = x * unit, height -  y * unit
+        return x, y
+
+    # Headers
+    hHU = Paragraph('''<font color="#210B61"><b>HU</b></font>''', styleBH)
+    husuario = Paragraph('''<font color="#210B61"><b>Usuario</b></font>''', styleBH)
+    hflujo = Paragraph('''<font color="#210B61"><b>Flujo</b></font>''', styleBH)
+    hactividad = Paragraph('''<font color="#210B61"><b>Actividad</b></font>''', styleBH)
+    hestado = Paragraph('''<font color="#210B61"><b>Estado</b></font>''', styleBH)
+    hduracion = Paragraph('''<font color="#210B61"><b>Duracion</b></font>''', styleBH)
+    hhorasRealizadas = Paragraph('''<font color="#210B61"><b>Horas Realizadas</b></font>''', styleBH)
+    c = canvas.Canvas(response)
+    for s in Sprint.objects.filter(proyecto=proyectox):
+        c.setFont("Helvetica",18)
+        c.setFillColor(blue)
+        c.drawString(60, 780, 'Reporte para el cliente')
+        c.setFont("Helvetica-Bold",12)
+        c.setFillColor(black)
+        c.line(30,760,580,760) # Para hacer una linea horizontal
+        texto='Nombre: '+s.descripcion+'  Estado: '+s.estado+ '  Duracion: '+str(s.duracion)+'   Fecha de inicio: '+str(s.fecha_inicio)
+        c.drawString(40,720,texto)
+        data=[]
+        data.append([hHU, husuario,hflujo, hactividad, hestado, hduracion, hhorasRealizadas])
+        i=0
+        for h in s.hu.all():
+            data.append([])
+            i=i+1
+            data[i].append(Paragraph(h.descripcion, styleN))
+            data[i].append(Paragraph(str(h.saber_usuario()), styleN))
+            data[i].append(Paragraph(str(h.flujo()), styleN))
+            data[i].append(Paragraph(str(h.actividad), styleN))
+            data[i].append(Paragraph(h.estado_en_actividad, styleN))
+            data[i].append(Paragraph(str(h.duracion), styleN))
+            data[i].append(Paragraph(str(h.acumulador_horas), styleN))
+        table = Table(data, colWidths=[2.05 * cm, 3 * cm, 2.3 * cm, 3.7* cm, 3 * cm, 3 * cm, 3 * cm])
+
+        table.setStyle(TableStyle([
+                       ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                       ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                       ('BACKGROUND',(0,0),(-1,0),colors.lightgrey),
+                             ]))
+
+        # Create the PDF object, using the BytesIO object as its "file."
+    
+        table.wrapOn(c, width, height)
+        table.drawOn(c, *coord(0.4, 6 + int(len((s.hu.all()))/2)+1, cm))
+        c.showPage()
+    c.save()
+    return response

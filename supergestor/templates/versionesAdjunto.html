@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en-us" >
+<head>
+<title>Versionador de adjuntos | Django site admin</title>
+<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css" />
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/static/admin/css/ie.css" /><![endif]-->
+
+<script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
+<script type="text/javascript">window.__admin_utc_offset__ = "0";</script>
+
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="/static/admin/js/core.js"></script>
+<script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+<script type="text/javascript" src="/static/admin/js/actions.js"></script>
+<script type="text/javascript" src="/static/admin/js/calendar.js"></script>
+<script type="text/javascript" src="/static/admin/js/admin/DateTimeShortcuts.js"></script>
+
+<meta name="robots" content="NONE,NOARCHIVE" />
+</head>
+<body class=" app-gestor model-proyecto change-form">
+
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        
+<h1 id="site-name"><a href="/adminAdjunto/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{huid}}/">Cambiar version de Adjunto</a></h1>
+
+        </div>
+        
+         <div id="user-tools">    
+
+                <a href="/password_change/">Cambiar contrasenha</a> /
+                
+                <a href="/logout/">Salir</a>
+
+        </div>
+        
+        
+    </div>
+    <!-- END Header -->
+    
+<div class="breadcrumbs">
+<a href="/adminAdjunto/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{huid}}/">Pagina Principal</a>
+<!-- 
+&rsaquo; <a href="/admin/gestor/">Gestor</a>
+&rsaquo; <a href="/admin/gestor/proyecto/">Proyectos</a>
+&rsaquo; p2
+ -->
+</div>
+
+    <!-- Content -->
+    <div id="content" class="colM">
+        
+        <h1>Version actual de Adjunto: {{adjunto.version}}</h1>
+        <div id="content-main">
+
+
+  <ul class="object-tools">
+    <!-- 
+    <li>
+        
+        <a href="/admin/gestor/proyecto/2/history/" class="historylink">Historial</a>
+    </li>
+     -->
+    
+  </ul>
+<table width="1100" bordercolor = #8904B1 border="8" align="center">
+	<tr>
+         <td align="center" bgcolor="#F7F2E0"><font size="2" color="black"><b>Version de Adjunto</b></font></td>
+         <td align="center" bgcolor="#F7F2E0"><font size="2" color="black"><b>Nombre</b></font></td>
+         <td align="center" bgcolor="#F7F2E0"><font size="2" color="black"><b>Tipo de adjunto</b></font></td>
+         <td align="center" bgcolor="#F7F2E0"><font size="2" color="black"><b>Tamanho</b></font></td>
+         <td align="center" bgcolor="#F7F2E0"><font size="2" color="black"><b>Descripcion de cambio</b></font></td>
+         <td align="center" bgcolor="#F7F2E0"><font size="2" color="black"><b>Elegir?</b></font></td>
+    </tr>
+{%for v in versiones%}
+	<tr><td align="center">{{v.version}} </td>
+	<td align="center">{{v.nombre}}  </td>
+	<td align="center">{{v.content}}</td>
+	<td align="center">{{v.tamanho}}</td>
+	<td align="center">{{v.descripcion}}  </td>
+	<td align="center"><a href="/elegirVersionAdjunto/{{archivoid}}/{{v.id}}/">Elegir</a></td>
+	</tr>
+{%endfor%}	
+</table>
+<form enctype="multipart/form-data" method="post" id="adjunto_form">
+	{% csrf_token %}
+	<br/><br/><p><font size="3" color="#DF3A01"><b>Agregar nueva version del archivo</b></font></p>
+	<div>
+		<label class="required" for="id_nombre">Descripcion:</label>
+        <textarea name="descripcion" rows="3" cols="90">Motivo de nueva version:</textarea>
+        <br/><br/><label class="required" for="id_nombre">Renombrar:</label>
+        <textarea name="name" rows="1" cols="25">{{adjunto.nombre}}</textarea>
+	</div>
+	<input type="file" name="archivo" >
+	<input type="submit" name="Subir" value="Subir" >
+						
+</form>
+<script type="text/javascript">
+(function($) {
+    var field;
+
+
+})(django.jQuery);
+</script>
+
+
+</div>
+</form></div>
+
+        
+        <br class="clear" />
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+
+</body>
+</html>
+
