@@ -21,6 +21,13 @@ import math
 import json
 from django.utils import timezone
 from io import BytesIO
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4, cm
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Paragraph, Table, TableStyle
+from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER
+from reportlab.lib import colors
+from reportlab.lib.colors import black, blue
 
 # Create your views and forms here.
 @login_required
@@ -220,18 +227,14 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
                 break
             i=i+1
         is_Scrum=2
-    HUc={}
     HUv=[]
-    if rolx.tiene_permiso('Visualizar HU'):
+    reporte=0
+    if rolx.tiene_permiso('Generar Reporte'):
         HUv=HU.objects.filter(proyecto=proyectox).filter(estado='ACT')
-        for h in HUv:
-            hay=0
-            for d in delegacion.objects.all():
-                if d.hu == h:
-                    HUc[h]=d.usuario
-                    hay=1
-            if hay == 0:
-                HUc[h]=None
+        reporte=1
+        sprintReporte=Sprint.objects.filter(proyecto=proyectox)
+    else:
+        sprintReporte=[]
                 
     if rolx.tiene_permiso('Can add sprint'):
         enlaceSprint.append(enlacex('/crearSprint/'+usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar Sprint'))
@@ -251,7 +254,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     if rolx.tiene_permiso('Can add sprint') or rolx.tiene_permiso('Can change sprint'):
         enlaceSprintv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
           
-    return render(request,'rol-flujo-para-scrum.html',{'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HUv':HUv,'HUc':HUc,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas, 'kanban':kanban})
+    return render(request,'rol-flujo-para-scrum.html',{'sprintReporte':sprintReporte,'proyecto':proyectox,'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HUv':HUv,'reporte':reporte,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas, 'kanban':kanban})
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
 def registrarUsuarioView(request):
@@ -1738,14 +1741,11 @@ def adminAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec):
         while archivoadjunto.objects.filter(nombre=cambiar).filter(estado='ACT'):
             n=n+1
             split=archivox.name.split('.')
-            if len(split) > 1:
-                cambiar=split[0]+"("+str(n)+")."+split[1]
-            else:
-                cambiar=split[0]+"("+str(n)+")"
+            cambiar=split[0]+"("+str(n)+")"
             
         filex=archivoadjunto.objects.create(nombre=cambiar,content=archivox.content_type,tamanho=archivox.size,archivo=file,hU_id=HU_id_rec,estado='ACT',version=1.0)
         filex.save()
-        version=adjuntoVersion.objects.create(archivo_original=filex,version=1.0,nombre=archivox.name,content=archivox.content_type,tamanho=archivox.size,archivo=file,estado='ACT',descripcion='Primera version')
+        version=adjuntoVersion.objects.create(archivo_original=filex,version=1.0,nombre=cambiar,content=archivox.content_type,tamanho=archivox.size,archivo=file,estado='ACT',descripcion='Primera version')
         version.save()
         #archivox.save()
         return HttpResponseRedirect('/adminAdjunto/'+usuario_id+'/'+proyectoid+'/'+rolid+'/'+HU_id_rec+'/')
@@ -1793,7 +1793,8 @@ def cambiarVersionAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec,arch
         archivox = request.FILES['archivo']
         desc = request.POST['descripcion']
         name = request.POST['name']
-        if name == adjunto.nombre:
+
+        if name == adjunto.nombre and archivox.content_type == adjunto.content:
             x=x+0.1
         else:
             x=math.floor(x)+1.0
@@ -2427,3 +2428,68 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
     
     
     return render(request,'burndown2.html',{'nuevaestima':nueva_estimacion,'suma':sumx,'estima':estimacion,'duracion':duracionsp,'horas':lista_horas,'fechas':lista_fechas,'restantes':horas_restantes,'cat_dias':cant_days,'sprint':sprint,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+
+def exportarPDF(request,usuario_id,proyectoid,rolid):
+    # Create the HttpResponse object with the appropriate PDF headers.
+    proyectox=proyecto.objects.get(id=proyectoid)
+    nombrePDF="reporte_"+proyectox.nombre_corto+".pdf"
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename='+nombrePDF
+    
+    width, height = A4
+    styles = getSampleStyleSheet()
+    styleN = styles["BodyText"]
+    styleN.alignment = TA_LEFT
+    styleBH = styles["Normal"]
+    styleBH.alignment = TA_CENTER
+
+    def coord(x, y, unit=1):
+        x, y = x * unit, height -  y * unit
+        return x, y
+
+    # Headers
+    hHU = Paragraph('''<font color="#210B61"><b>HU</b></font>''', styleBH)
+    husuario = Paragraph('''<font color="#210B61"><b>Usuario</b></font>''', styleBH)
+    hflujo = Paragraph('''<font color="#210B61"><b>Flujo</b></font>''', styleBH)
+    hactividad = Paragraph('''<font color="#210B61"><b>Actividad</b></font>''', styleBH)
+    hestado = Paragraph('''<font color="#210B61"><b>Estado</b></font>''', styleBH)
+    hduracion = Paragraph('''<font color="#210B61"><b>Duracion</b></font>''', styleBH)
+    hhorasRealizadas = Paragraph('''<font color="#210B61"><b>Horas Realizadas</b></font>''', styleBH)
+    c = canvas.Canvas(response)
+    for s in Sprint.objects.filter(proyecto=proyectox):
+        c.setFont("Helvetica",18)
+        c.setFillColor(blue)
+        c.drawString(60, 780, 'Reporte para el cliente')
+        c.setFont("Helvetica-Bold",12)
+        c.setFillColor(black)
+        c.line(30,760,580,760) # Para hacer una linea horizontal
+        texto='Nombre: '+s.descripcion+'  Estado: '+s.estado+ '  Duracion: '+str(s.duracion)+'   Fecha de inicio: '+str(s.fecha_inicio)
+        c.drawString(40,720,texto)
+        data=[]
+        data.append([hHU, husuario,hflujo, hactividad, hestado, hduracion, hhorasRealizadas])
+        i=0
+        for h in s.hu.all():
+            data.append([])
+            i=i+1
+            data[i].append(Paragraph(h.descripcion, styleN))
+            data[i].append(Paragraph(str(h.saber_usuario()), styleN))
+            data[i].append(Paragraph(str(h.flujo()), styleN))
+            data[i].append(Paragraph(str(h.actividad), styleN))
+            data[i].append(Paragraph(h.estado_en_actividad, styleN))
+            data[i].append(Paragraph(str(h.duracion), styleN))
+            data[i].append(Paragraph(str(h.acumulador_horas), styleN))
+        table = Table(data, colWidths=[2.05 * cm, 3 * cm, 2.3 * cm, 3.7* cm, 3 * cm, 3 * cm, 3 * cm])
+
+        table.setStyle(TableStyle([
+                       ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                       ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                       ('BACKGROUND',(0,0),(-1,0),colors.lightgrey),
+                             ]))
+
+        # Create the PDF object, using the BytesIO object as its "file."
+    
+        table.wrapOn(c, width, height)
+        table.drawOn(c, *coord(0.4, 6 + int(len((s.hu.all()))/2)+1, cm))
+        c.showPage()
+    c.save()
+    return response

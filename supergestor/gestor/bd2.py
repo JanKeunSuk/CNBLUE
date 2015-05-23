@@ -156,8 +156,8 @@ permission3 = Permission.objects.create(codename='Visualizar proyecto',
 permission4 = Permission.objects.create(codename='Visualizar equipo',
                                        name='Visualizar equipo',
                                        content_type=content_type2)
-permission5 = Permission.objects.create(codename='Visualizar HU',
-                                       name='Visualizar HU',
+permission5 = Permission.objects.create(codename='Generar Reporte',
+                                       name='Generar Reporte',
                                        content_type=content_type)
 
 
@@ -254,7 +254,7 @@ rol_equipo.permisos.add(permission1) # se cargo y se obtuvo en la linea 24
 
 
 """Carga para el Cliente"""
-"""Se le asigna visualizar proyecto, visualizar equipo y visualiazr hu que ya se obtuvieron en lineas 31,34,37"""
+"""Se le asigna visualizar proyecto, visualizar equipo y generar reporte que ya se obtuvieron en lineas 31,34,37"""
 rol_cliente.permisos.add(permission3,permission4,permission5)
 
 
