@@ -2376,7 +2376,7 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
     for i in lista_fechas:
         horas_restantes.insert(lista_fechas.index(i),tot_restante-lista_horas[lista_fechas.index(i)])
         tot_restante=tot_restante-lista_horas[lista_fechas.index(i)]
-    
+    horas_restantes.insert(0,sumx)
     
     
     pordia=sumx/sprint.duracion
@@ -2386,7 +2386,7 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
         estimacion.insert(duracionsp.index(x),tot_again-pordia)
         tot_again=tot_again-pordia
         
-        
+    estimacion.insert(0,sumx)  
 
     #AHora utilizando la lista lista_horas deberia calcular el resto del grafo, osea lista_horas debe ser mas largo o al menos 
     #tener otra lista igual a lista horas que dibuje la linea negra en el burndown
