@@ -86,14 +86,13 @@
 										{%if sp == s%}
 											{%for sd, d in dura_sprint.items%}
 												{%if sd == Sprint%}
-													<td rowspan="{{l}}" align="center"><font size="3" color="#088A85"><b>{{Sprint}}<br/><font size="1" color="red">FINALIZADO</font></td>									
-												
+													<td align="center"><font size="3" color="#088A85"><b>{{Sprint}}<br/><font size="1" color="red">FINALIZADO</font></td>									
 												{%endif%}
 											{%endfor%}	
 										{%endif%}
 									{%endfor%}
 								{%else%}
-									<td rowspan="{{l}}" align="center"><font size="3" color="#088A85"><b>{{Sprint}}</b></font></td>
+									<td align="center"><font size="3" color="#088A85"><b>{{Sprint}}</b></font></td>
 								{%endif%}
 								
 								{%if Sprint.estado == 'CON'%}
