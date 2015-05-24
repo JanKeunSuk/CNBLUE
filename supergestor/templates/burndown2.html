@@ -22,9 +22,9 @@ $(function () {
             text: 'Horas restantes de trabajo en el sprint'
         },
         xAxis: [{
-        	//categories: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24],
-        	categories: [],
-            labels: {
+        	categories: {{categorias}},
+        	//categories: [],
+            /*labels: {
                 formatter: function () {
                 	//categories[categories.length]=i;
                     return "Dia "+ i++;
@@ -34,7 +34,7 @@ $(function () {
                 },
             	
                 rotation: -45
-            },
+            },*/
         
             crosshair: true
         }],
@@ -80,7 +80,7 @@ $(function () {
             //enabled: false
         },
         series: [{
-            name: 'Dia',
+            name: 'Total horas restantes',
             type: 'column',
             //yAxis: 1,
             data: {{restantes}},
@@ -115,6 +115,13 @@ $(function () {
 <script src="/static/js/modules/exporting.js"></script>
 
 <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+<div id="volver">
+		<form id="formulario" action="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">
+        	
+        	<input type="submit" value="Volver" />
+        </form>
+
+</div>
 
 	</body>
 </html>
