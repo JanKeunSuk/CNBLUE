@@ -1766,7 +1766,8 @@ def adminAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec):
         for d in archivox.chunks():
             file.extend(d)
         n=0
-        cambiar=archivox.name
+        split=archivox.name.split('.')
+        cambiar=split[0]
         while archivoadjunto.objects.filter(nombre=cambiar).filter(estado='ACT'):
             n=n+1
             split=archivox.name.split('.')
