@@ -47,7 +47,6 @@ def holaView(request):
         proyectos_sin_enlace={}
         roles_enlace = []
         roles_sin_enlace = []
-        dif=0
         for a in asignacion.objects.all():
             if a.usuario.id == request.user.id:
                 rol_lista = rol.objects.get(id = a.rol.id)
@@ -92,7 +91,7 @@ def holaView(request):
                 proyectos_completo.append(p)
                     
         proyecto_cliente=set(proyecto_cliente)
-        return render(request,'hola.html',{'dif':dif,'proyectos_completo':proyectos_completo,'proyecto_cliente':proyecto_cliente, 'usuario':request.user, 'proyectos_enlace':proyectos_enlace, 'proyectos_sin_enlace':proyectos_sin_enlace})
+        return render(request,'hola.html',{'proyectos_completo':proyectos_completo,'proyecto_cliente':proyecto_cliente, 'usuario':request.user, 'proyectos_enlace':proyectos_enlace, 'proyectos_sin_enlace':proyectos_sin_enlace})
 
 def holaScrumView(request,usuario_id,proyectoid,rol_id):
     """
@@ -1317,8 +1316,11 @@ def crearSprint(request,usuario_id,proyectoid,rolid):
         for up in users:
             if u == up:
                 users.remove(u)
+    fecha_inicio_sugerida=str(datetime.now())[0:10]
+    for s in Sprint.objects.filter(proyecto=proyectox).filter(estado='CON'):
+        fecha_inicio_sugerida=str(s.fecha_inicio.date() + timedelta(days=math.ceil(s.duracion)))[0:10]
     if request.method == 'GET':
-        return render(request, 'crearSprint.html',{'equipo_pen':users_pen,'equipo':users,'flujos_pen':flujos_pen,'HUs_pendientes':HUs_pendientes,'HUs_no_seleccionadas':HUs,'flujos':flujos,'HUs':HUs,'fecha_ahora':str(datetime.now())[0:10],'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
+        return render(request, 'crearSprint.html',{'equipo_pen':users_pen,'equipo':users,'flujos_pen':flujos_pen,'HUs_pendientes':HUs_pendientes,'HUs_no_seleccionadas':HUs,'flujos':flujos,'HUs':HUs,'fecha_ahora':fecha_inicio_sugerida,'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
 
 def crearHU(request,usuario_id,proyectoid,rolid):
     """
@@ -2450,10 +2452,7 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
     catgria=[]
     for i in range(ncategorias):
         catgria.append(i)
-        
 
-    
-    
     return render(request,'burndown2.html',{'categorias':catgria,'nuevaestima':nueva_estimacion,'suma':sumx,'estima':estimacion,'duracion':duracionsp,'horas':lista_horas,'fechas':lista_fechas,'restantes':horas_restantes,'cat_dias':cant_days,'sprint':sprint,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
 
 def exportarPDF(request,usuario_id,proyectoid,rolid):
