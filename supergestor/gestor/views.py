@@ -19,6 +19,7 @@ from django.contrib.auth.models import Permission
 from datetime import datetime, timedelta, time
 import math
 import json
+import threading
 from django.utils import timezone
 from io import BytesIO
 from reportlab.pdfgen import canvas
@@ -1185,12 +1186,13 @@ def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
                 h.prioridad=prioridad
                 h.duracion=duracion
                 #h.estado=estado
-                h.save() #Guardamos el modelo de manera Editada
+                h.save() #Guardamos el modelo de manera Editada   
                 evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"M+"+"La HU '"+str(h.descripcion)+"' valor de negocio  '"+str(form.cleaned_data['valor_tecnico'])+"'  prioridad '"+str(form.cleaned_data['prioridad'])+"' y duracion  '"+str(form.cleaned_data['duracion'])+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
                 usuario_e=MyUser.objects.get(id=usuario_id)
                 historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=h.descripcion,evento=evento_e)
                 mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
                 mail.send()
+                    
 
                 return HttpResponse('La HU ha sido modificado exitosamente')
             else:
