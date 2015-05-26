@@ -270,8 +270,14 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     existe=0
     if Sprint.objects.filter(proyecto=proyectox).filter(estado='CON'):
         existe=1
+    #Chequeo de permiso para visaulizar chart, mando un bolean true si tiene permiso false si no
+    if(rolx.tiene_permiso('Visualizar Chart')):
+        verburn=True      
+    else:
+        verburn=False
           
-    return render(request,'rol-flujo-para-scrum.html',{'existe':existe,'sprintReporte':sprintReporte,'proyecto':proyectox,'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HUv':HUv,'reporte':reporte,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas, 'kanban':kanban})
+    return render(request,'rol-flujo-para-scrum.html',{'existe':existe,'verburn':verburn,'sprintReporte':sprintReporte,'proyecto':proyectox,'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HUv':HUv,'reporte':reporte,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas, 'kanban':kanban})
+
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
 def registrarUsuarioView(request):
@@ -2439,11 +2445,16 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
         if(remain-prome>0):
             nueva_estimacion.append(remain-prome)
         remain=remain-prome
-        pass
+    
+    ncategorias= len(nueva_estimacion)
+    catgria=[]
+    for i in range(ncategorias):
+        catgria.append(i)
+        
 
     
     
-    return render(request,'burndown2.html',{'nuevaestima':nueva_estimacion,'suma':sumx,'estima':estimacion,'duracion':duracionsp,'horas':lista_horas,'fechas':lista_fechas,'restantes':horas_restantes,'cat_dias':cant_days,'sprint':sprint,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+    return render(request,'burndown2.html',{'categorias':catgria,'nuevaestima':nueva_estimacion,'suma':sumx,'estima':estimacion,'duracion':duracionsp,'horas':lista_horas,'fechas':lista_fechas,'restantes':horas_restantes,'cat_dias':cant_days,'sprint':sprint,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
 
 def exportarPDF(request,usuario_id,proyectoid,rolid):
     # Create the HttpResponse object with the appropriate PDF headers.

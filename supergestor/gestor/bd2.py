@@ -159,7 +159,9 @@ permission4 = Permission.objects.create(codename='Visualizar equipo',
 permission5 = Permission.objects.create(codename='Generar Reporte',
                                        name='Generar Reporte',
                                        content_type=content_type)
-
+permission6 = Permission.objects.create(codename='Visualizar Chart',
+                                       name='Visualizar Chart',
+                                       content_type=content_type)
 
 """Creacion de proyectos precargados"""
 p1=proyecto.objects.create(nombre_corto='p1',nombre_largo='proyecto1',descripcion='proyecto1',fecha_inicio=str(datetime.date.today()),fecha_fin=str(str(datetime.date.today())),estado='PEN')
@@ -236,7 +238,7 @@ per_change_hu_scrum=Permission.objects.get(name='Can change hu nivel Scrum')
 rol_scrum.permisos.add(per_add_rol,per_change_rol,per_delete_rol,per_add_act,per_change_act,per_delete_act)
 rol_scrum.permisos.add(per_add_flujo,per_change_flujo,per_delete_flujo,per_change_proyecto,per_add_sprint,per_change_sprint,per_delete_sprint)
 rol_scrum.permisos.add(per_add_asigna,per_delete_asigna,per_change_asigna,per_add_delega,per_change_delega,per_delete_delega,per_change_hu_scrum)
-rol_scrum.permisos.add(per_add_asignahu,per_change_asignahu,per_delete_asignahu)
+rol_scrum.permisos.add(per_add_asignahu,per_change_asignahu,per_delete_asignahu,permission6)
 
 
 """Carga para el Product Owner"""
@@ -247,15 +249,15 @@ per_change_hu=Permission.objects.get(name='Can change hu')
 per_delete_hu=Permission.objects.get(name='Can delete hu')
 
 """Y aca le asigno solamente esos 3 ultimos permisos obtenidos"""
-rol_owner.permisos.add(per_add_hu,per_change_hu,per_delete_hu)
+rol_owner.permisos.add(per_add_hu,per_change_hu,per_delete_hu,permission6)
 
 """Carga para el Equipo"""
-rol_equipo.permisos.add(permission1) # se cargo y se obtuvo en la linea 24
+rol_equipo.permisos.add(permission1,permission6) # se cargo y se obtuvo en la linea 24
 
 
 """Carga para el Cliente"""
 """Se le asigna visualizar proyecto, visualizar equipo y generar reporte que ya se obtuvieron en lineas 31,34,37"""
-rol_cliente.permisos.add(permission3,permission4,permission5)
+rol_cliente.permisos.add(permission3,permission4,permission5,permission6)
 
 
 """Ahora se le asigna todo al admin(devalde ya que el se va al sistema ADMIN)"""
