@@ -422,14 +422,6 @@ sp1=Sprint.objects.create(descripcion='sprint1',fecha_inicio=str(datetime.date.t
 evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"SPRINT+"+"C+"+"Se ha creado un nuevo Sprint de nombre: '"+sp1.descripcion+"' con una fecha de inicio '"+str(sp1.fecha_inicio)+"' ,duracion '"+str(sp1.duracion)+ "' en la fecha y hora: "+str(datetime.date.today())
 historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=sp1.descripcion, evento=evento_e)
 
-sp2=Sprint.objects.create(descripcion='sprint2',fecha_inicio=str(datetime.date.today()),duracion=0,estado='ACT',proyecto=p1)
-evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"SPRINT+"+"C+"+"Se ha creado un nuevo Sprint de nombre: '"+sp2.descripcion+"' con una fecha de inicio '"+str(sp2.fecha_inicio)+"' ,duracion '"+str(sp2.duracion)+ "' en la fecha y hora: "+str(datetime.date.today())
-historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=sp2.descripcion, evento=evento_e)
-
-sp3=Sprint.objects.create(descripcion='sprint3',fecha_inicio=str(datetime.date.today()),duracion=0,estado='ACT',proyecto=p1)
-evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"SPRINT+"+"C+"+"Se ha creado un nuevo Sprint de nombre: '"+sp3.descripcion+"' con una fecha de inicio '"+str(sp3.fecha_inicio)+"' ,duracion '"+str(sp3.duracion)+ "' en la fecha y hora: "+str(datetime.date.today())
-historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=sp3.descripcion, evento=evento_e)
-
 """Agregar hus a los sprint creados"""
 sp1.hu.add(hu1,hu2,hu3,hu4,hu5,hu6,hu7,hu8)
 

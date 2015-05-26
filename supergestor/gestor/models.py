@@ -8,6 +8,7 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
     , Permission)
 from django.conf import settings
+import math
 
 
 class MyUserManager(BaseUserManager):
@@ -281,6 +282,9 @@ class HU(models.Model):
         round_up = lambda num: int(num + 1) if int(num) != num else int(num)
         dias=round_up(duracion/8)
         return dias
+    
+    def saber_duracion_dias(self):
+        return math.ceil(self.duracion/8)
      
 class HU_version(models.Model):
     """En este modelo se van a guardar los datos correspondientes a las versiones de HU que va cambiando el owner 

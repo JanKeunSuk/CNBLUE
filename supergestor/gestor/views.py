@@ -52,6 +52,18 @@ def holaView(request):
             if a.usuario.id == request.user.id:
                 rol_lista = rol.objects.get(id = a.rol.id)
                 for p in proyecto.objects.all():
+                    Sprint_consulta=Sprint.objects.filter(proyecto=p).filter(estado='CON')
+                    if Sprint_consulta:
+                        for s in Sprint_consulta:
+                            if int(s.duracion) <= int(str((datetime.today().date()-s.fecha_inicio.date()).days)):
+                                s.estado = 'FIN'
+                                s.save()
+                    Sprint_activo=Sprint.objects.filter(proyecto=p).filter(estado='ACT')    
+                    if Sprint_activo and Sprint_consulta is None:
+                        for s in Sprint_activo:
+                            if s.fecha_inicio.date() == datetime.today().date():
+                                s.estado = 'CON'
+                                s.save()
                     if p.id == a.proyecto.id:
                         if rol_lista.tiene_permiso('Can change proyecto'):
                             roles_enlace.append(rol_lista)
@@ -223,7 +235,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         enlaceHU_agregar.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar horas'))
         i=0
         for p in HUs_add_horas:
-            if p.acumulador_horas != p.duracion and p.estado_en_actividad != 'FIN':
+            if p.acumulador_horas != p.duracion and p.estado_en_actividad != 'FIN' and p.sprint().fecha_inicio.date() <= datetime.today().date():
                 agregar_horas=HUs_add_horas[i]             
                 break
             i=i+1
@@ -238,7 +250,8 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         sprintReporte=[]
                 
     if rolx.tiene_permiso('Can add sprint'):
-        enlaceSprint.append(enlacex('/crearSprint/'+usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar Sprint'))
+        if len(Sprint.objects.filter(proyecto=proyectox).filter(estado='ACT')) < 1:
+            enlaceSprint.append(enlacex('/crearSprint/'+usuario_id+'/'+proyectoid+'/'+rol_id,'Agregar Sprint'))
     else:
         sprints = []#lista vacia si no tiene permiso de ver flujos
     if rolx.tiene_permiso('Can change sprint'):
@@ -254,14 +267,17 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         
     if rolx.tiene_permiso('Can add sprint') or rolx.tiene_permiso('Can change sprint'):
         enlaceSprintv.append(enlacex(usuario_id+'/'+proyectoid+'/'+rol_id,'Visualizar'))
-        
+    existe=0
+    if Sprint.objects.filter(proyecto=proyectox).filter(estado='CON'):
+        existe=1
     #Chequeo de permiso para visaulizar chart, mando un bolean true si tiene permiso false si no
     if(rolx.tiene_permiso('Visualizar Chart')):
         verburn=True      
     else:
         verburn=False
           
-    return render(request,'rol-flujo-para-scrum.html',{'verburn':verburn,'sprintReporte':sprintReporte,'proyecto':proyectox,'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HUv':HUv,'reporte':reporte,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas, 'kanban':kanban})
+    return render(request,'rol-flujo-para-scrum.html',{'existe':existe,'verburn':verburn,'sprintReporte':sprintReporte,'proyecto':proyectox,'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HUv':HUv,'reporte':reporte,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas, 'kanban':kanban})
+
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
 def registrarUsuarioView(request):
@@ -495,7 +511,9 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
                 sum=sum+HU.objects.get(id=h).duracion
             flujos_pen=set(flujos_pen)
             for f in flujos_pen:
-                flujos=flujos.exclude(id=f.id)
+                for flu in flujos:
+                    if flu == f:
+                        flujos=flujos.exclude(id=f.id)
                 
             equipo_seleccionado=[]
             equipo_no_seleccionado=[]
@@ -510,7 +528,9 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
                 equipo_seleccionado.append(MyUser.objects.get(id=u))
                 equipo_no_seleccionado.remove(MyUser.objects.get(id=u))
             
-        return render(request, 'crearSprint.html',{'equipo_pen':equipo_seleccionado,'equipo':equipo_no_seleccionado,'flujos_pen':flujos_pen,'HUs_pendientes_no_seleccionadas':HUs_pendientes_no_seleccionadas,'HUs_pendientes':HUs_pendientes,'nombre':request.POST['descripcion'],'duracion':math.ceil(sum/horas),'flujos':flujos,'HUs':HUs,'HUs_seleccionadas':hus_seleccionadas,'HUs_no_seleccionadas':HUs_no_seleccionadas,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
+            fecha_fin=datetime.strptime(request.POST['fecha_inicio'],"%Y-%m-%d").date() + timedelta(days=math.ceil(sum/horas))
+            
+        return render(request, 'crearSprint.html',{'fecha_fin':fecha_fin,'equipo_pen':equipo_seleccionado,'equipo':equipo_no_seleccionado,'flujos_pen':flujos_pen,'HUs_pendientes_no_seleccionadas':HUs_pendientes_no_seleccionadas,'HUs_pendientes':HUs_pendientes,'nombre':request.POST['descripcion'],'duracion':math.ceil(sum/horas),'flujos':flujos,'HUs':HUs,'HUs_seleccionadas':hus_seleccionadas,'HUs_no_seleccionadas':HUs_no_seleccionadas,'fecha_ahora':request.POST['fecha_inicio'],'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
       
 
 def elegirVersionHU(request,hv_id,hu_id):
@@ -1129,7 +1149,7 @@ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
                     
         fecha = str(s.fecha_inicio)
         
-        ctx = {'equipo':users,'HUs_pendientes':HUs_pendientes,'flujos':flujos,'estados':estados, 'fecha':fecha[:-6],'form':form,'HUs':HUs,'lista_HU_sin_asignar':lista_restante,'Sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
+        ctx = {'equipo':users,'HUs_pendientes':HUs_pendientes,'flujos':flujos,'estados':estados, 'fecha':fecha[0:10],'form':form,'HUs':HUs,'lista_HU_sin_asignar':lista_restante,'Sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
         return render_to_response('modificarSprint.html', ctx ,context_instance=RequestContext(request))
     
 class FormularioHU(forms.ModelForm):
@@ -1280,7 +1300,9 @@ def crearSprint(request,usuario_id,proyectoid,rolid):
                         flujos_pen.remove(h.flujo())
     flujos_pen=set(flujos_pen)
     for f in flujos_pen:
-        flujos=flujos.exclude(id=f.id)
+        for flu in flujos:
+            if flu == f:
+                flujos=flujos.exclude(id=f.id)
     HUs=sorted(HUs,key=lambda x: x.prioridad, reverse=True)
     users=[]
     asignaciones= asignacion.objects.filter(proyecto=proyectox)#obtuve todas las asignaciones para este proyecto
@@ -1296,8 +1318,11 @@ def crearSprint(request,usuario_id,proyectoid,rolid):
         for up in users:
             if u == up:
                 users.remove(u)
+    fecha_inicio_sugerida=str(datetime.now())[0:10]
+    for s in Sprint.objects.filter(proyecto=proyectox).filter(estado='CON'):
+        fecha_inicio_sugerida=str(s.fecha_inicio.date() + timedelta(days=math.ceil(s.duracion)))[0:10]
     if request.method == 'GET':
-        return render(request, 'crearSprint.html',{'equipo_pen':users_pen,'equipo':users,'flujos_pen':flujos_pen,'HUs_pendientes':HUs_pendientes,'HUs_no_seleccionadas':HUs,'flujos':flujos,'HUs':HUs,'fecha_ahora':str(datetime.now()),'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
+        return render(request, 'crearSprint.html',{'equipo_pen':users_pen,'equipo':users,'flujos_pen':flujos_pen,'HUs_pendientes':HUs_pendientes,'HUs_no_seleccionadas':HUs,'flujos':flujos,'HUs':HUs,'fecha_ahora':fecha_inicio_sugerida,'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
 
 def crearHU(request,usuario_id,proyectoid,rolid):
     """
@@ -1617,9 +1642,7 @@ def delegarHU(request,usuario_id,proyectoid,rolid,hu_id,reasignar):
                     mail.send()
                     return HttpResponse('Se ha reasignado la HU exitosamente')
     else:
-        users=[]
-        for s in Sprint.objects.filter(estado='CON'):
-            users=s.equipo.all()
+        users=hu.sprint().equipo.all()
         usuario_asignado=[]
         if reasignar == '1':
             for d in delegacion.objects.all():
@@ -1745,7 +1768,8 @@ def adminAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec):
         for d in archivox.chunks():
             file.extend(d)
         n=0
-        cambiar=archivox.name
+        split=archivox.name.split('.')
+        cambiar=split[0]
         while archivoadjunto.objects.filter(nombre=cambiar).filter(estado='ACT'):
             n=n+1
             split=archivox.name.split('.')
@@ -2009,6 +2033,15 @@ def asignarHU_Usuario_FLujo(request,usuario_id,proyectoid,rolid,sprintid):
     sprintx=Sprint.objects.get(id=sprintid)
     hus=HU.objects.filter(proyecto=proyectox,estado='ACT',valido=True).filter(sprint=sprintx)
     hu_en_flujo={}
+    
+    fin=1
+    for h in sprintx.hu.all():
+        if h.estado_en_actividad != 'APR':
+            fin=0
+    if fin == 1:
+        sprintx.estado='FIN'
+        sprintx.save()
+        
     for f in Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)):
         for a in asignaHU_actividad_flujo.objects.all():
             if f == a.flujo_al_que_pertenece:
@@ -2422,10 +2455,7 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
     catgria=[]
     for i in range(ncategorias):
         catgria.append(i)
-        
 
-    
-    
     return render(request,'burndown2.html',{'categorias':catgria,'nuevaestima':nueva_estimacion,'suma':sumx,'estima':estimacion,'duracion':duracionsp,'horas':lista_horas,'fechas':lista_fechas,'restantes':horas_restantes,'cat_dias':cant_days,'sprint':sprint,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
 
 def exportarPDF(request,usuario_id,proyectoid,rolid):
