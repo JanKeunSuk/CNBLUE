@@ -50,11 +50,8 @@
         	<br/>
         	<font size="5" color="#088A85" align="center"><b><i>Sprint Backlog</i></b><font size="2" color="#088A85">
         	<br/><br/>
-        	{{len}}{{lista_sprint}}{{dura_sprint}}
         </div>
         <table width="900" bordercolor = #8904B1 border="8" align="center">			
-		
-            
             	{% csrf_token %}
             	<tr>
 					<td align="center" bgcolor="#81F7F3"><font size="2" color="black"><b>SPRINT</b></font></td>
@@ -77,23 +74,15 @@
 										{%if Sprint == s%}
 											{%for sd, d in dura_sprint.items%}
 												{%if sd == Sprint%}
-													<td rowspan="{{l}}" align="center"><font size="3" color="#088A85"><b>{{Sprint}}<br/><font size="1" color="blue">Duracion en Dias:{{s.duracion}}<br/>Duracion en Horas:{{d}}<br/>Fecha Inicio:{{f_a.fecha_i}}<br/>Fecha Fin:{{f_a.fecha_f}}<br/>Estado:{{s.estado}}</b></font></td>
+													<tr><td rowspan="{{l}}" align="center"><font size="3" color="#088A85"><b>{{Sprint}}<br/><font size="1" color="blue">Duracion en Dias:{{s.duracion}}<br/>Duracion en Horas:{{d}}<br/>Fecha Inicio:{{f_a.fecha_i}}<br/>Fecha Fin:{{f_a.fecha_f}}<br/>Estado:{{s.estado}}</b></font></td></tr>
 												{%endif%}
 											{%endfor%}	
 										{%endif%}
 									{%endfor%}
 								{%elif s.estado == 'FIN'%}
-									{%for sp, f_a in lista_sprint.items%}
-										{%if sp == s%}
-											{%for sd, d in dura_sprint.items%}
-												{%if sd == Sprint%}
-													<td align="center"><font size="3" color="#088A85"><b>{{Sprint}}<br/><font size="1" color="red">FINALIZADO</font></td>									
-												{%endif%}
-											{%endfor%}	
-										{%endif%}
-									{%endfor%}
+									<td align="center"><font size="3" color="#088A85"><b>{{Sprint}}<br/><font size="1" color="red">FINALIZADO</font></td>
 								{%else%}
-									<td align="center"><font size="3" color="#088A85"><b>{{Sprint}}</b></font></td>
+									<td align="center"><font size="3" color="#088A85"><b>{{Sprint}}<br/><font size="1" color="#FFFF00">PENDIENTE</font></td>
 								{%endif%}
 								
 								{%if Sprint.estado == 'CON'%}

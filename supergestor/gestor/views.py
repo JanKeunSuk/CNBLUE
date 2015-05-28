@@ -1898,7 +1898,7 @@ def visualizarSprintBacklog(request, usuario_id, proyectoid, rolid):
     dias=0
     hux=HU.objects.filter(proyecto=proyecto.objects.get(id=proyectoid))
     sprint=Sprint.objects.filter(proyecto=proyecto.objects.get(id=proyectoid))
-    s=sorted(sprint,key=lambda x: x.estado, reverse=True)
+    s=sorted(sprint,key=lambda x: x.estado, reverse=False)
     
     #obtengo las fechas
     lista_fecha=[]
