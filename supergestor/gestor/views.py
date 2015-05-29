@@ -59,9 +59,9 @@ def holaView(request):
                                 s.estado = 'FIN'
                                 s.save()
                     Sprint_activo=Sprint.objects.filter(proyecto=p).filter(estado='ACT')    
-                    if Sprint_activo and Sprint_consulta is None:
+                    if Sprint_activo and not Sprint_consulta:
                         for s in Sprint_activo:
-                            if s.fecha_inicio.date() == datetime.today().date():
+                            if s.fecha_inicio.date() <= datetime.today().date():
                                 s.estado = 'CON'
                                 s.save()
                     if p.id == a.proyecto.id:
