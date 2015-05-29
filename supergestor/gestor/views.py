@@ -270,9 +270,12 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     existe=0
     if Sprint.objects.filter(proyecto=proyectox).filter(estado='CON'):
         existe=1
-    #Chequeo de permiso para visaulizar chart, mando un bolean true si tiene permiso false si no
+    #Chequeo de permiso para visaulizar chart, mando un bolean true si tiene permiso y hay grafico que mostrar, false si no
     if(rolx.tiene_permiso('Visualizar Chart')):
-        verburn=True      
+        if Sprint.objects.filter(estado='CON'):
+            verburn=True
+        else:
+            verburn=False
     else:
         verburn=False
           
@@ -1819,14 +1822,16 @@ def cambiarVersionAdjunto(request, usuario_id, proyectoid, rolid, HU_id_rec,arch
     else:
         x=0.0
         lastx=len(versiones.all())
+        ultima_version= adjunto
         if lastx>0:
             x=versiones.last().version
+            ultima_version=versiones.last()
 
         archivox = request.FILES['archivo']
         desc = request.POST['descripcion']
         name = request.POST['name']
 
-        if name == adjunto.nombre and archivox.content_type == adjunto.content:
+        if name == ultima_version.nombre and archivox.content_type == ultima_version.content:
             x=x+0.1
         else:
             x=math.floor(x)+1.0
