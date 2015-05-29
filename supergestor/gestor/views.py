@@ -2451,9 +2451,11 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
     
     remain=tot_restante#continua con las horas que quedaron sin hacerse
     #prome es lo que se supone que debe avanzar en los dias restantes...meter eso en nueva_estimacion
-    while(remain>0):
+    while(remain>=0):
         if(remain-prome>0):
             nueva_estimacion.append(remain-prome)
+        else:
+            nueva_estimacion.append(0)
         remain=remain-prome
     
     ncategorias= len(nueva_estimacion)

@@ -5,7 +5,7 @@ Casos de prueba para los modelos existentes dentro del sistema.
 
 """
 from django.test import TestCase, Client
-from gestor.models import MyUser, Permitido, rol, rol_sistema, Actividades, Flujo, proyecto, asignacion, asigna_sistema, HU, Sprint, HU_descripcion, HU_version, historial_notificacion
+from gestor.models import MyUser, Permitido, rol, rol_sistema, Actividades, Flujo, proyecto, asignacion, asigna_sistema, HU, Sprint, HU_descripcion, HU_version, historial_notificacion, asignaHU_actividad_flujo
 from gestor.views import FormularioRolProyecto, proyectoFrom, FormularioFlujoProyecto, formularioActividad, FormularioHU, FormularioSprintProyecto, delegacion
 from django.test.client import RequestFactory
 from django.contrib.auth.models import Permission
@@ -697,7 +697,7 @@ class test_notificaciones(TestCase):
         self.assertEqual(mail.outbox[0].subject, 'Notificacion')
         
         #verifica que se ha enviado correctamente el cuerpo del mensaje
-        self.assertEqual(mail.outbox[0].body, "Se ha modificado el sprint de nombre: "+sprint.descripcion)
+        self.assertEqual(mail.outbox[0].body, "Se ha modificado el sprint de nombre: "+sprint.descripcion) 
 
 class TestholaScrumView(TestCase):
       
@@ -712,10 +712,27 @@ class TestholaScrumView(TestCase):
     
     def create_Flujo(self, nombre="1nuevoFlujo", estado="ACT" ):
         return Flujo.objects.create(nombre=nombre, estado=estado)
+    
+    def create_proyecto(self):
+        return proyecto.objects.create(nombre_corto="P", nombre_largo="proyecto", descripcion="proyecto", fecha_inicio="2015-03-31 00:00:00-04", fecha_fin="2015-03-31 00:00:00-04" ,estado="PEN" )
 
     def create_sprint(self):
         return Sprint.objects.create( descripcion='sprintTest', fecha_inicio=timezone.now(), duracion='3', estado='ACT', proyecto_id='1')
-  
+    
+    def create_sprint2(self):
+        return Sprint.objects.create( descripcion='sprintTest', fecha_inicio=timezone.now(), duracion='3', estado='CON', proyecto_id='1')
+    
+    def create_hu_descripcion(self, horas_trabajadas="1", descripcion_horas_trabajadas="Tarea", fecha="2015-04-30 17:40:33.036118-04", actividad="1 - Analisis", estado="PRO" ):
+        return HU_descripcion.objects.create(horas_trabajadas=horas_trabajadas, descripcion_horas_trabajadas=descripcion_horas_trabajadas, fecha=fecha, actividad=actividad, estado=estado)
+
+    def create_Actividades(self, nombre="nuevaActividad", descripcion="nuevo Actividad" ):
+        return Actividades.objects.create(nombre=nombre, descripcion=descripcion)
+    
+    def create_asignaHU_actividad_flujo(self):
+        HU=self.create_hu()
+        flujo=self.create_Flujo()
+        return asignaHU_actividad_flujo.objects.create(lista_de_hu=[t.descripcion for t in HU.all()], flujo_al_que_pertenece=[t.nombre for t in flujo.all()])
+      
     def test_permiso(self):
         """Test que comprueba la funcion tiene_permiso, creando un rol y otorgando un permiso"""
         w=self.create_rol()
@@ -865,12 +882,127 @@ class TestholaScrumView(TestCase):
                         for f in s.flujo.all():
                             if f == flujo:
                                 flujosm=flujosm.exclude(id=f.id)
-        for f in flujosm.all():
+        for f in flujosm:
             self.assertEqual(f.nombre, "2nuevoFlujo")
             
-           
+            
+    def test_generar_report(self):
+        rolx=self.create_rol()
+        rolx.permisos.add(Permission.objects.create(name='Generar Reporte', content_type_id=18, codename='Generar Reporte'))
+        rolx.save()
+        if rolx.tiene_permiso('Generar Reporte'):
+            reporte=1
+        else:
+            reporte=0        
 
+        self.assertEqual(reporte, 1)
 
+        
+    def test_modificar_sprint(self):
+        rolx=self.create_rol()
+        rolx.permisos.add(Permission.objects.get(id=53))
+        proyectox=self.create_proyecto()
+        if rolx.tiene_permiso('Can change sprint'):
+            sprintsm=Sprint.objects.filter(proyecto=proyectox)
+            for s in sprintsm:
+                if s.estado == 'FIN' or s.estado == 'CON':
+                    sprintsm=sprintsm.exclude(id=s.id)
+        else:
+            sprintsm = []#lista vacia si no tiene permiso de ver flujos
+        for s in sprintsm:
+            self.assertEqual(s.descripcion, "sprintTest")
+    
+    def test_visualizar_chart_invalido(self):
+        rolx=self.create_rol()
+        rolx.permisos.add(Permission.objects.create(name='Visualizar Chart', content_type_id=19, codename='Visualizar Chart'))
+        if(rolx.tiene_permiso('Visualizar Chart')):
+            if Sprint.objects.filter(estado='CON'):
+                verburn=True
+            else:
+                verburn=False
+        else:
+            verburn=False
+        
+        self.assertEqual(verburn, False)
+        
+    def test_visualizar_chart(self):
+        rolx=self.create_rol()
+        rolx.permisos.add(Permission.objects.create(name='Visualizar Chart', content_type_id=19, codename='Visualizar Chart'))
+        self.create_sprint()
+        self.create_sprint2()
+        if(rolx.tiene_permiso('Visualizar Chart')):
+            if Sprint.objects.filter(estado='CON'):
+                verburn=True
+            else:
+                verburn=False
+        else:
+            verburn=False
+        
+        self.assertEqual(verburn, True)
+
+    def test_aprobarhu_GET(self):
+        
+        HU_tratada=self.create_hu()
+        guardar=1
+        if guardar == 1:
+                HU_tratada.estado_en_actividad='APR'
+                HU_tratada.save()
+                hd=HU_descripcion.objects.create(horas_trabajadas=0,descripcion_horas_trabajadas='HU aprobada por SCRUM',fecha="2015-05-29", actividad=str(HU_tratada.actividad), estado=str(HU_tratada.estado_en_actividad))
+                HU_tratada.hu_descripcion.add(self.create_hu_descripcion())
+                hd.save()
+
+        
+        self.assertEqual(hd.descripcion_horas_trabajadas, 'HU aprobada por SCRUM')
+
+    def test_aprobarhu_POST(self):
+        HU_tratada=self.create_hu()
+        actividad=self.create_Actividades()
+        estado="ACT"
+        duracion="4.0"
+        if duracion >= HU_tratada.duracion:
+                    HU_tratada.actividad=actividad
+                    HU_tratada.estado_en_actividad=estado
+                    HU_tratada.duracion=duracion
+                    HU_tratada.save()
+                    descripcion="hu_test"
+                    hd=HU_descripcion.objects.create(horas_trabajadas=0,descripcion_horas_trabajadas=descripcion,fecha='2015-05-29', actividad=str(HU_tratada.actividad), estado=str(HU_tratada.estado_en_actividad))
+                    HU_tratada.hu_descripcion.add(self.create_hu_descripcion())
+                    hd.save()
+             
+
+        self.assertEqual(HU_tratada.duracion, duracion)
+        self.assertEqual(hd.fecha, '2015-05-29')
+        
+    def test_reasignarhuFlujo(self):
+        hu_now=self.create_hu()
+        proyecto_now=self.create_proyecto()
+        flujox=self.create_Flujo()
+        hu_now.actividad=self.create_Actividades()
+        hu_now.estado_en_actividad='PEN'
+        hu_now.save()
+            
+        #remuevo el manytomany de la hu al flujo anterior
+        asig=asignaHU_actividad_flujo.objects.filter(flujo_al_que_pertenece=hu_now.flujo())
+        if asig:
+                for f in asig:
+                    for h in f.lista_de_HU.filter(proyecto=proyecto_now):
+                        if h == hu_now:
+                            f.lista_de_HU.remove(h)
+                            f.save()
+            
+            #agrego el nuevo flujo relacionado a la HU
+        asig=asignaHU_actividad_flujo.objects.filter(flujo_al_que_pertenece=flujox)
+        if asig:
+                for f in asig:
+                    f.lista_de_HU.add(hu_now)
+                    f.save()
+                            
+        hu_now.duracion+= "1.0"
+        hu_now.save()
+        for f in asig:
+            self.assertEqual(f, [])    
+
+        
 class loginCase(LiveServerTestCase):
 
     def setUp(self):
@@ -916,7 +1048,7 @@ class loginCase(LiveServerTestCase):
         time.sleep(1)
         title = self.browser.find_element_by_tag_name('body')
         self.assertIn('Pagina Principal', title.text)
-        """
+        """"""
         user_link = self.browser.find_elements_by_link_text('Agregar HU')
         user_link[0].click()
         title = self.browser.find_element_by_tag_name('body')
@@ -928,7 +1060,7 @@ class loginCase(LiveServerTestCase):
         self.browser.find_element_by_css_selector("input[value='Guardar']").click()
         title = self.browser.find_element_by_tag_name('body')
         self.assertIn('La HU se ha creado y relacionado con el proyecto', title.text)
-        """
+        """"""
         time.sleep(3)
     #cierra el browser   
     def tearDown(self):
@@ -962,3 +1094,4 @@ class VisualizarEquipoCase(LiveServerTestCase):
     #cierra el browser   
     def tearDown(self):
         self.browser.quit()
+    
