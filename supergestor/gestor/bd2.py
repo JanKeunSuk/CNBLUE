@@ -500,7 +500,7 @@ evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"AS+"+"Se 
 historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu8.descripcion, evento=evento_e)
 
 """Creacion de descripciones para la HU1 Mensaje Finalizada a Tiempo"""
-dhu1=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Analisis",estado='PRO')
+dhu1=HU_descripcion.objects.create(horas_trabajadas=2,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Analisis",estado='PRO')
 evento_e=str(sebas.id)+"+"+str(p1.id)+"+"+str(rol_equipo.id)+"+"+"HU+"+"A+"+"Se ha agregado '"+str(dhu1.horas_trabajadas)+"' horas a la '"+str(hu1.descripcion)+"' con una descripcion '"+dhu1.descripcion_horas_trabajadas+"' estando en la actividad '"+ dhu1.actividad+ "' con el estado '"+dhu1.estado+"' con fecha y hora: "+str(datetime.date.today())
 historial_notificacion.objects.create(usuario=sebas, fecha_hora=str(datetime.date.today()), objeto=hu1.descripcion, evento=evento_e)
 dhu2=HU_descripcion.objects.create(horas_trabajadas=2,descripcion_horas_trabajadas='Tarea2',fecha=str(datetime.date.today()),actividad="Analisis",estado='FIN')
