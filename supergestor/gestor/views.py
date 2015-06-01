@@ -279,7 +279,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     else:
         verburn=False
           
-    return render(request,'rol-flujo-para-scrum.html',{'existe':existe,'verburn':verburn,'sprintReporte':sprintReporte,'proyecto':proyectox,'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HUv':HUv,'reporte':reporte,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas, 'kanban':kanban})
+    return render(request,'rol-flujo-para-scrum.html',{'fecha_inicio':str(proyectox.fecha_inicio)[:10],'existe':existe,'verburn':verburn,'sprintReporte':sprintReporte,'proyecto':proyectox,'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HUv':HUv,'reporte':reporte,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas, 'kanban':kanban})
 
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
@@ -1345,7 +1345,7 @@ class proyectoFrom(forms.ModelForm):
     """
     class Meta:
         model = proyecto
-        fields = ['nombre_corto', 'nombre_largo', 'descripcion','estado','fecha_inicio','fecha_fin']
+        fields = ['nombre_corto', 'nombre_largo', 'descripcion','fecha_inicio','duracion']
 
 def modificarProyecto(request, usuario_id, proyecto_id_rec):
     """
@@ -1363,17 +1363,16 @@ def modificarProyecto(request, usuario_id, proyecto_id_rec):
             nombre_corto=form.cleaned_data['nombre_corto']
             nombre_largo=form.cleaned_data['nombre_largo']
             descripcion=form.cleaned_data['descripcion']
-            estado=form.cleaned_data['estado']
             fecha_inicio=form.cleaned_data['fecha_inicio']
-            fecha_fin=form.cleaned_data['fecha_fin']
+            duracion=form.cleaned_data['duracion']
+            fecha_fin=datetime.strptime(request.POST['fecha_inicio'],"%Y-%m-%d").date() + timedelta(days=int(duracion))
             p.nombre_corto=nombre_corto
             p.nombre_largo=nombre_largo
             p.descripcion=descripcion
-            p.estado=estado
             p.fecha_inicio=fecha_inicio
             p.fecha_fin=fecha_fin
             p.save() #Guardamos el modelo de manera Editada
-            evento_e=usuario_id+"+"+proyecto_id_rec+"+SCRUM"+"+PROYECTO+"+"M+"+"El proyecto '"+form.cleaned_data['nombre_corto']+"' con nombre largo '"+form.cleaned_data['nombre_largo']+"' descripcion  '"+form.cleaned_data['descripcion']+"' estado '"+form.cleaned_data['estado']+"' fecha de inicio '"+str(form.cleaned_data['fecha_inicio'])+"'  fecha fin '"+str(form.cleaned_data['fecha_fin'])+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
+            evento_e=usuario_id+"+"+proyecto_id_rec+"+SCRUM"+"+PROYECTO+"+"M+"+"El proyecto '"+form.cleaned_data['nombre_corto']+"' con nombre largo '"+form.cleaned_data['nombre_largo']+"' descripcion  '"+form.cleaned_data['descripcion']+"' estado '"+form.cleaned_data['estado']+"' fecha de inicio '"+str(form.cleaned_data['fecha_inicio'])+"'  fecha fin '"+str(fecha_fin)+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=p.nombre_corto, evento=evento_e)
             mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
@@ -1386,12 +1385,11 @@ def modificarProyecto(request, usuario_id, proyecto_id_rec):
                                          'nombre_corto': p.nombre_corto,
                                          'nombre_largo': p.nombre_largo,
                                          'descripcion': p.descripcion,
-                                         'estado':p.estado,
-                                         'fecha_inicio': p.fecha_inicio,
-                                         'fecha_fin': p.fecha_fin,
+                                         'fecha_inicio': str(p.fecha_inicio)[:10],
+                                         'duracion':p.duracion,
                                      
                                          })
-        ctx = {'form':form, 'proyecto':p,'usuarioid':usuario_id}
+        ctx = {'form':form, 'proyecto':p,'usuarioid':usuario_id,'proyecto':p}
         return render_to_response('modificarProyecto.html', ctx ,context_instance=RequestContext(request))
     
 def visualizarProyectoView(request,usuario_id, proyecto_id_rec):
@@ -1742,11 +1740,20 @@ def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
         s=rol.objects.get(id=id_tipo)
         s.estado='ACT'
         s.save()
-        evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"ROL+"+"R+"+"El rol '"+s.nombre_corto+"' se ha reactivado exitosamente en la fecha y hora: "+str(timezone.now())
+        evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"ROL+"+"R+"+"El rol '"+s.nombre_rol_id+"' se ha reactivado exitosamente en la fecha y hora: "+str(timezone.now())
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=s.nombre_corto,evento=evento_e)
         mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
         mail.send()
-
+    
+    if tipo == '5': #se trata de un proyecto
+        s=proyecto.objects.get(id=id_tipo)
+        s.estado='ACT'
+        s.save()
+        evento_e=usuario_id+"+"+proyectoid+"+"+"PROYECTO+"+"R+"+"El proyecto '"+s.nombre_corto+"' se ha reactivado exitosamente en la fecha y hora: "+str(timezone.now())
+        historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=s.nombre_corto,evento=evento_e)
+        mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
+        mail.send()
+        return HttpResponseRedirect('/hola/')
     return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')
 
 
@@ -2298,6 +2305,8 @@ def desplegar_historial(request,usuario_id,proyectoid,rolid):
     hu_r=[]
     hu=0
     proyecto_m=[]
+    proyecto_r=[]
+    proyecto_a=[]
     proyecto=0
     usuario_rec=MyUser.objects.get(id=usuario_id)
     if rolid == str(1):
@@ -2361,7 +2370,12 @@ def desplegar_historial(request,usuario_id,proyectoid,rolid):
                     actividad_m.append(evento)
             if objeto == 'PROYECTO':
                 proyecto=1
-                proyecto_m.append(evento)
+                if tipo_evento == 'A':
+                    proyecto_a.append(evento)
+                elif tipo_evento == 'M':
+                    proyecto_m.append(evento)
+                elif tipo_evento == 'R':
+                    proyecto_r.append(evento)
     return render(request,'historial.html',{'sprint':sprint,'flujo':flujo,'actividad':actividad,'hu':hu,'proyecto':proyecto,'rol':rol,'proyecto_m':proyecto_m,'sprint_c':sprint_c,'sprint_m':sprint_m,'sprint_r':sprint_r,'flujo_c':flujo_c,'flujo_m':flujo_m,'flujo_r':flujo_r,'rol_c':rol_c,'rol_m':rol_m,'rol_r':rol_r,'actividad_c':actividad_c,'actividad_m':actividad_m,'hu_c':hu_c,'hu_m':hu_m,'hu_a':hu_a,'hu_as':hu_as,'hu_r':hu_r,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
 
 
@@ -2529,3 +2543,19 @@ def exportarPDF(request,usuario_id,proyectoid,rolid):
         c.showPage()
     c.save()
     return response
+
+def anularProyecto(request,usuario_id,proyectoid):
+    if request.method=='GET' :
+        return render(request,'anularProyecto.html',{'usuarioid':usuario_id,'proyectoid':proyectoid})
+    else:
+        proyectox=proyecto.objects.get(id=proyectoid)
+        usuario_e=MyUser.objects.get(id=usuario_id)
+        descripcion=request.POST['descripcion']
+        evento_e=usuario_id+"+"+proyectoid+"+"+"+"+"PROYECTO+"+"A+"+"Se ha anulado el proyecto: '"+proyectox.nombre_corto+"' por el siguiente motivo: '"+descripcion+"' con fecha y hora: "+str(timezone.now())
+        email_e=str(usuario_e.email)
+        historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=proyectox.nombre_corto,  evento=evento_e)
+        mail = EmailMessage('Notificacion', evento_e, to=[email_e])
+        mail.send()
+        proyectox.estado='ANU'
+        proyectox.save()
+        return HttpResponse('Se ha anulado el proyecto')

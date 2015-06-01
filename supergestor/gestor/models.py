@@ -178,6 +178,8 @@ class proyecto(models.Model):
     nombre_largo = models.CharField(max_length = 200)
     descripcion = models.CharField(max_length = 200)
     fecha_inicio = models.DateTimeField()
+    duracion = models.IntegerField()
+    cantidad_dias_transcurridos=models.IntegerField()
     fecha_fin = models.DateTimeField()
     estado = models.CharField(max_length = 3, choices = ESTADO_CHOICES)
     #flujos = models.ManyToManyField(Flujo)
@@ -185,6 +187,7 @@ class proyecto(models.Model):
     def __unicode__(self):
         """Representacion unicode del objeto proyecto"""
         return self.nombre_corto   
+    
 class HU_descripcion(models.Model):
     """
     Modelo representa la descripcion de cada hora de trabajo agregada mostrando de la fecha de la misma
