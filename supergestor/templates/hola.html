@@ -69,13 +69,15 @@ hr{
             <tr class="model-proyecto">
             	{%for p in proyectos_completo%}
             		{%if p.estado == 'ANU'%}
-						<th/><tr><td colspan="6" BGCOLOR="#E0E6F8"><font size=2 color=red><b>Nombre: </b> {{p}} <b> Descripcion: </b>{{p.descripcion}} - <b>ANULADO</b></font></tr>
+						<th/><tr><td colspan="6" BGCOLOR="#E0E6F8"><font size=2 color=red><b>Nombre: </b> {{p}} <b> Descripcion: </b>{{p.descripcion}} - <b>ANULADO el {{p.fecha_fin}}</b></font></tr>
             		{%elif p.estado == 'ACT'%}
             			<th/><tr><td colspan="6" BGCOLOR="#E0E6F8"><font size=2><b>Nombre: </b> {{p}} <b> Descripcion: </b>{{p.descripcion}}:- <b>INICIADO</b></font> 
             			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             			<font size=3 color=green><b>Dia: </font><font size=3>{{p.cantidad_dias_transcurridos}}  
             			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             			<font size=3 color=green>Estimacion: </font> {{p.duracion}} dias</font></b></td></tr>
+            		{%elif p.estado == 'FIN'%}
+            			<th/><tr><td colspan="6" BGCOLOR="#E0E6F8"><font size=2 color=green><b>Nombre: </b> {{p}} <b> Descripcion: </b>{{p.descripcion}} - <b>FINALIZADO el {{p.fecha_fin}}</b></font></tr>
             		{%else%}
             			<th/><tr><td colspan="6" BGCOLOR="#E0E6F8"><font size=2><b>Nombre: </b> {{p}} <b> Descripcion: </b>{{p.descripcion}} - <b>PENDIENTE</b></font></tr>
             		{%endif%}
@@ -84,15 +86,23 @@ hr{
 						{%if p == proyecto%}
   							{%for rol in roles%}
   							<tr>
-	  					 		<th><a href="/scrum/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}" >{{rol}}</a>
-	  							<td><a href="/modificarProyecto/{{usuario.id}}/{{proyecto.id}}/" class="changelink">Modificar</a></td>
+  								{%if p.estado == 'ANU'%}
+	  					 			<td><b><font color=red size=2>{{rol}}</font></b></td>
+	  					 		{%elif p.estado == 'FIN'%}
+	  					 			<td><b><font color=green size=2>{{rol}}</font></b></td>
+	  					 		{%else%}
+	  					 			<th><a href="/scrum/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}" >{{rol}}</a>
+	  							{%endif%}
 	  							<td><a href="/equipoProyecto/{{proyecto.id}}/{{usuario.id}}" class="addlink">Visualizar Equipo</a></td>
 	                			<td><a href="/visualizarProyecto/{{usuario.id}}/{{proyecto.id}}/" class="addlink">Visualizar</a></td>
 	                			<td><a href="/notificaciones/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}/" >Notificaciones</a></td>
 	                			{%if proyecto.estado == 'ANU'%}
 	                				<td><a href="/reactivar/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}/5/{{proyecto.id}}/" class="changelink">Reactivar</a></td>
+	                			{%elif proyecto.estado == 'FIN'%}
+	                				<td></td>
 	                			{%else%}
 	                				<td><a href="/anularProyecto/{{usuario.id}}/{{proyecto.id}}/" class="deletelink">Anular</a></td>
+	                				<td><a href="/modificarProyecto/{{usuario.id}}/{{proyecto.id}}/" class="changelink">Modificar</a></td>
 	                			{%endif%}
 	              			</tr>
 	              			{%endfor%}
@@ -105,18 +115,25 @@ hr{
             	  				<tr>
             	  					{%if p.estado == 'ANU'%}
             							<td><b><font color=red size=2>{{rol}}</font></b></td>
-            							<td><b><font color=red>Proyecto ANULADO</font></b></td>
+            						{%elif p.estado == 'FIN'%}
+            							<td><b><font color=green size=2>{{rol}}</font></b></td>
             						{%else%}
             							<th><a href="/scrum/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}" >{{rol}}</a></th>
-            							<td><a href="/visualizarProyecto/{{usuario.id}}/{{proyecto.id}}/" class="addlink">Visualizar</a></td>
-            							<td><a href="/notificaciones/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}/" >Notificaciones</a></td>
-            							{%if proyecto_cliente|length > 0%}
-            								{%for c in proyecto_cliente%}
-            									{%if c == proyecto.id%}
-            										<td><a href="/equipoProyecto/{{proyecto.id}}/{{usuario.id}}" class="addlink">Visualizar Equipo</a></td>
+            						{%endif%}
+            						<td><a href="/visualizarProyecto/{{usuario.id}}/{{proyecto.id}}/" class="addlink">Visualizar</a></td>
+            						<td><a href="/notificaciones/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}/" >Notificaciones</a></td>
+            						{%if proyecto_cliente|length > 0%}
+            							{%for c in proyecto_cliente%}
+            								{%if c == proyecto.id%}
+            									<td><a href="/equipoProyecto/{{proyecto.id}}/{{usuario.id}}" class="addlink">Visualizar Equipo</a></td>
+            									{%if p.estado == 'FIN'%}
+            										<td><a href="/scrum/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}" class="addlink">Ver Reporte final</a></td>
             									{%endif%}
-            								{%endfor%}
-            							{%endif%}
+            									{%if p.estado == 'ANU'%}
+            										<td><a href="/scrum/{{usuario.id}}/{{proyecto.id}}/{{rol.id}}" class="addlink">Ver ultimo Reporte</a></td>
+            									{%endif%}
+            								{%endif%}
+            							{%endfor%}
             						{%endif%}
             					</tr>
             	  			{%endfor%}
