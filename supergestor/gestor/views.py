@@ -1753,7 +1753,7 @@ def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
         s=proyecto.objects.get(id=id_tipo)
         s.estado='ACT'
         s.save()
-        evento_e=usuario_id+"+"+proyectoid+"+"+"PROYECTO+"+"R+"+"El proyecto '"+s.nombre_corto+"' se ha reactivado exitosamente en la fecha y hora: "+str(timezone.now())
+        evento_e=usuario_id+"+"+proyectoid+"+SCRUM+"+"PROYECTO+"+"R+"+"El proyecto '"+s.nombre_corto+"' se ha reactivado exitosamente en la fecha y hora: "+str(timezone.now())
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=s.nombre_corto,evento=evento_e)
         mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
         mail.send()
@@ -2322,10 +2322,10 @@ def desplegar_historial(request,usuario_id,proyectoid,rolid):
         obtenerStrings=n.evento.split('+')
         proyecto=obtenerStrings[1]
         rol=obtenerStrings[2]
+        objeto=obtenerStrings[3]
+        tipo_evento=obtenerStrings[4]
+        evento=obtenerStrings[5]
         if proyecto == proyectoid and (rol == rolid or rolid == str(1)):
-            objeto=obtenerStrings[3]
-            tipo_evento=obtenerStrings[4]
-            evento=obtenerStrings[5]
             if objeto == 'ROL':
                 rol=1
                 if tipo_evento == 'C':
@@ -2366,7 +2366,7 @@ def desplegar_historial(request,usuario_id,proyectoid,rolid):
                 elif tipo_evento == 'R':
                     if rolid == str(1): hu_r.append("Usuario: "+n.usuario+"- Evento: "+evento)
                     else: hu_r.append(evento)
-        elif proyecto == proyectoid and rol == 'SCRUM':   
+        if proyecto == proyectoid and rol == 'SCRUM':   
             if objeto == 'ACTIVIDAD':
                 actividad=1
                 if tipo_evento == 'C':
@@ -2383,7 +2383,8 @@ def desplegar_historial(request,usuario_id,proyectoid,rolid):
                     proyecto_r.append(evento)
                 elif tipo_evento == 'F':
                     proyecto_f.append(evento)
-    return render(request,'historial.html',{'sprint':sprint,'flujo':flujo,'actividad':actividad,'hu':hu,'proyecto':proyecto,'rol':rol,'proyecto_m':proyecto_m,'sprint_c':sprint_c,'sprint_m':sprint_m,'sprint_r':sprint_r,'flujo_c':flujo_c,'flujo_m':flujo_m,'flujo_r':flujo_r,'rol_c':rol_c,'rol_m':rol_m,'rol_r':rol_r,'actividad_c':actividad_c,'actividad_m':actividad_m,'hu_c':hu_c,'hu_m':hu_m,'hu_a':hu_a,'hu_as':hu_as,'hu_r':hu_r,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
+
+    return render(request,'historial.html',{'sprint':sprint,'flujo':flujo,'actividad':actividad,'hu':hu,'proyecto':proyecto,'rol':rol,'proyecto_m':proyecto_m,'proyecto_a':proyecto_a,'proyecto_r':proyecto_r,'proyecto_f':proyecto_f,'sprint_c':sprint_c,'sprint_m':sprint_m,'sprint_r':sprint_r,'flujo_c':flujo_c,'flujo_m':flujo_m,'flujo_r':flujo_r,'rol_c':rol_c,'rol_m':rol_m,'rol_r':rol_r,'actividad_c':actividad_c,'actividad_m':actividad_m,'hu_c':hu_c,'hu_m':hu_m,'hu_a':hu_a,'hu_as':hu_as,'hu_r':hu_r,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
 
 
 
@@ -2558,7 +2559,7 @@ def anularProyecto(request,usuario_id,proyectoid):
         proyectox=proyecto.objects.get(id=proyectoid)
         usuario_e=MyUser.objects.get(id=usuario_id)
         descripcion=request.POST['descripcion']
-        evento_e=usuario_id+"+"+proyectoid+"+"+"PROYECTO+"+"A+"+"Se ha anulado el proyecto: '"+proyectox.nombre_corto+"' por el siguiente motivo: '"+descripcion+"' con fecha y hora: "+str(timezone.now())
+        evento_e=usuario_id+"+"+proyectoid+"+SCRUM+"+"PROYECTO+"+"A+"+"Se ha anulado el proyecto: '"+proyectox.nombre_corto+"' por el siguiente motivo: '"+descripcion+"' con fecha y hora: "+str(timezone.now())
         email_e=str(usuario_e.email)
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=proyectox.nombre_corto,  evento=evento_e)
         mail = EmailMessage('Notificacion', evento_e, to=[email_e])
@@ -2575,7 +2576,7 @@ def finalizarProyecto(request,usuario_id,proyectoid,rol_id):
         proyectox=proyecto.objects.get(id=proyectoid)
         usuario_e=MyUser.objects.get(id=usuario_id)
         descripcion=request.POST['descripcion']
-        evento_e=usuario_id+"+"+proyectoid+"+"+"PROYECTO+"+"F+"+"Se ha finalizado el proyecto: '"+proyectox.nombre_corto+"' por el siguiente motivo: '"+descripcion+"' con fecha y hora: "+str(timezone.now())
+        evento_e=usuario_id+"+"+proyectoid+"+SCRUM+"+"PROYECTO+"+"F+"+"Se ha finalizado el proyecto: '"+proyectox.nombre_corto+"' por el siguiente motivo: '"+descripcion+"' con fecha y hora: "+str(timezone.now())
         email_e=str(usuario_e.email)
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=proyectox.nombre_corto,  evento=evento_e)
         mail = EmailMessage('Notificacion', evento_e, to=[email_e])
