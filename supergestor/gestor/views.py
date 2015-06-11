@@ -442,6 +442,24 @@ def guardarHUView(request,usuario_id, proyectoid, rolid):
     except ObjectDoesNotExist:
         print "Either the entry or blog doesn't exist." 
         return HttpResponseRedirect('/crearHU/')
+    
+
+def guardarSprintFlujos(request,usuario_id,proyectoid,rolid):
+    """Tengo que sacar el guardado de flujos del metodo guardarSprintView y ponerlo aqui y desde 
+    aqui redirijir hacia asignaHUActividad_Flujo"""
+    """en guardarSprintView tengo que redirigir hacia un html donde se muestren los flujos y des ese dirijirme a este metodo"""
+    userx=MyUser.objects.get(id=usuario_id)
+    
+    sprint_id =  request.POST['sprint']
+    
+    Sprint_a_crear= Sprint.objects.get(id=sprint_id)
+    
+    for f in request.POST.getlist('Flujos'):
+            Sprint_a_crear.flujo.add(Flujo.objects.get(id=f))
+    Sprint_a_crear.save()
+    
+    return HttpResponseRedirect('/asignarHUFlujo/'+userx+'/'+proyecto.objects.get(id=proyectoid)+'/'+rol.objects.get(id=rolid)+'/'+sprint_id)
+    
 
 def guardarSprintView(request, usuario_id, proyectoid, rolid):
     """
@@ -459,15 +477,20 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
             guardar=1
     if guardar == 1:
         try:
+            HUs=[]
+            HUs_pendientes=[]
+            
+            
             Sprint_a_crear = Sprint.objects.create(descripcion=request.POST['descripcion'],estado="ACT",fecha_inicio=request.POST['fecha_inicio'], duracion=request.POST['duracion'], proyecto=proyecto.objects.get(id=proyectoid))
             for p in request.POST.getlist('HUs'):
                 h=HU.objects.get(id=p)
                 Sprint_a_crear.hu.add(h)
+                HUs.append(h)#ahora HUs tienen todas las seleccionadas incluso las pendientes
                 if h.acumulador_horas > 0:
                     Sprint_a_crear.estado='CON'
                 Sprint_a_crear.save()
-            for f in request.POST.getlist('Flujos'):
-                Sprint_a_crear.flujo.add(Flujo.objects.get(id=f))
+            #for f in request.POST.getlist('Flujos'):
+                #Sprint_a_crear.flujo.add(Flujo.objects.get(id=f))
             for u in request.POST.getlist('usuarios'):
                 Sprint_a_crear.equipo.add(MyUser.objects.get(id=u))
             Sprint_a_crear.save()
@@ -476,7 +499,23 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=Sprint_a_crear.descripcion, evento=evento_e)
             mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
             mail.send()
-            return HttpResponse('El Sprint se ha creado')  
+            #return HttpResponse('El Sprint se ha creado')
+            
+            
+            flujos=Flujo.objects.all()
+            flujos_pen=[]
+            
+            
+            for h in HUs:#por cada hu seleccionada
+                if h.estado_en_actividad!='FIN':
+                    HUs_pendientes.append(h)
+                    HUs.remove(h)#HUs es una lista porque se definio asi pero flujos se obtuvo con un query
+                    flujos_pen.append(h.flujo())
+                    flujos=flujos.exclude(h.flujo())
+            #asi HU tiene todas las HU no pendientes 
+            #y HU_pendientes tiene las HU pendientes
+                            
+            return render(request,"eleccionFlujo.html",{'sprint':Sprint_a_crear,'HUs_pendientes':HUs_pendientes,'HUs':HUs,'flujo_pen':flujos_pen,'flujos':flujos,'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
         except ObjectDoesNotExist:
             print "Either the entry or blog doesn't exist." 
             return HttpResponseRedirect('/crearSprint/')
@@ -1286,7 +1325,7 @@ def crearSprint(request,usuario_id,proyectoid,rolid):
     flujos=Flujo.objects.all()#le mando todos los flujos para que elija los que quiere
     flujos_pen=[]
     HUs_pendientes=[]
-    for x in Sprint.objects.all():
+    for x in Sprint.objects.all():#se podria chequear solo los sprint del proyecto para hacer menos trabajo!
         if x.estado == 'FIN':
             for h in x.hu.all():
                 if h.estado_en_actividad != 'FIN':
@@ -1295,14 +1334,14 @@ def crearSprint(request,usuario_id,proyectoid,rolid):
                     flujos_pen.append(h.flujo())
                 else:
                     HUs=HUs.exclude(id=h.id)
-    for x in Sprint.objects.all():
-        if x.estado != 'FIN':
+    for x in Sprint.objects.all():#este super for es para analizae el contenido de los sprint que no hayan terminado 
+        if x.estado != 'FIN':#se busca sacar los hu que se pueden continuar todavia que esteen entre los pendientes
             for h in x.hu.all():
                 HUs=HUs.exclude(id=h.id)
                 for hp in HUs_pendientes:
                     if h == hp:
                         HUs_pendientes.remove(h)  
-                for f in flujos_pen:
+                for f in flujos_pen:#tambien se busca sacar los flujos que pueden continuar todavia que esteen en entre pendientes de hus pen.
                     if f == h.flujo():
                         flujos_pen.remove(h.flujo())
     flujos_pen=set(flujos_pen)
