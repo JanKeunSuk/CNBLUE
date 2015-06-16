@@ -76,6 +76,7 @@ td { padding: 2px 2px 2px 2px; text-align-center; }
 
 			{% if roles|length > 0%}
             	<tr><td BGCOLOR="#E0E6F8" colspan=6><font size=2 ><b>Roles de Proyecto</b></font></td></tr>
+
             	{%for rol in roles_inmodificables%}<!-- roles va a ser la lista que tenga o no elementos -->
             		{%if rol.estado == 'ACT'%}
             			<tr><td><p>{{rol}}</p></td>
@@ -322,7 +323,7 @@ td { padding: 2px 2px 2px 2px; text-align-center; }
           {% if sprints|length > 0%}
 			<table width=1290px>
 			<tr><td BGCOLOR="#E0E6F8" colspan=6><font size=2 ><b>Lista de Sprint's del proyecto </b></font></td></tr>
-
+   
             <tr class="model-proyecto">
             
 				{% for sprint in sprints %}
@@ -370,36 +371,77 @@ td { padding: 2px 2px 2px 2px; text-align-center; }
             {%endfor%}
             
             
-<!-- Cliente, visualizacion de HU con usuario asignado -->
+<!-- Cliente / Reporte -->
 		{%if reporte == 1%}
-            <p><font size = 5><b>Reporte para el cliente</b></font>(parcial)</p>
-            	{%for s in sprintReporte%}
-            	<br/><br/>
-            	<p><font size="3" color="black"> Nombre: <b>{{s}}</b> | Estado: <b>{{s.estado}}</b> | Duracion <b>{{s.duracion}}</b> dias | Fecha de inicio: <b>{{s.fecha_inicio}}</b></p>
-            	<table class="tablaDias" width="1000" bordercolor = #8904B1 border="8" align="center">
-					<tr><td WIDTH=150  bgcolor="#ECE0F8" align="center"><font size="2" color="black"><b>HU</b></font></td>
-					<td WIDTH=150  bgcolor="#ECE0F8" align="center"><font size="2" color="black"><b>USUARIO</b></font></td>
-					<td WIDTH=150  bgcolor="#ECE0F8" align="center"><font size="2" color="black"><b>FLUJO</b></font></td>
-					<td WIDTH=150  bgcolor="#ECE0F8" align="center"><font size="2" color="black"><b>ACTIVIDAD</b></font></td>
-					<td WIDTH=150  bgcolor="#ECE0F8" align="center"><font size="2" color="black"><b>ESTADO EN ACTIVIDAD</b></font></td>
-					<td WIDTH=150  bgcolor="#ECE0F8" align="center"><font size="2" color="black"><b>DURACION TOTAL</b></font></td>
-            		<td WIDTH=150  bgcolor="#ECE0F8" align="center"><font size="2" color="black"><b>HORAS REALIZADAS</b></font></td></tr>
-            		{%for h in s.hu.all%}
-            			<tr><td WIDTH=150  align="center"><font size="2" >{{h}}</font></td>
-						<td WIDTH=150  align="center"><font size="2" color="black">{{h.saber_usuario}}</font></td>
-						<td WIDTH=150  align="center"><font size="2" color="black">{{h.flujo}}</font></td>
-						<td WIDTH=150  align="center"><font size="2" color="black">{{h.actividad}}</font></td>
-						<td WIDTH=150  align="center"><font size="2" color="black"> {{h.estado_en_actividad}}</font></td>
-						<td WIDTH=150  align="center"><font size="2" color="black">{{h.duracion}} horas/ {{h.saber_duracion_dias}} dias</font></td>
-            			<td WIDTH=150  align="center"><font size="2" color="black">{{h.acumulador_horas}}</font></td></tr>
-            		{%endfor%}
-            		</table>
+            <p><font size = 5 color="blue"><b>Reporte para el cliente del Proyecto {{proyecto.nombre_corto}}</b></font></p>
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            <p><font size = 2 color="black"><b>Inicio del proyecto: </b>{{proyecto.fecha_inicio}} | <b>Fin estimado del Proyecto: </b>{{proyecto.fecha_fin}} |<b>Cantidad de dias trabajados: </b>{{duracion_pr}} | </font></p><p></p>
+            <p><font size = 3 color="blue"><b>Dentro del proyecto tenemos los siguientes Sprint:</b></font></p><p></p>
+            {%for sp in sprintReporte%}
+            	{%for s, l in lista_acu_sp_hu.items%}
+            		{%if s == sp%}
+            			<p><font size = 3  color="blue"><b>>> Sprint: </b> {{s}}</font></p>
+            			<p><font size = 2 color="black"><b>- Cantidad de HU's: </b> {{l}} <b>         - Estado del Sprint: </b> {{s.estado}}</p>
+            			<p><font size = 2 color="blue"><b>Usuarios a cargo de las HU's dentro de este Sprint: </b></font></p>
+            			{%for spr, lis in usu_hs_hu.items%}
+            				{%for u in lis%}
+            					{%if s == spr%}
+            						<p><font size = 2 color="black"><b> - {{u.usuario}}:</b> {{u.hs}} horas de trabajo, {{u.cont_hu}} HU a cargo</font></p>
+            						<p><font size = 2 color="blue"><b>HU's asignada:</b>
+            						<p><font size = 2 color="black"><b>OBS.:Las HU's estan ordenadas por prioridad, como muestra el siguiente listado.</b>
+            						{%for l in u.list_hu%}
+										{%for h in s.hu.all%}
+											{%if h == l%}
+												{%if h.estado_en_actividad == 'PRO' and h.duracion != h.acumulador_horas%}
+													<p><font size = 2 color="blue"><b>Actualmente trabajando en esta HU</b></font></p>
+												{%endif%}
+												{%if h.estado_en_actividad == 'PRO' and h.duracion == h.acumulador_horas%}
+													<p><font size = 2 color="black"><b>{{h}}</b> | <b>Estado:</b> {{h.estado}} | <b>Estado en actividad:</b> {{h.estado_en_actividad}} | <b>Duracion:</b> {{h.duracion}}   | <b>Acumulador de horas:</b> {{h.acumulador_horas}}  | <b>prioridad: </b>{{h.prioridad}}</b></font></p>
+													<p><font size = 2 color="red"><b>HU agotado su tiempo, esperando a que el Scrum Maste agregue mas horas</b></font></p>
+												{%else%}
+													<p><font size = 2 color="black"><b>{{h}}</b> | <b>Estado:</b> {{h.estado}} | <b>Estado en actividad:</b> {{h.estado_en_actividad}} | <b>Duracion:</b> {{h.duracion}}   | <b>Acumulador de horas:</b> {{h.acumulador_horas}}  | <b>prioridad: </b>{{h.prioridad}}</font></p>	
+												{%endif%}
+												{%for f in sp.flujo.all%}
+													{%for hp in hu_p%}
+														
+															{%if hp == h%}
+																{%if f == h.flujo%}
+																	<p><font size = 2 color="black"><b>Flujo: </b>{{f}} | <b>Actualmente en la actividad </b>{{h.actividad}}</font></p>
+																	<p><font size = 2 color="blue"><b>Actividades por la que pasa la </b>{{h}}</font></p>
+																	{%for fa in f.actividades.all%}
+																		<p><font size = 2 color="black">  {{fa}}</font></p>
+																	{%endfor%}
+																	
+																{%endif%}
+															{%endif%}
+													{%endfor%}
+												{%endfor%}
+											{%endif%}
+										{%endfor%}
+									{%endfor%}
+            				 		</font></p>
+            					{%endif%}
+            				{%endfor%}
+            			{%endfor%}
+            		{%endif%}
             	{%endfor%}
-            <a href="/exportarPDF/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/">Exportar en PDF</a>
-        {%endif%}
-        
-        
-        
+            	-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            {%endfor%}
+           
+            <p><font size = 3 color="blue"><b>HU's no asignadas a ningun Sprint </b></font></p>
+            <TABLE BORDER=5 WIDTH=300 CELLSPACING=5 >
+            <p><font size = 2 color="black"><b>Historias de usuario del Backlog </b></font></p>
+            <TR BGCOLOR="#D0A9F5" ><TD WIDTH=100 align="center"><p><font size = 2 color="black"><b>Descripcion</b><TD WIDTH=100 align="center"><font size = 2 color="black"><b>Prioridad</b></font></p></TD></TR>
+			{%for l in list_hu_p%}
+				<TR><TD WIDTH=100 align="center"><p><font size = 2 color="black">{{l}}<TD WIDTH=100 align="center"><font size = 2 color="black">{{l.prioridad}}</font></p></TD></TR>
+			{%endfor%}
+			</TABLE>
+            <a href="/exportarPDF/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Exportar en PDF</a><p></p>  
+             <a href="/generate_pdf_view/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Exportar en PDFgrafico</a><p></p> 
+			<td><a href="/visualizarSprintBacklog/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Visualizar Sprint Backlog</a></td>
+			<td><br/><a href="/visualizarChart/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Visualizar Burndown Chart</a></td>
+		{%endif%}        
+		
 <!-- Visualizacion Burndown Chart para quien tenga permiso Cliente, Owner, Equipo, Scrum -->
  	{% if verburn%}
  		<table>
