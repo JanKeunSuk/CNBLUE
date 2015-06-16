@@ -291,7 +291,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         HUp=HU.objects.filter(proyecto=proyectox)
         HU_p=sorted(HUp,key=lambda x: x.prioridad, reverse=True)
         sprintReporte=Sprint.objects.filter(proyecto=proyectox)
-        sprintReporte=sorted(sprint_Reporte,key=lambda x: x.estado, reverse=False)
+        sprintReporte=sorted(sprintReporte,key=lambda x: x.estado, reverse=False)
         #La duracion en horas de un Sprint
         for sp in sprintReporte:
             for hu in HUv:
@@ -2935,41 +2935,6 @@ def exportarPDF(request,usuario_id,proyectoid,rolid):
     table.drawOn(c, *coord(1.5, 4 + int(len((list_hu_no))/2)+1, cm))
     
     c.save()
-
-    return response
-
-
-def generate_pdf_view(request,usuario_id,proyectoid,rolid):    
-        
-        drawing = Drawing(400, 200)
-        data = [
-            ((1,1), (2,2), (2.5,1), (3,3), (4,5)),
-            ((1,2), (2,3), (2.5,2), (3.5,5), (4,6))
-            ]
-        lp = LinePlot()
-        lp.x = 50
-        lp.y = 50
-        lp.height = 125
-        lp.width = 300
-        lp.data = data
-        lp.joinedLines = 1
-        lp.lineLabelFormat = '%2.0f'
-        lp.strokeColor = colors.black
-        lp.lines[0].strokeColor = colors.red
-        lp.lines[0].symbol = makeMarker('FilledCircle')
-        lp.lines[1].strokeColor = colors.blue
-        lp.lines[1].symbol = makeMarker('FilledDiamond')
-        lp.xValueAxis.valueMin = 0
-        lp.xValueAxis.valueMax = 5
-        lp.xValueAxis.valueStep = 1
-        lp.yValueAxis.valueMin = 0
-        lp.yValueAxis.valueMax = 7
-        lp.yValueAxis.valueStep = 1
-        drawing.add(lp)
-        
-        from reportlab.graphics import renderPDF
-        renderPDF.drawToFile(drawing, 'example.pdf', 'lineplot with dates')
-
     """
     PAGE_HEIGHT=defaultPageSize[1]
     PAGE_WIDTH=defaultPageSize[0]
@@ -3011,6 +2976,40 @@ def generate_pdf_view(request,usuario_id,proyectoid,rolid):
     response.write(go())
     return response
     """
+    return response
+
+
+def generate_pdf_view(request,usuario_id,proyectoid,rolid):    
+        
+        drawing = Drawing(400, 200)
+        data = [
+            ((1,1), (2,2), (2.5,1), (3,3), (4,5)),
+            ((1,2), (2,3), (2.5,2), (3.5,5), (4,6))
+            ]
+        lp = LinePlot()
+        lp.x = 50
+        lp.y = 50
+        lp.height = 125
+        lp.width = 300
+        lp.data = data
+        lp.joinedLines = 1
+        lp.lineLabelFormat = '%2.0f'
+        lp.strokeColor = colors.black
+        lp.lines[0].strokeColor = colors.red
+        lp.lines[0].symbol = makeMarker('FilledCircle')
+        lp.lines[1].strokeColor = colors.blue
+        lp.lines[1].symbol = makeMarker('FilledDiamond')
+        lp.xValueAxis.valueMin = 0
+        lp.xValueAxis.valueMax = 5
+        lp.xValueAxis.valueStep = 1
+        lp.yValueAxis.valueMin = 0
+        lp.yValueAxis.valueMax = 7
+        lp.yValueAxis.valueStep = 1
+        drawing.add(lp)
+        
+        from reportlab.graphics import renderPDF
+        renderPDF.drawToFile(drawing, 'example.pdf', 'lineplot with dates')
+
 
 def anularProyecto(request,usuario_id,proyectoid):
     if request.method=='GET' :
