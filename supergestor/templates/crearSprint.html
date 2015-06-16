@@ -165,8 +165,8 @@
 
         </div>
         
-        <!-- 
-        <div class="form-row field-Flujos">
+        
+        <div class="form-row field-Flujos" hidden>
 
                 <div>
 
@@ -174,7 +174,7 @@
                         
                             <select multiple = "multiple" id="id_usuarios" name="Flujos" required>
                             {%for flujo in flujos_pen %}
-								<option value="{{flujo.id}}" selected> {{flujo}}</option>
+								<option value="{{flujo.id}}" selected="selected"> {{flujo}}</option>
 							{%endfor%}
                             {%for flujo in flujos %}
 								<option value="{{flujo.id}}"> {{flujo}}</option>
@@ -186,7 +186,7 @@
                     
                 </div>
             
-        </div> -->
+        </div> 
 
 </fieldset>
 

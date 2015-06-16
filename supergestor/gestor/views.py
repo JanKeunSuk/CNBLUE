@@ -598,8 +598,8 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
                 if h.acumulador_horas > 0:
                     Sprint_a_crear.estado='CON'
                 Sprint_a_crear.save()
-            #for f in request.POST.getlist('Flujos'):
-                #Sprint_a_crear.flujo.add(Flujo.objects.get(id=f))
+            for f in request.POST.getlist('Flujos'):
+                Sprint_a_crear.flujo.add(Flujo.objects.get(id=f))
             for u in request.POST.getlist('usuarios'):
                 Sprint_a_crear.equipo.add(MyUser.objects.get(id=u))
             Sprint_a_crear.save()

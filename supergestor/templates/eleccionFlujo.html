@@ -81,7 +81,7 @@
   </ul>
 
 
-<p>Flujos incluidos con HUs pendientes {{flujo_pen}}: </p>
+<p>Flujos incluidos con HUs pendientes: </p>
 	{%for f in flujo_pen%}
 		<p>{{f}}</p>
 	{%endfor%}
@@ -102,9 +102,9 @@
                             		<option value="{{fj.id}}">{{fj}}</option>
                            {%endfor%}
                            
-                           {%for fj in flujo_pen%}
+                          <!-- {%for fj in flujo_pen%}
                             		<option selected="selected" value="{{fp.id}}" style="visibility:hidden;" hidden>{{fp}}</option>
-                           {%endfor%}
+                           {%endfor%}-->
 							</select>
 							
                         
