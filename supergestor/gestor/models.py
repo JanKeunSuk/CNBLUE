@@ -71,6 +71,7 @@ class MyUser(AbstractBaseUser):
     last_name=models.CharField(max_length=50)
     direccion=models.CharField(max_length=255)
     email = models.OneToOneField(Permitido)
+    frecuencia_notificaciones=models.CharField(max_length=50)
     #email.unique()
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)

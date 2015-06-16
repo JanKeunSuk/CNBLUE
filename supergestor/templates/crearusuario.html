@@ -30,7 +30,7 @@
     <div id="header">
         <div id="branding">
         
-<h1 id="site-name"><a href="/login/"></a>Registro de Usuario Nuevo</h1>
+<h1 id="site-name"><a href="/login/">Registro de Usuario Nuevo</a></h1>
 
 <form enctype="multipart/form-data" action="/save/" method="post" id="myuser_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='I2gvMo5vSN0jrTyA6qIeHcNcN5UtgvFS' />
   {% csrf_token %}
@@ -122,6 +122,19 @@
 
                 </div>
             
+        </div>
+        
+        <div>
+        	<label class="required" for="id_password2">Seleccione la frecuencia en la que desea recibir las notificaciones de sus cambios al correo:</label>
+        	<font color=black>
+			<input type="radio" name="notificacion" value="instante" checked>Al instante que ocurran los cambios 
+			<br>
+			<input type="radio" name="notificacion" value="dia">Diariamente
+			<br>
+			<input type="radio" name="notificacion" value="semana">Semanalmente
+			<br>
+			<input type="radio" name="notificacion" value="mes">Mensualmente
+			</font>
         </div>
 
 </fieldset>

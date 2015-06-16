@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'gestor',
+    'djutils',
 )
 """Definición de aplicaciones. Se agrego en la INSTALLED_APPS gestor."""
 
@@ -108,4 +109,4 @@ EMAIL_USE_TLS = True
 
 STATIC_URL = '/static/'
 
-
+WORKSPACE = '/home/katherine/IS2Work/git/supergestor'

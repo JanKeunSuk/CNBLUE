@@ -413,7 +413,7 @@ td { padding: 2px 2px 2px 2px; text-align-center; }
  	
 <!-- Boton finalizar cuando todas las HU's validadas esten aprobadas por el Scrum -->
 	{%if finalizar == 1%}
-		{%if reporte != 1%}
+		{%if is_Scrum == 1%}
 			<form method="get" action="/finalizarProyecto/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/">
 
 				<input name="boton1"  style="Position:Absolute; left:78%;" type="image"

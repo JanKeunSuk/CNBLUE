@@ -3,6 +3,7 @@
 expresiones regulares en el archivo urls.py, manipula y gestiona la respuesta que se van a enviar a los clientes.
 Cada vista obtiene del request que se le envio la informacion necesaria para el funcionamiento de los metodos,
 """
+import os
 from django.shortcuts import render, render_to_response
 from django.http.response import HttpResponseRedirect
 from django.http import HttpResponse
@@ -16,10 +17,9 @@ from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.forms.widgets import CheckboxSelectMultiple
 from django.contrib.auth.models import Permission
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta
 import math
 import json
-import threading
 from django.utils import timezone
 from io import BytesIO
 from reportlab.pdfgen import canvas
@@ -29,8 +29,19 @@ from reportlab.platypus import Paragraph, Table, TableStyle
 from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER
 from reportlab.lib import colors
 from reportlab.lib.colors import black, blue
-
+from supergestor.settings import WORKSPACE
+from djutils.decorators import async
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+#from reportlab.rl_config import defaultPageSize
+from reportlab.lib.units import inch
 # Create your views and forms here.
+@async
+def send_email(to, subj, body):
+    # this will be executed in a separate thread
+    mail = EmailMessage(subj, body, to=[to])
+    mail.send()
+    
 @login_required
 def holaView(request):
     """
@@ -52,6 +63,9 @@ def holaView(request):
             if a.usuario.id == request.user.id:
                 rol_lista = rol.objects.get(id = a.rol.id)
                 for p in proyecto.objects.all():
+                    if p.estado != 'FIN' and p.estado != 'ANU':
+                        p.cantidad_dias_transcurridos=int(str((datetime.today().date()-p.fecha_inicio.date()).days))
+                        p.save()
                     Sprint_consulta=Sprint.objects.filter(proyecto=p).filter(estado='CON')
                     if Sprint_consulta:
                         for s in Sprint_consulta:
@@ -279,10 +293,12 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
     else:
         verburn=False
     
-    finalizar=1
-    for h in HU.objects.filter(proyecto=proyectox).filter(valido=True):
-        if h.estado_en_actividad != 'APR':
-            finalizar=0
+    finalizar=0
+    if proyectox.estado == 'CON':
+        finalizar=1
+        for h in HU.objects.filter(proyecto=proyectox).filter(valido=True):
+            if h.estado_en_actividad != 'APR':
+                finalizar=0
     return render(request,'rol-flujo-para-scrum.html',{'finalizar':finalizar,'fecha_inicio':str(proyectox.fecha_inicio)[:10],'existe':existe,'verburn':verburn,'sprintReporte':sprintReporte,'proyecto':proyectox,'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HUv':HUv,'reporte':reporte,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas, 'kanban':kanban})
 
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
@@ -312,12 +328,21 @@ def guardarUsuarioView(request):
         usuario.direccion = request.POST['direccion']
         usuario.last_name = request.POST['last_name']
         usuario.user_name = request.POST['user_name']
+        usuario.frecuencia_notificaciones=request.POST['notificacion']
         #usuario.save(using=request._db)
         usuario.save()
-        return HttpResponseRedirect('/login')
+        #agregar su correo y username en el crontab para que reciba las notificaciones o activar las notificaciones instantaneas
+        if usuario.frecuencia_notificaciones == 'dia':
+            cmd="sh "+WORKSPACE+"/notificaciones/notificar.sh "+WORKSPACE+" "+request.POST['username']+" "+request.POST['email']+" 1"
+        elif usuario.frecuencia_notificaciones == 'semana':
+            cmd="sh "+WORKSPACE+"/notificaciones/notificar.sh "+WORKSPACE+" "+request.POST['username']+" "+request.POST['email']+" 7"
+        elif usuario.frecuencia_notificaciones == 'mes':
+            cmd="sh "+WORKSPACE+"/notificaciones/notificar.sh "+WORKSPACE+" "+request.POST['username']+" "+request.POST['email']+" 30"
+        os.system(cmd)
+        return HttpResponseRedirect('/login/')
     except ObjectDoesNotExist:
         print "Either the entry or blog doesn't exist." 
-        return HttpResponseRedirect('/registrar')
+        return HttpResponseRedirect('/registrar/')
     
 def modificarCuenta(request, usuario_id):
     """
@@ -436,8 +461,8 @@ def guardarHUView(request,usuario_id, proyectoid, rolid):
         correo_e=usuario_e.email
         evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"C+"+"Se ha creado un nuevo HU de nombre: '"+request.POST['descripcion']+"' con valor de negocio '"+request.POST['valor_negocio']+"' con fecha y hora: "+str(timezone.now())
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=HU_a_crear.descripcion, evento=evento_e)
-        mail = EmailMessage('Notificacion', evento_e, to=[str(correo_e)])
-        mail.send()
+        if usuario_e.frecuencia_notificaciones == 'instante':
+            send_email(str(correo_e), 'Notificacion', evento_e)
         return HttpResponse('La HU se ha creado y relacionado con el proyecto')  
     except ObjectDoesNotExist:
         print "Either the entry or blog doesn't exist." 
@@ -2493,7 +2518,6 @@ def exportarPDF(request,usuario_id,proyectoid,rolid):
     nombrePDF="reporte_"+proyectox.nombre_corto+".pdf"
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename='+nombrePDF
-    
     width, height = A4
     styles = getSampleStyleSheet()
     styleN = styles["BodyText"]
@@ -2550,6 +2574,46 @@ def exportarPDF(request,usuario_id,proyectoid,rolid):
         table.drawOn(c, *coord(0.4, 6 + int(len((s.hu.all()))/2)+1, cm))
         c.showPage()
     c.save()
+    """
+    PAGE_HEIGHT=defaultPageSize[1]
+    PAGE_WIDTH=defaultPageSize[0]
+    styles = getSampleStyleSheet()
+    Title = "Hello world"
+    pageinfo = "platypus example"
+
+    def myFirstPage(canvas, doc):
+        canvas.saveState()
+        canvas.setFont('Times-Bold',16)
+        canvas.drawCentredString(PAGE_WIDTH/2.0, PAGE_HEIGHT-108, Title)
+        canvas.setFont('Times-Roman',9)
+        canvas.drawString(inch, 0.75 * inch,"First Page / %s" % pageinfo)
+        canvas.restoreState()
+    
+    def myLaterPages(canvas, doc):
+        canvas.saveState()
+        canvas.setFont('Times-Roman', 9)
+        canvas.drawString(inch, 0.75 * inch,"Page %d %s" % (doc.page, pageinfo))
+        canvas.restoreState()
+    
+    def go():
+        #doc = SimpleDocTemplate("phello.pdf")
+        Story = [Spacer(1,2*inch)]
+        style = styles["Normal"]
+        for i in range(100):
+            bogustext = ("Paragraph number %s. " % i) *20
+            p = Paragraph(bogustext, style)
+            Story.append(p)
+            Story.append(Spacer(1,0.2*inch))
+        a_buffer = BytesIO()
+        doc = SimpleDocTemplate(a_buffer, pagesize=A4)
+        doc.build(Story, onFirstPage=myFirstPage, onLaterPages=myLaterPages)
+        pdf = a_buffer.getvalue()
+        a_buffer.close()
+        return pdf
+    
+    response = HttpResponse(content_type='application/pdf')
+    response.write(go())
+    """
     return response
 
 def anularProyecto(request,usuario_id,proyectoid):
@@ -2562,8 +2626,8 @@ def anularProyecto(request,usuario_id,proyectoid):
         evento_e=usuario_id+"+"+proyectoid+"+SCRUM+"+"PROYECTO+"+"A+"+"Se ha anulado el proyecto: '"+proyectox.nombre_corto+"' por el siguiente motivo: '"+descripcion+"' con fecha y hora: "+str(timezone.now())
         email_e=str(usuario_e.email)
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=proyectox.nombre_corto,  evento=evento_e)
-        mail = EmailMessage('Notificacion', evento_e, to=[email_e])
-        mail.send()
+        if usuario_e.frecuencia_notificaciones == 'instante':
+            send_email(email_e, 'Notificacion', evento_e)
         proyectox.fecha_fin=timezone.now()
         proyectox.estado='ANU'
         proyectox.save()
