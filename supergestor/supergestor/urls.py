@@ -69,4 +69,5 @@ urlpatterns = patterns('',
     url(r'^visualizarChart/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$',views.visualizarBurnDownChart,name='verBurnDOwnCHart'),
     url(r'^exportarPDF/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$',views.exportarPDF,name='generarReporte'),
     url(r'^guardarFlujoSprint/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$', views.guardarSprintFlujos, name='guardar_nuevo_flujo_sprint'),
+    url(r'^generate_pdf_view/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$',views.generate_pdf_view,name='generarReportegrafico'),
 )
