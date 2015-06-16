@@ -81,11 +81,11 @@
   </ul>
 
 
-<p>Flujos incluidos con HUs pendientes : </p>
-	<ul>{%for f in flujos_pen%}
-		<li>{{f}}</li>
+<p>Flujos incluidos con HUs pendientes {{flujo_pen}}: </p>
+	{%for f in flujo_pen%}
+		<p>{{f}}</p>
 	{%endfor%}
-	</ul></br>
+	</br>
 <form  enctype="multipart/form-data" action="/guardarFlujoSprint/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="post" id="proyecto_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='lIrpccfDE0jXqIrun25AwLRBdIxGUDco' />
 {% csrf_token %}
 
@@ -94,17 +94,17 @@
             
                 <div>
                     	
-                    <input type="text" name="sprint" value="{{sprint.id}}" disabled="disabled" hidden>
+                    <input type="text" name="sprint" value="{{sprint.id}}" hidden>
                         <label class="required" for="id_usuarios">Flujos nuevos:</label>
                         
                             <select multiple="multiple" id="id_usuarios" name="Flujos" size="15">
                            {%for fj in flujos%}
                             		<option value="{{fj.id}}">{{fj}}</option>
-                           {%endfor}
+                           {%endfor%}
                            
-                           {%for fj in flujos_pen%}
+                           {%for fj in flujo_pen%}
                             		<option selected="selected" value="{{fp.id}}" style="visibility:hidden;" hidden>{{fp}}</option>
-                           {%endfor}
+                           {%endfor%}
 							</select>
 							
                         

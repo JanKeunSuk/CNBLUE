@@ -448,7 +448,7 @@ def guardarSprintFlujos(request,usuario_id,proyectoid,rolid):
     """Tengo que sacar el guardado de flujos del metodo guardarSprintView y ponerlo aqui y desde 
     aqui redirijir hacia asignaHUActividad_Flujo"""
     """en guardarSprintView tengo que redirigir hacia un html donde se muestren los flujos y des ese dirijirme a este metodo"""
-    userx=MyUser.objects.get(id=usuario_id)
+    
     
     sprint_id =  request.POST['sprint']
     
@@ -458,7 +458,7 @@ def guardarSprintFlujos(request,usuario_id,proyectoid,rolid):
             Sprint_a_crear.flujo.add(Flujo.objects.get(id=f))
     Sprint_a_crear.save()
     
-    return HttpResponseRedirect('/asignarHUFlujo/'+userx+'/'+proyecto.objects.get(id=proyectoid)+'/'+rol.objects.get(id=rolid)+'/'+sprint_id)
+    return HttpResponseRedirect('/asignarHUFlujo/'+usuario_id+'/'+proyectoid+'/'+rolid+'/'+sprint_id)
     
 
 def guardarSprintView(request, usuario_id, proyectoid, rolid):
@@ -508,12 +508,16 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
             
             for h in HUs:#por cada hu seleccionada
                 if h.estado_en_actividad!='FIN':
-                    HUs_pendientes.append(h)
+                    if h not in HUs_pendientes:
+                        HUs_pendientes.append(h)
                     HUs.remove(h)#HUs es una lista porque se definio asi pero flujos se obtuvo con un query
-                    flujos_pen.append(h.flujo())
-                    flujos=flujos.exclude(h.flujo())
+                    if h.flujo() not in flujos_pen:
+                        flujos_pen.append(h.flujo())
+                    if h.flujo() in flujos:   
+                        flujos=flujos.exclude(id=h.flujo().id)
             #asi HU tiene todas las HU no pendientes 
             #y HU_pendientes tiene las HU pendientes
+            HUs_pendientes=set(HUs_pendientes)
                             
             return render(request,"eleccionFlujo.html",{'sprint':Sprint_a_crear,'HUs_pendientes':HUs_pendientes,'HUs':HUs,'flujo_pen':flujos_pen,'flujos':flujos,'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
         except ObjectDoesNotExist:
