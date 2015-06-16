@@ -164,10 +164,10 @@ permission6 = Permission.objects.create(codename='Visualizar Chart',
                                        content_type=content_type)
 
 """Creacion de proyectos precargados"""
-p1=proyecto.objects.create(nombre_corto='p1',nombre_largo='proyecto1',descripcion='proyecto1',fecha_inicio=str(datetime.date.today()),fecha_fin=str(str(datetime.date.today())),estado='PEN')
-p2=proyecto.objects.create(nombre_corto='p2',nombre_largo='proyecto2',descripcion='proyecto2',fecha_inicio=str(datetime.date.today()),fecha_fin=str(str(datetime.date.today())),estado='PEN')
-p3=proyecto.objects.create(nombre_corto='p3',nombre_largo='proyecto3',descripcion='proyecto3',fecha_inicio=str(datetime.date.today()),fecha_fin=str(str(datetime.date.today())),estado='PEN')
-p4=proyecto.objects.create(nombre_corto='p4',nombre_largo='proyecto4',descripcion='proyecto4',fecha_inicio=str(datetime.date.today()),fecha_fin=str(str(datetime.date.today())),estado='PEN')
+p1=proyecto.objects.create(nombre_corto='p1',nombre_largo='proyecto1',descripcion='proyecto1',fecha_inicio=str(datetime.date.today()+ datetime.timedelta(days=-6)),duracion=20,cantidad_dias_transcurridos=6,fecha_fin=str(datetime.date.today() + datetime.timedelta(days=20)),estado='ACT')
+p2=proyecto.objects.create(nombre_corto='p2',nombre_largo='proyecto2',descripcion='proyecto2',fecha_inicio=str(datetime.date.today()),duracion=20,cantidad_dias_transcurridos=0,fecha_fin=str(datetime.date.today() + datetime.timedelta(days=20)),estado='PEN')
+p3=proyecto.objects.create(nombre_corto='p3',nombre_largo='proyecto3',descripcion='proyecto3',fecha_inicio=str(datetime.date.today()),duracion=20,cantidad_dias_transcurridos=0,fecha_fin=str(datetime.date.today() + datetime.timedelta(days=20)),estado='PEN')
+p4=proyecto.objects.create(nombre_corto='p4',nombre_largo='proyecto4',descripcion='proyecto4',fecha_inicio=str(datetime.date.today()),duracion=20,cantidad_dias_transcurridos=0,fecha_fin=str(datetime.date.today() + datetime.timedelta(days=20)),estado='PEN')
 
 
 """Creacion de rol admin y relacionamiento a todos los permisos existentes"""

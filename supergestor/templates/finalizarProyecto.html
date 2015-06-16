@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en-us" >
+<head>
+<title>Finalizar proyecto | Django site admin</title>
+<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css" />
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/static/admin/css/ie.css" /><![endif]-->
+
+<script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
+<script type="text/javascript">window.__admin_utc_offset__ = "0";</script>
+
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="/static/admin/js/core.js"></script>
+<script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+<script type="text/javascript" src="/static/admin/js/actions.js"></script>
+<script type="text/javascript" src="/static/admin/js/calendar.js"></script>
+<script type="text/javascript" src="/static/admin/js/admin/DateTimeShortcuts.js"></script>
+
+<meta name="robots" content="NONE,NOARCHIVE" />
+</head>
+
+
+<body class=" app-gestor model-proyecto change-form">
+
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        
+<h1 id="site-name"><a href="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/">Esta seguro de querer finalizar el proyecto?</a></h1>
+
+        </div>
+        
+         <div id="user-tools">    
+
+                <a href="/password_change/">Cambiar contrasenha</a> /
+                
+                <a href="/logout/">Salir</a>
+
+        </div>
+        
+        
+    </div>
+    <!-- END Header -->
+
+<form style="display:inline;" action="/finalizarProyecto/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="post">      
+        {% csrf_token %}
+			<div>
+				<br/><b><font color=green size=3>Importante!</font></b><br/><br/>
+				<p>- El proyecto sera de SOLO LECTURA, no podra realizar modificaciones:<br/>
+				<p>- Ya no podra continuar realizando cambios en los siguientes objetos:<br/>
+				<ul>
+					<li>HU's
+					<li>Sprint's
+					<li>Asignaciones
+				</ul>
+				<p>- El equipo ya tendra un enlace al proyecto para modificacion, solo se le informara de la finalizacion<br/>
+				<p>- El cliente tendra una interfaz del proyecto finalizado con los utimos cambios realizados.<br/>
+				<br/><br/>
+				<b><font size=3>Atendiendo los puntos mencionados, desea finalizar el proyecto?</font></b><br/>
+				<p>Escriba una descripcion del estado de finalizacion del proyecto:</p>
+        		<textarea name="descripcion" rows="5" cols="150"></textarea>
+			</div>
+<div class="submit-row">
+<input type="submit" value="SI"  class="boton" name="_save" />
+</form> 
+<form style="display:inline;" action="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="get">
+<input type="submit" value="NO"  class="boton"/> 
+</form>
+
+
+<script type="text/javascript">
+(function($) {
+    var field;
+
+
+})(django.jQuery);
+</script>
+
+
+</div>
+</form></div>
+
+        
+        <br class="clear" />
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+
+</body>
+</html>
+

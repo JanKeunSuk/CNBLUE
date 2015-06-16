@@ -10,6 +10,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField 
 from gestor.models import MyUser, Permitido, rol, asignacion, proyecto,\
     asigna_sistema, rol_sistema,Flujo, Sprint, archivoadjunto
+from datetime import date
 
 
 class UserCreationForm(forms.ModelForm):
@@ -186,13 +187,15 @@ class proyectoAdmin(admin.ModelAdmin):
     """Configura la vista de administracion de Proyecto para un usuario administrador,
     para establecer los proyectos en estado ACTIVO en la creacion"""
     form=ProyectoCreationForm
-    list_display = ('id', 'nombre_corto','nombre_largo','fecha_inicio','fecha_fin')
+    list_display = ('id', 'nombre_corto','nombre_largo','fecha_inicio','fecha_fin','duracion')
     list_filter = ('estado',)
     ordering = ('nombre_corto',)
     save_as = True 
     def save_model(self,request,obj,form,change):
         """Permite establecer el Estado por defecto en el momento de la creacion que es PENDIENTE"""
         obj.estado='PEN'
+        obj.duracion=int(str((obj.fecha_fin.date()-obj.fecha_inicio.date()).days))
+        obj.cantidad_dias_transcurridos=int(str((date.today().date()-obj.fecha_inicio.date()).days))
         obj.save()
         pass    
 

@@ -47,15 +47,36 @@ td { padding: 2px 2px 2px 2px; text-align-center; }
     <!-- END Header -->
     
     <!-- Content -->
-  		
-<div style="width:1500x; height:590px; border:#000 2px solid; overflow:auto">
+{%if proyecto.estado == 'ANU'%}
+	<div style="background: url(/static/tiempo.png);background-repeat:no-repeat;background-size:100% 100%;width:1295px;height:50px">
+		<p ALIGN=center style="text-shadow: 5px 5px 5px #aaa;"><font size=5 color=red>
+		 </br><b>Proyecto: {{proyecto}}&nbsp;&nbsp;&nbsp;- ANULADO</font></p>
+	</div>
+{%elif proyecto.estado == 'FIN'%}
+	<div style="background: url(/static/tiempo.png);background-repeat:no-repeat;background-size:100% 100%;width:1295px;height:50px">
+		<p ALIGN=center style="text-shadow: 5px 5px 5px #aaa;"><font size=5 color=green>
+		 </br><b>Proyecto: {{proyecto}}&nbsp;&nbsp;&nbsp;- FINALIZADO</font></p>
+	</div>
+{%else%}
+	<div style="background: url(/static/tiempo.png);background-repeat:no-repeat;background-size:100% 100%;width:1295px;height:50px">
+		<table width=1200px height=50px><tr><td bgcolor=#F2F2F2><p ALIGN=center style="text-shadow: 5px 5px 5px #aaa;"><font size=4 color=black>
+ 			</br><b>Proyecto: {{proyecto}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 			<td bgcolor=#0A0A2A><p ALIGN=center style="text-shadow: 5px 5px 5px #aaa;"><font size=4 color=white></br><b> Fecha de inicio: {{fecha_inicio}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<td bgcolor=#F2F2F2><p ALIGN=center style="text-shadow: 5px 5px 5px #aaa;"><font size=4 color=black></br><b> Dias transcurridos: </font><font size=5 color=#0A2A0A>{{proyecto.cantidad_dias_transcurridos}}</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<td bgcolor=#0A0A2A><p ALIGN=center style="text-shadow: 5px 5px 5px #aaa;"><font size=4 color=white></br><b> Duracion estimada: </font><font size=5 color=white>{{proyecto.duracion}}</b></font><br/></p>
+		</table>
+	</div>
+{%endif%}
+		
+<div style="width:1295px; height:540px; border:#000 2px solid; overflow:auto">
     
 	<div class="app-gestor module">
       
-		<table><caption>Gestor</caption>
+		<table width=1290px>
 
 			{% if roles|length > 0%}
-            	<th>Roles de Proyecto</th>
+            	<tr><td BGCOLOR="#E0E6F8" colspan=6><font size=2 ><b>Roles de Proyecto</b></font></td></tr>
+
             	{%for rol in roles_inmodificables%}<!-- roles va a ser la lista que tenga o no elementos -->
             		{%if rol.estado == 'ACT'%}
             			<tr><td><p>{{rol}}</p></td>
@@ -96,8 +117,8 @@ td { padding: 2px 2px 2px 2px; text-align-center; }
             vacia o una lista llena de roles que estan en la base de datos-->
 <!-- FLUJOS -->
 			{% if flujos|length > 0%}
-            	<table>
-            	<th>Flujos disponibles</th>
+            	<table width=1290px>
+            	<tr><td BGCOLOR="#E0E6F8" colspan=6><font size=2 ><b>Flujos disponibles</b></font></td></tr>
         
             	<tr class="model-proyecto">
             
@@ -138,8 +159,8 @@ td { padding: 2px 2px 2px 2px; text-align-center; }
 <!-- Product Owner -->
 {% if is_Scrum == 0 %}
 			{% if HU_no_asignada_owner|length > 0%}
-            	<table>
-            	<th>Lista de HU's del proyecto Owner </th>
+            	<table width=1290px>
+            	<tr><td BGCOLOR="#E0E6F8" colspan=6><font size=2 ><b>Lista de HU's del proyecto Owner</b></font></td></tr>
             	<tr class="model-proyecto">
 				{% for HU in HU_no_asignada_owner %}
 			    	{%if HU.descripcion|length > 0%}
@@ -194,9 +215,9 @@ td { padding: 2px 2px 2px 2px; text-align-center; }
              {% endif %}
  {%else%}<!-- Scrum Master -->
 			{% if HUs|length > 0%}
-            	<table>
-            	<th>Lista de HU's del proyecto </th>
-            	
+            	<table width=1290px>
+            	<tr><td BGCOLOR="#E0E6F8" colspan=6><font size=2 ><b>Lista de HU's del proyecto</b></font></td></tr>
+
             	{%for h in HUsm_horas_agotadas%}
             		<tr><td> {{h.descripcion}}
   					&nbsp;&nbsp;&nbsp;<font color="red"><b>Tiempo agotado, se necesita agregar horas!</b></font></td>
@@ -235,11 +256,11 @@ td { padding: 2px 2px 2px 2px; text-align-center; }
             {% endif %}
 {%endif%}
             {% if HUs_add_horas|length > 0%}
-            	<table width="1500">
+            	<table width="1290px">
 					<tr>
 					<td bgcolor="#CEECF5"><font size="2"><b>Descripcion </b></font> </td>
   						<td bgcolor="#CEECF5"><font size="2"> <B>Horas Trabajadas / Duracion</B></font> </td>
-  						<td bgcolor="#CEECF5"><font size="2"> <B>Prioridad</B></font> </td>
+  						<td bgcolor="#CEECF5" colspan=3><font size="2"> <B>Prioridad</B></font> </td>
 					</tr>
 
             		<tr class="model-proyecto">
@@ -300,9 +321,9 @@ td { padding: 2px 2px 2px 2px; text-align-center; }
             
 <!-- SPRINTS -->
           {% if sprints|length > 0%}
-			<table>
-            <th>Lista de Sprint's del proyecto </th>
-        
+			<table width=1290px>
+			<tr><td BGCOLOR="#E0E6F8" colspan=6><font size=2 ><b>Lista de Sprint's del proyecto </b></font></td></tr>
+   
             <tr class="model-proyecto">
             
 				{% for sprint in sprints %}
@@ -420,18 +441,37 @@ td { padding: 2px 2px 2px 2px; text-align-center; }
 			<td><a href="/visualizarSprintBacklog/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Visualizar Sprint Backlog</a></td>
 			<td><br/><a href="/visualizarChart/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Visualizar Burndown Chart</a></td>
 		{%endif%}        
+		
 <!-- Visualizacion Burndown Chart para quien tenga permiso Cliente, Owner, Equipo, Scrum -->
- {% if verburn%}
- <table>
- 	<tr>
- 	{%if is_Scrum != 1%}
-  		<td><br/><a href="/visualizarChart/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Visualizar Burndown Chart</a></td>
+ 	{% if verburn%}
+ 		<table>
+ 			<tr>
+ 			{%if is_Scrum != 1%}
+  				<td><br/><a href="/visualizarChart/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Visualizar Burndown Chart</a></td>
+ 			{%endif%}
+ 			</tr>
+ 		</table>
  	{%endif%}
- 	</tr>
- </table>
- {%endif%}
+ 	
+<!-- Boton finalizar cuando todas las HU's validadas esten aprobadas por el Scrum -->
+	{%if finalizar == 1%}
+		{%if reporte != 1%}
+			<form method="get" action="/finalizarProyecto/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/">
+
+				<input name="boton1"  style="Position:Absolute; left:78%;" type="image"
+
+				src="/static/FINALIZAR.png">
+
+			</form>
+		{%endif%}
+	{%endif%}
+
 </table> 
+        </div>
+
 </div>
-</div>
+  		
+<!-- END Container -->
+
 </body>
 </html>
