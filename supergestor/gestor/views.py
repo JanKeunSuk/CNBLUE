@@ -21,7 +21,6 @@ from datetime import datetime, timedelta
 import math
 import json
 from django.utils import timezone
-from io import BytesIO
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4, cm
 from reportlab.lib.styles import getSampleStyleSheet
@@ -39,6 +38,16 @@ from reportlab.lib.units import inch
 from reportlab.graphics.shapes import Drawing
 from reportlab.graphics.widgets.markers import makeMarker
 from reportlab.graphics.charts.lineplots import LinePlot
+from io import BytesIO
+from reportlab.graphics.charts.linecharts import HorizontalLineChart
+from reportlab.graphics.shapes import Drawing
+from reportlab.lib import colors
+from reportlab.lib.enums import TA_RIGHT, TA_CENTER
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib.units import mm
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.platypus import Table, TableStyle
 
 # Create your views and forms here.
 @async
@@ -406,7 +415,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         for h in HU.objects.filter(proyecto=proyectox).filter(valido=True):
             if h.estado_en_actividad != 'APR':
                 finalizar=0
-    return render(request,'rol-flujo-para-scrum.html',{'finalizar':finalizar,'fecha_inicio':str(proyectox.fecha_inicio)[:10],'existe':existe,'verburn':verburn,'sprintReporte':sprintReporte,'proyecto':proyectox,'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HUv':HUv,'reporte':reporte,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas, 'kanban':kanban, 'l_s_a_cl':lista_sprint_acu_cl, 'lista_acu_sp_hu':lista_sp_cant_hu, 'long_equipo':longitud_equipo, 'usu_hs_hu': usu_hs_hu, 'lista_hs_hu':lista_hs_hu, 'list_hu_p':list_hu_no, 'lista_pr':lista_pr, 'hu_p':HU_p, 'duracion_pr':duracion, 'HU_P':HU_p})
+    return render(request,'rol-flujo-para-scrum.html',{'sprint_con':Sprint.objects.filter(estado="CON"),'finalizar':finalizar,'fecha_inicio':str(proyectox.fecha_inicio)[:10],'existe':existe,'verburn':verburn,'sprintReporte':sprintReporte,'proyecto':proyectox,'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HUv':HUv,'reporte':reporte,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas, 'kanban':kanban, 'l_s_a_cl':lista_sprint_acu_cl, 'lista_acu_sp_hu':lista_sp_cant_hu, 'long_equipo':longitud_equipo, 'usu_hs_hu': usu_hs_hu, 'lista_hs_hu':lista_hs_hu, 'list_hu_p':list_hu_no, 'lista_pr':lista_pr, 'hu_p':HU_p, 'duracion_pr':duracion, 'HU_P':HU_p})
 
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
@@ -2660,6 +2669,449 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
 
     return render(request,'burndown2.html',{'categorias':catgria,'nuevaestima':nueva_estimacion,'suma':sumx,'estima':estimacion,'duracion':duracionsp,'horas':lista_horas,'fechas':lista_fechas,'restantes':horas_restantes,'cat_dias':cant_days,'sprint':sprint,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid})
 
+mod_vars = {
+    'PDF_TITLE': 'Reporte General de su proyecto',
+    'PDF_PROJECT': None,
+}
+
+def pdf_first_page(my_c, doc):
+    """
+    Adding title, header and footer to first page
+    :param my_c: Canvas
+    :param doc: SimpleDocTemplate
+    :return: None
+    """
+    my_c.saveState()
+    title = Paragraph(mod_vars['PDF_TITLE'], ParagraphStyle(
+        'Heading1', fontSize=16, alignment=TA_CENTER))
+    title.wrap(doc.width, 10*mm)
+    title.drawOn(my_c, doc.leftMargin, doc.height + doc.bottomMargin - 5*mm)
+    my_c.restoreState()
+    pdf_header_and_footer(my_c, doc)
+
+
+def pdf_later_pages(my_c, doc):
+    """
+    Adding header and footer to every page other than the first page
+    :param my_c: Canvas
+    :param doc: SimpleDocTemplate
+    :return: None
+    """
+    pdf_header_and_footer(my_c, doc)
+
+
+def pdf_header_and_footer(my_c, doc):
+    """
+    Auxiliary function that adds header and footer to pages
+    :param my_c: Canvas
+    :param doc: SimpleDocTemplate
+    :return: None
+    """
+    my_c.saveState()
+
+    # Header
+    header = Paragraph("Consultora De Software - " + mod_vars['PDF_PROJECT'].nombre_largo, ParagraphStyle('Normal'))
+    header.wrap(doc.width, doc.topMargin)
+    header.drawOn(my_c, doc.leftMargin, doc.height + doc.bottomMargin + 3*mm)
+
+    now1 = timezone.now()
+    header = Paragraph('{} - {}'.format(now1.strftime('%d / %m / %Y'),
+                       now1.strftime('%H:%M')),
+                       ParagraphStyle('Normal', alignment=TA_RIGHT))
+    header.wrap(doc.width, doc.topMargin)
+    header.drawOn(my_c, doc.leftMargin, doc.height + doc.bottomMargin + 3*mm)
+    my_c.line(60,773,540,773) # Para hacer una linea horizontal
+    my_c.line(60,776,540,776) # Para hacer una linea horizontal
+
+    # Footer
+    footer = Paragraph('Página {}'.format(doc.page),
+                       ParagraphStyle('Normal', alignment=TA_CENTER))
+    footer.wrap(doc.width, doc.bottomMargin)
+    footer.drawOn(my_c, doc.leftMargin, doc.bottomMargin - 5*mm)
+
+    my_c.restoreState()
+    
+def make_pdf(proyecto, sprint):
+    """
+    Make the requested PDF report.
+    :param proyecto:
+    :param report_id:
+    :param sprint: used in some reports
+    :return: pdf and filename
+    """
+    # report does not exist
+    filename = "reporte.pdf"
+    mod_vars['PDF_TITLE'] = "Reporte General de su proyecto"
+    mod_vars['PDF_PROJECT'] = proyecto
+    p_style1 = ParagraphStyle('Normal')
+    styles = getSampleStyleSheet()
+    styleH = styles['Heading3']
+    story = list()                      # list of flowables with the content
+    story.append(Spacer(1, 15*mm))      # so to not override the title
+
+    HUv=HU.objects.filter(proyecto=proyecto).filter(estado='ACT')
+    HUv=sorted(HUv,key=lambda x: x.prioridad, reverse=True)
+    
+    us_set = HUv
+    
+    story.append(Paragraph("Informacion sobre su proyecto", styleH))
+    story.append(Spacer(1, mm))
+    # first add the table header
+    table_col_widths = [65*mm, 65*mm]
+    table_data = [
+                  ['Nombre Corto', proyecto.nombre_corto],
+                  ['Nombre Largo', proyecto.nombre_largo],
+                  ['Descripcion', proyecto.descripcion],
+                  ['Fecha de inicio', str(proyecto.fecha_inicio)[:10]],
+                  ['Fecha de fin', str(proyecto.fecha_fin)[:10]],
+                  ['Duracion total', proyecto.duracion],
+                  ['Cantidad de dias transcurridos', proyecto.cantidad_dias_transcurridos],
+                  ['Estado', proyecto.estado],
+                  ]
+    table_style1 = TableStyle([
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
+            ('BACKGROUND', (0, 0), (0, -1), colors.gainsboro),
+        ])
+    story.append(Table(table_data, colWidths=table_col_widths,
+                           style=table_style1, repeatRows=1))
+    story.append(Spacer(1, 5*mm))
+    
+    story.append(Paragraph("Sprints definidos en el proyecto: ", styleH))
+    story.append(Spacer(1, mm))
+    i=1
+    flujos_utilizados=[]
+    for s in Sprint.objects.filter(proyecto=proyecto):
+        nombre= str(i)+". "+s.descripcion
+        i=i+1
+        story.append(Paragraph(nombre, styleH))
+        story.append(Spacer(1, mm))
+        # first add the table header
+        flujos=""
+        equipo=""
+        for f in s.flujo.all():
+            flujos=flujos + f.nombre + " - "
+            flujos_utilizados.append(f)
+        for u in s.equipo.all():
+            equipo=equipo + u.username + " - "
+        table_col_widths = [65*mm, 65*mm]
+        table_data = [
+                      ['Fecha de inicio', str(s.fecha_inicio)[:10]],
+                      ['Duracion estimada', s.duracion],
+                      ['Flujos utilizados', flujos],
+                      ['Equipo a cargo', equipo],
+                      ['Cantidad total de HU', str(len(s.hu.all()))],
+                      ['Estado', s.estado],
+                      ]
+        table_style1 = TableStyle([
+                ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
+                ('BACKGROUND', (0, 0), (0, -1), colors.gainsboro),
+            ])
+        story.append(Table(table_data, colWidths=table_col_widths,
+                               style=table_style1, repeatRows=1))
+        story.append(Spacer(1, 5*mm))
+        
+    story.append(Paragraph("Flujos utilizados en el proyecto: ", styleH))
+    story.append(Spacer(1, 0.5*mm))
+    i=1
+    flujos_utilizados=set(flujos_utilizados) # eliminar repeticiones
+    for f in flujos_utilizados:
+        nombre= str(i)+". "+f.nombre + "- Actividades por las que pasan las HU"
+        i=i+1
+        story.append(Paragraph(nombre, styles['Heading4']))
+        story.append(Spacer(1, mm))
+
+        j=1
+        jsonDec = json.decoder.JSONDecoder()
+        orden=jsonDec.decode(f.orden_actividades)
+        for a in orden:
+            act= str(j)+". "+ Actividades.objects.get(id=a).nombre
+            story.append(Paragraph(act, p_style1))
+            story.append(Spacer(1, 0.2*mm))
+            j=j+1
+            
+        story.append(Spacer(1, 5*mm))
+    
+    if not sprint:
+        # if no sprint came as param, check if there is an active one
+        sprint = Sprint.objects.filter(proyecto=proyecto).filter(estado="CON")
+
+    if sprint:
+        for s in sprint:
+            # update the file name and PDF title
+            filename = filename[:-6] + '{}'.format(s.descripcion)
+            sprint_dsc = 'Sprint {} (estado: {})'.format(
+                    s.descripcion, s.estado)
+    else:
+        sprint_dsc = 'No hay sprint desarrollandose'
+            
+    for s in sprint:
+        for h in us_set:
+            if h.sprint() != s:
+                us_set.remove(h)
+    story.append(Paragraph(sprint_dsc, styleH))
+    story.append(Spacer(1, 5*mm))
+    
+    story.append(Paragraph("1. Cantidad de trabajos en curso por equipo", styles['Heading5']))
+    story.append(Spacer(1, mm))
+    
+    equipo_hu={}
+    for s in sprint:
+        for h in s.hu.all():
+            if equipo_hu.has_key(h.saber_usuario()):
+                equipo_hu[h.saber_usuario()].append(h)
+            else:
+                equipo_hu[h.saber_usuario()]=[]
+                equipo_hu[h.saber_usuario()].append(h)
+    
+    table_style1 = TableStyle([
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('BACKGROUND', (0, 0), (-1, 0), colors.gainsboro),
+            ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+            ('ALIGN', (0, 1), (0, -1), 'RIGHT'),
+            ('ALIGN', (2, 1), (-1, -1), 'CENTER'),
+        ])
+    
+    if len(sprint) == 0:
+        table_data.append(['', 'No hay historias de usuario para mostrar',
+                               '', '', ''])
+    else:
+        for usuario, hus in equipo_hu.items():
+            table_col_widths = [10*mm, 20*mm, 15*mm, 15*mm, 20*mm, 20*mm, 30*mm, 20*mm]
+            table_data = [[
+                    '#',
+                    'Descripción',
+                    'Prioridad',
+                    'Hs. trab.',
+                    'Duracion',
+                    'Flujo',
+                    'Actividad',
+                    'Estado',
+            ], ]
+            if usuario:
+                story.append(Paragraph(" - " + usuario.username + " - Total de HUs a cargo: " + str(len(hus)), styles['Heading5']))
+                story.append(Spacer(1, 0.5*mm))
+            else:
+                story.append(Paragraph(str(j)+". HUs No asignadas: - " + str(len(hus)) , styles['Heading5']))
+                story.append(Spacer(1, 0.5*mm))
+            for i, us in enumerate(hus):
+                table_data.append([
+                    i+1,
+                    Paragraph(us.descripcion, p_style1),
+                    us.prioridad,
+                    us.acumulador_horas,
+                    us.duracion,
+                    us.flujo().nombre if us.flujo() else '',
+                    us.actividad.nombre if us.actividad else '',
+                    us.estado_en_actividad,
+                    ])
+            story.append(Table(table_data, colWidths=table_col_widths,
+                           style=table_style1, repeatRows=1))
+
+    story.append(Spacer(1, 5*mm))
+    
+    story.append(Paragraph("2.Cantidad de trabajos por usuario pendiente, en curso, finalizado", styles['Heading4']))
+    story.append(Spacer(1, mm))
+    table_col_widths = [10*mm, 20*mm, 15*mm, 15*mm, 20*mm, 20*mm,20*mm, 30*mm, 25*mm]
+    estado_hu={}
+    for h in HUv:
+        if estado_hu.has_key(h.estado_en_actividad):
+            estado_hu[h.estado_en_actividad].append(h)
+        else:
+            estado_hu[h.estado_en_actividad]=[]
+            estado_hu[h.estado_en_actividad].append(h)
+    for estado, hus in estado_hu.items():  
+        i=1
+        story.append(Paragraph("Estado: " + estado + " - Total de HUs: " + str(len(hus)), styles['Heading5']))
+        story.append(Spacer(1, 0.5*mm))
+        table_data = [[
+                    '#',
+                    'Descripción',
+                    'Prioridad',
+                    'Hs. trab.',
+                    'Duracion',
+                    'Sprint',
+                    'Flujo',
+                    'Actividad',
+                    'Estado',
+        ], ]
+        for us in hus:
+            table_data.append([
+                    i,
+                    Paragraph(us.descripcion, p_style1),
+                    us.prioridad,
+                    us.acumulador_horas,
+                    us.duracion,
+                    us.sprint().descripcion if us.sprint() else ' - ',
+                    us.flujo().nombre if us.flujo() else ' - ',
+                    us.actividad.nombre if us.actividad else ' - ',
+                    us.estado_en_actividad,
+                    ])
+            i=i+1
+        story.append(Table(table_data, colWidths=table_col_widths,
+                    style=table_style1, repeatRows=1))
+        story.append(Spacer(1, 1*mm))
+    story.append(Spacer(1, 3*mm))
+    story.append(Paragraph("3. Lista clasificada por orden de prioridad de las actividades para completar un proyecto.", styles['Heading4']))
+    story.append(Spacer(1, mm))
+    table_col_widths = [10*mm, 20*mm, 15*mm, 15*mm, 20*mm, 20*mm,20*mm, 30*mm, 25*mm]
+    table_data = [[
+                    '#',
+                    'Descripción',
+                    'Prioridad',
+                    'Hs. trab.',
+                    'Duracion',
+                    'Sprint',
+                    'Flujo',
+                    'Actividad',
+                    'Estado',
+        ], ]
+    i=1
+    for us in HUv:
+        table_data.append([
+                    i,
+                    Paragraph(us.descripcion, p_style1),
+                    us.prioridad,
+                    us.acumulador_horas,
+                    us.duracion,
+                    us.sprint().descripcion if us.sprint() else ' - ',
+                    us.flujo().nombre if us.flujo() else ' - ',
+                    us.actividad.nombre if us.actividad else ' - ',
+                    us.estado_en_actividad,
+                    ])
+        i=i+1
+    story.append(Table(table_data, colWidths=table_col_widths,
+                    style=table_style1, repeatRows=1))
+    story.append(Spacer(1, 4*mm))
+    
+    story.append(Paragraph("4. Lista de Tiempo estimado por proyecto y la ejecución del mismo", styles['Heading4']))
+    story.append(Spacer(1, 5*mm))
+    
+    if sprint:
+        #x_max, ideal_burndown, remaining_hours = sprint.get_burndown_chart()
+        ideal_burndown={}
+        remaining_hours={}
+        for i in range(20):
+            ideal_burndown[i] = float(i)+0.1
+            
+        for i in range(30):
+            remaining_hours[i] = float(i)+0.1
+
+        drawing = Drawing(140*mm, 100*mm)
+        lc = HorizontalLineChart()
+        lc.width = drawing.width
+        lc.height = drawing.height
+        lc.data = [ideal_burndown, remaining_hours]
+        lc.categoryAxis.categoryNames = []
+        for i in range(max(len(ideal_burndown), len(remaining_hours))):
+            lc.categoryAxis.categoryNames.append(str(i+1))
+        lc.categoryAxis.labels.boxAnchor = 'w'
+        lc.valueAxis.valueMin = 0
+        lc.valueAxis.valueMax = 50
+        lc.valueAxis.valueStep = round((lc.valueAxis.valueMax - lc.valueAxis.valueMin)/10)
+        lc.lines[0].strokeWidth = 2
+        lc.lines[1].strokeWidth = 1.5
+        drawing.add(lc)
+        story.append(drawing)
+        story.append(Spacer(1, 5*mm))
+        
+    story.append(Paragraph("5. El backlog del Producto, lista ordenada de HU, en orden que esperamos deben terminarse", styles['Heading4']))
+    story.append(Spacer(1, 5*mm))
+    
+    huss=HU.objects.all().filter(proyecto=proyecto).filter(estado='ACT').filter(valido=True).filter(sprint__hu__isnull=True)
+    huss=sorted(huss,key=lambda x: x.prioridad, reverse=True)
+    table_data = [[
+                    '#',
+                    'Descripción',
+                    'Prioridad',
+                    'Hs. trab.',
+                    'Duracion',
+                    'Sprint',
+                    'Flujo',
+                    'Actividad',
+                    'Estado',
+        ], ]
+    i=1
+    for us in huss:
+        table_data.append([
+                    i,
+                    Paragraph(us.descripcion, p_style1),
+                    us.prioridad,
+                    us.acumulador_horas,
+                    us.duracion,
+                    us.sprint().descripcion if us.sprint() else ' - ',
+                    us.flujo().nombre if us.flujo() else ' - ',
+                    us.actividad.nombre if us.actividad else ' - ',
+                    us.estado_en_actividad,
+                    ])
+        i=i+1
+    story.append(Table(table_data, colWidths=table_col_widths,
+                    style=table_style1, repeatRows=1))
+    story.append(Spacer(1, 5*mm))
+    
+    story.append(Paragraph("6. El Backlog del Sprint, lista de los elementos del Backlog del Producto, elegidos para ser desarrollados en el Sprint actual", styles['Heading4']))
+    story.append(Spacer(1, 2*mm))
+    for s in sprint: # sprint MODO CONSULTA
+        table_data = [[
+                    '#',
+                    'Descripción',
+                    'Prioridad',
+                    'Hs. trab.',
+                    'Duracion',
+                    'Usuario',
+                    'Flujo',
+                    'Actividad',
+                    'Estado',
+        ], ]
+        i=1
+        for us in s.hu.all():
+            table_data.append([
+                        i,
+                        Paragraph(us.descripcion, p_style1),
+                        us.prioridad,
+                        us.acumulador_horas,
+                        us.duracion,
+                        us.saber_usuario().username if us.saber_usuario() else ' - ',
+                        us.flujo().nombre if us.flujo() else ' - ',
+                        us.actividad.nombre if us.actividad else ' - ',
+                        us.estado_en_actividad,
+                        ])
+            i=i+1
+        story.append(Table(table_data, colWidths=table_col_widths,
+                        style=table_style1, repeatRows=1))
+        story.append(Spacer(1, 5*mm))
+    
+
+    # create PDF from list of flowables, using a temp buffer to assemble PDF
+    a_buffer = BytesIO()
+    doc = SimpleDocTemplate(a_buffer, pagesize=A4)
+    doc.build(story, onFirstPage=pdf_first_page, onLaterPages=pdf_later_pages)
+    pdf = a_buffer.getvalue()
+    a_buffer.close()
+    return pdf, filename
+
+@login_required()
+def reporte_view(request, proyectoid, report_id, sprint_id=None):
+    """
+    Displays the PDF of the requested report.
+    :param request: HttpRequest
+    :param proyectoid: ID of the requested project
+    :param report_id: ID of the requested report
+    :param sprint_id: (optional)
+    :return: HttpResponse
+    """
+    proyectox = proyecto.objects.get(id=proyectoid)
+    if sprint_id:
+        sprint = Sprint.objects.get(id=sprint_id)
+    else:
+        sprint = None
+
+    pdf, filename = make_pdf(proyectox, sprint)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'filename="{}.pdf"'.format(filename)
+    response.write(pdf)
+    return response
+    
 def exportarPDF(request,usuario_id,proyectoid,rolid):
     # Create the HttpResponse object with the appropriate PDF headers.
     class usu_hs:

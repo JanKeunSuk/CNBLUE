@@ -16,6 +16,17 @@
 td { padding: 2px 2px 2px 2px; text-align-center; }
 .columnaDia { width: 15px; }
 </style>
+
+<script type="text/javascript">
+        function muestra(nombrediv) {
+                if(document.getElementById(nombrediv).style.display == '') {
+                                document.getElementById(nombrediv).style.display = 'none';
+                } else {
+                                document.getElementById(nombrediv).style.display = '';
+                }
+        }
+</script>
+
 <body class=" dashboard">
 
 <!-- Container -->
@@ -373,10 +384,39 @@ td { padding: 2px 2px 2px 2px; text-align-center; }
             
 <!-- Cliente / Reporte -->
 		{%if reporte == 1%}
-            <p><font size = 5 color="blue"><b>Reporte para el cliente del Proyecto {{proyecto.nombre_corto}}</b></font></p>
+			<a href="/generar/{{proyecto.id}}/1/" class="addlink">Exportar en PDF</a><p></p>  
+            <p><font size = 5 ><b>Reporte para el cliente del Proyecto {{proyecto.nombre_corto}}</b></font></p>
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-            <p><font size = 2 color="black"><b>Inicio del proyecto: </b>{{proyecto.fecha_inicio}} | <b>Fin estimado del Proyecto: </b>{{proyecto.fecha_fin}} |<b>Cantidad de dias trabajados: </b>{{duracion_pr}} | </font></p><p></p>
-            <p><font size = 3 color="blue"><b>Dentro del proyecto tenemos los siguientes Sprint:</b></font></p><p></p>
+            <p><font size = 2 color="black"><b>1. Cantidad de trabajos en curso por equipo  </b></font>
+            <a href="#" onClick="muestra('info1')";>Mostrar / Ocultar informacion</a>
+            <div style="display:none" id="info1">
+ 				Y PON AQUI EL TEXTO OCULTO
+			</div></p>
+            <p><font size = 2 color="black"><b>2. Cantidad de trabajos por usuario pendiente, en curso, finalizado</b></font>
+            <a href="#" onClick="muestra('info2')";>Mostrar / Ocultar informacion</a>
+            <div style="display:none" id="info2">
+ 				Y PON AQUI EL TEXTO OCULTO
+			</div></p>
+            <p><font size = 2 color="black"><b>3. Lista clasificada por orden de prioridad de las actividades para completar un proyecto.</b></font>
+            <a href="#" onClick="muestra('info3')";>Mostrar / Ocultar informacion</a>
+            <div style="display:none" id="info3">
+ 				Y PON AQUI EL TEXTO OCULTO
+			</div></p>
+            <p><font size = 2 color="black"><b>4. Lista de Tiempo estimado por proyecto y la ejecución del mismo</b></font>
+            <a href="#" onClick="muestra('info4')";>Mostrar / Ocultar informacion</a>
+            <div style="display:none" id="info4">
+ 				Y PON AQUI EL TEXTO OCULTO
+			</div></p>
+            <p><font size = 2 color="black"><b>5. El backlog del Producto, lista ordenada de HU, en orden que esperamos deben terminarse</b></font>
+            <a href="#" onClick="muestra('info5')";>Mostrar / Ocultar informacion</a>
+            <div style="display:none" id="info5">
+ 				Y PON AQUI EL TEXTO OCULTO
+			</div></p>
+            <p><font size = 2 color="black"><b>6. El Backlog del Sprint, lista de los elementos del Backlog del Producto, elegidos para ser desarrollados en el Sprint actual</b></font>
+            <a href="#" onClick="muestra('info6')";>Mostrar / Ocultar informacion</a>
+            <div style="display:none" id="info6">
+ 				Y PON AQUI EL TEXTO OCULTO
+			</div></p>
             {%for sp in sprintReporte%}
             	{%for s, l in lista_acu_sp_hu.items%}
             		{%if s == sp%}
