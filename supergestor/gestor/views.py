@@ -21,33 +21,20 @@ from datetime import datetime, timedelta
 import math
 import json
 from django.utils import timezone
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4, cm
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus import Paragraph, Table, TableStyle
-from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER
+from reportlab.lib.pagesizes import A4
+from reportlab.platypus import Table, TableStyle
+from reportlab.lib.enums import TA_CENTER
 from reportlab.lib import colors
-from reportlab.lib.colors import black, blue
 from supergestor.settings import WORKSPACE
 from djutils.decorators import async
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus.doctemplate import SimpleDocTemplate
-#from reportlab.rl_config import defaultPageSize
-from reportlab.lib.units import inch
 from reportlab.graphics.shapes import Drawing
-from reportlab.graphics.widgets.markers import makeMarker
-from reportlab.graphics.charts.lineplots import LinePlot
 from io import BytesIO
 from reportlab.graphics.charts.linecharts import HorizontalLineChart
-from reportlab.graphics.shapes import Drawing
-from reportlab.lib import colors
-from reportlab.lib.enums import TA_RIGHT, TA_CENTER
-from reportlab.lib.pagesizes import A4
+from reportlab.lib.enums import TA_RIGHT
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import mm
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.platypus import Table, TableStyle
 
 # Create your views and forms here.
 @async
@@ -237,7 +224,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         HUsm = HU.objects.filter(proyecto=proyectox).filter(valido=True)
         for h in HUsm:
             if h.sprint():
-                if h.sprint().estado != 'ACT':
+                if h.sprint().estado != 'ACT' and h.sprint().estado != 'CAN':
                     HUs=HUs.exclude(id=h.id)
             if h.estado_en_actividad != "FIN" and h.estado_en_actividad !='APR' and h.duracion == h.acumulador_horas and h.acumulador_horas !=0:
                 HUsm_horas_agotadas.append(h)
@@ -1188,44 +1175,88 @@ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
         :rtype: descripcion, estado, fecha_inicio, duracion, hu, flujo
 
     """
-    estados=['ACT','CAN','CON']
+    estados=['ACT','CAN']
+    proyectox=proyecto.objects.get(id=proyectoid)
     s=Sprint.objects.get(id=Sprint_id_rec)
     if request.method == 'POST':
-        form = FormularioSprintProyecto(request.POST)
-        if form.is_valid():
-            descripcion=form.cleaned_data['descripcion']
-            estado=form.cleaned_data['estado']
-            fecha_inicio=form.cleaned_data['fecha_inicio']
-            duracion=form.cleaned_data['duracion']
-            hu=form.cleaned_data['hu']
-            flujo=form.cleaned_data['flujo']
-            usuarios=form.cleaned_data['equipo']
+        guardar=0
+        for g in request.POST.getlist('Submit'):
+            if g == 'Guardar':
+                guardar=1
+        if guardar == 1:
+            descripcion=request.POST['descripcion']
+            estado=request.POST['estado']
+            fecha_inicio=request.POST['fecha_inicio']
+            duracion=request.POST['duracion']
+            hu=request.POST.getlist('hu')
+            flujo=request.POST.getlist('flujo')
+            usuarios=request.POST.getlist('equipo')
             s.descripcion=descripcion
             s.estado=estado
             s.fecha_inicio=fecha_inicio
             s.duracion=duracion
-            s.hu=hu
-            s.flujo=flujo
-            s.equipo=usuarios
+            for h in hu:
+                s.hu.add(HU.objects.get(id=h))
+            for h in flujo:
+                s.flujo.add(Flujo.objects.get(id=h))
+            for h in usuarios:
+                s.equipo.add(MyUser.objects.get(id=h))
             s.save() #Guardamos el modelo de manera Editada
-            evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"SPRINT+"+"M+"+"El Sprint '"+form.cleaned_data['descripcion']+"' con estado '"+form.cleaned_data['estado']+"' con una fecha de inicio '"+str(form.cleaned_data['fecha_inicio'])+"' ,duracion '"+str(form.cleaned_data['duracion'])+"' ,hu '"+str([t.descripcion for t in s.hu.all()])+"' y flujo '"+str([t.nombre for t in s.flujo.all()])+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
+            evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"SPRINT+"+"M+"+"El Sprint '"+descripcion+"' con estado '"+estado+"' con una fecha de inicio '"+str(fecha_inicio)+"' ,duracion '"+duracion+"' ,hu '"+str([t.descripcion for t in s.hu.all()])+"' y flujo '"+str([t.nombre for t in s.flujo.all()])+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=s.descripcion,evento=evento_e)
             if usuario_e.frecuencia_notificaciones == 'instante':
                 send_email(str(usuario_e.email), 'Notificacion', evento_e)
             return HttpResponse('El Sprint ha sido modificado exitosamente')
+
         else:
-            return HttpResponse('El Sprint no es valido'+str(form.errors))
+            if request.POST['boton'] == 'Calcular':
+                sum=s.duracion
+                hus_seleccionadas=[]
+                HUs_no_seleccionadas=[]
+                for h in HU.objects.filter(estado="ACT").filter(proyecto=proyectox).filter(valido=True):
+                    if h not in s.hu.all():
+                        HUs_no_seleccionadas.append(h)
+                    
+                flujos_seleccionados=[]
+                flujos_no_seleccionados=[]
+                for f in Flujo.objects.all():
+                    if f not in s.flujo.all():
+                        flujos_no_seleccionados.append(f)
+                        
+                for h in request.POST.getlist('hu'):
+                    hus_seleccionadas.append(HU.objects.get(id=h))
+                    sum=sum+HU.objects.get(id=h).duracion
+                    if HU.objects.get(id=h) in HUs_no_seleccionadas:
+                        HUs_no_seleccionadas.remove(HU.objects.get(id=h))
+                
+                for f in request.POST.getlist('flujo'):
+                    flujos_seleccionados.append(Flujo.objects.get(id=f))
+                    if Flujo.objects.get(id=f) in flujos_no_seleccionados:
+                        flujos_no_seleccionados.remove(Flujo.objects.get(id=f))
+                
+                equipo_seleccionado=[]
+                equipo_no_seleccionado=[]
+                horas=len(s.equipo.all())*8
+                asignaciones= asignacion.objects.filter(proyecto=proyectox)#obtuve todas las asignaciones para este proyecto
+                for a in asignaciones:
+                    rola = a.rol
+                    if rola.tiene_permiso('Agregar horas trabajadas'):
+                        equipo_no_seleccionado.append(a.usuario)
+                for e in s.equipo.all():
+                    if e in equipo_no_seleccionado:
+                        equipo_no_seleccionado.remove(e)
+                        
+                for u in request.POST.getlist('equipo'):
+                    horas=horas+8
+                    equipo_seleccionado.append(MyUser.objects.get(id=u))
+                    equipo_no_seleccionado.remove(MyUser.objects.get(id=u))
+                fecha = str(s.fecha_inicio)
+                ctx = {'estimacion':math.ceil(sum/horas),'equipo':equipo_no_seleccionado,'equipo_sel':equipo_seleccionado,'flujos':flujos_no_seleccionados,'flujos_sel':flujos_seleccionados,'estados':estados, 'fecha':fecha[0:10],'lista_HU_sin_asignar':HUs_no_seleccionadas,'HUs_sel':hus_seleccionadas,'Sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
+                return render_to_response('modificarSprint.html', ctx ,context_instance=RequestContext(request))
+
     else:    
-        form = FormularioSprintProyecto(initial={
-                                         'descripcion': s.descripcion,
-                                         'estado': s.estado,
-                                         'fecha_inicio': s.fecha_inicio,
-                                         'duracion': s.duracion,
-                                         'hu':[t.id for t in s.hu.all()],
-                                         'flujo':[x.id for x in s.flujo.all()],
-                                         'equipo':[x.id for x in s.equipo.all()]
-                                         })
+        
         proyectox=proyecto.objects.get(id=proyectoid)
         HUs = HU.objects.filter(proyecto=proyectox).filter(valido=True)
         flujos=Flujo.objects.all()
@@ -1263,7 +1294,7 @@ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
                     
         fecha = str(s.fecha_inicio)
         
-        ctx = {'equipo':users,'HUs_pendientes':HUs_pendientes,'flujos':flujos,'estados':estados, 'fecha':fecha[0:10],'form':form,'HUs':HUs,'lista_HU_sin_asignar':lista_restante,'Sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
+        ctx = {'estimacion':s.duracion,'equipo':users,'HUs_pendientes':HUs_pendientes,'flujos':flujos,'estados':estados, 'fecha':fecha[0:10],'HUs':HUs,'lista_HU_sin_asignar':lista_restante,'Sprint':s, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid}
         return render_to_response('modificarSprint.html', ctx ,context_instance=RequestContext(request))
     
 class FormularioHU(forms.ModelForm):
@@ -1402,7 +1433,7 @@ def crearSprint(request,usuario_id,proyectoid,rolid):
                 else:
                     HUs=HUs.exclude(id=h.id)
     for x in Sprint.objects.all():#este super for es para analizae el contenido de los sprint que no hayan terminado 
-        if x.estado != 'FIN':#se busca sacar los hu que se pueden continuar todavia que esteen entre los pendientes
+        if x.estado != 'FIN' and x.estado != 'CAN':#se busca sacar los hu que se pueden continuar todavia que esteen entre los pendientes
             for h in x.hu.all():
                 HUs=HUs.exclude(id=h.id)
                 for hp in HUs_pendientes:
