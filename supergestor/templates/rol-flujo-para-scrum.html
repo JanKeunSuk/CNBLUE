@@ -79,7 +79,7 @@ td { padding: 2px 2px 2px 2px; text-align-center; }
 	</div>
 {%endif%}
 		
-<div style="width:1295px; height:540px; border:#000 2px solid; overflow:auto">
+<div style="width:1294px; height:540px; border:#000 2px solid; overflow:auto">
     
 	<div class="app-gestor module">
       
@@ -381,105 +381,70 @@ td { padding: 2px 2px 2px 2px; text-align-center; }
             	<td><a href="{{enlace.url}}">{{enlace.nombre}}</a></td>
             {%endfor%}
             
-            
 <!-- Cliente / Reporte -->
-		{%if reporte == 1%}
-			<a href="/generar/{{proyecto.id}}/1/" class="addlink">Exportar en PDF</a><p></p>  
-            <p><font size = 5 ><b>Reporte para el cliente del Proyecto {{proyecto.nombre_corto}}</b></font></p>
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-            <p><font size = 2 color="black"><b>1. Cantidad de trabajos en curso por equipo  </b></font>
+		{%if reporte == 1%} 
+            <br/><br/><p align="center" style="text-shadow: 5px 5px 5px #aaa;"><font size = 5 ><b>Reporte para el cliente del Proyecto {{proyecto.nombre_corto}}</b></font></p>
+            <br/><p><font size = 2 color="black"><b>1. Cantidad de trabajos en curso por equipo  </b></font>
             <a href="#" onClick="muestra('info1')";>Mostrar / Ocultar informacion</a>
-            <div style="display:none" id="info1">
- 				Y PON AQUI EL TEXTO OCULTO
+            <div style="display:none; border:#000 2px solid;" id="info1">
+            	{%for usuario, hus in equipo_hu.items%}
+            		<font size = 2 color="black"><b>{{usuario}} Cantidad de HUs a cargo: {{hus|length}} </b></font><br/>
+            		<ul>
+            		{%for hu in hus%}
+						<font size = 3 color="blue">Descripcion: </font>{{hu.descripcion}}
+						<li><font size = 2 color="black">Prioridad: </font>{{hu.prioridad}}</li>
+						<li><font size = 2 color="black">Horas trabajadas: </font>{{hu.acumulador_horas}}</li>
+						<li><font size = 2 color="black">Duracion: </font>{{hu.duracion}}</li>
+						<li><font size = 2 color="black">Flujo: </font>{{hu.flujo}}</li>
+						<li><font size = 2 color="black">Actividad: </font>{{hu.actividad}}</li>
+						<li><font size = 2 color="black">Estado: </font>{{hu.estado_en_actividad}}</li>
+						{%endfor%}
+					</ul>
+				{%endfor%}
 			</div></p>
-            <p><font size = 2 color="black"><b>2. Cantidad de trabajos por usuario pendiente, en curso, finalizado</b></font>
+            <br/><p><font size = 2 color="black"><b>2. Cantidad de trabajos por usuario pendiente, en curso, finalizado</b></font>
             <a href="#" onClick="muestra('info2')";>Mostrar / Ocultar informacion</a>
             <div style="display:none" id="info2">
- 				Y PON AQUI EL TEXTO OCULTO
+ 				{%for estado, hus in estado_hu.items%}
+            		<font size = 2 color="black"><b>{{estado}} Cantidad de HUs: {{hus|length}} </b></font><br/>
+            		<ul>
+            		{%for hu in hus%}
+						<font size = 3 color="blue">Descripcion: </font>{{hu.descripcion}}
+						<li><font size = 2 color="black">Prioridad: </font>{{hu.prioridad}}</li>
+						<li><font size = 2 color="black">Horas trabajadas: </font>{{hu.acumulador_horas}}</li>
+						<li><font size = 2 color="black">Duracion: </font>{{hu.duracion}}</li>
+						<li><font size = 2 color="black">Flujo: </font>{{hu.flujo}}</li>
+						<li><font size = 2 color="black">Actividad: </font>{{hu.actividad}}</li>
+						<li><font size = 2 color="black">Sprint: </font>{{hu.sprint}}</li>
+						{%endfor%}
+					</ul>
+				{%endfor%}
 			</div></p>
-            <p><font size = 2 color="black"><b>3. Lista clasificada por orden de prioridad de las actividades para completar un proyecto.</b></font>
+            <br/><p><font size = 2 color="black"><b>3. Lista clasificada por orden de prioridad de las actividades para completar un proyecto.</b></font>
             <a href="#" onClick="muestra('info3')";>Mostrar / Ocultar informacion</a>
             <div style="display:none" id="info3">
- 				Y PON AQUI EL TEXTO OCULTO
+            	<font size = 3 color="blue"><b>Total: {{HUv|length}}</b></font><br/>
+            	<ul>
+ 				{%for hu in HUv%}
+						<font size = 3 color="blue">Descripcion: </font>{{hu.descripcion}}
+						<li><font size = 2 color="black">Prioridad: </font>{{hu.prioridad}}</li>
+						<li><font size = 2 color="black">Horas trabajadas: </font>{{hu.acumulador_horas}}</li>
+						<li><font size = 2 color="black">Duracion: </font>{{hu.duracion}}</li>
+						<li><font size = 2 color="black">Flujo: </font>{{hu.flujo}}</li>
+						<li><font size = 2 color="black">Actividad: </font>{{hu.actividad}}</li>
+						<li><font size = 2 color="black">Sprint: </font>{{hu.sprint}}</li>
+				{%endfor%}
+				</ul>
 			</div></p>
-            <p><font size = 2 color="black"><b>4. Lista de Tiempo estimado por proyecto y la ejecución del mismo</b></font>
-            <a href="#" onClick="muestra('info4')";>Mostrar / Ocultar informacion</a>
-            <div style="display:none" id="info4">
- 				Y PON AQUI EL TEXTO OCULTO
-			</div></p>
-            <p><font size = 2 color="black"><b>5. El backlog del Producto, lista ordenada de HU, en orden que esperamos deben terminarse</b></font>
-            <a href="#" onClick="muestra('info5')";>Mostrar / Ocultar informacion</a>
-            <div style="display:none" id="info5">
- 				Y PON AQUI EL TEXTO OCULTO
-			</div></p>
-            <p><font size = 2 color="black"><b>6. El Backlog del Sprint, lista de los elementos del Backlog del Producto, elegidos para ser desarrollados en el Sprint actual</b></font>
-            <a href="#" onClick="muestra('info6')";>Mostrar / Ocultar informacion</a>
-            <div style="display:none" id="info6">
- 				Y PON AQUI EL TEXTO OCULTO
-			</div></p>
-            {%for sp in sprintReporte%}
-            	{%for s, l in lista_acu_sp_hu.items%}
-            		{%if s == sp%}
-            			<p><font size = 3  color="blue"><b>>> Sprint: </b> {{s}}</font></p>
-            			<p><font size = 2 color="black"><b>- Cantidad de HU's: </b> {{l}} <b>         - Estado del Sprint: </b> {{s.estado}}</p>
-            			<p><font size = 2 color="blue"><b>Usuarios a cargo de las HU's dentro de este Sprint: </b></font></p>
-            			{%for spr, lis in usu_hs_hu.items%}
-            				{%for u in lis%}
-            					{%if s == spr%}
-            						<p><font size = 2 color="black"><b> - {{u.usuario}}:</b> {{u.hs}} horas de trabajo, {{u.cont_hu}} HU a cargo</font></p>
-            						<p><font size = 2 color="blue"><b>HU's asignada:</b>
-            						<p><font size = 2 color="black"><b>OBS.:Las HU's estan ordenadas por prioridad, como muestra el siguiente listado.</b>
-            						{%for l in u.list_hu%}
-										{%for h in s.hu.all%}
-											{%if h == l%}
-												{%if h.estado_en_actividad == 'PRO' and h.duracion != h.acumulador_horas%}
-													<p><font size = 2 color="blue"><b>Actualmente trabajando en esta HU</b></font></p>
-												{%endif%}
-												{%if h.estado_en_actividad == 'PRO' and h.duracion == h.acumulador_horas%}
-													<p><font size = 2 color="black"><b>{{h}}</b> | <b>Estado:</b> {{h.estado}} | <b>Estado en actividad:</b> {{h.estado_en_actividad}} | <b>Duracion:</b> {{h.duracion}}   | <b>Acumulador de horas:</b> {{h.acumulador_horas}}  | <b>prioridad: </b>{{h.prioridad}}</b></font></p>
-													<p><font size = 2 color="red"><b>HU agotado su tiempo, esperando a que el Scrum Maste agregue mas horas</b></font></p>
-												{%else%}
-													<p><font size = 2 color="black"><b>{{h}}</b> | <b>Estado:</b> {{h.estado}} | <b>Estado en actividad:</b> {{h.estado_en_actividad}} | <b>Duracion:</b> {{h.duracion}}   | <b>Acumulador de horas:</b> {{h.acumulador_horas}}  | <b>prioridad: </b>{{h.prioridad}}</font></p>	
-												{%endif%}
-												{%for f in sp.flujo.all%}
-													{%for hp in hu_p%}
-														
-															{%if hp == h%}
-																{%if f == h.flujo%}
-																	<p><font size = 2 color="black"><b>Flujo: </b>{{f}} | <b>Actualmente en la actividad </b>{{h.actividad}}</font></p>
-																	<p><font size = 2 color="blue"><b>Actividades por la que pasa la </b>{{h}}</font></p>
-																	{%for fa in f.actividades.all%}
-																		<p><font size = 2 color="black">  {{fa}}</font></p>
-																	{%endfor%}
-																	
-																{%endif%}
-															{%endif%}
-													{%endfor%}
-												{%endfor%}
-											{%endif%}
-										{%endfor%}
-									{%endfor%}
-            				 		</font></p>
-            					{%endif%}
-            				{%endfor%}
-            			{%endfor%}
-            		{%endif%}
-            	{%endfor%}
-            	-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-            {%endfor%}
-           
-            <p><font size = 3 color="blue"><b>HU's no asignadas a ningun Sprint </b></font></p>
-            <TABLE BORDER=5 WIDTH=300 CELLSPACING=5 >
-            <p><font size = 2 color="black"><b>Historias de usuario del Backlog </b></font></p>
-            <TR BGCOLOR="#D0A9F5" ><TD WIDTH=100 align="center"><p><font size = 2 color="black"><b>Descripcion</b><TD WIDTH=100 align="center"><font size = 2 color="black"><b>Prioridad</b></font></p></TD></TR>
-			{%for l in list_hu_p%}
-				<TR><TD WIDTH=100 align="center"><p><font size = 2 color="black">{{l}}<TD WIDTH=100 align="center"><font size = 2 color="black">{{l.prioridad}}</font></p></TD></TR>
-			{%endfor%}
-			</TABLE>
-            <a href="/exportarPDF/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Exportar en PDF</a><p></p>  
-             <a href="/generate_pdf_view/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Exportar en PDFgrafico</a><p></p> 
-			<td><a href="/visualizarSprintBacklog/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Visualizar Sprint Backlog</a></td>
-			<td><br/><a href="/visualizarChart/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Visualizar Burndown Chart</a></td>
+            <br/><p><font size = 2 color="black"><b>4. Lista de Tiempo estimado por proyecto y la ejecución del mismo</b></font>
+            <a href="/visualizarChart/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Visualizar Burndown Chart</a></p>
+            <br/><p><font size = 2 color="black"><b>5. El backlog del Producto, lista ordenada de HU, en orden que esperamos deben terminarse</b></font>
+            <a href="/visualizarBacklog/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Visualizar Product Backlog</a></p>
+            <br/><p><font size = 2 color="black"><b>6. El Backlog del Sprint, lista de los elementos del Backlog del Producto, elegidos para ser desarrollados en el Sprint actual</b></font>
+            <a href="/visualizarSprintBacklog/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Visualizar Sprint Backlog</a></p>
+            <br/><br/>
+			<a href="/generar/{{proyecto.id}}/1/" class="addlink">Exportar reporte en PDF</a><p></p> 
+			
 		{%endif%}        
 		
 <!-- Visualizacion Burndown Chart para quien tenga permiso Cliente, Owner, Equipo, Scrum -->
@@ -487,8 +452,10 @@ td { padding: 2px 2px 2px 2px; text-align-center; }
  		<table>
  			<tr>
  			{%if is_Scrum != 1%}
-  				<td><br/><a href="/visualizarChart/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Visualizar Burndown Chart</a></td>
- 			{%endif%}
+ 				{%if reporte == 0%}
+	  				<td><br/><a href="/visualizarChart/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Visualizar Burndown Chart</a></td>
+	 			{%endif%}
+	 		{%endif%}
  			</tr>
  		</table>
  	{%endif%}

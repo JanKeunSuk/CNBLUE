@@ -277,107 +277,32 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         is_Scrum=2
     HUv=[]
     reporte=0
-    sprint_acu_cl=0
-    lista_sprint_acu_cl={}
-    acu_hu=0
-    lista_sp_cant_hu={}
-    usuario_hu={}
-    longitud_equipo=[]
-    usu=""
-    usu_hs_hu={}
-    lista_hs_hu=[]
-    hs=0
-    sw=0
-    cont_hu=0
-    list_hu=[]
-    hu_sprint=0
-    list_hu_no=[]
-    lista_pr=[]
-    duracion=0
     if rolx.tiene_permiso('Generar Reporte'):
-        HUv=HU.objects.filter(proyecto=proyectox).filter(valido=True)
+        HUv=HU.objects.filter(proyecto=proyectox).filter(estado="ACT")
+        HUv=sorted(HUv,key=lambda x: x.prioridad, reverse=True)
         reporte=1
-        HUp=HU.objects.filter(proyecto=proyectox)
-        HU_p=sorted(HUp,key=lambda x: x.prioridad, reverse=True)
-        sprintReporte=Sprint.objects.filter(proyecto=proyectox)
-        sprintReporte=sorted(sprintReporte,key=lambda x: x.estado, reverse=False)
-        #La duracion en horas de un Sprint
-        for sp in sprintReporte:
-            for hu in HUv:
-                for h in sp.hu.all():
-                    if h == hu:
-                        sprint_acu_cl=sprint_acu_cl+hu.acumulador_horas
-                        acu_hu+=1     
-            lista_sprint_acu_cl[sp]=sprint_acu_cl
-            lista_sp_cant_hu[sp]=acu_hu
-            acu_hu=0
-        hu_x=sorted(HUv,key=lambda x: x.prioridad, reverse=True)
-        
-        for h in hu_x:
-            for d in delegacion.objects.all():
-                if h.id == d.hu.id:
-                    usuario=d.usuario
-                    usuario_hu[h]=usuario#hu-usuario
-        
-        for i, u in usuario_hu.items():
-                if usu=="":
-                    usu=u
-                    #longitud_equipo[i]=usu
-                    longitud_equipo.append(usu)
-                elif usu != u:
-                    usu=u
-                    #longitud_equipo[i]=usu
-                    longitud_equipo.append(usu)#los usuarios
+        sprintReporte=Sprint.objects.filter(proyecto=proyectox).filter(estado="CON")
+        #1-
+        equipo_hu={}
         for s in sprintReporte:
             for h in s.hu.all():
-                lista_pr.append(h)
-
-
-        for hu in HU_p:
-            for l in lista_pr:    
-                if hu == l:
-                    hu_sprint=1
-            if hu_sprint==0:
-                    list_hu_no.append(hu)
+                if equipo_hu.has_key(h.saber_usuario()):
+                    equipo_hu[h.saber_usuario()].append(h)
+                else:
+                    equipo_hu[h.saber_usuario()]=[]
+                    equipo_hu[h.saber_usuario()].append(h)
+        #2-
+        estado_hu={}
+        for h in HUv:
+            if estado_hu.has_key(h.estado_en_actividad):
+                estado_hu[h.estado_en_actividad].append(h)
             else:
-                    hu_sprint=0
-                
-                        
-            
-        for s in sprintReporte:#sp1, sp2
-                for u in longitud_equipo:#sebas, valeria
-                    for hp in HU_p:
-                        for h in s.hu.all():#hu1, hu2
-                            if h == hp:
-                                if u==h.saber_usuario():#sebas==sebas
-                                    hs+=h.acumulador_horas
-                                    list_hu.append(h)
-                                    sw=1
-                                    cont_hu +=1
-                    if hs!=0 or sw==1:
-                                lista_hs_hu.append(usu_hs(u, hs, cont_hu, list_hu))
-                                hs=0
-                                sw=0
-                                cont_hu=0
-                                list_hu=[]
-                usu_hs_hu[s]=lista_hs_hu#sprint1=sebas, 8 hs, valeria, 6 horas
-                lista_hs_hu=[]
-        #cantidad de dias transcurridos
-        
-        fecha=2014-01-01
-        duracion=0
-        #fecha_fin_sprint=(sp.fecha_inicio+timedelta(days=(sp.duracion-1))).strftime('%Y-%m-%d')
-        for h in hu_x:
-            for hd in h.hu_descripcion.all():
-                if hd.fecha.strftime('%Y-%m-%d')>fecha:
-                    if  datetime.now().strftime('%Y-%m-%d') == fecha:
-                        break
-                    else:
-                        fecha=hd.fecha.strftime('%Y-%m-%d')
-                        duracion+=1           
+                estado_hu[h.estado_en_actividad]=[]
+                estado_hu[h.estado_en_actividad].append(h)
     else:
         sprintReporte=[]
-        HU_p=[]
+        equipo_hu={}
+        estado_hu={}
                 
     if rolx.tiene_permiso('Can add sprint'):
         if len(Sprint.objects.filter(proyecto=proyectox).filter(estado='ACT')) < 1:
@@ -415,7 +340,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         for h in HU.objects.filter(proyecto=proyectox).filter(valido=True):
             if h.estado_en_actividad != 'APR':
                 finalizar=0
-    return render(request,'rol-flujo-para-scrum.html',{'sprint_con':Sprint.objects.filter(estado="CON"),'finalizar':finalizar,'fecha_inicio':str(proyectox.fecha_inicio)[:10],'existe':existe,'verburn':verburn,'sprintReporte':sprintReporte,'proyecto':proyectox,'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HUv':HUv,'reporte':reporte,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas, 'kanban':kanban, 'l_s_a_cl':lista_sprint_acu_cl, 'lista_acu_sp_hu':lista_sp_cant_hu, 'long_equipo':longitud_equipo, 'usu_hs_hu': usu_hs_hu, 'lista_hs_hu':lista_hs_hu, 'list_hu_p':list_hu_no, 'lista_pr':lista_pr, 'hu_p':HU_p, 'duracion_pr':duracion, 'HU_P':HU_p})
+    return render(request,'rol-flujo-para-scrum.html',{'finalizar':finalizar,'fecha_inicio':str(proyectox.fecha_inicio)[:10],'existe':existe,'verburn':verburn,'sprintReporte':sprintReporte,'proyecto':proyectox,'HUsm_no_desarrolladas':HUsm_no_desarrolladas,'HUsm_horas_agotadas':HUsm_horas_agotadas,'roles_inmodificables':roles_inmodificables,'roles_modificables':roles_modificables,'HUv':HUv,'reporte':reporte,'sprints':sprints,'enlaceSprint':enlaceSprint,'sprintsm':sprintsm,'enlaceSprintm':enlaceSprintm,'enlaceSprintv':enlaceSprintv,'enlaceHUa':enlaceHUa,'HUsa':HUsa,'is_Scrum':is_Scrum,'HUs_add_horas':HUs_add_horas, 'enlaceHU_agregar':enlaceHU_agregar,'enlaceHUm':enlaceHUm,'HUsm':HUsm,'enlaceHUv':enlaceHUv,'HUs':HUs,'enlaceHU':enlaceHU,'enlacefv':enlacefv,'enlacefm':enlacefm,'enlacef':enlacef,'enlaces':enlaces,'roles':roles,'flujosm':flujosm, 'flujos':flujos,'proyecto':proyectox,'usuario':usuario,'rolid':rol_id, 'HU_asignada_owner':HU_asignada_owner, 'HU_no_asignada_owner':HU_no_asignada_owner, 'HU_cargar':agregar_horas, 'kanban':kanban,'equipo_hu':equipo_hu,'estado_hu':estado_hu})
 
     #ahora voy a checkear si el usuario tiene permiso de agregar rol y en base a eso va ver la interfaz de administracion de rol
 
@@ -2987,17 +2912,9 @@ def make_pdf(proyecto, sprint):
     story.append(Paragraph("4. Lista de Tiempo estimado por proyecto y la ejecución del mismo", styles['Heading4']))
     story.append(Spacer(1, 5*mm))
     
-    if sprint:
-        #x_max, ideal_burndown, remaining_hours = sprint.get_burndown_chart()
-        ideal_burndown={}
-        remaining_hours={}
-        for i in range(20):
-            ideal_burndown[i] = float(i)+0.1
-            
-        for i in range(30):
-            remaining_hours[i] = float(i)+0.1
-
-        drawing = Drawing(140*mm, 100*mm)
+    for s in sprint:
+        x_max, ideal_burndown, remaining_hours = s.get_BurdownChart()
+        drawing = Drawing(150*mm, 100*mm)
         lc = HorizontalLineChart()
         lc.width = drawing.width
         lc.height = drawing.height
@@ -3007,7 +2924,7 @@ def make_pdf(proyecto, sprint):
             lc.categoryAxis.categoryNames.append(str(i+1))
         lc.categoryAxis.labels.boxAnchor = 'w'
         lc.valueAxis.valueMin = 0
-        lc.valueAxis.valueMax = 50
+        lc.valueAxis.valueMax = x_max
         lc.valueAxis.valueStep = round((lc.valueAxis.valueMax - lc.valueAxis.valueMin)/10)
         lc.lines[0].strokeWidth = 2
         lc.lines[1].strokeWidth = 1.5
@@ -3111,357 +3028,6 @@ def reporte_view(request, proyectoid, report_id, sprint_id=None):
     response['Content-Disposition'] = 'filename="{}.pdf"'.format(filename)
     response.write(pdf)
     return response
-    
-def exportarPDF(request,usuario_id,proyectoid,rolid):
-    # Create the HttpResponse object with the appropriate PDF headers.
-    class usu_hs:
-        """Guarda el usuario y las horas acumualadas"""
-        def __init__(self,usuario, hs, cont_hu, list_hu):
-            self.usuario=usuario
-            self.hs=hs
-            self.cont_hu=cont_hu
-            self.list_hu=list_hu
-
-    sprint_acu_cl=0
-    lista_sprint_acu_cl={}
-    acu_hu=0
-    lista_sp_cant_hu={}
-    usuario_hu={}
-    longitud_equipo=[]
-    usu=""
-    usu_hs_hu={}
-    lista_hs_hu=[]
-    hs=0
-    sw=0
-    cont_hu=0
-    list_hu=[]
-    hu_sprint=0
-    list_hu_no=[]
-    lista_pr=[]
-
-    proyectox=proyecto.objects.get(id=proyectoid)
-    HUv=HU.objects.filter(proyecto=proyectox).filter(estado='ACT')
-    HUp=HU.objects.filter(proyecto=proyectox)
-    HU_p=sorted(HUp,key=lambda x: x.prioridad, reverse=True)
-    sprint_Reporte=Sprint.objects.filter(proyecto=proyectox)
-    sprintReporte=sorted(sprint_Reporte,key=lambda x: x.estado, reverse=False)
-    hu_x=sorted(HUv,key=lambda x: x.prioridad, reverse=True)
-
-    # Create the HttpResponse object with the appropriate PDF headers.
-    nombrePDF="reporte_"+proyectox.nombre_corto+".pdf"
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename='+nombrePDF
-    # create an API client instance
-    
-    width, height = A4
-    styles = getSampleStyleSheet()
-    styleN = styles["BodyText"]
-    styleN.alignment = TA_LEFT
-    styleBH = styles["Normal"]
-    styleBH.alignment = TA_CENTER
-    c = canvas.Canvas(response)
-    c.setFont("Helvetica",18)
-    c.setFillColor(blue)
-    c.drawString(60, 780, 'Reporte para el cliente del Proyecto '+proyectox.nombre_corto)
-    c.setFont("Helvetica-Bold",11)
-    c.setFillColor(black)
-    c.line(30,760,580,760) # Para hacer una linea horizontal
-    def coord(x, y, unit=1):
-        x, y = x * unit, height -  y * unit
-        return x, y
-    #cantidad de dias transcurridos       
-    fecha=2014-01-01#para tomar la primera fecha de bd
-    duracion=0
-    
-    for h in hu_x:
-            for hd in h.hu_descripcion.all():
-                if hd.fecha.strftime('%Y-%m-%d')>fecha:
-                    if  datetime.now().strftime('%Y-%m-%d') == fecha:
-                        break
-                    else:
-                        fecha=hd.fecha.strftime('%Y-%m-%d')
-                        duracion+=1
-            #La duracion en horas de un Sprint
-    for sp in sprintReporte:
-            for hu in HUv:
-                for h in sp.hu.all():
-                    if h == hu:
-                        sprint_acu_cl=sprint_acu_cl+hu.acumulador_horas
-                        acu_hu+=1     
-            lista_sprint_acu_cl[sp]=sprint_acu_cl
-            lista_sp_cant_hu[sp]=acu_hu
-            acu_hu=0
-    hu_x=sorted(HUv,key=lambda x: x.prioridad, reverse=True)
-        
-    for h in hu_x:
-            for d in delegacion.objects.all():
-                if h.id == d.hu.id:
-                    usuario=d.usuario
-                    usuario_hu[h]=usuario#hu-usuario
-        
-    for i, u in usuario_hu.items():
-                if usu=="":
-                    usu=u
-                    #longitud_equipo[i]=usu
-                    longitud_equipo.append(usu)
-                elif usu != u:
-                    usu=u
-                    #longitud_equipo[i]=usu
-                    longitud_equipo.append(usu)#los usuarios
-    for s in sprintReporte:
-            for h in s.hu.all():
-                lista_pr.append(h)
-
-
-    for hu in HU_p:
-            for l in lista_pr:    
-                if hu == l:
-                    hu_sprint=1
-            if hu_sprint==0:
-                    list_hu_no.append(hu)
-            else:
-                    hu_sprint=0
-                              
-    for s in sprintReporte:#sp1, sp2
-                for u in longitud_equipo:#sebas, valeria
-                    for hp in HU_p:
-                        for h in s.hu.all():#hu1, hu2
-                            if h == hp:
-                                if u==h.saber_usuario():#sebas==sebas
-                                    hs+=h.acumulador_horas
-                                    list_hu.append(h)
-                                    sw=1
-                                    cont_hu +=1
-                    if hs!=0 or sw==1:
-                                lista_hs_hu.append(usu_hs(u, hs, cont_hu, list_hu))
-                                hs=0
-                                sw=0
-                                cont_hu=0
-                                list_hu=[]
-                usu_hs_hu[s]=lista_hs_hu#sprint1=sebas, 8 hs, valeria, 6 horas
-                lista_hs_hu=[]
-
-
-    texto='- Inicio del proyecto: '+str(proyectox.fecha_inicio)+'        - Fin estimado del Proyecto: '+str(proyectox.fecha_fin)
-    c.drawString(40,720,texto)
-    texto='- Cantidad de dias trabajados: '+str(duracion)
-    c.drawString(40,705,texto)
-    c.setFont("Helvetica-Bold",12)
-    c.setFillColor(blue)
-    texto='Dentro del proyecto tenemos los siguientes Sprint:'
-    c.drawString(40,680,texto)
-    x=40
-    y=665
-    i=0
-    i_s=0
-    for sp in sprintReporte:
-        i=0
-        i_s=0
-        for s, l in lista_sp_cant_hu.items():
-            if s== sp:
-                c.setFont("Helvetica-Bold",12)
-                c.setFillColor(blue)
-                texto='>>Sprint: '+str(s)
-                c.drawString(x,y,texto)
-                y-=20
-                c.setFont("Helvetica-Bold",11)
-                c.setFillColor(black)
-                texto=' - Cantidad de HUs: '+str(l)+ '           - Estado del Sprint: '+s.estado
-                c.drawString(x,y,texto)
-                y-=15
-                c.setFont("Helvetica-Bold",12)
-                c.setFillColor(blue)
-                texto='Usuarios a cargo de las HUs dentro de este Sprint:'
-                c.drawString(x,y,texto)
-                y-=15
-                c.setFont("Helvetica-Bold",11)
-                c.setFillColor(black)                
-                for spr, lis in usu_hs_hu.items():
-                            for u in lis:
-                                if s == spr:
-                                    i+=1
-                                    i_s=0                                    
-                                    texto=str(i)+'- '+str(u.usuario)+': '+str(u.hs)+' horas de trabajo, '+str(u.cont_hu)+' HU a cargo'
-                                    c.drawString(x,y,texto)
-                                    y-=15
-                                    c.setFont("Helvetica-Bold",12)
-                                    c.setFillColor(blue)
-                                    texto='HUs asignada:'
-                                    c.drawString(x,y,texto)
-                                    y-=15
-                                    c.setFont("Helvetica-Bold",11)
-                                    c.setFillColor(black)
-                                    texto='OBS.:Las HUs estan ordenadas por prioridad, como muestra el siguiente listado.'
-                                    c.drawString(x,y,texto)
-                                    y-=15
-                                    for l in u.list_hu:
-                                        for h in s.hu.all():
-                                            if h == l:
-                                                c.setFont("Helvetica-Bold",11)
-                                                c.setFillColor(black)
-                                                if h.estado_en_actividad == 'PRO' and h.duracion != h.acumulador_horas:
-                                                    texto='Actualmente trabajando en esta HU'
-                                                    c.drawString(x,y,texto)
-                                                    y-=15
-                                                if h.estado_en_actividad == 'PRO' and h.duracion == h.acumulador_horas:
-                                                    texto=str(i)+'.'+str(i_s)+' - '+str(h)+':  Estado: '+ str(h.estado)+'   |   Estado en actividad: ' +str(h.estado_en_actividad)+ '   |   Duracion: '+ str(h.duracion)
-                                                    i_s+=1
-                                                    c.drawString(x,y,texto)
-                                                    y-=15
-                                                    texto='Acumulador de horas: '+str(h.acumulador_horas)+ '   |   Prioridad: '+str(h.prioridad)
-                                                    c.drawString(x,y,texto)
-                                                    y-=15
-                                                    c.setFillColor('red')
-                                                    texto= 'HU agotado su tiempo, esperando a que el Scrum Maste agregue mas horas'
-                                                    c.drawString(x,y,texto)
-                                                    y-=15
-                                                    c.setFillColor(black)
-                                                else:
-                                                    texto=str(i)+'.'+str(i_s)+' - '+str(h)+':  Estado: '+ str(h.estado)+'   |   Estado en actividad: ' +str(h.estado_en_actividad)+ '   |   Duracion: '+ str(h.duracion)
-                                                    i_s+=1
-                                                    c.drawString(x,y,texto)
-                                                    y-=15
-                                                    texto='Acumulador de horas: '+str(h.acumulador_horas)+ '   |   Prioridad: '+str(h.prioridad)
-                                                    c.drawString(x,y,texto)
-                                                    y-=15
-                                                
-                                                for f in sp.flujo.all():
-                                                    for hp in HU_p:
-                                                            if hp == h:
-                                                                if f == h.flujo(): 
-                                                                    texto='+ Flujo: '+str(f)+ '             Actualmente en la actividad: '+ str(h.actividad)
-                                                                    c.drawString(x,y,texto)
-                                                                    y-=15
-                                                                    c.setFont("Helvetica-Bold",12)
-                                                                    c.setFillColor(blue)
-                                                                    texto='Actividades por las que pasa la '+str(h)
-                                                                    c.drawString(x,y,texto)
-                                                                    y-=15
-                                                                    c.setFont("Helvetica-Bold",11)
-                                                                    c.setFillColor(black)
-                                                                    for fa in f.actividades.all():
-                                                                        texto='    '+str(fa)
-                                                                        c.drawString(x,y,texto)
-                                                                        y-=15
-                                                y-=20                        
-                                                if y<200:
-                                                    c.showPage()
-                                                    y=780
-    
-    c.showPage()
-    y=780
-    c.setFont("Helvetica-Bold",12)
-    c.setFillColor(blue)
-    texto= 'HUs no asignadas a ningun Sprint'
-    c.drawString(x,y,texto)
-    y-=15
-    c.setFont("Helvetica-Bold",11)
-    c.setFillColor(black)
-    texto='Historias de usuario del Backlog'
-    c.drawString(x,y,texto)
-    y-=15
-    # Headers
-    des = Paragraph('''<font color="#210B61"><b>Descripcion</b></font>''', styleBH)
-    pri = Paragraph('''<font color="#210B61"><b>Prioridad</b></font>''', styleBH)
-    data=[]
-    data.append([des, pri])
-    i=0
-
-    for l in list_hu_no:
-            data.append([])
-            i=i+1
-            data[i].append(Paragraph(str(l), styleN))
-            data[i].append(Paragraph(str(l.prioridad), styleN))
-    
-    table = Table(data, colWidths=[4 * cm, 4 * cm])
-
-    table.setStyle(TableStyle([
-                       ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-                       ('BOX', (0,0), (-1,-1), 0.25, colors.black),
-                       ('BACKGROUND',(0,0),(-1,0),colors.lightgrey),
-                             ]))
-
-        # Create the PDF object, using the BytesIO object as its "file."
-    
-    table.wrapOn(c, width, height)
-    table.drawOn(c, *coord(1.5, 4 + int(len((list_hu_no))/2)+1, cm))
-    
-    c.save()
-    """
-    PAGE_HEIGHT=defaultPageSize[1]
-    PAGE_WIDTH=defaultPageSize[0]
-    styles = getSampleStyleSheet()
-    Title = "Hello world"
-    pageinfo = "platypus example"
-
-    def myFirstPage(canvas, doc):
-        canvas.saveState()
-        canvas.setFont('Times-Bold',16)
-        canvas.drawCentredString(PAGE_WIDTH/2.0, PAGE_HEIGHT-108, Title)
-        canvas.setFont('Times-Roman',9)
-        canvas.drawString(inch, 0.75 * inch,"First Page / %s" % pageinfo)
-        canvas.restoreState()
-    
-    def myLaterPages(canvas, doc):
-        canvas.saveState()
-        canvas.setFont('Times-Roman', 9)
-        canvas.drawString(inch, 0.75 * inch,"Page %d %s" % (doc.page, pageinfo))
-        canvas.restoreState()
-    
-    def go():
-        #doc = SimpleDocTemplate("phello.pdf")
-        Story = [Spacer(1,2*inch)]
-        style = styles["Normal"]
-        for i in range(100):
-            bogustext = ("Paragraph number %s. " % i) *20
-            p = Paragraph(bogustext, style)
-            Story.append(p)
-            Story.append(Spacer(1,0.2*inch))
-        a_buffer = BytesIO()
-        doc = SimpleDocTemplate(a_buffer, pagesize=A4)
-        doc.build(Story, onFirstPage=myFirstPage, onLaterPages=myLaterPages)
-        pdf = a_buffer.getvalue()
-        a_buffer.close()
-        return pdf
-    
-    response = HttpResponse(content_type='application/pdf')
-    response.write(go())
-    return response
-    """
-    return response
-
-
-def generate_pdf_view(request,usuario_id,proyectoid,rolid):    
-        
-        drawing = Drawing(400, 200)
-        data = [
-            ((1,1), (2,2), (2.5,1), (3,3), (4,5)),
-            ((1,2), (2,3), (2.5,2), (3.5,5), (4,6))
-            ]
-        lp = LinePlot()
-        lp.x = 50
-        lp.y = 50
-        lp.height = 125
-        lp.width = 300
-        lp.data = data
-        lp.joinedLines = 1
-        lp.lineLabelFormat = '%2.0f'
-        lp.strokeColor = colors.black
-        lp.lines[0].strokeColor = colors.red
-        lp.lines[0].symbol = makeMarker('FilledCircle')
-        lp.lines[1].strokeColor = colors.blue
-        lp.lines[1].symbol = makeMarker('FilledDiamond')
-        lp.xValueAxis.valueMin = 0
-        lp.xValueAxis.valueMax = 5
-        lp.xValueAxis.valueStep = 1
-        lp.yValueAxis.valueMin = 0
-        lp.yValueAxis.valueMax = 7
-        lp.yValueAxis.valueStep = 1
-        drawing.add(lp)
-        
-        from reportlab.graphics import renderPDF
-        renderPDF.drawToFile(drawing, 'example.pdf', 'lineplot with dates')
-
 
 def anularProyecto(request,usuario_id,proyectoid):
     if request.method=='GET' :

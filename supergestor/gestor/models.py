@@ -9,7 +9,7 @@ from django.contrib.auth.models import (
     , Permission)
 from django.conf import settings
 import math
-
+from datetime import timedelta
 
 class MyUserManager(BaseUserManager):
     """Clase utilizada para la creacion de managers customizados 
@@ -397,6 +397,99 @@ class Sprint(models.Model):
             return True
         else:
             return False
+    
+    def get_BurdownChart(self):
+        #sprint ahora tiene el Sprint que se va mostrar en el burndown de este proyecto...el actual nose si hay que mostrar de todos?
+        duracionsp=range(int(self.duracion))
+        #tengo que sumar sus duraciones para saber el maximo del backlog
+        sumx=0
+        for ux in self.hu.all():
+            sumx+=ux.duracion
+        #ahora tengo que trabajar con el acumulador de horas diario que seria una lista por dia de todas las hu del dia
+        #parecido al de abajo pero en vez de lista_hu_horas seria lista fecha horas
+        #supongo que antes deberia saber cuantas fechas tener en cuenta...no estoy seguro                                                         
+        lista_fechas=[]
+        lista_horas=[]
+        lista_fechas.append(str((self.fecha_inicio+timedelta(days=-1)).strftime('%Y-%m-%d'))[:10])
+        lista_horas.append(0)
+        #el primer elemento del diccionario va a ser la duracion total de todas las hu osea la primera barra del burndown
+        for hu in self.hu.all():
+            for d in hu.hu_descripcion.all().order_by('fecha'):
+                f=str((d.fecha+timedelta(days=-1)).strftime('%Y-%m-%d'))[:10] 
+                if f in lista_fechas:
+                    lista_horas[lista_fechas.index(f)]=lista_horas[lista_fechas.index(f)]+d.horas_trabajadas
+                else:
+                    lista_fechas.append(f)
+                    lista_horas.insert(lista_fechas.index(f),d.horas_trabajadas)
+                    
+            
+        #tengo la lista correcta pero con fechas mal colocadas 
+                
+        
+        # Un diccionario puede tener elementos repetidos(keys), pero la programacion anterior va a impedirlo 
+        #bueno ahora ya tengo el diccionario con el total de horas por dia cargadas me convendria disponer de la longitud del diccionario
+        cant_days=len(lista_fechas)
+        # ahora voy a crear y cargar el diccionario que se va mandar al template
+        
+        tot_restante=sumx
+        horas_restantes=[]
+        #tot_restante es la que va disminuir, sum quiero mantener por las dudas
+        
+        
+        for i in lista_fechas:
+            horas_restantes.insert(lista_fechas.index(i),tot_restante-lista_horas[lista_fechas.index(i)])
+            tot_restante=tot_restante-lista_horas[lista_fechas.index(i)]
+        horas_restantes.insert(0,sumx)
+        
+        
+        pordia=sumx/self.duracion
+        estimacion=[]
+        tot_again=sumx
+        for x in duracionsp:
+            estimacion.insert(duracionsp.index(x),tot_again-pordia)
+            tot_again=tot_again-pordia
+            
+        estimacion.insert(0,sumx)  
+    
+        #AHora utilizando la lista lista_horas deberia calcular el resto del grafo, osea lista_horas debe ser mas largo o al menos 
+        #tener otra lista igual a lista horas que dibuje la linea negra en el burndown
+        
+        #estimacion nueva deberia tener una lista propia con lista_horas como primeros elementos mas nuevos elementos
+        #correspondientes a la estimacion actual calculada
+        
+        nueva_estimacion=list(horas_restantes)
+        #calcular aqui el promedio de horas por dia en lista_horas
+        suma_cargadas=0
+        for x in lista_horas: 
+            suma_cargadas=suma_cargadas+x
+            pass
+        prome=suma_cargadas/len(lista_horas)
+        
+        remain=tot_restante#continua con las horas que quedaron sin hacerse
+        #prome es lo que se supone que debe avanzar en los dias restantes...meter eso en nueva_estimacion
+        while(remain>=0):
+            if(remain-prome>0):
+                nueva_estimacion.append(remain-prome)
+            else:
+                nueva_estimacion.append(0)
+            remain=remain-prome
+        
+        ncategorias= len(nueva_estimacion)
+        catgria=[]
+        for i in range(ncategorias):
+            catgria.append(i)
+        ideal_burndown={}
+        x=0
+        for y in nueva_estimacion:
+            ideal_burndown[x]=y
+            x=x+1
+        
+        remaining_hours={}
+        x=0
+        for y in estimacion:
+            remaining_hours[x]=y
+            x=x+1
+        return sumx, ideal_burndown, remaining_hours
                 
 #Modelo para asignacion de actividades con HU en un flujo determinado
 class asignacion(models.Model):
