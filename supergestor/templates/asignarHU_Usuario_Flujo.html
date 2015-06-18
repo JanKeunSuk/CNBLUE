@@ -107,7 +107,9 @@
                     				{%endif%}
                     			{%endfor%}
                     		{%else%}
-                    			{%if sprint.estado == 'ACT'%}
+                    			{%if sprint.estado == 'FIN'%}
+                    				&nbsp;
+                    			{%else%}
                     				<a href="/delegarHUFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}/{{sprint.id}}/{{f.id}}/"> &nbsp; &nbsp; &nbsp; &nbsp;Asignar hu a flujo</a></td>
                     			{%endif%}
                     		{%endif%}

@@ -559,7 +559,7 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
             
             
             for h in HUs:#por cada hu seleccionada
-                if h.estado_en_actividad!='FIN':
+                if h.estado_en_actividad!='APR':
                     if h not in HUs_pendientes:
                         HUs_pendientes.append(h)
                     HUs.remove(h)#HUs es una lista porque se definio asi pero flujos se obtuvo con un query
@@ -1434,7 +1434,7 @@ def crearSprint(request,usuario_id,proyectoid,rolid):
     for x in Sprint.objects.all():#se podria chequear solo los sprint del proyecto para hacer menos trabajo!
         if x.estado == 'FIN':
             for h in x.hu.all():
-                if h.estado_en_actividad != 'FIN':
+                if h.estado_en_actividad != 'APR':
                     HUs_pendientes.append(h)
                     HUs=HUs.exclude(id=h.id)
                     flujos_pen.append(h.flujo())
@@ -2210,7 +2210,7 @@ def asignarHU_Usuario_FLujo(request,usuario_id,proyectoid,rolid,sprintid):
         for a in asignaHU_actividad_flujo.objects.all():
             if f == a.flujo_al_que_pertenece:
                 for h in a.lista_de_HU.all():
-                    if h.proyecto == proyectox:
+                    if h.proyecto == proyectox and h.sprint() == sprintx:
                         hu_en_flujo[f]=a.lista_de_HU.all()
                         break
     HU_no_asignada=[]
