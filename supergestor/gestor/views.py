@@ -2939,7 +2939,7 @@ def make_pdf(proyecto, sprint):
         i=i+1
     story.append(Table(table_data, colWidths=table_col_widths,
                     style=table_style1, repeatRows=1))
-    story.append(Spacer(1, 4*mm))
+    story.append(Spacer(1, 15*mm))
     
     story.append(Paragraph("4. Lista de Tiempo estimado por proyecto y la ejecución del mismo", styles['Heading4']))
     story.append(Spacer(1, 5*mm))
@@ -3028,8 +3028,6 @@ def make_pdf(proyecto, sprint):
             i=i+1
         story.append(Table(table_data, colWidths=table_col_widths,
                         style=table_style1, repeatRows=1))
-        story.append(Spacer(1, 5*mm))
-    
 
     # create PDF from list of flowables, using a temp buffer to assemble PDF
     a_buffer = BytesIO()
