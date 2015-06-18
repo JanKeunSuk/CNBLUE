@@ -460,9 +460,9 @@ evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"SPRINT+"+"C+"+"
 historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=sp1.descripcion, evento=evento_e)
 
 #este va a ser el finalizado correctamente, con hus nuevas que tengo que crear
-sp0=Sprint.objects.create(despcripcion='sprint0',fecha_inicio=str(datetime.date.today()-timedelta(days=15)),duracion=7,estado='FIN',proyecto=p1)
+sp0=Sprint.objects.create(descripcion='sprint0',fecha_inicio=str(datetime.date.today()+datetime.timedelta(days=-15)),duracion=7,estado='FIN',proyecto=p1)
 #este va a ser el que tenga hus pendientes las cuales tengo que crear nuevas
-sp01=Sprint.objects.create(despcripcion='sprint01',fecha_inicio=str(datetime.date.today()+timedelta(days=-7)),duracion=6,estado='FIN',proyecto=p1)
+sp01=Sprint.objects.create(descripcion='sprint01',fecha_inicio=str(datetime.date.today()+datetime.timedelta(days=-7)),duracion=6,estado='FIN',proyecto=p1)
 
 
 
