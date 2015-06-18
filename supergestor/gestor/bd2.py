@@ -1,5 +1,6 @@
 #coding: utf-8
 import django
+from datetime import timedelta
 django.setup()
 import datetime
 import psycopg2
@@ -417,19 +418,70 @@ huv12=HU_version.objects.create(descripcion=hu12.descripcion,valor_negocio=hu12.
 evento_e=str(kathe.id)+"+"+str(p1.id)+"+"+str(rol_owner.id)+"+"+"HU+"+"C+"+"Se ha creado un nuevo HU de nombre: "+hu12.descripcion+" con valor de negocio "+str(hu12.valor_negocio)+" con fecha y hora: "+str(datetime.date.today())
 h=historial_notificacion.objects.create(usuario=kathe, fecha_hora=str(datetime.date.today()), objeto=hu12.descripcion, evento=evento_e)
 
+
+#Ahora voy a crear las hu para el sprint sp0 terminado, tienen que haber suficientes descripciones que indiquen que se finalizo su duracion
+#seran 6 hus para este sprint
+hu13=HU.objects.create(descripcion='HU13',valor_negocio=3,valor_tecnico=5,prioridad=95,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='FIN',valido=True,proyecto=p1,version=1.0)
+huv13=HU_version.objects.create(descripcion=hu13.descripcion,valor_negocio=hu13.valor_negocio,hu=hu13,version=hu13.version)
+
+hu14=HU.objects.create(descripcion='HU14',valor_negocio=3,valor_tecnico=5,prioridad=85,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='FIN',valido=True,proyecto=p1,version=1.0)
+huv14=HU_version.objects.create(descripcion=hu14.descripcion,valor_negocio=hu14.valor_negocio,hu=hu14,version=hu14.version)
+
+hu15=HU.objects.create(descripcion='HU15',valor_negocio=3,valor_tecnico=5,prioridad=75,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='FIN',valido=True,proyecto=p1,version=1.0)
+huv15=HU_version.objects.create(descripcion=hu15.descripcion,valor_negocio=hu15.valor_negocio,hu=hu15,version=hu15.version)
+
+hu16=HU.objects.create(descripcion='HU16',valor_negocio=3,valor_tecnico=5,prioridad=65,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='FIN',valido=True,proyecto=p1,version=1.0)
+huv16=HU_version.objects.create(descripcion=hu16.descripcion,valor_negocio=hu16.valor_negocio,hu=hu16,version=hu16.version)
+
+hu17=HU.objects.create(descripcion='HU17',valor_negocio=3,valor_tecnico=5,prioridad=55,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='FIN',valido=True,proyecto=p1,version=1.0)
+huv17=HU_version.objects.create(descripcion=hu17.descripcion,valor_negocio=hu17.valor_negocio,hu=hu17,version=hu17.version)
+
+hu18=HU.objects.create(descripcion='HU18',valor_negocio=3,valor_tecnico=5,prioridad=45,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='FIN',valido=True,proyecto=p1,version=1.0)
+huv18=HU_version.objects.create(descripcion=hu18.descripcion,valor_negocio=hu18.valor_negocio,hu=hu18,version=hu18.version)
+
+#Ahora voy a crear las hu que van a quedar pendientes en el sprint que finaliza anticipadamente sprint01,no les voy a cargar horas
+hu19=HU.objects.create(descripcion='HU19',valor_negocio=3,valor_tecnico=5,prioridad=65,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='PEN',valido=True,proyecto=p1,version=1.0)
+huv19=HU_version.objects.create(descripcion=hu19.descripcion,valor_negocio=hu19.valor_negocio,hu=hu19,version=hu19.version)
+
+hu20=HU.objects.create(descripcion='HU20',valor_negocio=3,valor_tecnico=5,prioridad=55,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='PEN',valido=True,proyecto=p1,version=1.0)
+huv20=HU_version.objects.create(descripcion=hu20.descripcion,valor_negocio=hu20.valor_negocio,hu=hu20,version=hu20.version)
+
+hu21=HU.objects.create(descripcion='HU21',valor_negocio=3,valor_tecnico=5,prioridad=45,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='PEN',valido=True,proyecto=p1,version=1.0)
+huv21=HU_version.objects.create(descripcion=hu21.descripcion,valor_negocio=hu21.valor_negocio,hu=hu21,version=hu21.version)
+
+
+
+
+
+
 """Creacion de un Sprint"""
 sp1=Sprint.objects.create(descripcion='sprint1',fecha_inicio=str(datetime.date.today()),duracion=10,estado='ACT',proyecto=p1)
 evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"SPRINT+"+"C+"+"Se ha creado un nuevo Sprint de nombre: '"+sp1.descripcion+"' con una fecha de inicio '"+str(sp1.fecha_inicio)+"' ,duracion '"+str(sp1.duracion)+ "' en la fecha y hora: "+str(datetime.date.today())
 historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=sp1.descripcion, evento=evento_e)
 
+#este va a ser el finalizado correctamente, con hus nuevas que tengo que crear
+sp0=Sprint.objects.create(despcripcion='sprint0',fecha_inicio=str(datetime.date.today()-timedelta(days=15)),duracion=7,estado='FIN',proyecto=p1)
+#este va a ser el que tenga hus pendientes las cuales tengo que crear nuevas
+sp01=Sprint.objects.create(despcripcion='sprint01',fecha_inicio=str(datetime.date.today()+timedelta(days=-7)),duracion=6,estado='FIN',proyecto=p1)
+
+
+
 """Agregar hus a los sprint creados"""
 sp1.hu.add(hu1,hu2,hu3,hu4,hu5,hu6,hu7,hu8)
 
-"""Agregar hus a los sprint creados"""
+sp0.hu.add(hu13,hu14,hu15,hu16,hu17,hu18)
+
+sp01.hu.add(hu19,hu20,hu21)
+
+"""Agregar hus a los flujos creados"""
 sp1.flujo.add(f1,f2)
+sp0.flujo.add(f1,f2)
+sp01.flujo.add(f2)
 
 """Agregar el quipo a los sprint creados"""
 sp1.equipo.add(gabriela,sebas)
+sp0.equipo.add(gabriela,sebas)
+sp01.equipo.add(gabriela,sebas)
 
 """Clasificar esas hus seleccionadas en flujos"""
 #hu1 y hu2 estan en el flujo 1
@@ -438,6 +490,20 @@ hu1Flujo1.lista_de_HU.add(hu1,hu2,hu3,hu4,hu5)
 #hu3 esta en el flujo 2
 hu3flujo2=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=f2)
 hu3flujo2.lista_de_HU.add(hu6,hu7,hu8)
+
+#hu 13,14,15 en flujo 1 y 16,17,18 en flujo 2
+hu13Flujo1=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=f1)
+hu13Flujo1.lista_de_HU.add(hu13,hu14,hu15)
+
+hu16Flujo1=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=f1)
+hu16Flujo1.lista_de_HU.add(hu16,hu17,hu18)
+
+#hu 19,20,21 en flujo 1 para sprint01
+hu19Flujo1=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=f2)
+hu19Flujo1.lista_de_HU.add(hu19,hu20,hu21)
+
+
+
 
 """
 Agregar las actividades iniciales de las hu de acuerdo al flujo que fueron designados
@@ -465,6 +531,31 @@ hu7.save()
 
 hu8.actividad=act6
 hu8.save()
+
+#para el sp0 pongo las hu en actividad 5 nomas ya//parece que esto no hace falta
+
+hu13.actividad=act5
+hu13.save()
+hu14.actividad=act5
+hu14.save()
+hu15.actividad=act5
+hu15.save()
+hu16.actividad=act8
+hu16.save()
+hu17.actividad=act8
+hu17.save()
+hu18.actividad=act8
+hu18.save()
+ 
+hu19.actividad=act8
+hu19.save()
+hu20.actividad=act8
+hu20.save()
+hu21.actividad=act8
+hu21.save()
+
+
+
 
 """Delegacion de HU a un usuario"""
 delegacion.objects.create(usuario=sebas,hu=hu1)
@@ -498,6 +589,137 @@ historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.dat
 delegacion.objects.create(usuario=gabriela,hu=hu8)
 evento_e=str(delsy.id)+"+"+str(p1.id)+"+"+str(rol_scrum.id)+"+"+"HU+"+"AS+"+"Se ha asignado una HU '"+hu8.descripcion+"' al usuario '"+str(gabriela)+"' en la fecha y hora: "+str(datetime.date.today())
 historial_notificacion.objects.create(usuario=delsy, fecha_hora=str(datetime.date.today()), objeto=hu8.descripcion, evento=evento_e)
+
+
+
+#Delegaciones para el sprint terminado
+
+"""Delegacion de HU a un usuario"""
+delegacion.objects.create(usuario=sebas,hu=hu13)
+delegacion.objects.create(usuario=sebas,hu=hu15)
+delegacion.objects.create(usuario=sebas,hu=hu17)
+delegacion.objects.create(usuario=gabriela,hu=hu14)
+delegacion.objects.create(usuario=gabriela,hu=hu16)
+delegacion.objects.create(usuario=gabriela,hu=hu18)
+
+#Cracion y asignacion de descripciones de hu 13,14,15
+dhu131=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Analisis",estado='PRO')
+dhu132=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Disenho",estado='PRO')
+dhu133=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Despliegue",estado='PRO')
+dhu134=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Desarrollo",estado='PRO')
+dhu135=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Prueba",estado='PRO')
+hu13.hu_descripcion.add(dhu131)
+hu13.hu_descripcion.add(dhu132)
+hu13.hu_descripcion.add(dhu133)
+hu13.hu_descripcion.add(dhu134)
+hu13.hu_descripcion.add(dhu135)
+hu13.estado_en_actividad='FIN'
+hu13.actividad=act5
+hu13.acumulador_horas=15
+hu13.save()
+
+
+
+dhu141=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Analisis",estado='PRO')
+dhu142=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Disenho",estado='PRO')
+dhu143=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Despliegue",estado='PRO')
+dhu144=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Desarrollo",estado='PRO')
+dhu145=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Prueba",estado='PRO')
+hu14.hu_descripcion.add(dhu141)
+hu14.hu_descripcion.add(dhu142)
+hu14.hu_descripcion.add(dhu143)
+hu14.hu_descripcion.add(dhu144)
+hu14.hu_descripcion.add(dhu145)
+hu14.estado_en_actividad='FIN'
+hu14.actividad=act5
+hu14.acumulador_horas=15
+hu14.save()
+
+
+
+dhu151=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Analisis",estado='PRO')
+dhu152=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="diseño",estado='PRO')
+dhu153=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Despliegue",estado='PRO')
+dhu154=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="desarrollo",estado='PRO')
+dhu155=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="prueba",estado='PRO')
+hu15.hu_descripcion.add(dhu151)
+hu15.hu_descripcion.add(dhu152)
+hu15.hu_descripcion.add(dhu153)
+hu15.hu_descripcion.add(dhu154)
+hu15.hu_descripcion.add(dhu155)
+hu15.estado_en_actividad='FIN'
+hu15.actividad=act5
+hu15.acumulador_horas=15
+hu15.save()
+
+
+#Cracion y asignacion de descripciones de hu 16,17,18
+
+dhu161=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Relevamiento",estado='PRO')
+dhu162=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Implementacion",estado='PRO')
+dhu163=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Control",estado='PRO')
+hu16.hu_descripcion.add(dhu161)
+hu16.hu_descripcion.add(dhu162)
+hu16.hu_descripcion.add(dhu163)
+hu16.estado_en_actividad='FIN'
+hu16.actividad=act8
+hu16.acumulador_horas=15
+hu16.save()
+
+dhu171=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Relevamiento",estado='PRO')
+dhu172=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Implementacion",estado='PRO')
+dhu173=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Control",estado='PRO')
+hu17.hu_descripcion.add(dhu171)
+hu17.hu_descripcion.add(dhu172)
+hu17.hu_descripcion.add(dhu173)
+hu17.estado_en_actividad='FIN'
+hu17.actividad=act8
+hu17.acumulador_horas=15
+hu17.save()
+
+dhu181=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Relevamiento",estado='PRO')
+dhu182=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Implementacion",estado='PRO')
+dhu183=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Control",estado='PRO')
+hu18.hu_descripcion.add(dhu181)
+hu18.hu_descripcion.add(dhu182)
+hu18.hu_descripcion.add(dhu183)
+hu18.estado_en_actividad='FIN'
+hu18.actividad=act8
+hu18.acumulador_horas=15
+hu18.save()
+
+
+sp0.save()
+#aqui termino el trabajo con sp0 tiene que aparecer como finalizado
+
+#delegacion para sprint01 pendiente
+delegacion.objects.create(usuario=sebas,hu=hu19)
+delegacion.objects.create(usuario=sebas,hu=hu20)
+delegacion.objects.create(usuario=gabriela,hu=hu21)
+#agregar descripciones de progreso
+dhu191=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Relevamiento",estado='PRO')
+hu19.hu_descripcion.add(dhu191)
+hu19.estado_en_actividad='PRO'
+hu19.actividad=act8
+hu19.acumulador_horas=3
+hu19.save()
+
+dhu201=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Relevamiento",estado='PRO')
+hu20.hu_descripcion.add(dhu201)
+hu20.estado_en_actividad='PRO'
+hu20.actividad=act8
+hu20.acumulador_horas=3
+hu20.save()
+
+dhu211=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Relevamiento",estado='PRO')
+hu21.hu_descripcion.add(dhu211)
+hu21.estado_en_actividad='PRO'
+hu21.actividad=act8
+hu21.acumulador_horas=3
+hu21.save()
+
+sp01.save()
+#aqui se finalizo trabajo con sprint01
 
 """Creacion de descripciones para la HU1 Mensaje Finalizada a Tiempo"""
 dhu1=HU_descripcion.objects.create(horas_trabajadas=2,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Analisis",estado='PRO')
