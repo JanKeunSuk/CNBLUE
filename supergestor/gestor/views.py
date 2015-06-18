@@ -425,8 +425,8 @@ def guardarRolView(request,usuario_id, proyectoid, rolid):
         evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"ROL+"+"C+"+"Se ha creado un nuevo rol de nombre: '"+rol_a_crear.nombre_rol_id+"' con una descripcion '"+request.POST['descripcion']+"' con los permisos '"+str([t.codename for t in rol_a_crear.permisos.all()])+"' con fecha y hora: "+str(timezone.now())
         email_e=str(usuario_e.email)
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=rol_a_crear.nombre_rol_id,  evento=evento_e)
-        mail = EmailMessage('Notificacion', evento_e, to=[email_e])
-        mail.send()
+        if usuario_e.frecuencia_notificaciones == 'instante':
+            send_email(str(email_e), 'Notificacion', evento_e)
         #return HttpResponseRedirect('/crearRol/')
         return HttpResponse('El rol se ha creado')
       
@@ -461,8 +461,8 @@ def guardarFlujoView(request, usuario_id, proyectoid, rolid):
         usuario_e=MyUser.objects.get(id=usuario_id)
         email_e=str(usuario_e.email)
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=flujo_a_crear.nombre, evento=evento_e)
-        mail = EmailMessage('Notificacion', evento_e, to=[email_e])
-        mail.send()
+        if usuario_e.frecuencia_notificaciones == 'instante':
+            send_email(str(email_e), 'Notificacion', evento_e)
         return HttpResponse('El flujo se ha creado'+str(request.POST.getlist('actividades')))
     else:
         if request.POST['boton'] == 'Agregar':
@@ -561,8 +561,9 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
             evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"SPRINT+"+"C+"+"Se ha creado un nuevo Sprint de nombre: '"+request.POST['descripcion']+"' con una fecha de inicio '"+str(request.POST['fecha_inicio'])+"' ,duracion '"+str(request.POST['duracion'])+ "' en la fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=Sprint_a_crear.descripcion, evento=evento_e)
-            mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-            mail.send()
+            if usuario_e.frecuencia_notificaciones == 'instante':
+                send_email(str(usuario_e.email), 'Notificacion', evento_e)
+                
             #return HttpResponse('El Sprint se ha creado')
             
             
@@ -725,8 +726,8 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
             evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"M+"+"Se ha modificado '"+request.POST['descripcion']+"' con valor de negocio '"+request.POST['valor_negocio']+"' y estado '"+request.POST['estado']+" con fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=h.descripcion, evento=evento_e)
-            mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-            mail.send()
+            if usuario_e.frecuencia_notificaciones == 'instante':
+                send_email(str(usuario_e.email), 'Notificacion', evento_e)
             
             return HttpResponse('La descripcion y valor de negocio de la HU a sido modificado exitosamente')
         else:
@@ -766,8 +767,8 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                             evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"A+"+"Se ha agregado '"+str(request.POST['horas_agregar'])+"' horas a la '"+str(h.descripcion)+"' con una descripcion '"+request.POST['descripcion_horas']+"' estando en la actividad '"+ str(h.actividad)+ "' con el estado '"+str(h.estado_en_actividad)+"' con fecha y hora: "+str(timezone.now())
                             usuario_e=MyUser.objects.get(id=usuario_id)
                             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=h.descripcion, evento=evento_e)
-                            mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-                            mail.send()                            
+                            if usuario_e.frecuencia_notificaciones == 'instante':
+                                send_email(str(usuario_e.email), 'Notificacion', evento_e)                       
                             hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas,fecha=datetime.now(), actividad=str(h.actividad), estado=str(h.estado_en_actividad))
                             h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
                             hd.save()
@@ -811,8 +812,8 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                             evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"A+"+"Se ha agregado '"+request.POST['horas_agregar']+"' horas a la '"+HU.descripcion+"' con una descripcion '"+request.POST['descripcion_horas']+"' quedando asi finalizadas las actividades con fecha y hora: "+str(timezone.now())
                             usuario_e=MyUser.objects.get(id=usuario_id)
                             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=h.descripcion, evento=evento_e)
-                            mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-                            mail.send()                            
+                            if usuario_e.frecuencia_notificaciones == 'instante':
+                                send_email(str(usuario_e.email), 'Notificacion', evento_e)                        
                             return HttpResponse("Todas las actividades de HU finalizadas")
                         elif x < len(orden) and h.acumulador_horas == h.duracion:
                             h.estado_en_actividad='PEN'
@@ -824,8 +825,8 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                             evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"A+"+"Se ha agregado '"+request.POST['horas_agregar']+"' horas a la '"+HU.descripcion+"' con una descripcion '"+request.POST['descripcion_horas']+"' ,completando la duracion sin terminar todas las actividades con fecha y hora: "+str(timezone.now())
                             usuario_e=MyUser.objects.get(id=usuario_id)
                             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=h.descripcion, evento=evento_e)
-                            mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-                            mail.send()
+                            if usuario_e.frecuencia_notificaciones == 'instante':
+                                send_email(str(usuario_e.email), 'Notificacion', evento_e)
                             return HttpResponse("Duracion de HU finalizada sin terminar todas las actividades. Contactar con el Scrum")
                         else:
                             h.actividad=Actividades.objects.get(id=orden[x])
@@ -838,8 +839,8 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                             evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"A+"+"Se ha agregado '"+str(request.POST['horas_agregar'])+"' horas a la '"+str(h.descripcion)+"' con una descripcion '"+str(request.POST['descripcion_horas'])+"' estando en la actividad '"+ str(h.actividad)+ "' con el estado '"+str(h.estado_en_actividad)+"' con fecha y hora: "+str(timezone.now())
                             usuario_e=MyUser.objects.get(id=usuario_id)
                             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=h.descripcion, evento=evento_e)
-                            mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-                            mail.send()
+                            if usuario_e.frecuencia_notificaciones == 'instante':
+                                send_email(str(usuario_e.email), 'Notificacion', evento_e)
                             return render(request,'modificarHU.html', {'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':2})
             else:
                 return HttpResponse('Las Horas cargadas ya superan las 8 Horas diarias que deben cargarse por dia. Ya ha cargado '+str(acumulador-int(prueba))+' horas en este dia') 
@@ -875,8 +876,7 @@ def contactomail(request):
             usuario = MyUser.objects.get(username = username_cargado)
             if (str(usuario.email) == formulario.cleaned_data['correo']):
                 mensaje = 'Puedes dirigirte a esta URL de seteo de tu password:  djangoserver/seteoPassword/' + str(usuario.id) + '/'
-                mail = EmailMessage(asunto, mensaje, to=[request.POST['correo']])
-                mail.send()
+                send_email(request.POST['correo'], asunto, mensaje)
                 return HttpResponseRedirect('/login') 
             else:
                 return HttpResponse('El email no coincide con tu email unico asociado a tu usuario')  
@@ -971,8 +971,8 @@ def modificarRol(request, usuario_id, proyectoid, rolid, rol_id_rec):
             evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"ROL+"+"M+"+"El rol '"+f.descripcion+"' con descripcion '"+form.cleaned_data['descripcion']+"' con los permisos '"+str([t.codename for t in f.permisos.all()])+"' en el estado '"+form.cleaned_data['estado']+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=f.nombre_rol_id, evento=evento_e)
-            mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-            mail.send()
+            if usuario_e.frecuencia_notificaciones == 'instante':
+                send_email(str(usuario_e.email), 'Notificacion', evento_e)
             return HttpResponse('El rol ha sido modificado exitosamente')
         else:
             return HttpResponse('Error'+str(form.errors))
@@ -1098,16 +1098,16 @@ def modificarFlujo(request, usuario_id, proyectoid, rolid, flujo_id_rec):
                 evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"FLUJO+"+"C+"+"El flujo '"+request.POST['nombre']+"' con estado '"+request.POST['estado']+"' ha sido creado exitosamente en la fecha y hora: "+str(timezone.now())
                 usuario_e=MyUser.objects.get(id=usuario_id)
                 historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=flujo_a_crear.nombre,evento=evento_e)
-                mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-                mail.send()
+                if usuario_e.frecuencia_notificaciones == 'instante':
+                    send_email(str(usuario_e.email), 'Notificacion', evento_e)
                 return HttpResponse('El flujo nuevo se ha creado')  
             except ObjectDoesNotExist:
                 print "No se ha podido crear el nuevo flujo"
             evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"FLUJO+"+"C+"+"El flujo '"+request.POST['nombre']+"' ha sido creado exitosamente en la fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=flujo_a_crear.nombre,evento=evento_e)
-            mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-            mail.send()
+            if usuario_e.frecuencia_notificaciones == 'instante':
+                send_email(str(usuario_e.email), 'Notificacion', evento_e)
             return HttpResponse('El flujo ha sido creado exitosamente')
         elif guardar == 2:
             nombre=request.POST['nombre']
@@ -1125,8 +1125,8 @@ def modificarFlujo(request, usuario_id, proyectoid, rolid, flujo_id_rec):
             evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"FLUJO+"+"M+"+"El flujo '"+request.POST['nombre']+"' con estado '"+request.POST['estado']+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=f.nombre, evento=evento_e)
-            mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-            mail.send()
+            if usuario_e.frecuencia_notificaciones == 'instante':
+                send_email(str(usuario_e.email), 'Notificacion', evento_e)
             return HttpResponse('El flujo ha sido modificado exitosamente')
     else:
         actividades_asignadas=[]
@@ -1211,8 +1211,8 @@ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
             evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"SPRINT+"+"M+"+"El Sprint '"+form.cleaned_data['descripcion']+"' con estado '"+form.cleaned_data['estado']+"' con una fecha de inicio '"+str(form.cleaned_data['fecha_inicio'])+"' ,duracion '"+str(form.cleaned_data['duracion'])+"' ,hu '"+str([t.descripcion for t in s.hu.all()])+"' y flujo '"+str([t.nombre for t in s.flujo.all()])+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=s.descripcion,evento=evento_e)
-            mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-            mail.send()
+            if usuario_e.frecuencia_notificaciones == 'instante':
+                send_email(str(usuario_e.email), 'Notificacion', evento_e)
             return HttpResponse('El Sprint ha sido modificado exitosamente')
         else:
             return HttpResponse('El Sprint no es valido'+str(form.errors))
@@ -1324,9 +1324,8 @@ def modificarHU(request, usuario_id, proyectoid, rolid, HU_id_rec,is_Scrum):
                 evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"M+"+"La HU '"+str(h.descripcion)+"' valor de negocio  '"+str(form.cleaned_data['valor_tecnico'])+"'  prioridad '"+str(form.cleaned_data['prioridad'])+"' y duracion  '"+str(form.cleaned_data['duracion'])+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
                 usuario_e=MyUser.objects.get(id=usuario_id)
                 historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=h.descripcion,evento=evento_e)
-                mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-                mail.send()
-                    
+                if usuario_e.frecuencia_notificaciones == 'instante':
+                    send_email(str(usuario_e.email), 'Notificacion', evento_e)
 
                 return HttpResponse('La HU ha sido modificado exitosamente')
             else:
@@ -1486,8 +1485,8 @@ def modificarProyecto(request, usuario_id, proyecto_id_rec):
             evento_e=usuario_id+"+"+proyecto_id_rec+"+SCRUM"+"+PROYECTO+"+"M+"+"El proyecto '"+form.cleaned_data['nombre_corto']+"' con nombre largo '"+form.cleaned_data['nombre_largo']+"' descripcion  '"+form.cleaned_data['descripcion']+"' estado '"+form.cleaned_data['estado']+"' fecha de inicio '"+str(form.cleaned_data['fecha_inicio'])+"'  fecha fin '"+str(fecha_fin)+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=p.nombre_corto, evento=evento_e)
-            mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-            mail.send()
+            if usuario_e.frecuencia_notificaciones == 'instante':
+                send_email(str(usuario_e.email), 'Notificacion', evento_e)
 
             return HttpResponse('Tu proyecto a sido guardado exitosamente')
     else:
@@ -1539,8 +1538,8 @@ def crearActividadView(request,usuario_id,proyectoid):
             evento_e=usuario_id+"+"+proyectoid+"+SCRUM"+"+ACTIVIDAD+"+"C+"+"La Actividad '"+form.cleaned_data['nombre']+"' con descripcion '"+form.cleaned_data['descripcion']+"' se ha creado exitosamente en la fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(),  objeto=form.nombre,evento=evento_e)
-            mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-            mail.send()
+            if usuario_e.frecuencia_notificaciones == 'instante':
+                send_email(str(usuario_e.email), 'Notificacion', evento_e)
             return HttpResponse('Ha sido guardado exitosamente')       
 
 def crearActividadAdminView(request):
@@ -1641,8 +1640,8 @@ def modificarActividad(request,usuario_id,proyectoid,actividad_id_rec):
             evento_e=usuario_id+"+"+proyectoid+"+SCRUM"+"+ACTIVIDAD+"+"M+"+"La actividad '"+form.cleaned_data['nombre']+"' con descripcion '"+form.cleaned_data['descripcion']+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=p.nombre, evento=evento_e)
-            mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-            mail.send()
+            if usuario_e.frecuencia_notificaciones == 'instante':
+                send_email(str(usuario_e.email), 'Notificacion', evento_e)
 
             return HttpResponse('Se ha guardado exitosamente')
     else:
@@ -1736,8 +1735,8 @@ def delegarHU(request,usuario_id,proyectoid,rolid,hu_id,reasignar):
                 evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"AS+"+"Se ha asignado una HU '"+hu.descripcion+"' al usuario '"+str(delegacionx.usuario)+"' en la fecha y hora: "+str(timezone.now())
                 usuario_e=MyUser.objects.get(id=usuario_id)
                 historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=hu.descripcion, evento=evento_e)
-                mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-                mail.send()
+                if usuario_e.frecuencia_notificaciones == 'instante':
+                    send_email(str(usuario_e.email), 'Notificacion', evento_e)
 
                 return HttpResponse('La asignacion se realizo correctamente')
             except ObjectDoesNotExist:
@@ -1750,8 +1749,8 @@ def delegarHU(request,usuario_id,proyectoid,rolid,hu_id,reasignar):
                     usuario_e=MyUser.objects.get(id=usuario_id)
                     evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"AS+"+"Se ha asignado una HU '"+hu.descripcion+"' al usuario '"+str(d.usuario)+"' en la fecha y hora: "+str(timezone.now())
                     historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=hu.descripcion, evento=evento_e)
-                    mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-                    mail.send()
+                    if usuario_e.frecuencia_notificaciones == 'instante':
+                        send_email(str(usuario_e.email), 'Notificacion', evento_e)
                     return HttpResponse('Se ha reasignado la HU exitosamente')
     else:
         users=hu.sprint().equipo.all()
@@ -1827,16 +1826,17 @@ def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
         f.save()
         evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"FLUJO+"+"R+"+"El flujo '"+f.nombre+"' se ha reactivado exitosamente en la fecha y hora: "+str(timezone.now())
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=f.nombre,evento=evento_e)
-        mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-        mail.send()
+        if usuario_e.frecuencia_notificaciones == 'instante':
+            send_email(str(usuario_e.email), 'Notificacion', evento_e)
+            
     if tipo == '2': #se trata de una HU
         h=HU.objects.get(id=id_tipo)
         h.estado='ACT'
         h.save()
         evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"R+"+"La HU '"+h.descripcion+"' se ha reactivado exitosamente en la fecha y hora: "+str(timezone.now())
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=h.descripcion, evento=evento_e)
-        mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-        mail.send()
+        if usuario_e.frecuencia_notificaciones == 'instante':
+            send_email(str(usuario_e.email), 'Notificacion', evento_e)
 
     if tipo == '3': #se trata de un sprint
         s=Sprint.objects.get(id=id_tipo)
@@ -1844,8 +1844,8 @@ def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
         s.save()
         evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"SPRINT+"+"R+"+"El sprint '"+s.descripcion+"' se ha reactivado exitosamente en la fecha y hora: "+str(timezone.now())
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=s.descripcion,evento=evento_e)
-        mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-        mail.send()
+        if usuario_e.frecuencia_notificaciones == 'instante':
+            send_email(str(usuario_e.email), 'Notificacion', evento_e)
 
     if tipo == '4': #se trata de un rol
         s=rol.objects.get(id=id_tipo)
@@ -1853,8 +1853,8 @@ def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
         s.save()
         evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"ROL+"+"R+"+"El rol '"+s.nombre_rol_id+"' se ha reactivado exitosamente en la fecha y hora: "+str(timezone.now())
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=s.nombre_corto,evento=evento_e)
-        mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-        mail.send()
+        if usuario_e.frecuencia_notificaciones == 'instante':
+            send_email(str(usuario_e.email), 'Notificacion', evento_e)
     
     if tipo == '5': #se trata de un proyecto
         s=proyecto.objects.get(id=id_tipo)
@@ -1862,8 +1862,9 @@ def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
         s.save()
         evento_e=usuario_id+"+"+proyectoid+"+SCRUM+"+"PROYECTO+"+"R+"+"El proyecto '"+s.nombre_corto+"' se ha reactivado exitosamente en la fecha y hora: "+str(timezone.now())
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=s.nombre_corto,evento=evento_e)
-        mail = EmailMessage('Notificacion', evento_e, to=[str(usuario_e.email)])
-        mail.send()
+        if usuario_e.frecuencia_notificaciones == 'instante':
+            send_email(str(usuario_e.email), 'Notificacion', evento_e)
+            
         return HttpResponseRedirect('/hola/')
     return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rolid+'/')
 
@@ -3056,8 +3057,8 @@ def finalizarProyecto(request,usuario_id,proyectoid,rol_id):
         evento_e=usuario_id+"+"+proyectoid+"+SCRUM+"+"PROYECTO+"+"F+"+"Se ha finalizado el proyecto: '"+proyectox.nombre_corto+"' por el siguiente motivo: '"+descripcion+"' con fecha y hora: "+str(timezone.now())
         email_e=str(usuario_e.email)
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=proyectox.nombre_corto,  evento=evento_e)
-        mail = EmailMessage('Notificacion', evento_e, to=[email_e])
-        mail.send()
+        if usuario_e.frecuencia_notificaciones == 'instante':
+            send_email(str(email_e), 'Notificacion', evento_e)
         proyectox.estado='FIN'
         proyectox.fecha_fin=timezone.now()
         proyectox.save()
