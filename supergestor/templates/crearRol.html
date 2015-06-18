@@ -71,7 +71,7 @@
 
                         <label class="required" for="id_permisos" >Permisos:</label>
                         
-                            <select multiple="multiple" id="id_permisos" name="permisos" required>
+                            <select multiple="multiple" id="id_permisos" size=25 name="permisos" required>
                             	{%for permission in permissions %}
 									<option value="{{permission.id}}" >{{permission.codename}}</option>
 								{%endfor%}

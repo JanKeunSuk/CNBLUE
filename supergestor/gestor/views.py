@@ -978,10 +978,12 @@ def modificarRol(request, usuario_id, proyectoid, rolid, rol_id_rec):
         permisos=permisos.exclude(name='Can delete permitido')
         permisos=permisos.exclude(name='Can add log entry').exclude(name='Can delete log entry').exclude(name='Can change log entry')
         permisos=permisos.exclude(name='Can add content type').exclude(name='Can delete content type').exclude(name='Can change content type')
-        permisos=permisos.exclude(name='Can add h u_descripcion').exclude(name='Can change h u_descripcion') 
-        permisos=permisos.exclude(name='Can delete h u_descripcion')
-        permisos=permisos.exclude(name='Can add session').exclude(name='Can change session') 
-        permisos=permisos.exclude(name='Can delete session')
+        permisos=permisos.exclude(name='Can add queue message').exclude(name='Can change queue message').exclude(name='Can delete queue message')
+        permisos=permisos.exclude(name='Can add adjunto version').exclude(name='Can change adjunto version').exclude(name='Can delete adjunto version')
+        permisos=permisos.exclude(name='Can add h u_descripcion').exclude(name='Can change h u_descripcion').exclude(name='Can delete h u_descripcion')
+        permisos=permisos.exclude(name='Can add h u_version').exclude(name='Can change h u_version').exclude(name='Can delete h u_version')
+        permisos=permisos.exclude(name='Can add historial_notificacion').exclude(name='Can change historial_notificacion').exclude(name='Can delete historial_notificacion')
+        permisos=permisos.exclude(name='Can add session').exclude(name='Can change session').exclude(name='Can delete session')
         form = FormularioRolProyecto(initial={
                                          'nombre_rol_id': f.nombre_rol_id,
                                          'descripcion': f.descripcion,
@@ -1397,6 +1399,12 @@ def crearRol(request,usuario_id,proyectoid,rolid):
         permisos=permisos.exclude(name='Can delete permitido')
         permisos=permisos.exclude(name='Can add log entry').exclude(name='Can delete log entry').exclude(name='Can change log entry')
         permisos=permisos.exclude(name='Can add content type').exclude(name='Can delete content type').exclude(name='Can change content type')
+        permisos=permisos.exclude(name='Can add queue message').exclude(name='Can change queue message').exclude(name='Can delete queue message')
+        permisos=permisos.exclude(name='Can add adjunto version').exclude(name='Can change adjunto version').exclude(name='Can delete adjunto version')
+        permisos=permisos.exclude(name='Can add h u_descripcion').exclude(name='Can change h u_descripcion').exclude(name='Can delete h u_descripcion')
+        permisos=permisos.exclude(name='Can add h u_version').exclude(name='Can change h u_version').exclude(name='Can delete h u_version')
+        permisos=permisos.exclude(name='Can add historial_notificacion').exclude(name='Can change historial_notificacion').exclude(name='Can delete historial_notificacion')
+        permisos=permisos.exclude(name='Can add session').exclude(name='Can change session').exclude(name='Can delete session')
         return render(request, 'crearRol.html',{'permissions':permisos,'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
     
 def crearFlujo(request,usuario_id,proyectoid,rolid):
@@ -1486,7 +1494,7 @@ class proyectoFrom(forms.ModelForm):
     """
     class Meta:
         model = proyecto
-        fields = ['nombre_corto', 'nombre_largo', 'descripcion','fecha_inicio','duracion']
+        fields = ['nombre_corto', 'nombre_largo', 'descripcion','duracion']
 
 def modificarProyecto(request, usuario_id, proyecto_id_rec):
     """
@@ -1504,16 +1512,18 @@ def modificarProyecto(request, usuario_id, proyecto_id_rec):
             nombre_corto=form.cleaned_data['nombre_corto']
             nombre_largo=form.cleaned_data['nombre_largo']
             descripcion=form.cleaned_data['descripcion']
-            fecha_inicio=form.cleaned_data['fecha_inicio']
             duracion=form.cleaned_data['duracion']
-            fecha_fin=datetime.strptime(request.POST['fecha_inicio'],"%Y-%m-%d").date() + timedelta(days=int(duracion))
+            if p.estado == "PEN":
+                fecha_inicio=request.POST['fecha_inicio']
+                fecha_fin=datetime.strptime(request.POST['fecha_inicio'],"%Y-%m-%d").date() + timedelta(days=int(duracion))
+                p.fecha_inicio=fecha_inicio
+                p.fecha_fin=fecha_fin
             p.nombre_corto=nombre_corto
             p.nombre_largo=nombre_largo
             p.descripcion=descripcion
-            p.fecha_inicio=fecha_inicio
-            p.fecha_fin=fecha_fin
+            p.duracion=duracion
             p.save() #Guardamos el modelo de manera Editada
-            evento_e=usuario_id+"+"+proyecto_id_rec+"+SCRUM"+"+PROYECTO+"+"M+"+"El proyecto '"+form.cleaned_data['nombre_corto']+"' con nombre largo '"+form.cleaned_data['nombre_largo']+"' descripcion  '"+form.cleaned_data['descripcion']+"' estado '"+form.cleaned_data['estado']+"' fecha de inicio '"+str(form.cleaned_data['fecha_inicio'])+"'  fecha fin '"+str(fecha_fin)+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
+            evento_e=usuario_id+"+"+proyecto_id_rec+"+SCRUM"+"+PROYECTO+"+"M+"+"El proyecto '"+form.cleaned_data['nombre_corto']+"' con nombre largo '"+form.cleaned_data['nombre_largo']+"' descripcion  '"+form.cleaned_data['descripcion']+"' fecha de inicio '"+str(p.fecha_inicio)+"'  fecha fin '"+str(p.fecha_fin)+"' ha sido modificado exitosamente en la fecha y hora: "+str(timezone.now())
             usuario_e=MyUser.objects.get(id=usuario_id)
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=p.nombre_corto, evento=evento_e)
             if usuario_e.frecuencia_notificaciones == 'instante':
@@ -1526,11 +1536,10 @@ def modificarProyecto(request, usuario_id, proyecto_id_rec):
                                          'nombre_corto': p.nombre_corto,
                                          'nombre_largo': p.nombre_largo,
                                          'descripcion': p.descripcion,
-                                         'fecha_inicio': str(p.fecha_inicio)[:10],
                                          'duracion':p.duracion,
                                      
                                          })
-        ctx = {'form':form, 'proyecto':p,'usuarioid':usuario_id,'proyecto':p}
+        ctx = {'form':form, 'fecha_inicio':str(p.fecha_inicio)[:10],'proyecto':p,'usuarioid':usuario_id,'proyecto':p}
         return render_to_response('modificarProyecto.html', ctx ,context_instance=RequestContext(request))
     
 def visualizarProyectoView(request,usuario_id, proyecto_id_rec):
@@ -1883,7 +1892,7 @@ def reactivar(request, usuario_id, proyectoid, rolid, tipo, id_tipo):
         s.estado='ACT'
         s.save()
         evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"ROL+"+"R+"+"El rol '"+s.nombre_rol_id+"' se ha reactivado exitosamente en la fecha y hora: "+str(timezone.now())
-        historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=s.nombre_corto,evento=evento_e)
+        historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=s.nombre_rol_id,evento=evento_e)
         if usuario_e.frecuencia_notificaciones == 'instante':
             send_email(str(usuario_e.email), 'Notificacion', evento_e)
     
@@ -2301,6 +2310,7 @@ def verKanban(request,usuario_id,proyectoid,rolid,sprintid):
                 flujos_aprobados.append(f)
                    
     return render(request,"verKanban.html",{'flujos_aprobados':flujos_aprobados,'sprint':sprintx, 'flujos_hu':flujos_hu,'flujos_actividades':flujos_actividades,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid, 'kanban':kanban})
+
 def aprobarHU(request, usuario_id, proyectoid, rolid, sprintid, HU_id_rec):
     """
     Vista que permite al Scrum aprobar una HU o volver a un estado anterior del flujo.
@@ -2362,7 +2372,7 @@ def cambiarVersionHU(request,usuario_id, proyectoid,rolid,hu_id):
     hu_now=HU.objects.get(id=hu_id)
     huv=HU_version.objects.filter(hu__id=hu_id) 
     huv=huv.exclude(version=hu_now.version)#tengo que excluir la version actual de la lista
-    return render(request,"listarVersionesHU.html",{'huv':huv,'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid,'huid':hu_id})
+    return render(request,"listarVersionesHU.html",{'hu_actual':hu_now,'huv':huv,'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid,'huid':hu_id})
 
 def reasignarhuFlujo(request,usuario_id, proyectoid,rolid,sprintid,huid,kanban):
     """

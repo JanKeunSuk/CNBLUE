@@ -195,7 +195,7 @@ class proyectoAdmin(admin.ModelAdmin):
         """Permite establecer el Estado por defecto en el momento de la creacion que es PENDIENTE"""
         obj.estado='PEN'
         obj.duracion=int(str((obj.fecha_fin.date()-obj.fecha_inicio.date()).days))
-        obj.cantidad_dias_transcurridos=int(str((date.today().date()-obj.fecha_inicio.date()).days))
+        obj.cantidad_dias_transcurridos=0
         obj.save()
         pass    
 

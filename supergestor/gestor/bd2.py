@@ -1,9 +1,7 @@
 #coding: utf-8
 import django
-from datetime import timedelta
 django.setup()
 import datetime
-import psycopg2
 #from django.db import models
 from gestor.models import Permitido, MyUser, HU, proyecto,rol_sistema, rol, asigna_sistema,asignacion, Actividades,Flujo,delegacion,Sprint, HU_descripcion, asignaHU_actividad_flujo, HU_version, historial_notificacion
 
@@ -123,6 +121,15 @@ permiso.save()
 permiso=Permission.objects.get(name='Can delete session')
 permiso.codename='Eliminar session'
 permiso.save()
+permiso=Permission.objects.get(name='Can add queue message')
+permiso.codename='Agregar cola de mensajes'
+permiso.save()
+permiso=Permission.objects.get(name='Can change queue message')
+permiso.codename='Modificar cola de mensajes'
+permiso.save()
+permiso=Permission.objects.get(name='Can delete queue message')
+permiso.codename='Eliminar cola de mensajes'
+permiso.save()
 
 """Creacion de correos electronicos asociados a usuarios"""
 perm4=Permitido.objects.create(email='gsebacatt@gmail.com')
@@ -138,9 +145,9 @@ admin=MyUser.objects.create(password='pbkdf2_sha256$15000$5PUgdTbag7Cm$kbLmrEL+p
 kathe=MyUser.objects.create(password='pbkdf2_sha256$15000$4FMgo6Ef1xDS$Jmf7hATzgtfttaXHMKBeac/pap4+DExO6fjP4qtS0S8=',username='katherine',user_name='Katherine',last_name='Vera',direccion='Lambare',is_active=True,is_admin=False,email=perm3, frecuencia_notificaciones='dia')
 delsy=MyUser.objects.create(password='pbkdf2_sha256$15000$4FMgo6Ef1xDS$Jmf7hATzgtfttaXHMKBeac/pap4+DExO6fjP4qtS0S8=',username='delsy',user_name='Delsy',last_name='Denis',direccion='San Lorenzo',is_active=True,is_admin=False,email=perm2, frecuencia_notificaciones='instante')
 sebas=MyUser.objects.create(password='pbkdf2_sha256$15000$4FMgo6Ef1xDS$Jmf7hATzgtfttaXHMKBeac/pap4+DExO6fjP4qtS0S8=',username='sebas',user_name='Sebastian',last_name='Cattaneo',direccion='Asuncion',is_active=True,is_admin=False,email=perm4, frecuencia_notificaciones='semana')
-gabriela=MyUser.objects.create(password='pbkdf2_sha256$15000$4FMgo6Ef1xDS$Jmf7hATzgtfttaXHMKBeac/pap4+DExO6fjP4qtS0S8=',username='gabriela',user_name='Gabriela',last_name='Gabriela',direccion='Lambare',is_active=True,is_admin=False,email=perm5, frecuencia_notificaciones='mes')
-vanessa=MyUser.objects.create(password='pbkdf2_sha256$15000$4FMgo6Ef1xDS$Jmf7hATzgtfttaXHMKBeac/pap4+DExO6fjP4qtS0S8=',username='vanessa',user_name='Vanessa',last_name='Vanessa',direccion='Lambare',is_active=True,is_admin=False,email=perm6, frecuencia_notificaciones='mes')
-valeria=MyUser.objects.create(password='pbkdf2_sha256$15000$4FMgo6Ef1xDS$Jmf7hATzgtfttaXHMKBeac/pap4+DExO6fjP4qtS0S8=',username='valeria',user_name='Valeria',last_name='Valeria',direccion='Lambare',is_active=True,is_admin=False,email=perm7, frecuencia_notificaciones='mes')
+gabriela=MyUser.objects.create(password='pbkdf2_sha256$15000$4FMgo6Ef1xDS$Jmf7hATzgtfttaXHMKBeac/pap4+DExO6fjP4qtS0S8=',username='gabriela',user_name='Gabriela',last_name='Delvalle',direccion='Lambare',is_active=True,is_admin=False,email=perm5, frecuencia_notificaciones='mes')
+vanessa=MyUser.objects.create(password='pbkdf2_sha256$15000$4FMgo6Ef1xDS$Jmf7hATzgtfttaXHMKBeac/pap4+DExO6fjP4qtS0S8=',username='vanessa',user_name='Vanessa',last_name='Herrera',direccion='Lambare',is_active=True,is_admin=False,email=perm6, frecuencia_notificaciones='mes')
+valeria=MyUser.objects.create(password='pbkdf2_sha256$15000$4FMgo6Ef1xDS$Jmf7hATzgtfttaXHMKBeac/pap4+DExO6fjP4qtS0S8=',username='valeria',user_name='Valeria',last_name='Candia',direccion='Lambare',is_active=True,is_admin=False,email=perm7, frecuencia_notificaciones='mes')
 
 """Creacion de permisos que faltan"""
 content_type = ContentType.objects.get_for_model(HU)
@@ -487,23 +494,22 @@ sp01.equipo.add(gabriela,sebas)
 #hu1 y hu2 estan en el flujo 1
 hu1Flujo1=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=f1)
 hu1Flujo1.lista_de_HU.add(hu1,hu2,hu3,hu4,hu5)
+hu1Flujo1.save()
 #hu3 esta en el flujo 2
 hu3flujo2=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=f2)
 hu3flujo2.lista_de_HU.add(hu6,hu7,hu8)
-
+hu3flujo2.save()
 #hu 13,14,15 en flujo 1 y 16,17,18 en flujo 2
 hu13Flujo1=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=f1)
 hu13Flujo1.lista_de_HU.add(hu13,hu14,hu15)
-
+hu13Flujo1.save()
 hu16Flujo1=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=f1)
 hu16Flujo1.lista_de_HU.add(hu16,hu17,hu18)
-
+hu16Flujo1.save()
 #hu 19,20,21 en flujo 1 para sprint01
 hu19Flujo1=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=f2)
 hu19Flujo1.lista_de_HU.add(hu19,hu20,hu21)
-
-
-
+hu19Flujo1.save()
 
 """
 Agregar las actividades iniciales de las hu de acuerdo al flujo que fueron designados

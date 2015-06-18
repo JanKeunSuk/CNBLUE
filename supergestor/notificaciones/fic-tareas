@@ -1,2 +1,3 @@
 @daily sh /home/katherine/IS2Work/git/supergestor/notificaciones/enviar.sh /home/katherine/IS2Work/git/supergestor Gloria 1 | mail -s Eventos gloria@gmail.com
 @weekly sh /home/katherine/IS2Work/git/supergestor/notificaciones/enviar.sh /home/katherine/IS2Work/git/supergestor Gloria 7 | mail -s Eventos gloria@gmail.com
+@daily sh /home/katherine/IS2Work/git/supergestor/notificaciones/enviar.sh /home/katherine/IS2Work/git/supergestor Carolina 1 | mail -s Eventos carolina@gmail.com
