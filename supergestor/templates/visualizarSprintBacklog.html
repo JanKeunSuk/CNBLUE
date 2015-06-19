@@ -113,9 +113,9 @@ background:#BDC3C7;
 										{%endif%}
 									{%endfor%}
 								{%elif s.estado == 'FIN'%}
-									<td WIDTH=260 align="center"><font size="3" color="#088A85"><b>{{Sprint}}<br/><font size="1" color="red">FINALIZADO</font></td>
+									<tr><td WIDTH=260 align="center"><font size="3" color="#088A85"><b>{{Sprint}}<br/><font size="1" color="red">FINALIZADO</font></td></tr>
 								{%else%}
-									<td WIDTH=260 align="center"><font size="3" color="#088A85"><b>{{Sprint}}<br/><font size="1" color="#FFFF00">PENDIENTE</font></td>
+									<tr><td WIDTH=260 align="center"><font size="3" color="#088A85"><b>{{Sprint}}<br/><font size="1" color="#FFFF00">PENDIENTE</font></td></tr>
 								{%endif%}
 								
 								{%if Sprint.estado == 'CON'%}
