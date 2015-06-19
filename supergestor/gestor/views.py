@@ -314,7 +314,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         existe=1
     #Chequeo de permiso para visaulizar chart, mando un bolean true si tiene permiso y hay grafico que mostrar, false si no
     if(rolx.tiene_permiso('Visualizar Chart')):
-        if Sprint.objects.filter(estado='CON'):
+        if Sprint.objects.filter(estado='CON').filter(proyecto=proyectox):
             verburn=True
         else:
             verburn=False
