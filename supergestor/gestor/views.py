@@ -530,8 +530,6 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
         try:
             HUs=[]
             HUs_pendientes=[]
-            
-            
             Sprint_a_crear = Sprint.objects.create(descripcion=request.POST['descripcion'],estado="ACT",fecha_inicio=request.POST['fecha_inicio'], duracion=request.POST['duracion'], proyecto=proyecto.objects.get(id=proyectoid))
             for p in request.POST.getlist('HUs'):
                 h=HU.objects.get(id=p)
@@ -548,14 +546,10 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=Sprint_a_crear.descripcion, evento=evento_e)
             if usuario_e.frecuencia_notificaciones == 'instante':
                 send_email(str(usuario_e.email), 'Notificacion', evento_e)
-                
-            #return HttpResponse('El Sprint se ha creado')
-            
-            
+
             flujos=Flujo.objects.all()
             flujos_pen=[]
-            
-            
+
             for h in HUs:#por cada hu seleccionada
                 if h.estado_en_actividad!='APR':
                     if h not in HUs_pendientes:
@@ -583,7 +577,7 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
                 if x.estado != 'FIN':
                     for h in x.hu.all():
                         HUs=HUs.exclude(id=h.id)
-                else:
+                elif x.estado != 'CON':
                     for h in x.hu.all():
                         if h.estado_en_actividad == 'FIN' or h.estado_en_actividad == 'APR':
                             HUs=HUs.exclude(id=h.id)
@@ -1211,12 +1205,18 @@ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
 
         else:
             if request.POST['boton'] == 'Calcular':
-                sum=s.duracion
+                sum=0
+                for h in s.hu.all():
+                    sum=sum+h.duracion
                 hus_seleccionadas=[]
                 HUs_no_seleccionadas=[]
                 for h in HU.objects.filter(estado="ACT").filter(proyecto=proyectox).filter(valido=True):
                     if h not in s.hu.all():
-                        HUs_no_seleccionadas.append(h)
+                        if not h.sprint():
+                            HUs_no_seleccionadas.append(h)
+                        else:
+                            if h.sprint().estado == 'FIN' and h.estado_en_actividad != 'APR':
+                                HUs_no_seleccionadas.append(h)
                     
                 flujos_seleccionados=[]
                 flujos_no_seleccionados=[]
@@ -1273,7 +1273,7 @@ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
                     HUs=HUs.exclude(id=h.id)
             else:
                 for h in x.hu.all():
-                    if h.estado_en_actividad != 'FIN' and h.sprint() == x:
+                    if h.estado_en_actividad != 'APR' and h.sprint() == x:
                         HUs_pendientes.append(h)
                         HUs=HUs.exclude(id=h.id)
                     else:
