@@ -322,7 +322,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
         verburn=False
     
     finalizar=0
-    if proyectox.estado == 'CON':
+    if proyectox.estado == 'ACT':
         finalizar=1
         for h in HU.objects.filter(proyecto=proyectox).filter(valido=True):
             if h.estado_en_actividad != 'APR':
