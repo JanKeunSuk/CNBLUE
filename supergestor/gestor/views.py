@@ -1834,12 +1834,12 @@ def visualizarBacklog(request, usuario_id, proyectoid, rolid):
     huss=HU.objects.all().filter(proyecto=proyectox).filter(estado='ACT').filter(valido=True).filter(sprint__hu__isnull=True)
     hu=sorted(huss,key=lambda x: x.prioridad, reverse=True)
     HUs_pendientes=[]
-    for x in Sprint.objects.all():
+    for x in Sprint.objects.filter(proyecto=proyectox):
         if x.estado == 'FIN':
             for h in x.hu.all():
                 if h.estado_en_actividad != 'APR':
                     HUs_pendientes.append(h)
-    for x in Sprint.objects.all():
+    for x in Sprint.objects.filter(proyecto=proyectox):
         if x.estado != 'FIN':
             for h in x.hu.all():
                 for hp in HUs_pendientes:
@@ -2722,7 +2722,6 @@ def make_pdf(proyecto, sprint):
     HUv=sorted(HUv,key=lambda x: x.prioridad, reverse=True)
     
     us_set = HUv
-    
     story.append(Paragraph("Informacion sobre su proyecto", styleH))
     story.append(Spacer(1, mm))
     # first add the table header
@@ -2822,7 +2821,9 @@ def make_pdf(proyecto, sprint):
     
     story.append(Paragraph("1. Cantidad de trabajos en curso por equipo", styles['Heading5']))
     story.append(Spacer(1, mm))
-    
+    if not sprint:
+        story.append(Paragraph("No hay trabajos realizandose", p_style1))
+        story.append(Spacer(1, 1*mm))
     equipo_hu={}
     for s in sprint:
         for h in s.hu.all():
@@ -2843,7 +2844,7 @@ def make_pdf(proyecto, sprint):
     
     if len(sprint) == 0:
         table_data.append(['', 'No hay historias de usuario para mostrar',
-                               '', '', ''])
+                               '', '', '','', '', ''])
     else:
         for usuario, hus in equipo_hu.items():
             table_col_widths = [10*mm, 20*mm, 15*mm, 15*mm, 20*mm, 20*mm, 30*mm, 20*mm]
@@ -2883,12 +2884,11 @@ def make_pdf(proyecto, sprint):
     story.append(Spacer(1, mm))
     table_col_widths = [10*mm, 20*mm, 15*mm, 15*mm, 20*mm, 20*mm,20*mm, 30*mm, 25*mm]
     estado_hu={}
-    for h in HUv:
-        if estado_hu.has_key(h.estado_en_actividad):
-            estado_hu[h.estado_en_actividad].append(h)
-        else:
+    for h in HU.objects.filter(proyecto=proyecto).filter(estado='ACT'):
+        if not estado_hu.has_key(h.estado_en_actividad):
             estado_hu[h.estado_en_actividad]=[]
-            estado_hu[h.estado_en_actividad].append(h)
+        estado_hu[h.estado_en_actividad].append(h)
+        
     for estado, hus in estado_hu.items():  
         i=1
         story.append(Paragraph("Estado: " + estado + " - Total de HUs: " + str(len(hus)), styles['Heading5']))
@@ -2936,6 +2936,8 @@ def make_pdf(proyecto, sprint):
                     'Estado',
         ], ]
     i=1
+    HUv=HU.objects.filter(proyecto=proyecto).filter(estado='ACT')
+    HUv=sorted(HUv,key=lambda x: x.prioridad, reverse=True)
     for us in HUv:
         table_data.append([
                     i,
@@ -2955,7 +2957,9 @@ def make_pdf(proyecto, sprint):
     
     story.append(Paragraph("4. Lista de Tiempo estimado por proyecto y la ejecución del mismo", styles['Heading4']))
     story.append(Spacer(1, 5*mm))
-    
+    if not sprint:
+        story.append(Paragraph("No hay trabajos realizandose", p_style1))
+        story.append(Spacer(1, 1*mm))
     for s in sprint:
         x_max, ideal_burndown, remaining_hours = s.get_BurdownChart()
         drawing = Drawing(150*mm, 100*mm)
@@ -2981,6 +2985,9 @@ def make_pdf(proyecto, sprint):
     
     huss=HU.objects.all().filter(proyecto=proyecto).filter(estado='ACT').filter(valido=True).filter(sprint__hu__isnull=True)
     huss=sorted(huss,key=lambda x: x.prioridad, reverse=True)
+    if not huss:
+        story.append(Paragraph("No hay trabajos pendientes de realizacion", p_style1))
+        story.append(Spacer(1, 1*mm))
     table_data = [[
                     '#',
                     'Descripción',
@@ -3008,10 +3015,60 @@ def make_pdf(proyecto, sprint):
         i=i+1
     story.append(Table(table_data, colWidths=table_col_widths,
                     style=table_style1, repeatRows=1))
-    story.append(Spacer(1, 5*mm))
+    story.append(Spacer(1, 3*mm))
+    story.append(Paragraph("HUs Pendientes de sprints anteriores", styles['Heading5']))
+    story.append(Spacer(1, 2*mm))
+    #las pendientes de sprints anteriores
+    HUs_pendientes=[]
+    for x in Sprint.objects.filter(proyecto=proyecto):
+        if x.estado == 'FIN':
+            for h in x.hu.all():
+                if h.estado_en_actividad != 'APR':
+                    HUs_pendientes.append(h)
+    for x in Sprint.objects.filter(proyecto=proyecto):
+        if x.estado != 'FIN':
+            for h in x.hu.all():
+                for hp in HUs_pendientes:
+                    if h == hp:
+                        HUs_pendientes.remove(h)
     
+    if not huss:
+        story.append(Paragraph("No hay trabajos que quedaron pendientes en sprints anteriores", p_style1))
+        story.append(Spacer(1, 1*mm))
+    table_data = [[
+                    '#',
+                    'Descripción',
+                    'Prioridad',
+                    'Hs. trab.',
+                    'Duracion',
+                    'Sprint',
+                    'Flujo',
+                    'Actividad',
+                    'Estado',
+        ], ]
+    i=1
+    for us in HUs_pendientes:
+        table_data.append([
+                    i,
+                    Paragraph(us.descripcion, p_style1),
+                    us.prioridad,
+                    us.acumulador_horas,
+                    us.duracion,
+                    us.sprint().descripcion if us.sprint() else ' - ',
+                    us.flujo().nombre if us.flujo() else ' - ',
+                    us.actividad.nombre if us.actividad else ' - ',
+                    us.estado_en_actividad,
+                    ])
+        i=i+1
+    story.append(Table(table_data, colWidths=table_col_widths,
+                    style=table_style1, repeatRows=1))
+    story.append(Spacer(1, 5*mm))
+                      
     story.append(Paragraph("6. El Backlog del Sprint, lista de los elementos del Backlog del Producto, elegidos para ser desarrollados en el Sprint actual", styles['Heading4']))
     story.append(Spacer(1, 2*mm))
+    if not sprint:
+        story.append(Paragraph("No hay sprint desarrollandose", p_style1))
+        story.append(Spacer(1, 1*mm))
     for s in sprint: # sprint MODO CONSULTA
         table_data = [[
                     '#',

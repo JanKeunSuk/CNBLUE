@@ -386,7 +386,8 @@ td { padding: 2px 2px 2px 2px; text-align-center; }
             <br/><br/><p align="center" style="text-shadow: 5px 5px 5px #aaa;"><font size = 5 ><b>Reporte para el cliente del Proyecto {{proyecto.nombre_corto}}</b></font></p>
             <br/><p><font size = 2 color="black"><b>1. Cantidad de trabajos en curso por equipo  </b></font>
             <a href="#" onClick="muestra('info1')";>Mostrar / Ocultar informacion</a>
-            <div style="display:none; border:#000 2px solid;" id="info1">
+            <div style="display:none;" id="info1">
+            {%if equipo_hu.items%}
             	{%for usuario, hus in equipo_hu.items%}
             		<font size = 2 color="black"><b>{{usuario}} Cantidad de HUs a cargo: {{hus|length}} </b></font><br/>
             		<ul>
@@ -401,6 +402,9 @@ td { padding: 2px 2px 2px 2px; text-align-center; }
 						{%endfor%}
 					</ul>
 				{%endfor%}
+			{%else%}
+				<br/>No hay trabajos en curso.
+			{%endif%}
 			</div></p>
             <br/><p><font size = 2 color="black"><b>2. Cantidad de trabajos por usuario pendiente, en curso, finalizado</b></font>
             <a href="#" onClick="muestra('info2')";>Mostrar / Ocultar informacion</a>
@@ -437,7 +441,11 @@ td { padding: 2px 2px 2px 2px; text-align-center; }
 				</ul>
 			</div></p>
             <br/><p><font size = 2 color="black"><b>4. Lista de Tiempo estimado por proyecto y la ejecución del mismo</b></font>
-            <a href="/visualizarChart/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Visualizar Burndown Chart</a></p>
+            {%if sprintReporte%}
+            	<a href="/visualizarChart/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Visualizar Burndown Chart</a></p>
+            {%else%}
+            	&nbsp;&nbsp;&nbsp;<font color=black size=2>No hay Sprint desarrollandose en este momento</font><br/>
+            {%endif%}
             <br/><p><font size = 2 color="black"><b>5. El backlog del Producto, lista ordenada de HU, en orden que esperamos deben terminarse</b></font>
             <a href="/visualizarBacklog/{{usuario.id}}/{{proyecto.id}}/{{rolid}}/" class="addlink">Visualizar Product Backlog</a></p>
             <br/><p><font size = 2 color="black"><b>6. El Backlog del Sprint, lista de los elementos del Backlog del Producto, elegidos para ser desarrollados en el Sprint actual</b></font>
