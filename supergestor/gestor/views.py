@@ -573,7 +573,7 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
             HUs = HU.objects.filter(proyecto=proyectox).filter(valido=True)
             flujos=Flujo.objects.all()#le mando todos los flujos para que elija los que quiere
             HUs_pendientes=[]
-            for x in Sprint.objects.all():
+            for x in Sprint.objects.filter(proyecto=proyectox):
                 if x.estado != 'FIN':
                     for h in x.hu.all():
                         HUs=HUs.exclude(id=h.id)
