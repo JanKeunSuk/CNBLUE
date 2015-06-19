@@ -249,7 +249,7 @@ class HU(models.Model):
         """ Funcion que retorna el sprint de una hu """
         id=0
         sprint=None
-        for a in Sprint.objects.all():
+        for a in Sprint.objects.filter(proyecto=self.proyecto):
             for h in a.hu.all():
                 if self.id == h.id:
                     if a.id > id:

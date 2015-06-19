@@ -1429,7 +1429,7 @@ def crearSprint(request,usuario_id,proyectoid,rolid):
     flujos=Flujo.objects.all()#le mando todos los flujos para que elija los que quiere
     flujos_pen=[]
     HUs_pendientes=[]
-    for x in Sprint.objects.all():#se podria chequear solo los sprint del proyecto para hacer menos trabajo!
+    for x in Sprint.objects.filter(proyecto=proyectox):#se podria chequear solo los sprint del proyecto para hacer menos trabajo!
         if x.estado == 'FIN':
             for h in x.hu.all():
                 if h.estado_en_actividad != 'APR':
@@ -1438,7 +1438,7 @@ def crearSprint(request,usuario_id,proyectoid,rolid):
                     flujos_pen.append(h.flujo())
                 else:
                     HUs=HUs.exclude(id=h.id)
-    for x in Sprint.objects.all():#este super for es para analizae el contenido de los sprint que no hayan terminado 
+    for x in Sprint.objects.filter(proyecto=proyectox):#este super for es para analizae el contenido de los sprint que no hayan terminado 
         if x.estado != 'FIN' and x.estado != 'CAN':#se busca sacar los hu que se pueden continuar todavia que esteen entre los pendientes
             for h in x.hu.all():
                 HUs=HUs.exclude(id=h.id)
@@ -2281,16 +2281,20 @@ def verKanban(request,usuario_id,proyectoid,rolid,sprintid):
     flujos_hu={}
     flujos_actividades={}
     kanban=1
+    proyectox=proyecto.objects.get(id=proyectoid)
     lista_hu=[]
-    for f in Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)):
-        for a in asignaHU_actividad_flujo.objects.all():
-            if a.flujo_al_que_pertenece == f:
-                lista_hu=[]
-                for h in a.lista_de_HU.all():
-                    if h.sprint() == sprintx:
-                        lista_hu.append(h)
+    for f in sprintx.flujo.all():
+        for a in asignaHU_actividad_flujo.objects.filter(flujo_al_que_pertenece=f):
+            lista_hu=[]
+            x=0
+            for h in a.lista_de_HU.all():
+                if h.sprint() == sprintx and h.proyecto == proyectox:
+                    x=1
+                    lista_hu.append(h)
+            if x == 1:
                 flujos_hu[f]=lista_hu
-    for f in Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)):
+                break
+    for f in sprintx.flujo.all():
         jsonDec = json.decoder.JSONDecoder()
         orden=jsonDec.decode(f.orden_actividades)
         actividades=[]
@@ -2298,7 +2302,7 @@ def verKanban(request,usuario_id,proyectoid,rolid,sprintid):
             actividades.append(Actividades.objects.get(id=o))
         flujos_actividades[f]=actividades
     flujos_aprobados=[]
-    for f in Flujo.objects.filter(sprint=Sprint.objects.get(id=sprintid)):
+    for f in sprintx.flujo.all():
         x=0
         if flujos_hu.has_key(f):
             for h in flujos_hu[f]:
