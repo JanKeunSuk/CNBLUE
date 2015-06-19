@@ -173,7 +173,7 @@ permission6 = Permission.objects.create(codename='Visualizar Chart',
 
 """Creacion de proyectos precargados"""
 p1=proyecto.objects.create(nombre_corto='p1',nombre_largo='proyecto1',descripcion='proyecto1',fecha_inicio=str(datetime.date.today()+ datetime.timedelta(days=-6)),duracion=20,cantidad_dias_transcurridos=6,fecha_fin=str(datetime.date.today() + datetime.timedelta(days=20)),estado='ACT')
-p2=proyecto.objects.create(nombre_corto='p2',nombre_largo='proyecto2',descripcion='proyecto2',fecha_inicio=str(datetime.date.today()),duracion=20,cantidad_dias_transcurridos=0,fecha_fin=str(datetime.date.today() + datetime.timedelta(days=20)),estado='PEN')
+p2=proyecto.objects.create(nombre_corto='p2',nombre_largo='proyecto2',descripcion='proyecto2',fecha_inicio=str(datetime.date.today()- datetime.timedelta(days=20)),duracion=20,cantidad_dias_transcurridos=20,fecha_fin=str(datetime.date.today()),estado='ACT')
 p3=proyecto.objects.create(nombre_corto='p3',nombre_largo='proyecto3',descripcion='proyecto3',fecha_inicio=str(datetime.date.today()),duracion=20,cantidad_dias_transcurridos=0,fecha_fin=str(datetime.date.today() + datetime.timedelta(days=20)),estado='PEN')
 p4=proyecto.objects.create(nombre_corto='p4',nombre_largo='proyecto4',descripcion='proyecto4',fecha_inicio=str(datetime.date.today()),duracion=20,cantidad_dias_transcurridos=0,fecha_fin=str(datetime.date.today() + datetime.timedelta(days=20)),estado='PEN')
 
@@ -284,6 +284,9 @@ asignacion.objects.create(usuario=vanessa,rol=rol_equipo,proyecto=p1) #Equipo
 asignacion.objects.create(usuario=valeria,rol=rol_cliente,proyecto=p1) #Cliente
 asignacion.objects.create(usuario=sebas,rol=rol_scrum,proyecto=p2)
 asignacion.objects.create(usuario=kathe,rol=rol_equipo,proyecto=p2)
+asignacion.objects.create(usuario=delsy,rol=rol_equipo,proyecto=p2)
+asignacion.objects.create(usuario=valeria,rol=rol_equipo,proyecto=p2)
+asignacion.objects.create(usuario=gabriela,rol=rol_equipo,proyecto=p2)
 asignacion.objects.create(usuario=kathe,rol=rol_scrum,proyecto=p3)
 asignacion.objects.create(usuario=sebas,rol=rol_owner,proyecto=p3)
 asignacion.objects.create(usuario=delsy,rol=rol_equipo,proyecto=p3)
@@ -455,6 +458,41 @@ huv20=HU_version.objects.create(descripcion=hu20.descripcion,valor_negocio=hu20.
 
 hu21=HU.objects.create(descripcion='HU21',valor_negocio=3,valor_tecnico=5,prioridad=45,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='PEN',valido=True,proyecto=p1,version=1.0)
 huv21=HU_version.objects.create(descripcion=hu21.descripcion,valor_negocio=hu21.valor_negocio,hu=hu21,version=hu21.version)
+
+#HU para el proyeto 2 que va a finalizar
+hu22=HU.objects.create(descripcion='HU22',valor_negocio=3,valor_tecnico=5,prioridad=45,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='APR',valido=True,proyecto=p2,version=1.0)
+huv22=HU_version.objects.create(descripcion=hu22.descripcion,valor_negocio=hu22.valor_negocio,hu=hu22,version=hu22.version)
+
+hu23=HU.objects.create(descripcion='HU23',valor_negocio=3,valor_tecnico=5,prioridad=45,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='APR',valido=True,proyecto=p2,version=1.0)
+huv23=HU_version.objects.create(descripcion=hu23.descripcion,valor_negocio=hu23.valor_negocio,hu=hu23,version=hu23.version)
+
+hu24=HU.objects.create(descripcion='HU24',valor_negocio=3,valor_tecnico=5,prioridad=45,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='APR',valido=True,proyecto=p2,version=1.0)
+huv24=HU_version.objects.create(descripcion=hu24.descripcion,valor_negocio=hu24.valor_negocio,hu=hu24,version=hu24.version)
+
+hu25=HU.objects.create(descripcion='HU25',valor_negocio=3,valor_tecnico=5,prioridad=45,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='APR',valido=True,proyecto=p2,version=1.0)
+huv25=HU_version.objects.create(descripcion=hu25.descripcion,valor_negocio=hu25.valor_negocio,hu=hu25,version=hu25.version)
+
+hu26=HU.objects.create(descripcion='HU26',valor_negocio=3,valor_tecnico=5,prioridad=45,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='APR',valido=True,proyecto=p2,version=1.0)
+huv26=HU_version.objects.create(descripcion=hu26.descripcion,valor_negocio=hu26.valor_negocio,hu=hu26,version=hu26.version)
+
+hu27=HU.objects.create(descripcion='HU27',valor_negocio=3,valor_tecnico=5,prioridad=45,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='APR',valido=True,proyecto=p2,version=1.0)
+huv27=HU_version.objects.create(descripcion=hu27.descripcion,valor_negocio=hu27.valor_negocio,hu=hu27,version=hu27.version)
+
+hu28=HU.objects.create(descripcion='HU28',valor_negocio=3,valor_tecnico=5,prioridad=45,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='APR',valido=True,proyecto=p2,version=1.0)
+huv28=HU_version.objects.create(descripcion=hu28.descripcion,valor_negocio=hu28.valor_negocio,hu=hu28,version=hu28.version)
+
+hu29=HU.objects.create(descripcion='HU29',valor_negocio=3,valor_tecnico=5,prioridad=45,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='APR',valido=True,proyecto=p2,version=1.0)
+huv29=HU_version.objects.create(descripcion=hu29.descripcion,valor_negocio=hu29.valor_negocio,hu=hu29,version=hu29.version)
+
+hu30=HU.objects.create(descripcion='HU30',valor_negocio=3,valor_tecnico=5,prioridad=45,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='APR',valido=True,proyecto=p2,version=1.0)
+huv30=HU_version.objects.create(descripcion=hu30.descripcion,valor_negocio=hu30.valor_negocio,hu=hu30,version=hu30.version)
+
+hu31=HU.objects.create(descripcion='HU31',valor_negocio=3,valor_tecnico=5,prioridad=45,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='APR',valido=True,proyecto=p2,version=1.0)
+huv31=HU_version.objects.create(descripcion=hu31.descripcion,valor_negocio=hu31.valor_negocio,hu=hu31,version=hu31.version)
+
+hu32=HU.objects.create(descripcion='HU32',valor_negocio=3,valor_tecnico=5,prioridad=45,duracion=15,acumulador_horas=15,estado='ACT',estado_en_actividad='ARP',valido=True,proyecto=p2,version=1.0)
+huv32=HU_version.objects.create(descripcion=hu32.descripcion,valor_negocio=hu32.valor_negocio,hu=hu32,version=hu32.version)
+
 
 """
 Agregar las actividades iniciales de las hu de acuerdo al flujo que fueron designados
@@ -798,3 +836,256 @@ hu3.save()
 """Ya que se comenzo la primera HU de mas alta prioridad del sprint cambiamos su estado de ACT a CON"""
 sp1.estado='CON'
 sp1.save()
+
+"""--------------------------------------Creacion de un Sprint finalizado correctamente SPRINT_FIN-----------------------------------"""
+#este va a ser el finalizado correctamente, con hus nuevas que tengo que crear
+spF=Sprint.objects.create(descripcion='sprint_fin',fecha_inicio=str(datetime.date.today()-datetime.timedelta(days=15)),duracion=7,estado='FIN',proyecto=p2)
+
+"""Agregar hus a los sprint creados"""
+spF.hu.add(hu22,hu23,hu24,hu25,hu26,hu27,hu28,hu29,hu30,hu31,hu32)
+
+"""Agregar hus a los sprint creados"""
+spF.flujo.add(f1,f2,f3)
+
+"""Agregar el quipo a los sprint creados"""
+spF.equipo.add(delsy,gabriela,valeria)
+
+"""Clasificar esas hus seleccionadas en flujos"""
+#hu 22,23,24,25 en flujo 1 , 26,27,28 en flujo y 29,30,31,32 en el flujo3
+hu22Flujo1=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=f1)
+hu22Flujo1.lista_de_HU.add(hu22,hu23,hu24,hu25)
+hu22Flujo1.save()
+hu26Flujo2=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=f2)
+hu26Flujo2.lista_de_HU.add(hu26,hu27,hu28)
+hu26Flujo2.save()
+hu29Flujo3=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=f3)
+hu29Flujo3.lista_de_HU.add(hu29,hu30,hu31,hu32)
+hu29Flujo3.save()
+
+delegacion.objects.create(usuario=delsy,hu=hu22)
+delegacion.objects.create(usuario=delsy,hu=hu23)
+delegacion.objects.create(usuario=delsy,hu=hu24)
+delegacion.objects.create(usuario=delsy,hu=hu25)
+delegacion.objects.create(usuario=gabriela,hu=hu26)
+delegacion.objects.create(usuario=gabriela,hu=hu27)
+delegacion.objects.create(usuario=gabriela,hu=hu28)
+delegacion.objects.create(usuario=valeria,hu=hu29)
+delegacion.objects.create(usuario=valeria,hu=hu30)
+delegacion.objects.create(usuario=valeria,hu=hu31)
+delegacion.objects.create(usuario=valeria,hu=hu32)
+
+#Creacion y asignacion de descripciones de hu 22, 23,24,25
+dhu221=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Analisis",estado='PRO')
+dhu222=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Disenho",estado='PRO')
+dhu223=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Despliegue",estado='PRO')
+dhu224=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Desarrollo",estado='PRO')
+dhu225=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Prueba",estado='PRO')
+hu22.hu_descripcion.add(dhu221)
+hu22.hu_descripcion.add(dhu222)
+hu22.hu_descripcion.add(dhu223)
+hu22.hu_descripcion.add(dhu224)
+hu22.hu_descripcion.add(dhu225)
+hu22.actividad=act1
+hu22.acumulador_horas=15
+hu22.save()
+
+"""Coloco en los campos estado y actividad de la HU a la que cargamos las descripciones los datos correctos segun la descripcion agregada"""
+hu22.estado_en_actividad='APR'
+hu22.actividad=act1
+hu22.acumulador_horas=15
+hu22.save()
+
+
+dhu231=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Analisis",estado='PRO')
+dhu232=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Disenho",estado='PRO')
+dhu233=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Despliegue",estado='PRO')
+dhu234=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Desarrollo",estado='PRO')
+dhu235=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Prueba",estado='PRO')
+hu23.hu_descripcion.add(dhu231)
+hu23.hu_descripcion.add(dhu232)
+hu23.hu_descripcion.add(dhu233)
+hu23.hu_descripcion.add(dhu234)
+hu23.hu_descripcion.add(dhu235)
+hu23.actividad=act1
+hu23.acumulador_horas=15
+hu23.save()
+
+
+"""Coloco en los campos estado y actividad de la HU a la que cargamos las descripciones los datos correctos segun la descripcion agregada"""
+hu23.estado_en_actividad='APR'
+hu23.actividad=act1
+hu23.acumulador_horas=15
+hu23.save()
+
+
+dhu241=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Analisis",estado='PRO')
+dhu242=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Disenho",estado='PRO')
+dhu243=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Despliegue",estado='PRO')
+dhu244=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Desarrollo",estado='PRO')
+dhu245=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Prueba",estado='PRO')
+hu24.hu_descripcion.add(dhu241)
+hu24.hu_descripcion.add(dhu242)
+hu24.hu_descripcion.add(dhu243)
+hu24.hu_descripcion.add(dhu244)
+hu24.hu_descripcion.add(dhu245)
+hu24.actividad=act1
+hu24.acumulador_horas=15
+hu24.save()
+
+
+"""Coloco en los campos estado y actividad de la HU a la que cargamos las descripciones los datos correctos segun la descripcion agregada"""
+hu24.estado_en_actividad='APR'
+hu24.actividad=act1
+hu24.acumulador_horas=15
+hu24.save()
+
+
+dhu251=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Analisis",estado='PRO')
+dhu252=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="diseño",estado='PRO')
+dhu253=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Despliegue",estado='PRO')
+dhu254=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="desarrollo",estado='PRO')
+dhu255=HU_descripcion.objects.create(horas_trabajadas=3,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="prueba",estado='PRO')
+hu25.hu_descripcion.add(dhu251)
+hu25.hu_descripcion.add(dhu252)
+hu25.hu_descripcion.add(dhu253)
+hu25.hu_descripcion.add(dhu254)
+hu25.hu_descripcion.add(dhu255)
+hu25.actividad=act1
+hu25.acumulador_horas=15
+hu25.save()
+
+
+"""Coloco en los campos estado y actividad de la HU a la que cargamos las descripciones los datos correctos segun la descripcion agregada"""
+hu25.estado_en_actividad='APR'
+hu25.actividad=act1
+hu25.acumulador_horas=15
+hu25.save()
+
+#Creacion y asignacion de descripciones de hu 26,27,28
+dhu261=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Relevamiento",estado='PRO')
+dhu262=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Implementacion",estado='PRO')
+dhu263=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Control",estado='PRO')
+hu26.hu_descripcion.add(dhu261)
+hu26.hu_descripcion.add(dhu262)
+hu26.hu_descripcion.add(dhu263)
+hu26.actividad=act6
+hu26.acumulador_horas=15
+hu26.save()
+
+
+"""Coloco en los campos estado y actividad de la HU a la que cargamos las descripciones los datos correctos segun la descripcion agregada"""
+hu26.estado_en_actividad='APR'
+hu26.actividad=act6
+hu26.acumulador_horas=15
+hu26.save()
+
+
+dhu271=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Relevamiento",estado='PRO')
+dhu272=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Implementacion",estado='PRO')
+dhu273=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Control",estado='PRO')
+hu27.hu_descripcion.add(dhu271)
+hu27.hu_descripcion.add(dhu272)
+hu27.hu_descripcion.add(dhu273)
+hu27.actividad=act6
+hu27.acumulador_horas=15
+hu27.save()
+
+
+"""Coloco en los campos estado y actividad de la HU a la que cargamos las descripciones los datos correctos segun la descripcion agregada"""
+hu27.estado_en_actividad='APR'
+hu27.actividad=act6
+hu27.acumulador_horas=15
+hu27.save()
+
+
+dhu281=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Relevamiento",estado='PRO')
+dhu282=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Implementacion",estado='PRO')
+dhu283=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Control",estado='PRO')
+hu28.hu_descripcion.add(dhu281)
+hu28.hu_descripcion.add(dhu282)
+hu28.hu_descripcion.add(dhu283)
+hu28.actividad=act8
+hu28.acumulador_horas=15
+hu28.save()
+
+"""Coloco en los campos estado y actividad de la HU a la que cargamos las descripciones los datos correctos segun la descripcion agregada"""
+hu28.estado_en_actividad='APR'
+hu28.actividad=act6
+hu28.acumulador_horas=15
+hu28.save()
+
+
+#Creacion y asignacion de descripciones de hu 29,30,31,32
+dhu291=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Relevamiento",estado='PRO')
+dhu292=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Disenho",estado='PRO')
+dhu293=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Desarrollo",estado='PRO')
+dhu294=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Control",estado='PRO')
+hu29.hu_descripcion.add(dhu291)
+hu29.hu_descripcion.add(dhu292)
+hu29.hu_descripcion.add(dhu293)
+hu29.hu_descripcion.add(dhu294)
+hu29.actividad=act6
+hu29.acumulador_horas=15
+hu29.save()
+
+"""Coloco en los campos estado y actividad de la HU a la que cargamos las descripciones los datos correctos segun la descripcion agregada"""
+hu29.estado_en_actividad='APR'
+hu29.actividad=act6
+hu29.acumulador_horas=15
+hu29.save()
+
+
+dhu301=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Relevamiento",estado='PRO')
+dhu302=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Disenho",estado='PRO')
+dhu303=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Desarrollo",estado='PRO')
+dhu304=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Control",estado='PRO')
+hu30.hu_descripcion.add(dhu301)
+hu30.hu_descripcion.add(dhu302)
+hu30.hu_descripcion.add(dhu303)
+hu30.hu_descripcion.add(dhu304)
+hu30.actividad=act8
+hu30.acumulador_horas=15
+hu30.save()
+
+"""Coloco en los campos estado y actividad de la HU a la que cargamos las descripciones los datos correctos segun la descripcion agregada"""
+hu30.estado_en_actividad='APR'
+hu30.actividad=act6
+hu30.acumulador_horas=15
+hu30.save()
+
+
+dhu311=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Relevamiento",estado='PRO')
+dhu312=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Disenho",estado='PRO')
+dhu313=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Desarrollo",estado='PRO')
+dhu314=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Control",estado='PRO')
+hu31.hu_descripcion.add(dhu311)
+hu31.hu_descripcion.add(dhu312)
+hu31.hu_descripcion.add(dhu313)
+hu31.hu_descripcion.add(dhu314)
+hu31.actividad=act6
+hu31.acumulador_horas=15
+hu31.save()
+
+"""Coloco en los campos estado y actividad de la HU a la que cargamos las descripciones los datos correctos segun la descripcion agregada"""
+hu31.estado_en_actividad='APR'
+hu31.actividad=act6
+hu31.acumulador_horas=15
+hu31.save()
+
+dhu321=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Relevamiento",estado='PRO')
+dhu322=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Disenho",estado='PRO')
+dhu323=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Desarrollo",estado='PRO')
+dhu324=HU_descripcion.objects.create(horas_trabajadas=5,descripcion_horas_trabajadas='Tarea1',fecha=str(datetime.date.today()),actividad="Control",estado='PRO')
+hu32.hu_descripcion.add(dhu321)
+hu32.hu_descripcion.add(dhu322)
+hu32.hu_descripcion.add(dhu323)
+hu32.hu_descripcion.add(dhu324)
+hu32.actividad=act6
+hu32.acumulador_horas=15
+hu32.save()
+
+"""Coloco en los campos estado y actividad de la HU a la que cargamos las descripciones los datos correctos segun la descripcion agregada"""
+hu32.estado_en_actividad='APR'
+hu32.actividad=act6
+hu32.acumulador_horas=15
+hu32.save()
