@@ -291,7 +291,7 @@ class proyectoTest(TestCase):
     
     def test_invalid_proyectoFrom(self):
         """Test que prueba el formulario de un proyecto invalido"""
-        w = proyecto.objects.create(nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio="2015-03-31 00:00:00-04", fecha_fin="2015-03-31 00:00:00-04" ,estado="PEN" )
+        w = proyecto.objects.create(nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio="2015-03-31 00:00:00-04", fecha_fin="2015-03-31 00:00:00-04",estado="PEN" ,duracion=10,cantidad_dias_transcurridos=0)
         data = {'nombre_corto':w.nombre_corto, 'nombre_largo':w.nombre_largo, 'descripcion':w.descripcion, 'fecha_inicio':w.fecha_inicio, 'fecha_fin': w.fecha_fin, }
         form = proyectoFrom(data=data)
         self.assertFalse(form.is_valid())
@@ -327,7 +327,7 @@ class proyectoTest(TestCase):
         
 class asignacionTest(TestCase):
     def create_proyecto(self):
-        return proyecto.objects.create(nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio="2015-03-31 00:00:00-04", fecha_fin="2015-03-31 00:00:00-04" ,estado="PEN" )
+        return proyecto.objects.create(nombre_corto="P9", nombre_largo="proyecto9", descripcion="proyecto9", fecha_inicio="2015-03-31 00:00:00-04", fecha_fin="2015-03-31 00:00:00-04" ,estado="PEN" ,duracion=10,cantidad_dias_transcurridos=0)
         
     def create_rol(self):
         return rol.objects.create( nombre_rol_id="nuevoRol", descripcion="nuevo_rol", usuario_creador= MyUser.objects.create_user('delsy', Permitido.objects.create(email='delsy@gmail.com'), '1234'))
@@ -344,7 +344,7 @@ class asignacionTest(TestCase):
         self.assertEqual(w.usuario.username, 'anonimo')
         
     def create_proyecto2(self):
-        return proyecto.objects.create(nombre_corto="P", nombre_largo="proyecto", descripcion="proyecto", fecha_inicio="2015-03-31 00:00:00-04", fecha_fin="2015-03-31 00:00:00-04" ,estado="PEN" )
+        return proyecto.objects.create(nombre_corto="P", nombre_largo="proyecto", descripcion="proyecto", fecha_inicio="2015-03-31 00:00:00-04", fecha_fin="2015-03-31 00:00:00-04" ,estado="PEN" ,duracion=10,cantidad_dias_transcurridos=0)
         
     def test_asignacion_modificar(self):
         """Test que prueba la modificacion del proyecto de una asignacion"""
@@ -714,7 +714,7 @@ class TestholaScrumView(TestCase):
         return Flujo.objects.create(nombre=nombre, estado=estado)
     
     def create_proyecto(self):
-        return proyecto.objects.create(nombre_corto="P", nombre_largo="proyecto", descripcion="proyecto", fecha_inicio="2015-03-31 00:00:00-04", fecha_fin="2015-03-31 00:00:00-04" ,estado="PEN" )
+        return proyecto.objects.create(nombre_corto="P", nombre_largo="proyecto", descripcion="proyecto", fecha_inicio="2015-03-31 00:00:00-04", fecha_fin="2015-03-31 00:00:00-04" ,estado="PEN" ,duracion=10,cantidad_dias_transcurridos=0)
 
     def create_sprint(self):
         return Sprint.objects.create( descripcion='sprintTest', fecha_inicio=timezone.now(), duracion='3', estado='ACT', proyecto_id='1')
@@ -760,7 +760,7 @@ class TestholaScrumView(TestCase):
         rol.permisos.add(Permission.objects.create(name='Can change hu nivel Scrum', content_type_id=13, codename='Can change hu nivel Scrum'))
         rol.save()
         self.assertEqual(rol.nombre_rol_id, 'Scrum')
-        proyectox=proyecto.objects.create(nombre_corto='p1',nombre_largo='proyecto1',descripcion='proyecto1',fecha_inicio=timezone.now(),fecha_fin=timezone.now(),estado='PEN')
+        proyectox=proyecto.objects.create(nombre_corto='p1',nombre_largo='proyecto1',descripcion='proyecto1',fecha_inicio=timezone.now(),fecha_fin=timezone.now(),estado='PEN',duracion=10,cantidad_dias_transcurridos=0)
         hu=self.create_hu()
         hu.valido=True
         hu.duracion=4
@@ -785,7 +785,7 @@ class TestholaScrumView(TestCase):
         rolx.permisos.add(Permission.objects.create(name='agregar delegacion', content_type_id=15, codename='Can add delegacion'))
         rolx.save()
         self.assertEqual(rolx.nombre_rol_id, 'Scrum')
-        proyectox=proyecto.objects.create(nombre_corto='p1',nombre_largo='proyecto1',descripcion='proyecto1',fecha_inicio=timezone.now(),fecha_fin=timezone.now(),estado='ACT')
+        proyectox=proyecto.objects.create(nombre_corto='p1',nombre_largo='proyecto1',descripcion='proyecto1',fecha_inicio=timezone.now(),fecha_fin=timezone.now(),estado='ACT',duracion=10,cantidad_dias_transcurridos=0)
         hu=self.create_hu()
         hu.valido=True
         hu.estado="ACT"
@@ -813,7 +813,7 @@ class TestholaScrumView(TestCase):
         rolx.permisos.add(Permission.objects.create(name='Agregar horas trabajadas', content_type_id=16, codename='Agregar horas trabajadas'))
         rolx.save()
         self.assertEqual(rolx.nombre_rol_id, 'Scrum')
-        proyectox=proyecto.objects.create(nombre_corto='p1',nombre_largo='proyecto1',descripcion='proyecto1',fecha_inicio=timezone.now(),fecha_fin=timezone.now(),estado='ACT')
+        proyectox=proyecto.objects.create(nombre_corto='p1',nombre_largo='proyecto1',descripcion='proyecto1',fecha_inicio=timezone.now(),fecha_fin=timezone.now(),estado='ACT',duracion=10,cantidad_dias_transcurridos=0)
         hu=self.create_hu()
         hu.valido=True
         hu.estado="ACT"
@@ -838,7 +838,7 @@ class TestholaScrumView(TestCase):
         rolx.permisos.add(Permission.objects.create(name='modificar hu', content_type_id=17, codename='Can change hu'))
         rolx.save()
         self.assertEqual(rolx.nombre_rol_id, 'ProductOwner')
-        proyectox=proyecto.objects.create(nombre_corto='p1',nombre_largo='proyecto1',descripcion='proyecto1',fecha_inicio=timezone.now(),fecha_fin=timezone.now(),estado='ACT')
+        proyectox=proyecto.objects.create(nombre_corto='p1',nombre_largo='proyecto1',descripcion='proyecto1',fecha_inicio=timezone.now(),fecha_fin=timezone.now(),estado='ACT',duracion=10,cantidad_dias_transcurridos=0)
         hu=self.create_hu()
         hu.proyecto_id=proyectox.id
         hu.save()
