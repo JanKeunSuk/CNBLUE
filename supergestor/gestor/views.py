@@ -537,8 +537,6 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
                 h=HU.objects.get(id=p)
                 Sprint_a_crear.hu.add(h)
                 HUs.append(h)#ahora HUs tienen todas las seleccionadas incluso las pendientes
-                if h.acumulador_horas > 0:
-                    Sprint_a_crear.estado='CON'
                 Sprint_a_crear.save()
             for f in request.POST.getlist('Flujos'):
                 Sprint_a_crear.flujo.add(Flujo.objects.get(id=f))
@@ -1839,7 +1837,7 @@ def visualizarBacklog(request, usuario_id, proyectoid, rolid):
     for x in Sprint.objects.all():
         if x.estado == 'FIN':
             for h in x.hu.all():
-                if h.estado_en_actividad != 'FIN':
+                if h.estado_en_actividad != 'APR':
                     HUs_pendientes.append(h)
     for x in Sprint.objects.all():
         if x.estado != 'FIN':
