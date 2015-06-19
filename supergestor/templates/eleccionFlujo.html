@@ -82,9 +82,14 @@
 
 
 <p>Flujos incluidos con HUs pendientes: </p>
-	{%for f in flujo_pen%}
-		<p>{{f}}</p>
-	{%endfor%}
+	{%if flujo_pen|length > 1 %}
+		{%for f in flujo_pen%}
+			<p>{{f}}</p>
+		{%endfor%}
+	{%else%}
+			<p>Ninguno</p>
+	{%endif%}
+		
 	</br>
 <form  enctype="multipart/form-data" action="/guardarFlujoSprint/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="post" id="proyecto_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='lIrpccfDE0jXqIrun25AwLRBdIxGUDco' />
 {% csrf_token %}
