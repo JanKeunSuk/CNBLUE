@@ -189,6 +189,12 @@ class proyecto(models.Model):
         """Representacion unicode del objeto proyecto"""
         return self.nombre_corto   
     
+    def get_fecha_inicio(self):
+        return str(self.fecha_inicio)[:10]
+    
+    def get_fecha_fin(self):
+        return str(self.fecha_fin)[:10]
+    
 class HU_descripcion(models.Model):
     """
     Modelo representa la descripcion de cada hora de trabajo agregada mostrando de la fecha de la misma
@@ -384,6 +390,9 @@ class Sprint(models.Model):
     def __unicode__(self):
         """Representacion unicode del objeto Sprint"""
         return self.descripcion
+    
+    def get_fecha_inicio(self):
+        return str(self.fecha_inicio)[:10]
     
     def termino_Sprint(self):
         """Funcion que representa el termino de un sprint retornando True o False"""

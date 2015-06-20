@@ -372,7 +372,7 @@ def guardarUsuarioView(request):
         return HttpResponseRedirect('/login/')
     except ObjectDoesNotExist:
         print "Either the entry or blog doesn't exist." 
-        return HttpResponseRedirect('/registrar/')
+        return HttpResponse('El correo no se encuentra aprobado. Contactar con el Administrador')
     
 def modificarCuenta(request, usuario_id):
     """
