@@ -17,6 +17,21 @@
 <script type="text/javascript" src="/static/admin/js/actions.js"></script>
 
 <meta name="robots" content="NONE,NOARCHIVE" />
+<script type="text/javascript">
+function validarForm(formulario) {
+  if(formulario.descripcion.value.length==0) { //comprueba que no esté vacío
+    formulario.descripcion.focus();   
+    alert('No has completado el campo Descripcion'); 
+    return false; //devolvemos el foco
+  }
+  if(formulario.duracion.value.length==0) { //comprueba que no esté vacío
+	    formulario.duracion.focus();   
+	    alert('No has estimado la Duracion'); 
+	    return false; //devolvemos el foco
+	  }
+  return true;
+}
+</script>
 </head>
 
 
@@ -60,7 +75,7 @@
 
 
 
-<form enctype="multipart/form-data" action="/guardarSprint/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="post" id="rol_form" novalidate>
+<form enctype="multipart/form-data" action="/guardarSprint/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="post" id="rol_form" novalidate onsubmit="return validarForm(this);">
 <input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
 {% csrf_token %}
 <div style="width:1500x; height:530px; border:#000 2px solid; overflow:auto">

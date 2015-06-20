@@ -17,6 +17,17 @@
 <script type="text/javascript" src="/static/admin/js/actions.js"></script>
 
 <meta name="robots" content="NONE,NOARCHIVE" />
+<script type="text/javascript">
+function validarForm(formulario) {
+  if(formulario.nombre.value.length==0) { //comprueba que no esté vacío
+    formulario.nombre.focus();   
+    alert('No has completado todos los campos'); 
+    return false; //devolvemos el foco
+  }
+  
+  return true;
+}
+</script>
 </head>
 
 
@@ -59,7 +70,7 @@
         <h1>Agregar flujo</h1>
         <div id="content-main">
 
-<form enctype="multipart/form-data" action="/guardarFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="post" id="rol_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
+<form enctype="multipart/form-data" action="/guardarFlujo/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="post" id="rol_form" novalidate onsubmit="return validarForm(this);"><input type='hidden' name='csrfmiddlewaretoken' value='JyS6xzJ9lDG2WgfiSPv0L0PvCmALwE52' />
 {% csrf_token %}
 <div>
 
