@@ -452,7 +452,7 @@ def guardarFlujoView(request, usuario_id, proyectoid, rolid):
         historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=flujo_a_crear.nombre, evento=evento_e)
         if usuario_e.frecuencia_notificaciones == 'instante':
             send_email(str(email_e), 'Notificacion', evento_e)
-        return HttpResponse('El flujo se ha creado'+str(request.POST.getlist('actividades')))
+        return HttpResponse('El flujo se ha creado')
     else:
         if request.POST['boton'] == 'Agregar':
             act_asi=request.POST.getlist('actividades_asignadas')
@@ -790,7 +790,7 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                             hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas, fecha=fecha, actividad=str(h.actividad), estado=str(h.estado_en_actividad))
                             h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
                             hd.save()
-                            evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"A+"+"Se ha agregado '"+request.POST['horas_agregar']+"' horas a la '"+HU.descripcion+"' con una descripcion '"+request.POST['descripcion_horas']+"' quedando asi finalizadas las actividades con fecha y hora: "+str(timezone.now())
+                            evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"A+"+"Se ha agregado '"+request.POST['horas_agregar']+"' horas a la '"+h.descripcion+"' con una descripcion '"+request.POST['descripcion_horas']+"' quedando asi finalizadas las actividades con fecha y hora: "+str(timezone.now())
                             usuario_e=MyUser.objects.get(id=usuario_id)
                             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=h.descripcion, evento=evento_e)
                             if usuario_e.frecuencia_notificaciones == 'instante':
@@ -803,7 +803,7 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                             hd=HU_descripcion.objects.create(horas_trabajadas=horas_a_agregar,descripcion_horas_trabajadas=descripcion_horas, fecha=fecha, actividad=str(h.actividad), estado=estadoP)
                             h.hu_descripcion.add(HU_descripcion.objects.get(id=hd.id))
                             hd.save()
-                            evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"A+"+"Se ha agregado '"+request.POST['horas_agregar']+"' horas a la '"+HU.descripcion+"' con una descripcion '"+request.POST['descripcion_horas']+"' ,completando la duracion sin terminar todas las actividades con fecha y hora: "+str(timezone.now())
+                            evento_e=usuario_id+"+"+proyectoid+"+"+rolid+"+"+"HU+"+"A+"+"Se ha agregado '"+request.POST['horas_agregar']+"' horas a la '"+h.descripcion+"' con una descripcion '"+request.POST['descripcion_horas']+"' ,completando la duracion sin terminar todas las actividades con fecha y hora: "+str(timezone.now())
                             usuario_e=MyUser.objects.get(id=usuario_id)
                             historial_notificacion.objects.create(usuario=usuario_e, fecha_hora=timezone.now(), objeto=h.descripcion, evento=evento_e)
                             if usuario_e.frecuencia_notificaciones == 'instante':
@@ -823,6 +823,7 @@ def guardarHUProdOwnerView(request,usuario_id, proyectoid, rolid, HU_id_rec,is_S
                             if usuario_e.frecuencia_notificaciones == 'instante':
                                 send_email(str(usuario_e.email), 'Notificacion', evento_e)
                             return render(request,'modificarHU.html', {'HU':h, 'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'is_Scrum':2})
+                    return('Las horas se han cargado exitosamente')
             else:
                 return HttpResponse('Las Horas cargadas ya superan las 8 Horas diarias que deben cargarse por dia. Ya ha cargado '+str(acumulador-int(prueba))+' horas en este dia') 
                 
@@ -3179,3 +3180,10 @@ def finalizarProyecto(request,usuario_id,proyectoid,rol_id):
         proyectox.fecha_fin=timezone.now()
         proyectox.save()
         return HttpResponseRedirect('/hola/')
+    
+def iniciarProyecto(request,usuario_id,proyectoid,rol_id,sprintid ):
+    s=Sprint.objects.get(id=sprintid)
+    s.fecha_inicio=datetime.today()
+    s.estado = 'CON'
+    s.save()
+    return HttpResponseRedirect('/scrum/'+usuario_id+'/'+proyectoid+'/'+rol_id+'/')

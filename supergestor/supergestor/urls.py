@@ -69,4 +69,5 @@ urlpatterns = patterns('',
     url(r'^visualizarChart/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$',views.visualizarBurnDownChart,name='verBurnDOwnCHart'),
     url(r'^guardarFlujoSprint/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rolid>\d+)/$', views.guardarSprintFlujos, name='guardar_nuevo_flujo_sprint'),
     url(r'^generar/(?P<proyectoid>\d+)/(?P<report_id>\d+)/$',views.reporte_view,name='generarReporte'),
+    url(r'^iniciar/(?P<usuario_id>\d+)/(?P<proyectoid>\d+)/(?P<rol_id>\d+)/(?P<sprintid>\d+)/$', views.iniciarProyecto, name='iniciarSprint'),
 )

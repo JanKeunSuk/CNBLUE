@@ -361,11 +361,16 @@ td { padding: 2px 2px 2px 2px; text-align-center; }
             				{%if s == sprint%}
             					{%for enlace in enlaceSprintm%}
                 					{%if sprint.estado == 'CAN'%}
-                						<td><a href="/reactivar/{{enlace.url}}/3/{{sprint.id}}/" class="changelink">Reactivar</a></td>
+                						&nbsp;
+                						<!-- 
+                						{%if existe == 0%}
+                							<td><a href="/reactivar/{{enlace.url}}/3/{{sprint.id}}/" class="changelink">Reactivar</a></td>
+                						{%endif%} -->
                 					{%else%}
                 						<td><a href="/modificarSprint/{{enlace.url}}/{{sprint.id}}/" class="changelink">Modificar</a></td>
+                						<td><a href="/asignarHUFlujo/{{enlace.url}}/{{sprint.id}}/" class="changelink">Clasificar HU en flujos</a></td>
                 						{%if existe == 0%}
-                							<td><a href="/asignarHUFlujo/{{enlace.url}}/{{sprint.id}}/" class="changelink">Clasificar HU en flujos</a></td>
+                							<td><a href="/iniciar/{{enlace.url}}/{{sprint.id}}/" class="changelink">Iniciar Sprint</a></td>
                 						{%endif%}
                 					{%endif%}
                 				{%endfor%}
