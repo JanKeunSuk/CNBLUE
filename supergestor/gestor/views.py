@@ -2570,7 +2570,7 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
     for u in hus:
         if u.sprint()==sprint:
             hux.append(u)
-            
+    val=0        
     #ahora ya tengo todas las hu del sprint en hux
     #tengo que sumar sus duraciones para saber el maximo del backlog
     sumx=0
@@ -2586,6 +2586,7 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
     #el primer elemento del diccionario va a ser la duracion total de todas las hu osea la primera barra del burndown
     for hu in hux:
             for d in hu.hu_descripcion.all().order_by('fecha'):
+                val=1
                 f=str((d.fecha+timedelta(days=-1)).strftime('%Y-%m-%d'))[:10] 
                 if f in lista_fechas:
                     lista_horas[lista_fechas.index(f)]=lista_horas[lista_fechas.index(f)]+d.horas_trabajadas
@@ -2634,7 +2635,10 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
     for x in lista_horas: 
         suma_cargadas=suma_cargadas+x
         pass
-    prome=suma_cargadas/len(lista_horas)
+    if val==1:
+        prome=suma_cargadas/len(lista_horas)
+    else:
+        prome=sumx
     
     remain=tot_restante#continua con las horas que quedaron sin hacerse
     #prome es lo que se supone que debe avanzar en los dias restantes...meter eso en nueva_estimacion
