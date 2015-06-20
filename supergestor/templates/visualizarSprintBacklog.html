@@ -100,6 +100,7 @@ background:#BDC3C7;
 					</tr>
 					{% for Sprint in sprint %}
 					<tr>
+					{%if Sprint.estado != 'CAN'%}
 						{%for s,l in len.items%}
 							{%if s == Sprint%}
 								{%if s.estado == 'CON'%}
@@ -199,7 +200,7 @@ background:#BDC3C7;
 							{%endif%}
 							
 						{%endfor%}
-						
+					{%endif%}	
 					{%endfor%}
 				</tbody>
         </table>
