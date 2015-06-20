@@ -17,6 +17,47 @@
 <script type="text/javascript" src="/static/admin/js/actions.js"></script>
 
 <meta name="robots" content="NONE,NOARCHIVE" />
+<script type="text/javascript">
+function validarForm(formulario) {
+  if(formulario.username.value.length==0) { //comprueba que no esté vacío
+    formulario.username.focus();   
+    alert('No has completado todos los campos'); 
+    return false; //devolvemos el foco
+  }
+  if(formulario.user_name.value.length==0) { //comprueba que no esté vacío
+	    formulario.user_name.focus();   
+	    alert('No has completado todos los campos'); 
+	    return false; //devolvemos el foco
+	}
+  if(formulario.last_name.value.length==0) { //comprueba que no esté vacío
+	    formulario.last_name.focus();   
+	    alert('No has completado todos los campos'); 
+	    return false; //devolvemos el foco
+	  }
+  if(formulario.direccion.value.length==0) { //comprueba que no esté vacío
+	    formulario.direccion.focus();   
+	    alert('No has completado todos los campos'); 
+	    return false; //devolvemos el foco
+	  }
+  if(formulario.email.value.length==0) { //comprueba que no esté vacío
+	    formulario.email.focus();   
+	    alert('No has completado todos los campos'); 
+	    return false; //devolvemos el foco
+	  }
+  if(formulario.password1.value.length==0) { //comprueba que no esté vacío
+	    formulario.password1.focus();   
+	    alert('No has completado todos los campos'); 
+	    return false; //devolvemos el foco
+	  }
+  if(formulario.password2.value.length==0) { //comprueba que no esté vacío
+	    formulario.password2.focus();   
+	    alert('No has completado todos los campos'); 
+	    return false; //devolvemos el foco
+	  }
+ 
+  return true;
+}
+</script>
 </head>
 
 
@@ -32,7 +73,7 @@
         
 <h1 id="site-name"><a href="/login/">Registro de Usuario Nuevo</a></h1>
 
-<form enctype="multipart/form-data" action="/save/" method="post" id="myuser_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='I2gvMo5vSN0jrTyA6qIeHcNcN5UtgvFS' />
+<form enctype="multipart/form-data" action="/save/" method="post" id="myuser_form" novalidate onsubmit="return validarForm(this);"><input type='hidden' name='csrfmiddlewaretoken' value='I2gvMo5vSN0jrTyA6qIeHcNcN5UtgvFS' />
   {% csrf_token %}
     <p>Ingrese los datos del usuario a crearse.</p>
 
@@ -46,8 +87,8 @@
 
                         <label class="required" for="id_username">Username:</label>
                         
-                            <input class="vTextField" id="id_username" maxlength="40" name="username" type="text" pattern="[a-z]" required="required" autofocus="autofocus"/>
-               
+                            <input class="vTextField" id="id_username" maxlength="40" name="username" type="text" pattern="[a-z]" required autofocus="autofocus"/>
+               				
                 </div>
             
         </div>
