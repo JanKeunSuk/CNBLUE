@@ -2549,7 +2549,7 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
         :param args: usuario_id,proyectoid,rolid
         :returns: burndown.htm
     """
-    sprint= Sprint.objects.get(estado='CON').filter(proyecto__id=proyectoid)#esto es un quiryset....que sea un elemento nomas!!!!!!!!
+    sprint= Sprint.objects.get(estado='CON',proyecto__id=proyectoid)#esto es un quiryset....que sea un elemento nomas!!!!!!!!
     #sprint ahora tiene el Sprint que se va mostrar en el burndown de este proyecto...el actual nose si hay que mostrar de todos?
     duracionsp=range(int(sprint.duracion))
     hus=HU.objects.all().filter(proyecto__id=proyectoid)
