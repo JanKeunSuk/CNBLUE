@@ -2585,7 +2585,6 @@ def visualizarBurnDownChart(request,usuario_id,proyectoid,rolid):
     lista_horas.append(0)
     #el primer elemento del diccionario va a ser la duracion total de todas las hu osea la primera barra del burndown
     for hu in hux:
-        if hu.hu_descripcion:
             for d in hu.hu_descripcion.all().order_by('fecha'):
                 f=str((d.fecha+timedelta(days=-1)).strftime('%Y-%m-%d'))[:10] 
                 if f in lista_fechas:
