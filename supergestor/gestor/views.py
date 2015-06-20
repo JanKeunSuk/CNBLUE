@@ -1269,7 +1269,7 @@ def modificarSprint(request, usuario_id, proyectoid, rolid, Sprint_id_rec):
             if rola.tiene_permiso('Agregar horas trabajadas'):
                 users.append(a.usuario)
         HUs_pendientes=[]
-        for x in Sprint.objects.all():
+        for x in Sprint.objects.filter(proyecto=proyectox):
             if x.estado != 'FIN':
                 for h in x.hu.all():
                     HUs=HUs.exclude(id=h.id)
