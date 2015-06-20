@@ -229,7 +229,7 @@ def holaScrumView(request,usuario_id,proyectoid,rol_id):
             if h.estado_en_actividad != "FIN" and h.estado_en_actividad !='APR' and h.duracion == h.acumulador_horas and h.acumulador_horas !=0:
                 HUsm_horas_agotadas.append(h)
         hus_desarrollandose=[]
-        for s in Sprint.objects.all():
+        for s in Sprint.objects.filter(proyecto=proyectox):
             if s.estado == 'CON':
                 hus_desarrollandose=s.hu.all()
         for h in HUsm:
@@ -556,15 +556,15 @@ def guardarSprintView(request, usuario_id, proyectoid, rolid):
                 if h.estado_en_actividad!='APR':
                     if h not in HUs_pendientes:
                         HUs_pendientes.append(h)
-                    HUs.remove(h)#HUs es una lista porque se definio asi pero flujos se obtuvo con un query
                     if h.flujo() not in flujos_pen:
                         flujos_pen.append(h.flujo())
                     if h.flujo() in flujos:   
                         flujos=flujos.exclude(id=h.flujo().id)
+                    HUs.remove(h)#HUs es una lista porque se definio asi pero flujos se obtuvo con un query
             #asi HU tiene todas las HU no pendientes 
             #y HU_pendientes tiene las HU pendientes
             HUs_pendientes=set(HUs_pendientes)
-                            
+
             return render(request,"eleccionFlujo.html",{'sprint':Sprint_a_crear,'HUs_pendientes':HUs_pendientes,'HUs':HUs,'flujo_pen':flujos_pen,'flujos':flujos,'usuarioid':usuario_id,'proyectoid':proyectoid,'rolid':rolid})
         except ObjectDoesNotExist:
             print "Either the entry or blog doesn't exist." 
@@ -2259,15 +2259,27 @@ def asignarHU_a_FLujo(request,usuario_id,proyectoid,rolid,sprintid,flujo_id):
             h.actividad=Actividades.objects.get(id=orden[0])
             h.save()
             asig=asignaHU_actividad_flujo.objects.filter(flujo_al_que_pertenece=flujo)
+            existe_flujo_en_proyecto=0
             if asig:
                 for f in asig:
-                    if f.lista_de_HU.filter(proyecto=proyectox):
+                    existe_flujo_en_proyecto=0
+                    for h in f.lista_de_HU.all():
+                        if h.proyecto == proyectox and h.estado_en_actividad != 'APR':
+                            existe_flujo_en_proyecto=1
+                    if existe_flujo_en_proyecto == 1:
                         f.lista_de_HU.add(HU.objects.get(id=a))
                         f.save()
+                        break
             else:
                 asignar=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=Flujo.objects.get(id=flujo_id))
                 asignar.lista_de_HU.add(HU.objects.get(id=a))
                 asignar.save()
+                existe_flujo_en_proyecto=1
+            if existe_flujo_en_proyecto == 0:
+                asignar=asignaHU_actividad_flujo.objects.create(flujo_al_que_pertenece=Flujo.objects.get(id=flujo_id))
+                asignar.lista_de_HU.add(HU.objects.get(id=a))
+                asignar.save() 
+
         return HttpResponseRedirect('/asignarHUFlujo/'+str(usuario_id)+'/'+str(proyectoid)+'/'+str(rolid)+'/'+str(sprintid))
     else:
         return render(request,"asignarHUFlujo.html",{'flujo':flujo,'hus':hus,'proyectoid':proyectoid,'usuarioid':usuario_id, 'rolid':rolid,'sprint':sprintx,'flujo_id':flujo_id})

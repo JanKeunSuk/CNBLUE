@@ -84,7 +84,9 @@
 <p>Flujos incluidos con HUs pendientes: </p>
 	{%if flujo_pen|length > 1 %}
 		{%for f in flujo_pen%}
-			<p>{{f}}</p>
+			{%if f%}
+				<p>{{f}}</p>
+			{%endif%}
 		{%endfor%}
 	{%else%}
 			<p>Ninguno</p>
