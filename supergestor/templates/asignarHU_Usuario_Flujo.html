@@ -85,7 +85,7 @@
   </ul>
 
 
-<form enctype="multipart/form-data" method="post" id="proyecto_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='lIrpccfDE0jXqIrun25AwLRBdIxGUDco' />
+<form enctype="multipart/form-data" action="/scrum/{{usuarioid}}/{{proyectoid}}/{{rolid}}/" method="post" id="proyecto_form" novalidate><input type='hidden' name='csrfmiddlewaretoken' value='lIrpccfDE0jXqIrun25AwLRBdIxGUDco' />
 {% csrf_token %}
 
     <div class="form-row field-permisos">
@@ -160,7 +160,7 @@
 
 
 <div class="submit-row">
-<input type="submit" value="Guardar" class="modificarProyecto" name="_save" />
+<input type="submit" value="Volver a Pagina Principal" class="modificarProyecto" name="_save" />
 <!-- 
     
     <p class="deletelink-box"><a href="/admin/gestor/proyecto/2/delete/" class="deletelink">Eliminar</a></p>
