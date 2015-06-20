@@ -362,11 +362,13 @@ def guardarUsuarioView(request):
         #agregar su correo y username en el crontab para que reciba las notificaciones o activar las notificaciones instantaneas
         if usuario.frecuencia_notificaciones == 'dia':
             cmd="sh "+WORKSPACE+"/notificaciones/notificar.sh "+WORKSPACE+" "+request.POST['username']+" "+request.POST['email']+" 1"
+            os.system(cmd)
         elif usuario.frecuencia_notificaciones == 'semana':
             cmd="sh "+WORKSPACE+"/notificaciones/notificar.sh "+WORKSPACE+" "+request.POST['username']+" "+request.POST['email']+" 7"
+            os.system(cmd)
         elif usuario.frecuencia_notificaciones == 'mes':
             cmd="sh "+WORKSPACE+"/notificaciones/notificar.sh "+WORKSPACE+" "+request.POST['username']+" "+request.POST['email']+" 30"
-        os.system(cmd)
+            os.system(cmd)
         return HttpResponseRedirect('/login/')
     except ObjectDoesNotExist:
         print "Either the entry or blog doesn't exist." 
